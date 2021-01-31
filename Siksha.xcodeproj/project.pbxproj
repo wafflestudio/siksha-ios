@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,17 @@
 		1E3A56F725C6FCE800DBB3F4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A56F525C6FCE800DBB3F4 /* LaunchScreen.storyboard */; };
 		1E3A570225C6FCE900DBB3F4 /* SikshaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A570125C6FCE900DBB3F4 /* SikshaTests.swift */; };
 		1E3A570D25C6FCE900DBB3F4 /* SikshaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A570C25C6FCE900DBB3F4 /* SikshaUITests.swift */; };
+		1E3A572425C6FDA300DBB3F4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A572325C6FDA300DBB3F4 /* MainView.swift */; };
+		1E3A572B25C6FDE400DBB3F4 /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A572A25C6FDE400DBB3F4 /* FavoriteView.swift */; };
+		1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */; };
+		1E3A573A25C6FE2700DBB3F4 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A573925C6FE2700DBB3F4 /* Extension.swift */; };
+		1E3A574925C6FEEB00DBB3F4 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A574825C6FEEB00DBB3F4 /* Menu.swift */; };
+		1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A574D25C6FF0500DBB3F4 /* Restaurant.swift */; };
+		1E3A575325C6FF1400DBB3F4 /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A575225C6FF1400DBB3F4 /* Review.swift */; };
+		1E3A575825C6FF2900DBB3F4 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A575725C6FF2900DBB3F4 /* MainViewModel.swift */; };
+		1E3A575D25C6FF6700DBB3F4 /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A575C25C6FF6700DBB3F4 /* FavoriteViewModel.swift */; };
+		1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */; };
+		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,6 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1CD81680B4947C1182765D1D /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
 		1E3A56E725C6FCE600DBB3F4 /* Siksha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Siksha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +61,22 @@
 		1E3A570825C6FCE900DBB3F4 /* SikshaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SikshaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A570C25C6FCE900DBB3F4 /* SikshaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SikshaUITests.swift; sourceTree = "<group>"; };
 		1E3A570E25C6FCE900DBB3F4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1E3A572325C6FDA300DBB3F4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		1E3A572A25C6FDE400DBB3F4 /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
+		1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		1E3A573925C6FE2700DBB3F4 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		1E3A574825C6FEEB00DBB3F4 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		1E3A574D25C6FF0500DBB3F4 /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
+		1E3A575225C6FF1400DBB3F4 /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
+		1E3A575725C6FF2900DBB3F4 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		1E3A575C25C6FF6700DBB3F4 /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
+		1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		1E3A578025C7014600DBB3F4 /* NanumSquareOTFRegular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFRegular.otf; sourceTree = "<group>"; };
+		1E3A578125C7014600DBB3F4 /* NanumSquareOTFBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFBold.otf; sourceTree = "<group>"; };
+		1E3A578225C7014600DBB3F4 /* NanumSquareOTFExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFExtraBold.otf; sourceTree = "<group>"; };
+		1E3A578325C7014600DBB3F4 /* NanumSquareOTFLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFLight.otf; sourceTree = "<group>"; };
+		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
+		808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +112,8 @@
 				1E3A570025C6FCE900DBB3F4 /* SikshaTests */,
 				1E3A570B25C6FCE900DBB3F4 /* SikshaUITests */,
 				1E3A56E825C6FCE600DBB3F4 /* Products */,
+				BB378484FB4B02EA3B0876A2 /* Pods */,
+				5127BCAAB12CF9DDFA269AEB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,11 +130,17 @@
 		1E3A56E925C6FCE600DBB3F4 /* Siksha */ = {
 			isa = PBXGroup;
 			children = (
+				1E3A574125C6FEC600DBB3F4 /* Models */,
 				1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */,
 				1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */,
 				1E3A56EE25C6FCE600DBB3F4 /* ContentView.swift */,
-				1E3A56F025C6FCE800DBB3F4 /* Assets.xcassets */,
+				1E3A572825C6FDC000DBB3F4 /* Main */,
+				1E3A572925C6FDCA00DBB3F4 /* Favorite */,
+				1E3A572F25C6FDEC00DBB3F4 /* Settings */,
+				1E3A573825C6FE1600DBB3F4 /* Library */,
 				1E3A56F525C6FCE800DBB3F4 /* LaunchScreen.storyboard */,
+				1E3A56F025C6FCE800DBB3F4 /* Assets.xcassets */,
+				1E3A577425C7012F00DBB3F4 /* Font */,
 				1E3A56F825C6FCE800DBB3F4 /* Info.plist */,
 				1E3A56F225C6FCE800DBB3F4 /* Preview Content */,
 			);
@@ -136,6 +173,79 @@
 			path = SikshaUITests;
 			sourceTree = "<group>";
 		};
+		1E3A572825C6FDC000DBB3F4 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				1E3A572325C6FDA300DBB3F4 /* MainView.swift */,
+				1E3A575725C6FF2900DBB3F4 /* MainViewModel.swift */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		1E3A572925C6FDCA00DBB3F4 /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+				1E3A572A25C6FDE400DBB3F4 /* FavoriteView.swift */,
+				1E3A575C25C6FF6700DBB3F4 /* FavoriteViewModel.swift */,
+			);
+			path = Favorite;
+			sourceTree = "<group>";
+		};
+		1E3A572F25C6FDEC00DBB3F4 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */,
+				1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		1E3A573825C6FE1600DBB3F4 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				1E3A573925C6FE2700DBB3F4 /* Extension.swift */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		1E3A574125C6FEC600DBB3F4 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				1E3A574825C6FEEB00DBB3F4 /* Menu.swift */,
+				1E3A574D25C6FF0500DBB3F4 /* Restaurant.swift */,
+				1E3A575225C6FF1400DBB3F4 /* Review.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		1E3A577425C7012F00DBB3F4 /* Font */ = {
+			isa = PBXGroup;
+			children = (
+				1E3A578125C7014600DBB3F4 /* NanumSquareOTFBold.otf */,
+				1E3A578225C7014600DBB3F4 /* NanumSquareOTFExtraBold.otf */,
+				1E3A578325C7014600DBB3F4 /* NanumSquareOTFLight.otf */,
+				1E3A578025C7014600DBB3F4 /* NanumSquareOTFRegular.otf */,
+			);
+			path = Font;
+			sourceTree = "<group>";
+		};
+		5127BCAAB12CF9DDFA269AEB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		BB378484FB4B02EA3B0876A2 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */,
+				1CD81680B4947C1182765D1D /* Pods-Siksha.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -143,9 +253,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E3A571125C6FCE900DBB3F4 /* Build configuration list for PBXNativeTarget "Siksha" */;
 			buildPhases = (
+				1844B939664D612305CB31B0 /* [CP] Check Pods Manifest.lock */,
 				1E3A56E325C6FCE600DBB3F4 /* Sources */,
 				1E3A56E425C6FCE600DBB3F4 /* Frameworks */,
 				1E3A56E525C6FCE600DBB3F4 /* Resources */,
+				111E4C7C7AB4A230ACCA1811 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -261,14 +373,66 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		111E4C7C7AB4A230ACCA1811 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		1844B939664D612305CB31B0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Siksha-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1E3A56E325C6FCE600DBB3F4 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
+				1E3A572425C6FDA300DBB3F4 /* MainView.swift in Sources */,
+				1E3A574925C6FEEB00DBB3F4 /* Menu.swift in Sources */,
+				1E3A573A25C6FE2700DBB3F4 /* Extension.swift in Sources */,
 				1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */,
+				1E3A575325C6FF1400DBB3F4 /* Review.swift in Sources */,
+				1E3A575D25C6FF6700DBB3F4 /* FavoriteViewModel.swift in Sources */,
+				1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */,
+				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
+				1E3A572B25C6FDE400DBB3F4 /* FavoriteView.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
+				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
+				1E3A575825C6FF2900DBB3F4 /* MainViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,43 +597,51 @@
 		};
 		1E3A571225C6FCE900DBB3F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				BUNDLE_NAME = "식샤-Debug";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = ###;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Siksha/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.wafflestudio.Siksha;
+				MARKETING_VERSION = 2.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "###-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
 		1E3A571325C6FCE900DBB3F4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1CD81680B4947C1182765D1D /* Pods-Siksha.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				BUNDLE_NAME = "식샤";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = ###;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Siksha/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.wafflestudio.Siksha;
+				MARKETING_VERSION = 2.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ###;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
