@@ -18,13 +18,22 @@
 		1E3A572425C6FDA300DBB3F4 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A572325C6FDA300DBB3F4 /* MainView.swift */; };
 		1E3A572B25C6FDE400DBB3F4 /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A572A25C6FDE400DBB3F4 /* FavoriteView.swift */; };
 		1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */; };
-		1E3A573A25C6FE2700DBB3F4 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A573925C6FE2700DBB3F4 /* Extension.swift */; };
+		1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A573925C6FE2700DBB3F4 /* Extensions.swift */; };
 		1E3A574925C6FEEB00DBB3F4 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A574825C6FEEB00DBB3F4 /* Menu.swift */; };
 		1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A574D25C6FF0500DBB3F4 /* Restaurant.swift */; };
 		1E3A575325C6FF1400DBB3F4 /* Review.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A575225C6FF1400DBB3F4 /* Review.swift */; };
 		1E3A575825C6FF2900DBB3F4 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A575725C6FF2900DBB3F4 /* MainViewModel.swift */; };
 		1E3A575D25C6FF6700DBB3F4 /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A575C25C6FF6700DBB3F4 /* FavoriteViewModel.swift */; };
 		1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */; };
+		1E3A57CA25C71F2000DBB3F4 /* NanumSquareOTFBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A578125C7014600DBB3F4 /* NanumSquareOTFBold.otf */; };
+		1E3A57CE25C71F2200DBB3F4 /* NanumSquareOTFExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A578225C7014600DBB3F4 /* NanumSquareOTFExtraBold.otf */; };
+		1E3A57CF25C71F2400DBB3F4 /* NanumSquareOTFLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A578325C7014600DBB3F4 /* NanumSquareOTFLight.otf */; };
+		1E3A57D325C71F2600DBB3F4 /* NanumSquareOTFRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A578025C7014600DBB3F4 /* NanumSquareOTFRegular.otf */; };
+		1E3A57D825C724B200DBB3F4 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57D725C724B200DBB3F4 /* PageViewController.swift */; };
+		1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57E525C735F200DBB3F4 /* PageView.swift */; };
+		1E3A57EB25C73CCC00DBB3F4 /* DailyMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57EA25C73CCC00DBB3F4 /* DailyMenuView.swift */; };
+		1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57EF25C73EC700DBB3F4 /* Meal.swift */; };
+		1E3A57FB25C73FDD00DBB3F4 /* DailyMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57FA25C73FDD00DBB3F4 /* DailyMenu.swift */; };
 		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
 /* End PBXBuildFile section */
 
@@ -64,7 +73,7 @@
 		1E3A572325C6FDA300DBB3F4 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		1E3A572A25C6FDE400DBB3F4 /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
 		1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		1E3A573925C6FE2700DBB3F4 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		1E3A573925C6FE2700DBB3F4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		1E3A574825C6FEEB00DBB3F4 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		1E3A574D25C6FF0500DBB3F4 /* Restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restaurant.swift; sourceTree = "<group>"; };
 		1E3A575225C6FF1400DBB3F4 /* Review.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Review.swift; sourceTree = "<group>"; };
@@ -75,6 +84,11 @@
 		1E3A578125C7014600DBB3F4 /* NanumSquareOTFBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFBold.otf; sourceTree = "<group>"; };
 		1E3A578225C7014600DBB3F4 /* NanumSquareOTFExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFExtraBold.otf; sourceTree = "<group>"; };
 		1E3A578325C7014600DBB3F4 /* NanumSquareOTFLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFLight.otf; sourceTree = "<group>"; };
+		1E3A57D725C724B200DBB3F4 /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
+		1E3A57E525C735F200DBB3F4 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
+		1E3A57EA25C73CCC00DBB3F4 /* DailyMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMenuView.swift; sourceTree = "<group>"; };
+		1E3A57EF25C73EC700DBB3F4 /* Meal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
+		1E3A57FA25C73FDD00DBB3F4 /* DailyMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMenu.swift; sourceTree = "<group>"; };
 		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
 		808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -178,6 +192,7 @@
 			children = (
 				1E3A572325C6FDA300DBB3F4 /* MainView.swift */,
 				1E3A575725C6FF2900DBB3F4 /* MainViewModel.swift */,
+				1E3A57EA25C73CCC00DBB3F4 /* DailyMenuView.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -203,7 +218,9 @@
 		1E3A573825C6FE1600DBB3F4 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				1E3A573925C6FE2700DBB3F4 /* Extension.swift */,
+				1E3A573925C6FE2700DBB3F4 /* Extensions.swift */,
+				1E3A57D725C724B200DBB3F4 /* PageViewController.swift */,
+				1E3A57E525C735F200DBB3F4 /* PageView.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -212,6 +229,8 @@
 			isa = PBXGroup;
 			children = (
 				1E3A574825C6FEEB00DBB3F4 /* Menu.swift */,
+				1E3A57FA25C73FDD00DBB3F4 /* DailyMenu.swift */,
+				1E3A57EF25C73EC700DBB3F4 /* Meal.swift */,
 				1E3A574D25C6FF0500DBB3F4 /* Restaurant.swift */,
 				1E3A575225C6FF1400DBB3F4 /* Review.swift */,
 			);
@@ -352,8 +371,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E3A56F725C6FCE800DBB3F4 /* LaunchScreen.storyboard in Resources */,
+				1E3A57CF25C71F2400DBB3F4 /* NanumSquareOTFLight.otf in Resources */,
 				1E3A56F425C6FCE800DBB3F4 /* Preview Assets.xcassets in Resources */,
 				1E3A56F125C6FCE800DBB3F4 /* Assets.xcassets in Resources */,
+				1E3A57CE25C71F2200DBB3F4 /* NanumSquareOTFExtraBold.otf in Resources */,
+				1E3A57D325C71F2600DBB3F4 /* NanumSquareOTFRegular.otf in Resources */,
+				1E3A57CA25C71F2000DBB3F4 /* NanumSquareOTFBold.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -421,18 +444,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
+				1E3A57EB25C73CCC00DBB3F4 /* DailyMenuView.swift in Sources */,
+				1E3A57FB25C73FDD00DBB3F4 /* DailyMenu.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MainView.swift in Sources */,
+				1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */,
 				1E3A574925C6FEEB00DBB3F4 /* Menu.swift in Sources */,
-				1E3A573A25C6FE2700DBB3F4 /* Extension.swift in Sources */,
+				1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */,
 				1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */,
 				1E3A575325C6FF1400DBB3F4 /* Review.swift in Sources */,
 				1E3A575D25C6FF6700DBB3F4 /* FavoriteViewModel.swift in Sources */,
 				1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */,
 				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
 				1E3A572B25C6FDE400DBB3F4 /* FavoriteView.swift in Sources */,
+				1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
 				1E3A575825C6FF2900DBB3F4 /* MainViewModel.swift in Sources */,
+				1E3A57D825C724B200DBB3F4 /* PageViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
