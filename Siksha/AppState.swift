@@ -1,0 +1,94 @@
+//
+//  AppState.swift
+//  Siksha
+//
+//  Created by 박종석 on 2021/02/02.
+//
+
+import Foundation
+import SwiftyJSON
+import Realm
+import RealmSwift
+import Combine
+
+class AppState: ObservableObject {
+    private let url = URL(string: "https://siksha.kr:8000/api/v1/snu/menus/")!
+    private var cancellables = Set<AnyCancellable>()
+    
+    private let realm = try! Realm()
+    
+    // string value for page tab
+    var dateFormatted = [String]()
+    
+    @Published var dailyMenus: [DailyMenu] = []
+    
+    @Published var failedToGetMenu: Bool = false
+    
+    @Published var saveToDB: Bool = false
+    
+    init(){
+        let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_kr")
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        let today = Date()
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today
+        
+        let todayString = formatter.string(from: today)
+        let tomorrowString = formatter.string(from: tomorrow)
+        
+        formatter.dateFormat = "MM. dd. E"
+        dateFormatted.append(formatter.string(from: today))
+        dateFormatted.append(formatter.string(from: tomorrow))
+        
+        $saveToDB
+            .filter { $0 }
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                try! self.realm.write {
+                    let allMenus = self.realm.objects(DailyMenu.self)
+                    self.realm.delete(allMenus)
+                    
+                    self.dailyMenus.forEach { menu in
+                        self.realm.add(menu)
+                    }
+                }
+            }
+            .store(in: &cancellables)
+
+        
+        if let todayMenu = realm.objects(DailyMenu.self).filter("date LIKE %@", todayString).first,
+           let tomorrowMenu = realm.objects(DailyMenu.self).filter("date LIKE %@", tomorrowString).first {
+            dailyMenus.append(todayMenu)
+            dailyMenus.append(tomorrowMenu)
+        } else {
+            getMenus()
+        }
+    }
+    
+    func getMenus() {
+        URLSession.shared.dataTaskPublisher(for: url)
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+            .sink { [weak self] completion in
+                guard let self = self else { return }
+                if case .failure = completion {
+                    self.failedToGetMenu = true
+                }
+            } receiveValue: { [weak self] (data, response) in
+                guard let self = self else { return }
+                guard let response = response as? HTTPURLResponse,
+                      200..<300 ~= response.statusCode,
+                      let jsonArray = try? JSON(data: data).array else {
+                    self.failedToGetMenu = true
+                    return
+                }
+                self.dailyMenus.removeAll()
+                jsonArray.forEach { json in
+                    self.dailyMenus.append(DailyMenu(json))
+                }
+                self.saveToDB = true
+            }
+            .store(in: &cancellables)
+    }
+}

@@ -1,5 +1,5 @@
 //
-//  MainView.swift
+//  MenuView.swift
 //  Siksha
 //
 //  Created by 박종석 on 2021/02/01.
@@ -7,17 +7,18 @@
 
 import SwiftUI
 
-private extension MainView {
+private extension MenuView {
     
     // Pager Tab Button
     func dayButton(day: DayInfo, _ geometry: GeometryProxy) -> some View {
         Button(action: {
             withAnimation(.easeInOut) {
+                viewModel.scroll = day.id - viewModel.selectedPage
                 viewModel.selectedPage = day.id
             }
         }) {
             ZStack(alignment: .bottom) {
-                    Text(day.date)
+                Text(appState.dateFormatted[day.id])
                         .font(.custom("NanumSquareOTFB", size: 15))
                         .foregroundColor(viewModel.selectedPage == day.id ? orangeColor : lightGrayColor)
                 .padding([.top, .bottom], 12)
@@ -32,29 +33,30 @@ private extension MainView {
     }
 }
 
-struct MainView: View {
+struct MenuView: View {
     struct DayInfo: Identifiable {
         var id: Int
         var dayType: DaySelection
-        var date: String
-        var dailyMenuView = DailyMenuView()
+        var dailyMenuView: DailyMenuView
         
-        init(type: DaySelection, date: String) {
+        init(type: DaySelection) {
             self.id = type.rawValue
-            self.date = date
             self.dayType = type
+            self.dailyMenuView = DailyMenuView(type)
         }
     }
     
-    let dayInfos: [DayInfo] = [
-        DayInfo(type: .today, date: "02. 01. 월"),
-        DayInfo(type: .tomorrow, date: "02. 02. 화")
-    ]
+    @EnvironmentObject var appState: AppState
+    @ObservedObject var viewModel = MainViewModel()
+    
     
     let lightGrayColor = Color.init("LightGrayColor")
     let orangeColor = Color.init("MainThemeColor")
     
-    @ObservedObject var viewModel = MainViewModel()
+    let dayInfos: [DayInfo] = [
+        DayInfo(type: .today),
+        DayInfo(type: .tomorrow)
+    ]
     
     var body: some View {
         GeometryReader { geometry in
@@ -78,7 +80,9 @@ struct MainView: View {
                 }
                 .background(Color.white.shadow(color: .init(white: 0.9), radius: 2, x: 0, y: 3.5))
                 
-                PageView(currentPage: $viewModel.selectedPage, dayInfos.map{ $0.dailyMenuView })
+                PageView(currentPage: $viewModel.selectedPage, scroll: $viewModel.scroll, dayInfos.map{ $0.dailyMenuView })
+                    .background(Color.init("AppBackgroundColor"))
+                    .padding(.top, -3)
             }
             
         }
@@ -87,6 +91,6 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        MenuView()
     }
 }

@@ -4,19 +4,23 @@ PODS:
   - Realm/Headers (5.3.4)
   - RealmSwift (5.3.4):
     - Realm (= 5.3.4)
+  - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
   - RealmSwift
+  - SwiftyJSON
 
 SPEC REPOS:
   trunk:
     - Realm
     - RealmSwift
+    - SwiftyJSON
 
 SPEC CHECKSUMS:
   Realm: 4dd457b6ed025041cf7efe05dae78c027ba842e0
   RealmSwift: 233af88fffe05ed7f9305eecef100d477c0c2c42
+  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 4bd8caf9b6b3a0cca7a75a3126ad2395019ae688
+PODFILE CHECKSUM: 061b4b8a7672a8fe8ff092808cc754dec83c9eb8
 
 COCOAPODS: 1.9.1

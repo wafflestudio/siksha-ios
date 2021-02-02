@@ -48,7 +48,7 @@ struct ContentView: View {
     
     let tabItems = [
         TabItem(id: 0, content: AnyView(FavoriteView()), buttonImage: ["Favorite", "Favorite-disabled"]),
-        TabItem(id: 1, content: AnyView(MainView()), buttonImage: ["Main", "Main-disabled"]),
+        TabItem(id: 1, content: AnyView(MenuView()), buttonImage: ["Main", "Main-disabled"]),
         TabItem(id: 2, content: AnyView(SettingsView()), buttonImage: ["Settings", "Settings-disabled"])
     ]
     

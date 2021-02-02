@@ -10,12 +10,14 @@ import SwiftUI
 struct PageView<Content: View>: View {
     var viewControllers: [UIHostingController<Content>]
     @Binding var currentPage: Int
-    init(currentPage: Binding<Int>, _ views: [Content]) {
+    @Binding var scroll: Int
+    init(currentPage: Binding<Int>, scroll: Binding<Int>, _ views: [Content]) {
         self.viewControllers = views.map { UIHostingController(rootView: $0) }
         self._currentPage = currentPage
+        self._scroll = scroll
     }
 
     var body: some View {
-        PageViewController(controllers: viewControllers, currentPage: $currentPage)
+        PageViewController(controllers: viewControllers, currentPage: $currentPage, scroll: $scroll)
     }
 }
