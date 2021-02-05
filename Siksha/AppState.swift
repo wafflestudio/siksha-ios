@@ -12,7 +12,7 @@ import RealmSwift
 import Combine
 
 class AppState: ObservableObject {
-    private let url = URL(string: "https://siksha.kr:8000/api/v1/snu/menus/")!
+    private let url = URL(string: "-")!
     private var cancellables = Set<AnyCancellable>()
     
     private let realm = try! Realm()
@@ -26,6 +26,22 @@ class AppState: ObservableObject {
     
     @Published var saveToDB: Bool = false
     
+    @Published var showSheet: Bool = false
+    @Published var restaurantToShow: Restaurant? = nil
+    @Published var mealToReview: Meal? = nil
+    
+    @Published var ratingEnabled: Bool = true
+    
+    var modalHeight: CGFloat {
+        if restaurantToShow != nil {
+            return 400
+        } else if mealToReview != nil {
+            return 320
+        } else {
+            return 0
+        }
+    }
+
     init(){
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_kr")
@@ -55,14 +71,39 @@ class AppState: ObservableObject {
                 }
             }
             .store(in: &cancellables)
-
+        
+        $restaurantToShow
+            .filter { $0 != nil }
+            .sink { [weak self] restaurant in
+                guard let self = self else { return }
+                self.showSheet = true
+            }
+            .store(in: &cancellables)
+        
+        $mealToReview
+            .filter { $0 != nil }
+            .sink { [weak self] restaurant in
+                guard let self = self else { return }
+                self.showSheet = true
+            }
+            .store(in: &cancellables)
+        
+        $showSheet
+            .filter { !$0 }
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.restaurantToShow = nil
+                self.mealToReview = nil
+            }
+            .store(in: &cancellables)
         
         if let todayMenu = realm.objects(DailyMenu.self).filter("date LIKE %@", todayString).first,
            let tomorrowMenu = realm.objects(DailyMenu.self).filter("date LIKE %@", tomorrowString).first {
             dailyMenus.append(todayMenu)
             dailyMenus.append(tomorrowMenu)
         } else {
-            getMenus()
+//            getMenus()
+            getMenuDebug()
         }
     }
     
@@ -90,5 +131,48 @@ class AppState: ObservableObject {
                 self.saveToDB = true
             }
             .store(in: &cancellables)
+    }
+    
+    // MARK: - only for debugging purpose
+    
+    func getMenuDebug(){
+        var meals = [Meal]()
+        for i in 0..<3 {
+            let meal = Meal()
+            meal.id = i
+            meal.nameKr = "식단 \(i)"
+            meal.price = 3000
+            meal.reviewCnt = 1
+            meal.score = Double(i) * 0.5
+            meals.append(meal)
+        }
+        
+        var restaurants = [Restaurant]()
+        
+        for i in 0..<3 {
+            let restaurant = Restaurant()
+            restaurant.id = i
+            restaurant.nameKr = "식당 \(i)"
+            if i != 2 {
+                restaurant.menus.append(objectsIn: meals)
+            }
+            restaurant.addr = "301동 \(i)층"
+            
+            restaurants.append(restaurant)
+        }
+        
+        var dailyMenus = [DailyMenu]()
+        
+        for i in 0..<2 {
+            let menu = DailyMenu()
+            menu.date = dateFormatted[i]
+            menu.br.append(objectsIn: restaurants)
+            menu.lu.append(objectsIn: restaurants)
+            menu.dn.append(objectsIn: restaurants)
+            
+            dailyMenus.append(menu)
+        }
+        
+        self.dailyMenus.append(contentsOf: dailyMenus)
     }
 }

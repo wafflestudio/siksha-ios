@@ -29,10 +29,11 @@ struct SettingsView: View {
                 ZStack {
                     Image("NaviBar")
                         .resizable()
-                        .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+40)
+                        .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+55)
                         .padding(.top, -geometry.safeAreaInsets.top)
                     
                     Image("Logo")
+                        .padding(.bottom, 5)
                 }
                 // Navigation Bar
                 

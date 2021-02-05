@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct RestaurantsView: View {
+    private let fontColor = Color("DefaultFontColor")
+    
     @EnvironmentObject var appState: AppState
-    @ObservedObject var viewModel = RestaurantsViewModel()
     
     var day: DaySelection
     var type: TypeSelection
@@ -25,26 +26,31 @@ struct RestaurantsView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack {
-                Text("Restaurant List")
-                if appState.dailyMenus.count > day.rawValue {
-                    ForEach(restaurantsList, id: \.id) { _ in
-                        HStack {
-                        }
+            if appState.dailyMenus.count > day.rawValue && restaurantsList.count > 0 {
+                ScrollView(.vertical) {
+                    ForEach(restaurantsList, id: \.id) { restaurant in
+                        RestaurantCell(restaurant)
+                            .padding([.leading, .trailing], 12)
+                            .padding([.top, .bottom], 2)
                     }
-                } else {
-                    Text("식단 정보가 없습니다")
-                        .font(.custom("NanumSquareOTFB", size: 15))
                 }
+                .padding(.top, 2)
+                .frame(width: geometry.size.width)
+                .background(Color.init("AppBackgroundColor"))
+            } else {
+                Text("식단 정보가 없습니다")
+                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .foregroundColor(fontColor)
             }
-            .frame(width: geometry.size.width, height: geometry.size.height)
-            .background(Color.init("AppBackgroundColor"))
         }
     }
 }
 
+// MARK: - Preview
+
 struct RestaurantsView_Previews: PreviewProvider {
     static var previews: some View {
         RestaurantsView(.today, .breakfast)
+            .environmentObject(AppState())
     }
 }

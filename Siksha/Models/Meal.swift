@@ -1,5 +1,5 @@
 //
-//  Menu.swift
+//  Meal.swift
 //  Siksha
 //
 //  Created by 박종석 on 2021/02/01.
@@ -10,7 +10,7 @@ import SwiftyJSON
 import Realm
 import RealmSwift
 
-class Menu: Object {
+class Meal: Object {
     @objc dynamic var id: Int = 0
     @objc dynamic var code: String = ""
     @objc dynamic var nameKr: String = ""

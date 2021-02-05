@@ -10,8 +10,5 @@ import Combine
 
 class DailyMenuViewModel: ObservableObject {
     @Published var selectedPage: Int = 0
-    @Published var scroll: Int = -1
-    
-    init(_ day: DaySelection){
-    }
+    @Published var scroll: Int = 0
 }
