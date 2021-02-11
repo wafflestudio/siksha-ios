@@ -6,6 +6,7 @@ target 'Siksha' do
 
   # Pods for Siksha
   pod 'RealmSwift'
+  pod 'SwiftyJSON'
 
 end
 

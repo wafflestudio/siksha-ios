@@ -7,9 +7,56 @@
 
 import SwiftUI
 
+private extension SettingsView {
+    func settingsCell(text: String, _ geometry: GeometryProxy) -> some View {
+        ZStack(alignment: .leading) {
+            Image("SettingsCell")
+                .resizable()
+                .frame(width: geometry.size.width-32, height: 54)
+            Text(text)
+                .padding(.leading, 20)
+                .font(.custom("NanumSquareOTFB", size: 15))
+                .foregroundColor(.init("DefaultFontColor"))
+        }
+    }
+}
+
 struct SettingsView: View {
     var body: some View {
-        Text("Settings View")
+        GeometryReader { geometry in
+            VStack {
+                // Navigation Bar
+                ZStack {
+                    Image("NaviBar")
+                        .resizable()
+                        .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+55)
+                        .padding(.top, -geometry.safeAreaInsets.top)
+                    
+                    Image("Logo")
+                        .padding(.bottom, 5)
+                }
+                // Navigation Bar
+                
+                NavigationView {
+                    VStack(alignment: .trailing, spacing: 10) {
+                        Button(action: {
+                            
+                        }) {
+                            settingsCell(text: "식샤 정보", geometry)
+                        }
+                        Button(action: {
+                            
+                        }) {
+                            settingsCell(text: "메뉴 새로고침", geometry)
+                        }
+                        Spacer()
+                    }
+                    .padding(.top)
+                    .navigationBarHidden(true)
+                }
+            }
+        }
+
     }
 }
 

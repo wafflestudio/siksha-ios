@@ -1,13 +1,13 @@
 //
-//  FavoriteView.swift
+//  MenuView.swift
 //  Siksha
 //
-//  Created by 박종석 on 2021/02/06.
+//  Created by 박종석 on 2021/02/01.
 //
 
 import SwiftUI
 
-private extension FavoriteView {
+private extension MenuView {
     // Pager Tab Button
     func dayButton(day: DayInfo, _ geometry: GeometryProxy) -> some View {
         Button(action: {
@@ -30,9 +30,9 @@ private extension FavoriteView {
     }
 }
 
-// MARK: - Favorite View
+// MARK: - Menu View
 
-struct FavoriteView: View {
+struct MenuView: View {
     struct DayInfo: Identifiable {
         var id: Int
         var dayType: DaySelection
@@ -46,7 +46,7 @@ struct FavoriteView: View {
     }
     
     @EnvironmentObject var appState: AppState
-    @ObservedObject var viewModel = FavoriteViewModel()
+    @ObservedObject var viewModel = MenuViewModel()
     
     let lightGrayColor = Color.init("LightGrayColor")
     let orangeColor = Color.init("MainThemeColor")
@@ -95,8 +95,9 @@ struct FavoriteView: View {
 
 // MARK: - Preview
 
-struct FavoriteView_Previews: PreviewProvider {
+struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        FavoriteView()
+        MenuView()
+            .environmentObject(AppState())
     }
 }
