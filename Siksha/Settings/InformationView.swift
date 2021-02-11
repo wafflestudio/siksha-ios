@@ -25,9 +25,9 @@ struct InformationView: View {
                     }) {
                         HStack {
                             Image("Back")
-                                .frame(width: 25, height: 25)
+                                .frame(width: 20, height: 20)
                             Text("설정")
-                                .font(.custom("NanumSquareOTFB", size: 20))
+                                .font(.custom("NanumSquareOTFB", size: 14))
                                 .foregroundColor(.init("DefaultFontColor"))
                         }
                     }
@@ -36,7 +36,7 @@ struct InformationView: View {
                 Spacer()
                 
                 Text("식샤 정보")
-                    .font(.custom("NanumSquareOTFExtraBold", size: 30))
+                    .font(.custom("NanumSquareOTFExtraBold", size: 17))
                     .foregroundColor(.init("DefaultFontColor"))
                 Spacer()
                 Text("")
@@ -103,6 +103,8 @@ struct InformationView: View {
                 // HStack
             }
             
+            Spacer()
+                .frame(height: 75)
 
                 HStack {
                     Spacer()

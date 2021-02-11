@@ -7,22 +7,6 @@
 
 import SwiftUI
 
-//private extension MenuOrderView {
-//    func settingsCell(text: String, _ geometry: GeometryProxy) -> some View {
-//        ZStack(alignment: .leading) {
-//            Image("SettingsCell")
-//                .resizable()
-//                .frame(width: geometry.size.width-32, height: 54)
-//
-//            Text(text)
-//                .padding(.leading, 20)
-//                .font(.custom("NanumSquareOTFB", size: 15))
-//                .foregroundColor(.init("DefaultFontColor"))
-//
-//        }
-//    }
-//}
-
 struct MenuOrderView: View {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -46,9 +30,9 @@ struct MenuOrderView: View {
                         }) {
                             HStack {
                                 Image("Back")
-                                    .frame(width: 25, height: 25)
+                                    .frame(width: 20, height: 20)
                                 Text("설정")
-                                    .font(.custom("NanumSquareOTFB", size: 20))
+                                    .font(.custom("NanumSquareOTFB", size: 14))
                                     .foregroundColor(.init("DefaultFontColor"))
                             }
                         }
@@ -57,7 +41,7 @@ struct MenuOrderView: View {
                     Spacer()
                     
                     Text("식단 순서 변경")
-                        .font(.custom("NanumSquareOTFExtraBold", size: 30))
+                        .font(.custom("NanumSquareOTFExtraBold", size: 17))
                         .foregroundColor(.init("DefaultFontColor"))
                     Spacer()
                     Text("")
@@ -71,8 +55,8 @@ struct MenuOrderView: View {
                 // Description
                 HStack {
                     Spacer()
-                    Text("드래그하여 순서를 바꿔보세요.")
-                        .font(.custom("NanumSquareOTFExtraBold", size: 20))
+                    Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
+                        .font(.custom("NanumSquareOTFExtraBold", size: 14))
                         .foregroundColor(.init("DefaultFontColor"))
                     Spacer()
                 }
@@ -88,9 +72,8 @@ struct MenuOrderView: View {
                         }
                     }
                 }
-                .padding(.leading, -10)
+                .padding(.leading, -55)
                 .environment(\.editMode, isEditable ? .constant(.active) : .constant(.inactive))
-                
                 
                 
             } // VStack

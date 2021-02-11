@@ -9,10 +9,6 @@ import SwiftUI
 import CoreGraphics
 
 private extension SettingsView {
-//    var animation: Animation {
-//        Animation.easeIn
-//            .repeatForever(autoreverses: false)
-//    }
     
     func settingsCell(text: String, imageText: String, rotation: Bool, hide: Bool, _ geometry: GeometryProxy) -> some View {
         ZStack(alignment: .leading) {
@@ -28,14 +24,6 @@ private extension SettingsView {
                 Spacer()
                 
                 SettingsIcon(imageName: imageText, rotationAnimation: rotation, noMenuHide: hide)
-                
-                
-//                Image(imageName)
-//                    .resizable()
-//                    .frame(width: 15, height: 15)
-//                    .rotationEffect(.degrees(rotationAnimation ? 360 : 0))
-//                    .animation(rotationAnimation ? animation: nil)
-
             }
             .frame(width: geometry.size.width-48)
         }

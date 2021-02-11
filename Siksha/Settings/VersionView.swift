@@ -17,9 +17,11 @@ struct VersionView: View {
             
             // New Logo Needed
             VStack {
-                Image("LaunchLogo")
+                Image("LogoEllipse")
                     .resizable()
                     .frame(width: 100, height: 100)
+                Spacer()
+                    .frame(height: 25)
                 Text("최신 버전을 이용 중입니다.")
                     .font(.custom("NanumSquareOTFB", size: 15))
                     .foregroundColor(.init("DefaultFontColor"))
