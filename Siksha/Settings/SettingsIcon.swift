@@ -17,23 +17,20 @@ struct SettingsIcon: View {
             .repeatForever(autoreverses: false)
     }
     
-    var body: some View {
-        if (noMenuHide) {
-            Image("Checked")
-                .resizable()
-                .frame(width: 15, height: 15)
-        } else if (rotationAnimation) {
-            Image(imageName)
-                .resizable()
-                .frame(width: 15, height: 15)
-                .rotationEffect(.degrees(rotationAnimation ? 360 : 0))
-                .animation(rotationAnimation ? animation: nil)
+    var image: String {
+        if noMenuHide {
+            return "Checked"
         } else {
-            Image(imageName)
-                .resizable()
-                .frame(width: 15, height: 15)
+            return imageName
         }
+    }
         
+    var body: some View {
+        Image(image)
+            .resizable()
+            .frame(width: 15, height: 15)
+            .rotationEffect(.degrees(rotationAnimation ? 360 : 0))
+            .animation(rotationAnimation ? animation : nil)
     }
 }
 

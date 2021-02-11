@@ -103,25 +103,20 @@ struct InformationView: View {
                 // HStack
             }
             
-//
-//                HStack {
-//                    // WaffleStudio new logo
-//                    Image("Logo")
-//                        .resizable()
-//                        .frame(width: 30, height: 30, alignment: .center)
-//                }
+
+                HStack {
+                    Spacer()
+                    Image("WaffleStudioLogo")
+                        .resizable()
+                        .frame(width: 127, height: 47)
+                    Spacer()
+                }
             
             Spacer()
             
         }
         // VStack
         .contentShape(Rectangle())
-        .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
-                
-            if(value.startLocation.x < 20 && value.translation.width > 100) {
-                    self.presentationMode.wrappedValue.dismiss()
-                }
-        }))
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)
         .navigationBarTitle("", displayMode: .inline)

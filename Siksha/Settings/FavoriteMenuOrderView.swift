@@ -29,7 +29,7 @@ struct FavoriteMenuOrderView: View {
     @GestureState private var dragOffset = CGSize.zero
     
     @State private var dummy = ["학생회관 식당", "농생대 3식당", "302동식당"]
-    @State private var isEditable = false
+    @State private var isEditable = true
     
     var body: some View {
         GeometryReader { geometry in
@@ -95,12 +95,6 @@ struct FavoriteMenuOrderView: View {
                 
             } // VStack
             .contentShape(Rectangle())
-            .gesture(DragGesture().updating($dragOffset, body: { (value, state, transaction) in
-                    
-                if(value.startLocation.x < 20 && value.translation.width > 100) {
-                        self.presentationMode.wrappedValue.dismiss()
-                    }
-            }))
             .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)
             .navigationBarTitle("", displayMode: .inline)
@@ -111,9 +105,6 @@ struct FavoriteMenuOrderView: View {
     
     func move(from source: IndexSet, to destination: Int) {
         dummy.move(fromOffsets: source, toOffset: destination)
-        withAnimation {
-            isEditable = false
-        }
     }
 }
 

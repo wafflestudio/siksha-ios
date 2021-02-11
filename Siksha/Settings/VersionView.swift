@@ -15,6 +15,7 @@ struct VersionView: View {
                 .shadow(radius: 5)
                 .frame(width: UIScreen.main.bounds.size.width-32, height: 250)
             
+            // New Logo Needed
             VStack {
                 Image("LaunchLogo")
                     .resizable()

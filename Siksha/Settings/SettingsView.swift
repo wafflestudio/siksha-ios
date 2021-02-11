@@ -43,6 +43,14 @@ private extension SettingsView {
 }
 
 struct SettingsView: View {
+    
+    @ObservedObject var viewModel: SettingsViewModel
+
+    
+    init() {
+        viewModel = SettingsViewModel()
+    }
+    
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -78,9 +86,10 @@ struct SettingsView: View {
                             .foregroundColor(.init("DefaultFontColor"))
                             .font(.footnote)
                         Button(action: {
-                            
+                            // change button
+                            viewModel.noMenuHide = !viewModel.noMenuHide
                         }) {
-                            settingsCell(text: "메뉴 없는 식당 숨기기", imageText: "NotChecked", rotation: false, hide: true, geometry)
+                            settingsCell(text: "메뉴 없는 식당 숨기기", imageText: "NotChecked", rotation: false, hide: viewModel.noMenuHide, geometry)
                         }
                         Button(action: {
                             
