@@ -17,3 +17,9 @@ enum TypeSelection: Int {
     case lunch = 1
     case dinner = 2
 }
+
+enum Result {
+    case failed
+    case succeeded
+    case idle
+}

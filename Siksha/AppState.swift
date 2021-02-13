@@ -22,9 +22,7 @@ class AppState: ObservableObject {
     
     @Published var dailyMenus: [DailyMenu] = []
     
-    @Published var failedToGetMenu: Bool = false
-    
-    @Published var saveToDB: Bool = false
+    @Published var getResult: Result = .idle
     
     init(){
         let formatter = DateFormatter()
@@ -41,10 +39,12 @@ class AppState: ObservableObject {
         dateFormatted.append(formatter.string(from: today))
         dateFormatted.append(formatter.string(from: tomorrow))
         
-        $saveToDB
-            .filter { $0 }
+        $getResult
+            .filter { $0 == .succeeded }
             .sink { [weak self] _ in
                 guard let self = self else { return }
+                
+                // Save To DB
                 try! self.realm.write {
                     let allMenus = self.realm.objects(DailyMenu.self)
                     self.realm.delete(allMenus)
@@ -53,6 +53,9 @@ class AppState: ObservableObject {
                         self.realm.add(menu)
                     }
                 }
+                
+                self.getResult = .idle
+                
             }
             .store(in: &cancellables)
 
@@ -73,21 +76,21 @@ class AppState: ObservableObject {
             .sink { [weak self] completion in
                 guard let self = self else { return }
                 if case .failure = completion {
-                    self.failedToGetMenu = true
+                    self.getResult = .failed
                 }
             } receiveValue: { [weak self] (data, response) in
                 guard let self = self else { return }
                 guard let response = response as? HTTPURLResponse,
                       200..<300 ~= response.statusCode,
                       let jsonArray = try? JSON(data: data).array else {
-                    self.failedToGetMenu = true
+                    self.getResult = .failed
                     return
                 }
                 self.dailyMenus.removeAll()
                 jsonArray.forEach { json in
                     self.dailyMenus.append(DailyMenu(json))
                 }
-                self.saveToDB = true
+                self.getResult = .succeeded
             }
             .store(in: &cancellables)
     }

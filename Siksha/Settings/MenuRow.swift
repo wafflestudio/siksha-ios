@@ -12,7 +12,7 @@ struct MenuRow: View {
     
     var body: some View {
         ZStack(alignment: .leading) {
-            Image("SettingsCell")
+            Image("OrderCell")
                 .resizable()
                 .frame(width: UIScreen.main.bounds.size.width - 20, height: 50)
             
@@ -20,7 +20,6 @@ struct MenuRow: View {
                 .padding(.leading, 20)
                 .font(.custom("NanumSquareOTFB", size: 15))
                 .foregroundColor(.init("DefaultFontColor"))
-            
         }
     }
 }

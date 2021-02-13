@@ -6,34 +6,14 @@
 //
 
 import SwiftUI
-import CoreGraphics
-
-private extension SettingsView {
-    
-    func settingsCell(text: String, imageText: String, rotation: Bool, hide: Bool, _ geometry: GeometryProxy) -> some View {
-        ZStack(alignment: .leading) {
-            Image("SettingsCell")
-                .resizable()
-                .frame(width: geometry.size.width-32, height: 54)
-            HStack() {
-                Text(text)
-                    .padding(.leading, 20)
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(.init("DefaultFontColor"))
-                      
-                Spacer()
-                
-                SettingsIcon(imageName: imageText, rotationAnimation: rotation, noMenuHide: hide)
-            }
-            .frame(width: geometry.size.width-48)
-        }
-    }
-}
 
 struct SettingsView: View {
-    
     @ObservedObject var viewModel: SettingsViewModel
-
+    @EnvironmentObject var appState: AppState
+    @State private var isAnimating = false
+    @State private var inProgress = false
+    
+    private let foreverAnimation = Animation.linear(duration: 2.0).repeatForever(autoreverses: false)
     
     init() {
         viewModel = SettingsViewModel()
@@ -41,71 +21,88 @@ struct SettingsView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack {
-                // Navigation Bar
-                ZStack {
-                    Image("NaviBar")
-                        .resizable()
-                        .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+40)
-                        .padding(.top, -geometry.safeAreaInsets.top)
-                    Image("Logo")
-                }
-                // Navigation Bar
+            VStack(spacing: 0) {
+                NavigationBar(geometry)
                 
                 NavigationView {
-                    VStack(alignment: .leading, spacing: 10) {
-                        Button(action: {
-                            
-                        }) {
-                            NavigationLink(destination: InformationView()) {
-                                settingsCell(text: "식샤 정보", imageText: "Back", rotation: false, hide: false, geometry)
+                    VStack(alignment: .leading) {
+                        NavigationLink(destination: InformationView()) {
+                            SettingsCell(text: "식샤 정보") {
+                                Image("Arrow")
+                                    .resizable()
+                                    .frame(width: 8, height: 15)
                             }
                         }
                         Button(action: {
-                            // icon rotation
+                            viewModel.refreshMenu = true
                         }) {
-                            settingsCell(text: "메뉴 새로고침", imageText: "Refresh", rotation: true, hide: false, geometry)
+                            SettingsCell(text: "메뉴 새로고침") {
+                                if viewModel.refreshMenu {
+                                    Image("Refresh")
+                                        .resizable()
+                                        .frame(width: 13, height: 13)
+                                        .rotationEffect(isAnimating ? .degrees(360) : .zero)
+                                        .animation(foreverAnimation)
+                                        .onAppear {
+                                            self.isAnimating = true
+                                        }
+                                        .onDisappear {
+                                            self.isAnimating = false
+                                        }
+                                } else {
+                                    Image("Refresh")
+                                        .resizable()
+                                        .frame(width: 13, height: 13)
+                                }
+                            }
                         }
-                        Spacer()
-                            .frame(height: 25)
                         
                         Text("식당")
-                            .multilineTextAlignment(/*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/)
                             .foregroundColor(.init("DefaultFontColor"))
                             .font(.footnote)
+                            .padding(.top, 25)
+                        
                         Button(action: {
                             // change button
-                            viewModel.noMenuHide = !viewModel.noMenuHide
+                            viewModel.noMenuHide.toggle()
                         }) {
-                            settingsCell(text: "메뉴 없는 식당 숨기기", imageText: "NotChecked", rotation: false, hide: viewModel.noMenuHide, geometry)
-                        }
-                        Button(action: {
-                            
-                        }) {
-                            NavigationLink(destination: MenuOrderView()) {
-                                settingsCell(text: "식당 순서 변경", imageText: "Back", rotation: false, hide: false, geometry)
+                            SettingsCell(text: "메뉴 없는 식당 숨기기") {
+                                Image(viewModel.noMenuHide ? "Checked" : "NotChecked")
+                                    .resizable()
+                                    .frame(width: 20, height: 20)
                             }
                         }
-                        Spacer()
-                            .frame(height: 25)
+                        NavigationLink(destination: MenuOrderView()) {
+                            SettingsCell(text: "식당 순서 변경") {
+                                Image("Arrow")
+                                    .resizable()
+                                    .frame(width: 8, height: 15)
+                            }
+                        }
                         
                         Text("즐겨찾기")
-                            .multilineTextAlignment(/*@START_MENU_TOKEN@*/.leading/*@END_MENU_TOKEN@*/)
                             .foregroundColor(.init("DefaultFontColor"))
                             .font(.footnote)
-                        Button(action: {
-                            
-                        }) {
-                            NavigationLink(destination: FavoriteMenuOrderView()) {
-                                settingsCell(text: "식당 순서 변경", imageText: "Back", rotation: false, hide: false, geometry)
+                            .padding(.top, 25)
+                        
+                        NavigationLink(destination: FavoriteMenuOrderView()) {
+                            SettingsCell(text: "식당 순서 변경") {
+                                Image("Arrow")
+                                    .resizable()
+                                    .frame(width: 8, height: 15)
                             }
                         }
                         Spacer()
                     }
-                    .padding(.top)
+                    .padding(.top, 32)
+                    .padding([.leading, .trailing], 16)
                     .navigationBarHidden(true)
                 }
+                
             }
+        }
+        .onAppear {
+            self.viewModel.appState = appState
         }
 
     }

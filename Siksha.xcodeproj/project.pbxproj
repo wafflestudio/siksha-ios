@@ -39,6 +39,8 @@
 		1E3A582525C9C53900DBB3F4 /* DailyMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A582425C9C53900DBB3F4 /* DailyMenuViewModel.swift */; };
 		1E3A582A25C9C6E300DBB3F4 /* RestaurantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A582925C9C6E300DBB3F4 /* RestaurantsView.swift */; };
 		1E3A583225C9D43300DBB3F4 /* RestaurantsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A583125C9D43300DBB3F4 /* RestaurantsViewModel.swift */; };
+		1ED44A8D25D7FA68001D916B /* CommonViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A8C25D7FA68001D916B /* CommonViews.swift */; };
+		1ED44A9225D80D0C001D916B /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A9125D80D0C001D916B /* SettingsCell.swift */; };
 		230F81EC25D510CA00B2993C /* MenuRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230F81EB25D510CA00B2993C /* MenuRow.swift */; };
 		230F81F125D518A400B2993C /* FavoriteMenuOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230F81F025D518A400B2993C /* FavoriteMenuOrderView.swift */; };
 		2351EF4D25CD357400A7AA99 /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2351EF4C25CD357400A7AA99 /* InformationView.swift */; };
@@ -105,6 +107,8 @@
 		1E3A582425C9C53900DBB3F4 /* DailyMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMenuViewModel.swift; sourceTree = "<group>"; };
 		1E3A582925C9C6E300DBB3F4 /* RestaurantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantsView.swift; sourceTree = "<group>"; };
 		1E3A583125C9D43300DBB3F4 /* RestaurantsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantsViewModel.swift; sourceTree = "<group>"; };
+		1ED44A8C25D7FA68001D916B /* CommonViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonViews.swift; sourceTree = "<group>"; };
+		1ED44A9125D80D0C001D916B /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
 		230F81EB25D510CA00B2993C /* MenuRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuRow.swift; sourceTree = "<group>"; };
 		230F81F025D518A400B2993C /* FavoriteMenuOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMenuOrderView.swift; sourceTree = "<group>"; };
 		2351EF4C25CD357400A7AA99 /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
@@ -236,9 +240,10 @@
 			isa = PBXGroup;
 			children = (
 				1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */,
+				1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */,
+				1ED44A9125D80D0C001D916B /* SettingsCell.swift */,
 				2351EF4C25CD357400A7AA99 /* InformationView.swift */,
 				2351EF5125CD378D00A7AA99 /* VersionView.swift */,
-				1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */,
 				23BB2DFA25D2659B000B0668 /* SettingsIcon.swift */,
 				23BB2DFF25D27BCC000B0668 /* MenuOrderView.swift */,
 				230F81F025D518A400B2993C /* FavoriteMenuOrderView.swift */,
@@ -255,6 +260,7 @@
 				1E3A57E525C735F200DBB3F4 /* PageView.swift */,
 				1E3A581525C9893300DBB3F4 /* Storage.swift */,
 				1E3A581F25C9C28000DBB3F4 /* Enums.swift */,
+				1ED44A8C25D7FA68001D916B /* CommonViews.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -477,6 +483,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1E3A582525C9C53900DBB3F4 /* DailyMenuViewModel.swift in Sources */,
+				1ED44A8D25D7FA68001D916B /* CommonViews.swift in Sources */,
 				230F81EC25D510CA00B2993C /* MenuRow.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
 				1E3A57EB25C73CCC00DBB3F4 /* DailyMenuView.swift in Sources */,
@@ -499,6 +506,7 @@
 				1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */,
 				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
 				1E3A572B25C6FDE400DBB3F4 /* FavoriteView.swift in Sources */,
+				1ED44A9225D80D0C001D916B /* SettingsCell.swift in Sources */,
 				1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
