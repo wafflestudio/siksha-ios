@@ -6,51 +6,45 @@
 //
 
 import SwiftUI
+import Combine
 
 struct RestaurantsView: View {
     private let fontColor = Color("DefaultFontColor")
     
-    @EnvironmentObject var appState: AppState
+    var restaurantsList: [Restaurant]
+    let onlyFavorites: Bool
     
-    var day: DaySelection
-    var type: TypeSelection
-    
-    init(_ day: DaySelection, _ type: TypeSelection) {
-        self.day = day
-        self.type = type
-    }
-    
-    var restaurantsList: [Restaurant] {
-        Array(appState.dailyMenus[day.rawValue].getRestaurants(type))
+    init(_ restaurants: [Restaurant], onlyFavorites: Bool = false){
+        self.restaurantsList = restaurants
+        self.onlyFavorites = onlyFavorites
     }
     
     var body: some View {
         GeometryReader { geometry in
-            if appState.dailyMenus.count > day.rawValue && restaurantsList.count > 0 {
+            if restaurantsList.count > 0 {
                 ScrollView(.vertical) {
                     ForEach(restaurantsList, id: \.id) { restaurant in
-                        RestaurantCell(restaurant)
-                            .padding([.leading, .trailing], 12)
-                            .padding([.top, .bottom], 2)
+                        RestaurantCell(restaurant, onlyFavorites)
+                            .padding([.leading, .trailing], 10)
+                            .padding([.top, .bottom], 4)
                     }
                 }
                 .padding(.top, 2)
-                .frame(width: geometry.size.width)
+                .padding(.bottom)
                 .background(Color.init("AppBackgroundColor"))
+                
             } else {
-                Text("식단 정보가 없습니다")
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(fontColor)
+                VStack {
+                    HStack{
+                        Text("식단 정보가 없습니다")
+                            .font(.custom("NanumSquareOTFB", size: 15))
+                            .foregroundColor(fontColor)
+                    }
+                    .frame(maxHeight: .infinity)
+                }
+                .frame(maxWidth: .infinity)
+                .background(Color.init("AppBackgroundColor"))
             }
         }
-    }
-}
-
-// MARK: - Preview
-
-struct RestaurantsView_Previews: PreviewProvider {
-    static var previews: some View {
-        RestaurantsView(.today, .breakfast)
-            .environmentObject(AppState())
     }
 }

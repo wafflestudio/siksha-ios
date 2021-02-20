@@ -38,78 +38,88 @@ private extension RestaurantCell {
 
 struct RestaurantCell: View {
     private let fontColor = Color("DefaultFontColor")
+    private let titleColor = Color("TitleFontColor")
+    private let lightGrayColor = Color("LightGrayColor")
     private let orangeColor = Color.init("MainThemeColor")
     
     var restaurant: Restaurant
     var meals: [Meal]
     @State var isFavorite: Bool = false
+    @State var onlyFavorites: Bool
     @EnvironmentObject var appState: AppState
     
-    init(_ restaurant: Restaurant) {
+    init(_ restaurant: Restaurant, _ onlyFavorites: Bool = false) {
         self.restaurant = restaurant
         self.meals = Array(restaurant.menus)
-        self.isFavorite = UserDefaults.standard.bool(forKey: "fav\(restaurant.id)")
+        self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
+        self._onlyFavorites = State(initialValue: onlyFavorites)
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            // Restaurant Name
-            HStack {
-                Text(restaurant.nameKr)
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(fontColor)
-                
-                Button(action: {
-                    withAnimation {
-                        appState.restaurantToShow = restaurant
+        if !onlyFavorites || isFavorite {
+            VStack(spacing: 0) {
+                // Restaurant Name
+                HStack {
+                    Text(restaurant.nameKr)
+                        .font(.custom("NanumSquareOTFB", size: 15))
+                        .foregroundColor(titleColor)
+                    
+                    Button(action: {
+                        withAnimation {
+                            appState.restaurantToShow = restaurant
+                        }
+                    }) {
+                        Image("Info")
+                            .resizable()
+                            .frame(width: 14, height: 14)
                     }
-                }) {
-                    Image("Info")
-                        .resizable()
-                        .frame(width: 14, height: 14)
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        isFavorite.toggle()
+                        UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
+                    }, label: {
+                        Image(isFavorite ? "Favorite-selected" : "Favorite-default")
+                            .resizable()
+                            .frame(width: 20, height: 20)
+                    })
                 }
+                .padding([.leading, .trailing], 16)
+                .padding([.top, .bottom], 10)
                 
-                Spacer()
+                HStack {
+                    orangeColor
+                        .frame(height: 2)
+                        .frame(maxWidth: .infinity)
+                }
+                .padding([.leading, .trailing], 12)
                 
-                Button(action: {
-                    isFavorite.toggle()
-                    UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                }, label: {
-                    Image(isFavorite ? "Favorite-selected" : "Favorite-default")
-                        .resizable()
-                        .frame(width: 22, height: 21)
-                })
-            }
-            .padding([.leading, .trailing], 14)
-            .padding([.top, .bottom], 10)
-            
-            orangeColor
-                .frame(height: 2)
-                .frame(maxWidth: .infinity)
-            
-            VStack(spacing: 8) {
-                if meals.count > 0 {
-                    ForEach(meals, id: \.id) { meal in
-                        mealCell(meal: meal)
-                            .onTapGesture {
-                                withAnimation {
-                                    appState.mealToReview = meal
+                
+                VStack(spacing: 7) {
+                    if meals.count > 0 {
+                        ForEach(meals, id: \.id) { meal in
+                            mealCell(meal: meal)
+                                .onTapGesture {
+                                    withAnimation {
+                                        appState.mealToReview = meal
+                                    }
                                 }
-                            }
-                    }
-                } else {
-                    HStack {
-                        Text("메뉴가 없습니다.")
-                            .font(.custom("NanumSquareOTFL", size: 14))
-                        
-                        Spacer()
+                        }
+                    } else {
+                        HStack(alignment: .center) {
+                            Text("해당 시간대의 메뉴가 없습니다.")
+                                .font(.custom("NanumSquareOTFR", size: 14))
+                                .foregroundColor(lightGrayColor)
+                        }
+                        .padding([.top, .bottom], 12)
                     }
                 }
+                .padding([.leading, .trailing], 16)
+                .padding([.top, .bottom], 12)
             }
-            .padding([.leading, .trailing], 13)
-            .padding([.top, .bottom], 10)
+            .background(Color.white.cornerRadius(10).shadow(color: .init(white: 0.8), radius: 3, x: 0, y: 0))
         }
-        .background(Color.white.shadow(color: .init(white: 0.8), radius: 3, x: 0, y: 0))
     }
 }
 
@@ -129,6 +139,6 @@ struct RestaurantCell_Previews: PreviewProvider {
         menu.score = 3
         nonEmptyRes.menus.append(menu)
 
-        return RestaurantCell(nonEmptyRes)
+        return RestaurantCell(emptyRes)
     }
 }
