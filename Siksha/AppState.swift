@@ -24,6 +24,10 @@ class AppState: ObservableObject {
     
     @Published var getResult: Result = .idle
     
+    @Published var restaurants: [Restaurant] = []
+    
+    @Published var restaurantOrder = [Int : Int]()
+    
     init(){
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_kr")
@@ -94,4 +98,100 @@ class AppState: ObservableObject {
             }
             .store(in: &cancellables)
     }
+    
+    func getRestaurants() {
+        URLSession.shared.dataTaskPublisher(for: url)
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+            .sink { [weak self] completion in
+                guard let self = self else { return }
+                switch completion {
+                case .failure:
+                    self.restaurants = []
+                case .finished:
+                    break
+                }
+            } receiveValue: { [weak self] (data, response) in
+                guard let self = self else { return }
+                guard let response = response as? HTTPURLResponse,
+                      200..<300 ~= response.statusCode,
+                      let jsonArray = try? JSON(data: data).array else {
+                    self.getResult = .failed
+                    return
+                }
+                self.restaurants.removeAll()
+                jsonArray.forEach { json in
+                    self.restaurants.append(Restaurant(json))
+                }
+                
+                self.getResult = .succeeded
+            }
+            .store(in: &cancellables)
+    }
+    
+    
+    // repetitive code?
+    func getRestaurantOrder() -> [Int: Int] {
+        URLSession.shared.dataTaskPublisher(for: url)
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+            .sink { [weak self] completion in
+                guard let self = self else { return }
+                switch completion {
+                case .failure:
+                    self.restaurantOrder = [Int: Int]()
+                case .finished:
+                    break
+                }
+            } receiveValue: { [weak self] (data, response) in
+                guard let self = self else { return }
+                guard let response = response as? HTTPURLResponse,
+                      200..<300 ~= response.statusCode,
+                      let _ = try? JSON(data: data).array else {
+                    self.getResult = .failed
+                    return
+                }
+                // If getRestaurants not failed?
+                self.restaurantOrder.removeAll()
+                for (i, Restaurant) in self.restaurants.enumerated() {
+                    self.restaurantOrder[Restaurant.id] = i
+                }
+                self.getResult = .succeeded
+            }
+            .store(in: &cancellables)
+        return self.restaurantOrder
+    }
+    
+    func getFavoriteRestaurants() {
+        URLSession.shared.dataTaskPublisher(for: url)
+            .receive(on: RunLoop.main)
+            .eraseToAnyPublisher()
+            .sink { [weak self] completion in
+                guard let self = self else { return }
+                switch completion {
+                case .failure:
+                    self.restaurants = []
+                case .finished:
+                    break
+                }
+            } receiveValue: { [weak self] (data, response) in
+                guard let self = self else { return }
+                guard let response = response as? HTTPURLResponse,
+                      200..<300 ~= response.statusCode,
+                      let jsonArray = try? JSON(data: data).array else {
+                    self.getResult = .failed
+                    return
+                }
+                self.restaurants.removeAll()
+                jsonArray.forEach { json in
+                    self.restaurants.append(Restaurant(json))
+                }
+                
+                self.getResult = .succeeded
+            }
+            .store(in: &cancellables)
+    }
+    
 }
+
+

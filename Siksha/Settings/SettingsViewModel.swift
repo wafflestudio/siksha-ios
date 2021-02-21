@@ -38,6 +38,11 @@ class SettingsViewModel: ObservableObject {
     @Published var noMenuHide = false
     @Published var refreshMenu = false
     @Published var getMenuError = false
+    @Published var getRestaurantError = false
+    @Published var restaurantOrder = [Int: Int]()
+    @Published var favRestaurantsOrder = [Int: Int]()
+    
+    var restaurants: [Restaurant] = []
     
     init() {
         noMenuHide = UserDefaults.standard.bool(forKey: "noMenuHide")
@@ -60,5 +65,21 @@ class SettingsViewModel: ObservableObject {
                 appState.getMenus()
             }
             .store(in: &cancellables)
+        
+        $restaurantOrder
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                guard let appState = self.appState else {
+                    self.getRestaurantError = true
+                    self.restaurants = []
+                    return
+                }
+                self.restaurantOrder = appState.getRestaurantOrder()
+                UserDefaults.standard.set(self.restaurantOrder, forKey: "restaurantOrder")
+            }
+            .store(in: &cancellables)
+        
+        
     }
+    
 }
