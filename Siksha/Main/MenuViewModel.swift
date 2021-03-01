@@ -1,14 +1,14 @@
 //
-//  FavoriteViewModel.swift
+//  MenuViewModel.swift
 //  Siksha
 //
-//  Created by 박종석 on 2021/02/06.
+//  Created by 박종석 on 2021/02/01.
 //
 
 import Foundation
 import Combine
 
-class FavoriteViewModel: ObservableObject {
+class MenuViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     @Published var selectedPage: Int = 0
     @Published var scroll: Int = 0

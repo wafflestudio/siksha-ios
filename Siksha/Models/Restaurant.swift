@@ -19,7 +19,7 @@ class Restaurant: Object {
     @objc dynamic var lat: String = ""
     @objc dynamic var lng: String = ""
     @objc dynamic var etc: String = ""
-    var menus = List<Menu>()
+    var menus = List<Meal>()
     
     convenience init(_ json: JSON) {
         self.init()
@@ -37,7 +37,7 @@ class Restaurant: Object {
     
     private func addMenus(_ json: JSON) {
         json.forEach { (str, mealJson) in
-            let newMeal = Menu(mealJson)
+            let newMeal = Meal(mealJson)
             self.menus.append(newMeal)
         }
     }

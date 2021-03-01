@@ -13,9 +13,7 @@ private extension ContentView {
             Spacer()
             ForEach(self.tabItems) { item in
                 Button(action: {
-                    withAnimation {
-                        self.selectedTab = item.id
-                    }
+                    self.selectedTab = item.id
                 }) {
                     Image((self.selectedTab == item.id ? item.buttonImage[0] : item.buttonImage[1]))
                         .renderingMode(.original)
@@ -24,6 +22,10 @@ private extension ContentView {
                 }
                 .padding(.bottom, geometry.safeAreaInsets.bottom)
                 .padding([.leading, .trailing], item.id==1 ? 20 : 0)
+                .transaction { transaction in
+                    transaction.animation = nil
+                    transaction.disablesAnimations = true
+                }
                 
                 Spacer()
             }
@@ -35,9 +37,11 @@ private extension ContentView {
     }
 }
 
+// MARK: - Content View
 
 struct ContentView: View {
     @State var selectedTab = 1
+    @EnvironmentObject var appState: AppState
     
     struct TabItem: Identifiable {
         var id: Int
@@ -56,14 +60,24 @@ struct ContentView: View {
         GeometryReader { geometry in
             VStack {
                 tabItems[selectedTab].content
+                    .padding(.bottom, -5)
                 
                 Spacer()
                 
                 tabBar(geometry)
             }
+            .sheet(isPresented: $appState.showSheet, height: appState.modalHeight) {
+                if let restaurant = appState.restaurantToShow {
+                    RestaurantInfoView(restaurant)
+                } else if let meal = appState.mealToReview {
+                    RatingView(meal)
+                }
+            }
         }
     }
 }
+
+// MARK: - Preview
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

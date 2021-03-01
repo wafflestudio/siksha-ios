@@ -12,10 +12,13 @@ struct PageViewController: UIViewControllerRepresentable {
     @Binding var currentPage: Int
     @Binding var scroll: Int
     
+    @State var previousPage: Int = -1
+    
     init(controllers: [UIViewController], currentPage: Binding<Int>, scroll: Binding<Int>){
         self.controllers = controllers
         self._currentPage = currentPage
         self._scroll = scroll
+        self.previousPage = currentPage.wrappedValue
     }
     
     func makeCoordinator() -> Coordinator {
@@ -31,14 +34,16 @@ struct PageViewController: UIViewControllerRepresentable {
     }
     
     func updateUIViewController(_ pageViewController: UIPageViewController, context: Context) {
-        guard !controllers.isEmpty, scroll != 0 else {
+        guard !controllers.isEmpty, currentPage != previousPage else {
             return
         }
 
         let direction: UIPageViewController.NavigationDirection = scroll > 0 ? .forward : .reverse
         context.coordinator.parent = self
 
-        pageViewController.setViewControllers([controllers[currentPage]], direction: direction, animated: true)
+        pageViewController.setViewControllers([controllers[currentPage]], direction: direction, animated: scroll != 0) { _ in
+            previousPage = currentPage
+        }
     }
     
     class Coordinator: NSObject, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
@@ -73,6 +78,7 @@ struct PageViewController: UIViewControllerRepresentable {
                let visibleViewController = pageViewController.viewControllers?.first,
                let index = parent.controllers.firstIndex(of: visibleViewController) {
                 parent.currentPage = index
+                parent.previousPage = index
             }
         }
     }

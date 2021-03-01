@@ -8,14 +8,11 @@
 import SwiftUI
 
 private extension MenuView {
-    
     // Pager Tab Button
     func dayButton(day: DayInfo, _ geometry: GeometryProxy) -> some View {
         Button(action: {
-            withAnimation(.easeInOut) {
-                viewModel.scroll = day.id - viewModel.selectedPage
-                viewModel.selectedPage = day.id
-            }
+            viewModel.scroll = day.id - viewModel.selectedPage
+            viewModel.selectedPage = day.id
         }) {
             ZStack(alignment: .bottom) {
                 Text(appState.dateFormatted[day.id])
@@ -33,6 +30,8 @@ private extension MenuView {
     }
 }
 
+// MARK: - Menu View
+
 struct MenuView: View {
     struct DayInfo: Identifiable {
         var id: Int
@@ -47,8 +46,7 @@ struct MenuView: View {
     }
     
     @EnvironmentObject var appState: AppState
-    @ObservedObject var viewModel = MainViewModel()
-    
+    @ObservedObject var viewModel = MenuViewModel()
     
     let lightGrayColor = Color.init("LightGrayColor")
     let orangeColor = Color.init("MainThemeColor")
@@ -65,10 +63,11 @@ struct MenuView: View {
                 ZStack {
                     Image("NaviBar")
                         .resizable()
-                        .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+40)
+                        .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+55)
                         .padding(.top, -geometry.safeAreaInsets.top)
                     
                     Image("Logo")
+                        .padding(.bottom, 5)
                 }
                 // Navigaiton Bar
                 
@@ -84,13 +83,21 @@ struct MenuView: View {
                     .background(Color.init("AppBackgroundColor"))
                     .padding(.top, -3)
             }
-            
+        }
+        .onAppear {
+            if viewModel.appState == nil {
+                viewModel.appState = appState
+            }
+            viewModel.scroll = 0
         }
     }
 }
 
+// MARK: - Preview
+
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MenuView()
+            .environmentObject(AppState())
     }
 }

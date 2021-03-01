@@ -10,20 +10,20 @@ import SwiftUI
 private extension DailyMenuView {
     func typeButton(type: TypeInfo) -> some View {
         Button(action: {
-            withAnimation(.easeInOut) {
-                viewModel.scroll = type.id - viewModel.selectedPage
-                viewModel.selectedPage = type.id
-            }
+            viewModel.scroll = type.id - viewModel.selectedPage
+            viewModel.selectedPage = type.id
         }) {
             Image(type.icon)
                 .renderingMode(.template)
                 .resizable()
                 .frame(width: type.width, height: type.height)
                 .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
-                .padding(.leading, type.id == 2 ? 5 : 0)
+                .padding(.leading, type.id == 2 ? 6 : 0)
         }
     }
 }
+
+// MARK: - Daily Menu View
 
 struct DailyMenuView: View {
     struct TypeInfo: Identifiable {
@@ -50,21 +50,20 @@ struct DailyMenuView: View {
                 self.height = 20
             case .dinner:
                 self.icon = "Dinner"
-                self.width = 15
-                self.height = 15
+                self.width = 14
+                self.height = 14
             }
         }
     }
-    let lightGrayColor = Color.init("LightGrayColor")
-    let orangeColor = Color.init("MainThemeColor")
+    private let lightGrayColor = Color.init("LightGrayColor")
+    private let orangeColor = Color.init("MainThemeColor")
     
     @ObservedObject var viewModel: DailyMenuViewModel
-    
     
     var typeInfos: [TypeInfo]
     
     init(_ day: DaySelection){
-        viewModel = DailyMenuViewModel(day)
+        viewModel = DailyMenuViewModel()
         self.typeInfos = [
             TypeInfo(day: day, type: .breakfast),
             TypeInfo(day: day, type: .lunch),
@@ -87,8 +86,11 @@ struct DailyMenuView: View {
     }
 }
 
+// MARK: - Preview
+
 struct DailyMenuView_Previews: PreviewProvider {
     static var previews: some View {
         DailyMenuView(.today)
+            .environmentObject(AppState())
     }
 }
