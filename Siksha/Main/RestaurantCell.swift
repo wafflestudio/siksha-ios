@@ -38,17 +38,20 @@ private extension RestaurantCell {
 
 struct RestaurantCell: View {
     private let fontColor = Color("DefaultFontColor")
+    private let titleColor = Color("TitleFontColor")
+    private let lightGrayColor = Color("LightGrayColor")
     private let orangeColor = Color.init("MainThemeColor")
     
     var restaurant: Restaurant
     var meals: [Meal]
     @State var isFavorite: Bool = false
     @EnvironmentObject var appState: AppState
+    @Environment(\.favoriteViewModel) var viewModel: FavoriteViewModel?
     
     init(_ restaurant: Restaurant) {
         self.restaurant = restaurant
         self.meals = Array(restaurant.menus)
-        self.isFavorite = UserDefaults.standard.bool(forKey: "fav\(restaurant.id)")
+        self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
     }
     
     var body: some View {
@@ -57,7 +60,7 @@ struct RestaurantCell: View {
             HStack {
                 Text(restaurant.nameKr)
                     .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(fontColor)
+                    .foregroundColor(titleColor)
                 
                 Button(action: {
                     withAnimation {
@@ -74,20 +77,25 @@ struct RestaurantCell: View {
                 Button(action: {
                     isFavorite.toggle()
                     UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
+                    viewModel?.getMenuStatus = .idle
                 }, label: {
                     Image(isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
-                        .frame(width: 22, height: 21)
+                        .frame(width: 20, height: 20)
                 })
             }
-            .padding([.leading, .trailing], 14)
+            .padding([.leading, .trailing], 16)
             .padding([.top, .bottom], 10)
             
-            orangeColor
-                .frame(height: 2)
-                .frame(maxWidth: .infinity)
+            HStack {
+                orangeColor
+                    .frame(height: 2)
+                    .frame(maxWidth: .infinity)
+            }
+            .padding([.leading, .trailing], 12)
             
-            VStack(spacing: 8) {
+            
+            VStack(spacing: 7) {
                 if meals.count > 0 {
                     ForEach(meals, id: \.id) { meal in
                         mealCell(meal: meal)
@@ -98,18 +106,18 @@ struct RestaurantCell: View {
                             }
                     }
                 } else {
-                    HStack {
-                        Text("메뉴가 없습니다.")
-                            .font(.custom("NanumSquareOTFL", size: 14))
-                        
-                        Spacer()
+                    HStack(alignment: .center) {
+                        Text("해당 시간대의 메뉴가 없습니다.")
+                            .font(.custom("NanumSquareOTFR", size: 14))
+                            .foregroundColor(lightGrayColor)
                     }
+                    .padding([.top, .bottom], 12)
                 }
             }
-            .padding([.leading, .trailing], 13)
-            .padding([.top, .bottom], 10)
+            .padding([.leading, .trailing], 16)
+            .padding([.top, .bottom], 12)
         }
-        .background(Color.white.shadow(color: .init(white: 0.8), radius: 3, x: 0, y: 0))
+        .background(Color.white.cornerRadius(10).shadow(color: .init(white: 0.8), radius: 3, x: 0, y: 0))
     }
 }
 
@@ -129,6 +137,6 @@ struct RestaurantCell_Previews: PreviewProvider {
         menu.score = 3
         nonEmptyRes.menus.append(menu)
 
-        return RestaurantCell(nonEmptyRes)
+        return RestaurantCell(emptyRes)
     }
 }

@@ -23,30 +23,37 @@ struct BottomModalView<Content: View>: View {
     
     var body: some View {
         GeometryReader { geometry in
-            content
-                .background(Color(.systemBackground))
-                .edgesIgnoringSafeArea(.bottom)
-                .position(x: geometry.size.width/2, y: geometry.size.height*3/2 - height + geometry.safeAreaInsets.bottom/2)
-                .offset(y: max(self.translation, -5))
-                .simultaneousGesture(
-                    DragGesture().updating($translation) { (value, state, transaction) in
-                        transaction.disablesAnimations = true
-                        transaction.animation = .interactiveSpring()
-                        if abs(value.predictedEndTranslation.height) < 50 {
-                            return
-                        }
-                        state = value.translation.height
+            VStack {
+                RoundedRectangle(cornerRadius: 25)
+                    .fill(Color.init("LightGrayColor"))
+                    .frame(width: 50, height: 5)
+                    .padding(.top, 10)
+                
+                content
+            }
+            .background(Color(.systemBackground).cornerRadius(25))
+            .edgesIgnoringSafeArea(.bottom)
+            .position(x: geometry.size.width/2, y: geometry.size.height*3/2 - height + geometry.safeAreaInsets.bottom/2)
+            .offset(y: max(self.translation, -5))
+            .simultaneousGesture(
+                DragGesture().updating($translation) { (value, state, transaction) in
+                    transaction.disablesAnimations = true
+                    transaction.animation = .interactiveSpring()
+                    if abs(value.predictedEndTranslation.height) < 50 {
+                        return
                     }
-                    .onEnded { value in
-                        let snapDistance = self.height * 0.5
-                        guard value.translation.height > 0, value.predictedEndTranslation.height > snapDistance else {
-                            return
-                        }
-                        withAnimation {
-                            self.isPresented = value.translation.height < 0
-                        }
+                    state = value.translation.height
+                }
+                .onEnded { value in
+                    let snapDistance = self.height * 0.5
+                    guard value.translation.height > 0, value.predictedEndTranslation.height > snapDistance else {
+                        return
                     }
-                )
+                    withAnimation {
+                        self.isPresented = value.translation.height < 0
+                    }
+                }
+            )
         }
     }
 }

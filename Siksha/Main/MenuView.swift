@@ -8,87 +8,136 @@
 import SwiftUI
 
 private extension MenuView {
-    // Pager Tab Button
-    func dayButton(day: DayInfo, _ geometry: GeometryProxy) -> some View {
+    func typeButton(type: TypeInfo) -> some View {
         Button(action: {
-            viewModel.scroll = day.id - viewModel.selectedPage
-            viewModel.selectedPage = day.id
+            viewModel.selectedPage = type.id
         }) {
-            ZStack(alignment: .bottom) {
-                Text(appState.dateFormatted[day.id])
-                        .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(viewModel.selectedPage == day.id ? orangeColor : lightGrayColor)
-                .padding([.top, .bottom], 12)
-                
+            Image(type.icon)
+                .renderingMode(.template)
+                .resizable()
+                .frame(width: type.width, height: type.height)
+                .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
+                .padding(.leading, type.id == 2 ? 6 : 0)
+        }
+    }
+    
+    var dayPageTab: some View {
+        HStack(alignment: .top) {
+            Button(action: {
+                viewModel.selectedPage = 0
+                viewModel.selectedDate = viewModel.prevDate
+            }, label: {
+                Text(viewModel.prevFormatted)
+            })
+            .frame(width: 80, alignment: .leading)
+            .font(.custom("NanumSquareOTFR", size: 14))
+            .foregroundColor(lightGrayColor)
+            
+            Spacer()
+            
+            VStack(spacing: 0) {
+                Text(viewModel.selectedFormatted)
+                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .foregroundColor(orangeColor)
+                    .padding(.bottom, 10)
+                    
                 orangeColor
-                    .frame(height: 2)
-                    .opacity(viewModel.selectedPage == day.id ? 1 : 0)
+                    .frame(width: 150, height: 2)
+            }
+            
+            Spacer()
+            
+            Button(action: {
+                viewModel.selectedPage = 0
+                viewModel.selectedDate = viewModel.nextDate
+            }, label: {
+                Text(viewModel.nextFormatted)
+            })
+            .frame(width: 80, alignment: .trailing)
+            .font(.custom("NanumSquareOTFR", size: 14))
+            .foregroundColor(lightGrayColor)
+        }
+        .padding(EdgeInsets(top: 2, leading: 25, bottom: 0, trailing: 25))
+        .background(Color.white.shadow(color: .init(white: 0.9), radius: 2, x: 0, y: 3.5))
+    }
+    
+    var menuList: some View {
+        // Menus
+        VStack(alignment: .center) {
+            if !viewModel.noMenu {
+                HStack(spacing: 30) {
+                    ForEach(typeInfos) { type in
+                        typeButton(type: type)
+                    }
+                }
+                .padding(.top, 8)
+                
+                PageView(currentPage: $viewModel.selectedPage, viewModel.restaurantsLists.map { RestaurantsView($0) })
+            } else {
+                VStack {
+                    Spacer()
+                    Text("불러온 식단이 없습니다")
+                        .font(.custom("NanumSquareOTFB", size: 15))
+                        .foregroundColor(fontColor)
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity)
+                .background(Color.init("AppBackgroundColor"))
             }
         }
-        .frame(width: geometry.size.width/2)
-        .transition(.opacity)
+        .background(Color.init("AppBackgroundColor"))
+        .padding(.top, -4)
     }
 }
 
 // MARK: - Menu View
 
 struct MenuView: View {
-    struct DayInfo: Identifiable {
-        var id: Int
-        var dayType: DaySelection
-        var dailyMenuView: DailyMenuView
-        
-        init(type: DaySelection) {
-            self.id = type.rawValue
-            self.dayType = type
-            self.dailyMenuView = DailyMenuView(type)
-        }
-    }
-    
-    @EnvironmentObject var appState: AppState
     @ObservedObject var viewModel = MenuViewModel()
     
-    let lightGrayColor = Color.init("LightGrayColor")
-    let orangeColor = Color.init("MainThemeColor")
+    private let lightGrayColor = Color.init("LightGrayColor")
+    private let orangeColor = Color.init("MainThemeColor")
+    private let fontColor = Color("DefaultFontColor")
     
-    let dayInfos: [DayInfo] = [
-        DayInfo(type: .today),
-        DayInfo(type: .tomorrow)
+    var typeInfos: [TypeInfo] = [
+        TypeInfo(type: .breakfast),
+        TypeInfo(type: .lunch),
+        TypeInfo(type: .dinner)
     ]
     
     var body: some View {
         GeometryReader { geometry in
-            VStack {
-                // Navigation Bar
-                ZStack {
-                    Image("NaviBar")
-                        .resizable()
-                        .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+55)
-                        .padding(.top, -geometry.safeAreaInsets.top)
-                    
-                    Image("Logo")
-                        .padding(.bottom, 5)
-                }
-                // Navigaiton Bar
-                
-                // Day Page Tab
-                HStack(spacing: 0) {
-                    ForEach(dayInfos) { day in
-                        dayButton(day: day, geometry)
+            ZStack {
+                VStack {
+                    // Navigation Bar
+                    ZStack {
+                        Image("NaviBar")
+                            .resizable()
+                            .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+55)
+                            .padding(.top, -geometry.safeAreaInsets.top)
+                        
+                        Image("Logo")
+                            .padding(.bottom, 5)
                     }
+                    // Navigaiton Bar
+                    
+                    dayPageTab
+                    
+                    menuList
                 }
-                .background(Color.white.shadow(color: .init(white: 0.9), radius: 2, x: 0, y: 3.5))
+                .blur(radius: viewModel.getMenuStatus == .loading ? 5 : 0)
+                .disabled(viewModel.getMenuStatus == .loading)
                 
-                PageView(currentPage: $viewModel.selectedPage, scroll: $viewModel.scroll, dayInfos.map{ $0.dailyMenuView })
-                    .background(Color.init("AppBackgroundColor"))
-                    .padding(.top, -3)
+                if viewModel.getMenuStatus == .loading {
+                    ActivityIndicator(isAnimating: .constant(true), style: .large)
+                }
             }
-        }
-        .onAppear {
-            if viewModel.appState == nil {
-                viewModel.appState = appState
+            .alert(isPresented: $viewModel.showNetworkAlert, content: {
+                Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))
+            })
+            .onAppear {
+                viewModel.getMenu(date: viewModel.selectedDate)
             }
-            viewModel.scroll = 0
         }
     }
 }

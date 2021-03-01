@@ -8,6 +8,46 @@
 import Foundation
 import SwiftUI
 
+struct ViewControllerHolder {
+    weak var value: UIViewController?
+}
+
+struct ViewControllerKey: EnvironmentKey {
+    static var defaultValue: ViewControllerHolder {
+        return ViewControllerHolder(value: UIApplication.shared.windows.first?.rootViewController)
+    }
+}
+
+struct FavoriteViewModelKey: EnvironmentKey {
+    static var defaultValue: FavoriteViewModel? {
+        return nil
+    }
+}
+
+public extension EnvironmentValues {
+    var viewController: UIViewController? {
+        get { return self[ViewControllerKey.self].value }
+        set { self[ViewControllerKey.self].value = newValue }
+    }
+    
+    var favoriteViewModel: FavoriteViewModel? {
+        get { return self[FavoriteViewModelKey.self] }
+        set { self[FavoriteViewModelKey.self] = newValue }
+    }
+}
+
+public extension UIViewController {
+    func present<Content: View>(style: UIModalPresentationStyle = .automatic, @ViewBuilder builder: () -> Content) {
+        let toPresent = UIHostingController(rootView: AnyView(EmptyView()))
+        toPresent.modalPresentationStyle = style
+        toPresent.rootView = AnyView(
+            builder()
+                .environment(\.viewController, toPresent)
+        )
+        self.present(toPresent, animated: true, completion: nil)
+    }
+}
+
 extension UINavigationController: UIGestureRecognizerDelegate {
     override open func viewDidLoad() {
         super.viewDidLoad()
