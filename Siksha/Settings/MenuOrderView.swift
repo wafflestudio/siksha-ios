@@ -29,6 +29,8 @@ struct MenuOrderView: View {
                     
                     Button(action: {
                         self.isEditable.toggle()
+                        // viewModel code...
+                        
                     }, label: {
                         Text(isEditable ? "확인" : "편집")
                             .font(.custom("NanumSquareOTFB", size: 14))

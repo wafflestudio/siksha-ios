@@ -45,6 +45,7 @@
 		230F81F125D518A400B2993C /* FavoriteMenuOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230F81F025D518A400B2993C /* FavoriteMenuOrderView.swift */; };
 		2351EF4D25CD357400A7AA99 /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2351EF4C25CD357400A7AA99 /* InformationView.swift */; };
 		2351EF5225CD378D00A7AA99 /* VersionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2351EF5125CD378D00A7AA99 /* VersionView.swift */; };
+		23666E0725E29B4B000435A9 /* RestaurantInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23666E0625E29B4B000435A9 /* RestaurantInformationView.swift */; };
 		23BB2DFB25D2659B000B0668 /* SettingsIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BB2DFA25D2659B000B0668 /* SettingsIcon.swift */; };
 		23BB2E0025D27BCC000B0668 /* MenuOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23BB2DFF25D27BCC000B0668 /* MenuOrderView.swift */; };
 		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
@@ -113,6 +114,7 @@
 		230F81F025D518A400B2993C /* FavoriteMenuOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMenuOrderView.swift; sourceTree = "<group>"; };
 		2351EF4C25CD357400A7AA99 /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
 		2351EF5125CD378D00A7AA99 /* VersionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionView.swift; sourceTree = "<group>"; };
+		23666E0625E29B4B000435A9 /* RestaurantInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInformationView.swift; sourceTree = "<group>"; };
 		23BB2DFA25D2659B000B0668 /* SettingsIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsIcon.swift; sourceTree = "<group>"; };
 		23BB2DFF25D27BCC000B0668 /* MenuOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOrderView.swift; sourceTree = "<group>"; };
 		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 		1E3A56E925C6FCE600DBB3F4 /* Siksha */ = {
 			isa = PBXGroup;
 			children = (
+				23666DFA25E299CC000435A9 /* RestaurantInformation */,
 				1E3A574125C6FEC600DBB3F4 /* Models */,
 				1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */,
 				1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */,
@@ -285,6 +288,14 @@
 				1E3A578025C7014600DBB3F4 /* NanumSquareOTFRegular.otf */,
 			);
 			path = Font;
+			sourceTree = "<group>";
+		};
+		23666DFA25E299CC000435A9 /* RestaurantInformation */ = {
+			isa = PBXGroup;
+			children = (
+				23666E0625E29B4B000435A9 /* RestaurantInformationView.swift */,
+			);
+			path = RestaurantInformation;
 			sourceTree = "<group>";
 		};
 		5127BCAAB12CF9DDFA269AEB /* Frameworks */ = {
@@ -486,6 +497,7 @@
 				1ED44A8D25D7FA68001D916B /* CommonViews.swift in Sources */,
 				230F81EC25D510CA00B2993C /* MenuRow.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
+				23666E0725E29B4B000435A9 /* RestaurantInformationView.swift in Sources */,
 				1E3A57EB25C73CCC00DBB3F4 /* DailyMenuView.swift in Sources */,
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
 				1E3A581B25C98F9A00DBB3F4 /* AppState.swift in Sources */,

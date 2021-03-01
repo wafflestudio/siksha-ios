@@ -40,6 +40,7 @@ class SettingsViewModel: ObservableObject {
     @Published var getMenuError = false
     @Published var getRestaurantError = false
     @Published var restaurantOrder = [Int: Int]()
+    @Published var favRestaurants = []
     @Published var favRestaurantsOrder = [Int: Int]()
     
     var restaurants: [Restaurant] = []
@@ -79,7 +80,20 @@ class SettingsViewModel: ObservableObject {
             }
             .store(in: &cancellables)
         
-        
+        $favRestaurantsOrder
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                guard let appState = self.appState else {
+                    self.getRestaurantError = true
+                    self.restaurants = []
+                    self.favRestaurants = []
+                    return
+                }
+//                self.favRestaurants = UserDefaults.standard(forKey: "favRestaurants")
+                self.restaurantOrder = appState.getRestaurantOrder()
+                UserDefaults.standard.set(self.restaurantOrder, forKey: "restaurantOrder")
+            }
+            .store(in: &cancellables)
     }
     
 }

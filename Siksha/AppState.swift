@@ -162,36 +162,6 @@ class AppState: ObservableObject {
         return self.restaurantOrder
     }
     
-    func getFavoriteRestaurants() {
-        URLSession.shared.dataTaskPublisher(for: url)
-            .receive(on: RunLoop.main)
-            .eraseToAnyPublisher()
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                switch completion {
-                case .failure:
-                    self.restaurants = []
-                case .finished:
-                    break
-                }
-            } receiveValue: { [weak self] (data, response) in
-                guard let self = self else { return }
-                guard let response = response as? HTTPURLResponse,
-                      200..<300 ~= response.statusCode,
-                      let jsonArray = try? JSON(data: data).array else {
-                    self.getResult = .failed
-                    return
-                }
-                self.restaurants.removeAll()
-                jsonArray.forEach { json in
-                    self.restaurants.append(Restaurant(json))
-                }
-                
-                self.getResult = .succeeded
-            }
-            .store(in: &cancellables)
-    }
-    
 }
 
 
