@@ -12,15 +12,14 @@ struct MenuRow: View {
     
     var body: some View {
         ZStack(alignment: .leading) {
-            Image("OrderCell")
-                .resizable()
-                .frame(width: UIScreen.main.bounds.size.width - 20, height: 50)
+            Color.white.cornerRadius(10).shadow(color: .init(white: 0.75), radius: 2, x: 0, y: 0)
             
             Text(text)
                 .padding(.leading, 20)
                 .font(.custom("NanumSquareOTFB", size: 15))
                 .foregroundColor(.init("DefaultFontColor"))
         }
+        .frame(width: UIScreen.main.bounds.size.width-24, height: 40)
     }
 }
 

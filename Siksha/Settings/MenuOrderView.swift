@@ -10,8 +10,11 @@ import SwiftUI
 struct MenuOrderView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @State private var dummy = ["학생회관 식당", "농생대 3식당", "302동식당"]
-    @State private var isEditable = false
+    @ObservedObject var viewModel: SettingsViewModel
+    
+    init(_ viewModel: SettingsViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -23,20 +26,12 @@ struct MenuOrderView: View {
                     Spacer()
                     
                     Text("식단 순서 변경")
-                        .font(.custom("NanumSquareOTFB", size: 17))
-                        .foregroundColor(.init("DefaultFontColor"))
+                        .font(.custom("NanumSquareOTFB", size: 18))
+                        .foregroundColor(.init(white: 79/255))
                     Spacer()
                     
-                    Button(action: {
-                        self.isEditable.toggle()
-                        // viewModel code...
-                        
-                    }, label: {
-                        Text(isEditable ? "확인" : "편집")
-                            .font(.custom("NanumSquareOTFB", size: 14))
-                            .foregroundColor(.init("LightGrayColor"))
-                    })
-                    .frame(width: 100, alignment: .trailing)
+                    Text("")
+                        .frame(width: 100, alignment: .trailing)
                 }
                 .padding([.leading, .trailing], 16)
                 .padding(.top, 26)
@@ -49,19 +44,20 @@ struct MenuOrderView: View {
                         .foregroundColor(.init("DefaultFontColor"))
                     Spacer()
                 }
-                .padding([.top, .bottom], 20)
+                .padding(.top, 20)
+                .padding(.bottom, 5)
                 
                 List {
-                    ForEach(dummy, id: \.self) { row in
+                    ForEach(viewModel.restaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
                         MenuRow(text: row)
-                            .padding(EdgeInsets(top: 3, leading: 12, bottom: 1, trailing: 12))
+                            .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                             .listRowInsets(EdgeInsets())
                             .background(Color.white)
                     }
                     .onMove(perform: move)
                 }
-                .padding(.leading, isEditable ? -44 : 0)
-                .environment(\.editMode, isEditable ? .constant(.active) : .constant(.inactive))
+                .padding(.leading, -44)
+                .environment(\.editMode, .constant(.active))
                 
                 
             } // VStack
@@ -75,12 +71,12 @@ struct MenuOrderView: View {
     } // View
     
     func move(from source: IndexSet, to destination: Int) {
-        dummy.move(fromOffsets: source, toOffset: destination)
+        viewModel.restaurantIds.move(fromOffsets: source, toOffset: destination)
     }
 }
 
 struct MenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        MenuOrderView()
+        MenuOrderView(SettingsViewModel())
     }
 }

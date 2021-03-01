@@ -22,8 +22,8 @@ struct InformationView: View {
                     Spacer()
                     
                     Text("식샤 정보")
-                        .font(.custom("NanumSquareOTFB", size: 17))
-                        .foregroundColor(.init("DefaultFontColor"))
+                        .font(.custom("NanumSquareOTFB", size: 18))
+                        .foregroundColor(.init(white: 79/255))
                     Spacer()
                     Text("")
                         .frame(width: 100)

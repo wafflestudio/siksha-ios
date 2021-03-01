@@ -21,5 +21,6 @@ enum TypeSelection: Int {
 enum Result {
     case failed
     case succeeded
+    case loading
     case idle
 }

@@ -10,16 +10,8 @@ import KakaoSDKAuth
 import UIKit
 
 struct SettingsView: View {
-    @ObservedObject var viewModel: SettingsViewModel
+    @ObservedObject var viewModel = SettingsViewModel()
     @EnvironmentObject var appState: AppState
-    @State private var isAnimating = false
-    @State private var inProgress = false
-    
-    private let foreverAnimation = Animation.linear(duration: 2.0).repeatForever(autoreverses: false)
-    
-    init() {
-        viewModel = SettingsViewModel()
-    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -29,9 +21,9 @@ struct SettingsView: View {
                 NavigationView {
                     VStack(alignment: .leading) {
                         Text("식샤 설정")
-                            .foregroundColor(.init("DefaultFontColor"))
-                            .font(.footnote)
-                            .padding(.top, 25)
+                            .foregroundColor(.init(white: 79/255))
+                            .font(.custom("NanumSquareOTFB", size: 18))
+                            .padding(.top, 20)
                         
                         NavigationLink(destination: InformationView()) {
                             SettingsCell(text: "식샤 정보") {
@@ -40,29 +32,7 @@ struct SettingsView: View {
                                     .frame(width: 8, height: 15)
                             }
                         }
-//                        Button(action: {
-//                            viewModel.refreshMenu = true
-//                        }) {
-//                            SettingsCell(text: "메뉴 새로고침") {
-//                                if viewModel.refreshMenu {
-//                                    Image("Refresh")
-//                                        .resizable()
-//                                        .frame(width: 13, height: 13)
-//                                        .rotationEffect(isAnimating ? .degrees(360) : .zero)
-//                                        .animation(foreverAnimation)
-//                                        .onAppear {
-//                                            self.isAnimating = true
-//                                        }
-//                                        .onDisappear {
-//                                            self.isAnimating = false
-//                                        }
-//                                } else {
-//                                    Image("Refresh")
-//                                        .resizable()
-//                                        .frame(width: 13, height: 13)
-//                                }
-//                            }
-//                        }
+
                         Button(action: {
                             
                         }) {
@@ -72,19 +42,20 @@ struct SettingsView: View {
                         }
                         
                         Text("식당 설정")
-                            .foregroundColor(.init("DefaultFontColor"))
-                            .font(.footnote)
+                            .foregroundColor(.init(white: 79/255))
+                            .font(.custom("NanumSquareOTFB", size: 18))
                             .padding(.top, 25)
                         
-                        NavigationLink(destination: MenuOrderView()) {
-                            SettingsCell(text: "식당 리스트 변경") {
+                        NavigationLink(destination: MenuOrderView(viewModel)) {
+                            SettingsCell(text: "식당 순서 변경") {
                                 Image("Arrow")
                                     .resizable()
                                     .frame(width: 8, height: 15)
                             }
                         }
-                        NavigationLink(destination: FavoriteMenuOrderView()) {
-                            SettingsCell(text: "즐겨찾기 식당 리스트 변경") {
+                        
+                        NavigationLink(destination: FavoriteMenuOrderView(viewModel)) {
+                            SettingsCell(text: "즐겨찾기 식당 순서 변경") {
                                 Image("Arrow")
                                     .resizable()
                                     .frame(width: 8, height: 15)
@@ -98,10 +69,9 @@ struct SettingsView: View {
                             SettingsCell(text: "메뉴 없는 식당 숨기기") {
                                 Image(viewModel.noMenuHide ? "Checked" : "NotChecked")
                                     .resizable()
-                                    .frame(width: 20, height: 20)
+                                    .frame(width: 26, height: 26)
                             }
                         }
-                        
                         
                         Text("로그인")
                             .foregroundColor(.init("DefaultFontColor"))
@@ -132,13 +102,8 @@ struct SettingsView: View {
                     .padding([.leading, .trailing], 16)
                     .navigationBarHidden(true)
                 }
-                
             }
         }
-        .onAppear {
-            self.viewModel.appState = appState
-        }
-
     }
 }
 

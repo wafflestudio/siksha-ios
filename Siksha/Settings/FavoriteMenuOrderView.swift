@@ -8,73 +8,68 @@
 import SwiftUI
 
 struct FavoriteMenuOrderView: View {
-    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @GestureState private var dragOffset = CGSize.zero
     
-    @State private var dummy = ["학생회관 식당", "농생대 3식당", "302동식당"]
-    @State private var isEditable = true
+    @ObservedObject var viewModel: SettingsViewModel
+    
+    init(_ viewModel: SettingsViewModel) {
+        self.viewModel = viewModel
+    }
     
     var body: some View {
         GeometryReader { geometry in
-            
             VStack(alignment: .leading) {
-                
-                Spacer()
-                    .frame(height: 20)
-                
                 // Navigation Bar
                 HStack {
-                    Button(action: {
-                        self.presentationMode.wrappedValue.dismiss()
-                        }) {
-                            HStack {
-                                Image("Back")
-                                    .frame(width: 20, height: 20)
-                                Text("설정")
-                                    .font(.custom("NanumSquareOTFB", size: 14))
-                                    .foregroundColor(.init("DefaultFontColor"))
-                            }
-                        }
-                        .frame(width: 100)
-
+                    BackButton(self.presentationMode)
                     Spacer()
                     
                     Text("식단 순서 변경")
-                        .font(.custom("NanumSquareOTFExtraBold", size: 17))
-                        .foregroundColor(.init("DefaultFontColor"))
+                        .font(.custom("NanumSquareOTFB", size: 18))
+                        .foregroundColor(.init(white: 79/255))
                     Spacer()
+                    
                     Text("")
-                        .frame(width: 100)
+                        .frame(width: 100, alignment: .trailing)
                 }
-                //
-                
-                Spacer()
-                    .frame(height: 50)
+                .padding([.leading, .trailing], 16)
+                .padding(.top, 26)
                 
                 // Description
                 HStack {
                     Spacer()
                     Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
-                        .font(.custom("NanumSquareOTFExtraBold", size: 14))
+                        .font(.custom("NanumSquareOTFR", size: 14))
                         .foregroundColor(.init("DefaultFontColor"))
                     Spacer()
                 }
+                .padding(.top, 20)
+                .padding(.bottom, 5)
                 
-                List() {
-                    ForEach(dummy, id: \.self) { row in
-                        MenuRow(text: row)
-                    }
-                    .onMove(perform: move)
-                    .onLongPressGesture {
-                        withAnimation {
-                            self.isEditable = true
+                if viewModel.favRestaurantIds.count > 0 {
+                    List() {
+                        ForEach(viewModel.favRestaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
+                            MenuRow(text: row)
+                                .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+                                .listRowInsets(EdgeInsets())
+                                .background(Color.white)
                         }
+                        .onMove(perform: move)
                     }
+                    .padding(.leading, -44)
+                    .environment(\.editMode, .constant(.active))
+                } else {
+                    VStack {
+                        Spacer()
+                        
+                        Text("즐겨찾기에 추가된 식당이 없습니다.")
+                            .font(.custom("NanumSquareOTFB", size: 15))
+                            .foregroundColor(.init("DefaultFontColor"))
+                        
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity)
                 }
-                .padding(.leading, -55)
-                .environment(\.editMode, isEditable ? .constant(.active) : .constant(.inactive))
-                
             } // VStack
             .contentShape(Rectangle())
             .navigationBarHidden(true)
@@ -86,12 +81,12 @@ struct FavoriteMenuOrderView: View {
     } // View
     
     func move(from source: IndexSet, to destination: Int) {
-        dummy.move(fromOffsets: source, toOffset: destination)
+        viewModel.restaurantIds.move(fromOffsets: source, toOffset: destination)
     }
 }
 
 struct FavoriteMenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        MenuOrderView()
+        MenuOrderView(SettingsViewModel())
     }
 }
