@@ -85,14 +85,18 @@ public class MenuViewModel: ObservableObject {
             .store(in: &cancellables)
         
         $selectedMenu
-            .removeDuplicates()
             .sink { [weak self] menu in
                 guard let self = self else { return }
                 
                 if let menu = menu {
+                    let restOrder = (UserDefaults.standard.dictionary(forKey: "restaurantOrder") as? [String : Int]) ?? [String : Int]()
+                    
                     let br = Array(menu.getRestaurants(.breakfast))
+                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     let lu = Array(menu.getRestaurants(.lunch))
+                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     let dn = Array(menu.getRestaurants(.dinner))
+                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     self.restaurantsLists = [br, lu, dn]
                     self.noMenu = false
                     

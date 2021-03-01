@@ -110,17 +110,7 @@ struct FavoriteView: View {
         GeometryReader { geometry in
             ZStack {
                 VStack {
-                    // Navigation Bar
-                    ZStack {
-                        Image("NaviBar")
-                            .resizable()
-                            .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+55)
-                            .padding(.top, -geometry.safeAreaInsets.top)
-                        
-                        Image("Logo")
-                            .padding(.bottom, 5)
-                    }
-                    // Navigaiton Bar
+                    NavigationBar(geometry)
                     
                     if viewModel.noFavorites {
                         Spacer()

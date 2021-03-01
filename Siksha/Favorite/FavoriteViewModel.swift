@@ -90,9 +90,17 @@ public class FavoriteViewModel: ObservableObject {
                 guard let self = self else { return }
                 
                 if let menu = menu {
-                    let br = Array(menu.getRestaurants(.breakfast)).filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
-                    let lu = Array(menu.getRestaurants(.lunch)).filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
-                    let dn = Array(menu.getRestaurants(.dinner)).filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
+                    let restOrder = (UserDefaults.standard.dictionary(forKey: "favRestaurantOrder") as? [String : Int]) ?? [String : Int]()
+                    
+                    let br = Array(menu.getRestaurants(.breakfast))
+                        .filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
+                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
+                    let lu = Array(menu.getRestaurants(.lunch))
+                        .filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
+                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
+                    let dn = Array(menu.getRestaurants(.dinner))
+                        .filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
+                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     self.restaurantsLists = [br, lu, dn]
                     
                     if br.count == 0, lu.count == 0, dn.count == 0 {

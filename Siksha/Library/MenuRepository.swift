@@ -33,14 +33,14 @@ final class MenuRepository {
     }
     
     func getMenuPublisher(startDate: String, endDate: String) -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure> {
-        let url = "-"
+        let url = "-/menus/"
         
         var component = URLComponents(string: url)
         var parameters = [URLQueryItem]()
         
         parameters.append(URLQueryItem(name: "start_date", value: startDate))
         parameters.append(URLQueryItem(name: "end_date", value: endDate))
-        parameters.append(URLQueryItem(name: "except_empty", value: "false"))
+        parameters.append(URLQueryItem(name: "except_empty", value: UserDefaults.standard.bool(forKey: "noMenuHide") ? "true" : "false"))
         
         component?.queryItems = parameters
         
