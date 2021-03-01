@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class RatingViewModel: ObservableObject {
+public class RatingViewModel: ObservableObject {
     var scoreToRate: Double = 0
     
     func submitReview() {

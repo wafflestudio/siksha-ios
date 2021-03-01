@@ -20,6 +20,75 @@ private extension FavoriteView {
                 .padding(.leading, type.id == 2 ? 6 : 0)
         }
     }
+    
+    var dayPageTab: some View {
+        // Day Page Tab
+        HStack(alignment: .top) {
+            Button(action: {
+                viewModel.selectedPage = 0
+                viewModel.selectedDate = viewModel.prevDate
+            }, label: {
+                Text(viewModel.prevFormatted)
+            })
+            .frame(width: 80, alignment: .leading)
+            .font(.custom("NanumSquareOTFR", size: 14))
+            .foregroundColor(lightGrayColor)
+            
+            Spacer()
+            
+            VStack(spacing: 0) {
+                Text(viewModel.selectedFormatted)
+                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .foregroundColor(orangeColor)
+                    .padding(.bottom, 10)
+                    
+                orangeColor
+                    .frame(width: 150, height: 2)
+            }
+            
+            Spacer()
+            
+            Button(action: {
+                viewModel.selectedPage = 0
+                viewModel.selectedDate = viewModel.nextDate
+            }, label: {
+                Text(viewModel.nextFormatted)
+            })
+            .frame(width: 80, alignment: .trailing)
+            .font(.custom("NanumSquareOTFR", size: 14))
+            .foregroundColor(lightGrayColor)
+        }
+        .padding(EdgeInsets(top: 2, leading: 25, bottom: 0, trailing: 25))
+        .background(Color.white.shadow(color: .init(white: 0.9), radius: 2, x: 0, y: 3.5))
+    }
+    
+    var menuList: some View {
+        // Menus
+        VStack(alignment: .center) {
+            if viewModel.restaurantsLists.count > 0 {
+                HStack(spacing: 30) {
+                    ForEach(typeInfos) { type in
+                        typeButton(type: type)
+                    }
+                }
+                .padding(.top, 8)
+                
+                PageView(currentPage: $viewModel.selectedPage, viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.favoriteViewModel, viewModel) })
+            } else {
+                VStack {
+                    Spacer()
+                    Text("불러온 식단이 없습니다")
+                        .font(.custom("NanumSquareOTFB", size: 15))
+                        .foregroundColor(fontColor)
+                    Spacer()
+                }
+                .frame(maxWidth: .infinity)
+                .background(Color.init("AppBackgroundColor"))
+            }
+        }
+        .background(Color.init("AppBackgroundColor"))
+        .padding(.top, -4)
+    }
 }
 
 // MARK: - Favorite View
@@ -53,65 +122,19 @@ struct FavoriteView: View {
                     }
                     // Navigaiton Bar
                     
-                    // Day Page Tab
-                    HStack {
-                        Button(action: {
-                            viewModel.selectedDate = viewModel.prevDate
-                            viewModel.selectedPage = 0
-                        }, label: {
-                            Text(viewModel.prevFormatted)
-                        })
-                        .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(lightGrayColor)
-                        
+                    if viewModel.noFavorites {
                         Spacer()
-                        
-                        Text(viewModel.selectedFormatted)
-                            .font(.custom("NanumSquareOTFB", size: 15))
-                            .foregroundColor(orangeColor)
-                        
+                        Text("즐겨찾기에 추가된 식당이 없습니다.\n식당 탭에서 별을 눌러 추가해보세요.")
+                            .font(.custom("NanumSquareOTFB", size: 14))
+                            .foregroundColor(lightGrayColor)
                         Spacer()
+                    } else {
+                        dayPageTab
                         
-                        Button(action: {
-                            viewModel.selectedDate = viewModel.nextDate
-                            viewModel.selectedPage = 0
-                        }, label: {
-                            Text(viewModel.nextFormatted)
-                        })
-                        .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(lightGrayColor)
+                        menuList
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding([.top, .bottom], 10)
-                    .padding([.leading, .trailing], 25)
-                    .background(Color.white.shadow(color: .init(white: 0.9), radius: 2, x: 0, y: 3.5))
-                    
-                    // Menus
-                    VStack(alignment: .center) {
-                        if viewModel.restaurantsLists.count > 0 {
-                            HStack(spacing: 30) {
-                                ForEach(typeInfos) { type in
-                                    typeButton(type: type)
-                                }
-                            }
-                            .padding(.top, 8)
-                            
-                            PageView(currentPage: $viewModel.selectedPage, viewModel.restaurantsLists.map { RestaurantsView($0, onlyFavorites: true) })
-                        } else {
-                            VStack {
-                                Spacer()
-                                Text("불러온 식단이 없습니다")
-                                    .font(.custom("NanumSquareOTFB", size: 15))
-                                    .foregroundColor(fontColor)
-                                Spacer()
-                            }
-                            .frame(maxWidth: .infinity)
-                            .background(Color.init("AppBackgroundColor"))
-                        }
-                    }
-                    .background(Color.init("AppBackgroundColor"))
-                    .padding(.top, -4)
                 }
+                .blur(radius: viewModel.getMenuStatus == .loading ? 5 : 0)
                 .disabled(viewModel.getMenuStatus == .loading)
                 
                 if viewModel.getMenuStatus == .loading {

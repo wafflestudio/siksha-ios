@@ -7,6 +7,7 @@
 
 import UIKit
 import SwiftUI
+import AuthenticationServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -20,12 +21,51 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
         // Create the SwiftUI view that provides the window contents.
-        let contentView = ContentView().environmentObject(appState)
+        
+        let appleUserIdentifier = UserDefaults.standard.string(forKey: "appleUserIdentifier")
+        var accessToken = UserDefaults.standard.string(forKey: "accessToken")
+        
+        print(appleUserIdentifier)
+        print(accessToken)
+        
+        let appleIDProvider = ASAuthorizationAppleIDProvider()
+        
+        if let identifier = appleUserIdentifier {
+            appleIDProvider.getCredentialState(forUserID: appleUserIdentifier ?? "") { (credentialState, error) in
+                switch credentialState {
+                case .authorized:
+                    accessToken = nil
+                    break // The Apple ID credential is valid.
+                case .revoked, .notFound:
+                    accessToken = nil
+                    UserDefaults.standard.set(nil, forKey: "userToken")
+                    
+                    DispatchQueue.main.async {
+                        let loginView = LoginView().environmentObject(self.appState)
+                        let loginController = UIHostingController(rootView: loginView)
+                        
+                        loginController.modalPresentationStyle = .fullScreen
+                        UIApplication.shared.windows.first?.rootViewController?.present(loginController, animated: true, completion: nil)
+                    }
+                default:
+                    break
+                }
+            }
+        } else {
+            accessToken = nil
+            UserDefaults.standard.set(nil, forKey: "userToken")
+        }
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: contentView)
+            if accessToken != nil {
+                let contentView = ContentView().environmentObject(appState)
+                window.rootViewController = UIHostingController(rootView: contentView)
+            } else {
+                let loginView = LoginView().environmentObject(appState)
+                window.rootViewController = UIHostingController(rootView: loginView)
+            }
             self.window = window
             window.makeKeyAndVisible()
         }

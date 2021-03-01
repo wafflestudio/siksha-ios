@@ -11,10 +11,8 @@ import Realm
 import RealmSwift
 import Combine
 
-class AppState: ObservableObject {
+public class AppState: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
-    
-    @Published var failedToGetMenu: Bool = false
     
     @Published var showSheet: Bool = false
     @Published var restaurantToShow: Restaurant? = nil

@@ -45,81 +45,79 @@ struct RestaurantCell: View {
     var restaurant: Restaurant
     var meals: [Meal]
     @State var isFavorite: Bool = false
-    @State var onlyFavorites: Bool
     @EnvironmentObject var appState: AppState
+    @Environment(\.favoriteViewModel) var viewModel: FavoriteViewModel?
     
-    init(_ restaurant: Restaurant, _ onlyFavorites: Bool = false) {
+    init(_ restaurant: Restaurant) {
         self.restaurant = restaurant
         self.meals = Array(restaurant.menus)
         self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
-        self._onlyFavorites = State(initialValue: onlyFavorites)
     }
     
     var body: some View {
-        if !onlyFavorites || isFavorite {
-            VStack(spacing: 0) {
-                // Restaurant Name
-                HStack {
-                    Text(restaurant.nameKr)
-                        .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(titleColor)
-                    
-                    Button(action: {
-                        withAnimation {
-                            appState.restaurantToShow = restaurant
-                        }
-                    }) {
-                        Image("Info")
-                            .resizable()
-                            .frame(width: 14, height: 14)
+        VStack(spacing: 0) {
+            // Restaurant Name
+            HStack {
+                Text(restaurant.nameKr)
+                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .foregroundColor(titleColor)
+                
+                Button(action: {
+                    withAnimation {
+                        appState.restaurantToShow = restaurant
                     }
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        isFavorite.toggle()
-                        UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                    }, label: {
-                        Image(isFavorite ? "Favorite-selected" : "Favorite-default")
-                            .resizable()
-                            .frame(width: 20, height: 20)
-                    })
+                }) {
+                    Image("Info")
+                        .resizable()
+                        .frame(width: 14, height: 14)
                 }
-                .padding([.leading, .trailing], 16)
-                .padding([.top, .bottom], 10)
                 
-                HStack {
-                    orangeColor
-                        .frame(height: 2)
-                        .frame(maxWidth: .infinity)
-                }
-                .padding([.leading, .trailing], 12)
+                Spacer()
                 
-                
-                VStack(spacing: 7) {
-                    if meals.count > 0 {
-                        ForEach(meals, id: \.id) { meal in
-                            mealCell(meal: meal)
-                                .onTapGesture {
-                                    withAnimation {
-                                        appState.mealToReview = meal
-                                    }
-                                }
-                        }
-                    } else {
-                        HStack(alignment: .center) {
-                            Text("해당 시간대의 메뉴가 없습니다.")
-                                .font(.custom("NanumSquareOTFR", size: 14))
-                                .foregroundColor(lightGrayColor)
-                        }
-                        .padding([.top, .bottom], 12)
-                    }
-                }
-                .padding([.leading, .trailing], 16)
-                .padding([.top, .bottom], 12)
+                Button(action: {
+                    isFavorite.toggle()
+                    UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
+                    viewModel?.getMenuStatus = .idle
+                }, label: {
+                    Image(isFavorite ? "Favorite-selected" : "Favorite-default")
+                        .resizable()
+                        .frame(width: 20, height: 20)
+                })
             }
-            .background(Color.white.cornerRadius(10).shadow(color: .init(white: 0.8), radius: 3, x: 0, y: 0))
+            .padding([.leading, .trailing], 16)
+            .padding([.top, .bottom], 10)
+            
+            HStack {
+                orangeColor
+                    .frame(height: 2)
+                    .frame(maxWidth: .infinity)
+            }
+            .padding([.leading, .trailing], 12)
+            
+            
+            VStack(spacing: 7) {
+                if meals.count > 0 {
+                    ForEach(meals, id: \.id) { meal in
+                        mealCell(meal: meal)
+                            .onTapGesture {
+                                withAnimation {
+                                    appState.mealToReview = meal
+                                }
+                            }
+                    }
+                } else {
+                    HStack(alignment: .center) {
+                        Text("해당 시간대의 메뉴가 없습니다.")
+                            .font(.custom("NanumSquareOTFR", size: 14))
+                            .foregroundColor(lightGrayColor)
+                    }
+                    .padding([.top, .bottom], 12)
+                }
+            }
+            .padding([.leading, .trailing], 16)
+            .padding([.top, .bottom], 12)
         }
+        .background(Color.white.cornerRadius(10).shadow(color: .init(white: 0.8), radius: 3, x: 0, y: 0))
     }
 }
 

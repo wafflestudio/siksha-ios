@@ -19,6 +19,14 @@ final class MenuRepository {
     private let realm = try! Realm()
     
     init() {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        
+        // delete menus that have been passed already
+        try! realm.write{
+            realm.delete(realm.objects(DailyMenu.self).filter{ formatter.date(from: $0.date)?.timeIntervalSince(Date()) ?? -1 < 0 })
+        }
+        
         realm.objects(DailyMenu.self).forEach { menu in
             dailyMenus.append(menu)
         }

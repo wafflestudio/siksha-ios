@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class MenuViewModel: ObservableObject {
+public class MenuViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     private let repository = MenuRepository()
@@ -41,8 +41,6 @@ class MenuViewModel: ObservableObject {
         
         selectedDate = formatter.string(from: Date())
         
-        selectedMenu = dailyMenus.first { $0.date == selectedDate }
-        
         $selectedDate
             .sink { [weak self] dateString in
                 guard let self = self else { return }
@@ -68,10 +66,11 @@ class MenuViewModel: ObservableObject {
             .store(in: &cancellables)
         
         $getMenuStatus
+            .filter { $0 != .idle && $0 != .loading }
             .combineLatest($dailyMenus)
-            .sink { [weak self] (_, menus) in
+            .sink { [weak self] (status, menus) in
                 guard let self = self else { return }
-                
+
                 self.selectedMenu = menus.first { $0.date == self.selectedDate }
             }
             .store(in: &cancellables)
@@ -106,6 +105,7 @@ class MenuViewModel: ObservableObject {
     
     func getMenu(date: String) {
         repository.getMenuPublisher(startDate: date, endDate: date)
+            .delay(for: 0.1, scheduler: RunLoop.main)
             .receive(on: RunLoop.main)
             .sink { [weak self] completion in
                 guard let self = self else { return }
@@ -119,8 +119,9 @@ class MenuViewModel: ObservableObject {
                     self.getMenuStatus = .failed
                     return
                 }
-                self.getMenuStatus = .succeeded
+                
                 self.dailyMenus = self.repository.dailyMenus
+                self.getMenuStatus = .succeeded
             }
             .store(in: &cancellables)
     }

@@ -24,13 +24,13 @@ struct RestaurantsView: View {
             if restaurantsList.count > 0 {
                 ScrollView(.vertical) {
                     ForEach(restaurantsList, id: \.id) { restaurant in
-                        RestaurantCell(restaurant, onlyFavorites)
+                        RestaurantCell(restaurant)
                             .padding([.leading, .trailing], 10)
                             .padding([.top, .bottom], 4)
                     }
                 }
                 .padding(.top, 2)
-                .padding(.bottom)
+                .padding(.bottom, 4)
                 .background(Color.init("AppBackgroundColor"))
                 
             } else {

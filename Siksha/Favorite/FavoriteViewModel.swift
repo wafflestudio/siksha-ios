@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-class FavoriteViewModel: ObservableObject {
+public class FavoriteViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     private let repository = MenuRepository()
@@ -33,6 +33,8 @@ class FavoriteViewModel: ObservableObject {
     
     @Published var selectedPage: Int = 0
     
+    @Published var noFavorites: Bool = false
+    
     init() {
         dailyMenus = repository.dailyMenus
         
@@ -40,8 +42,6 @@ class FavoriteViewModel: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         
         selectedDate = formatter.string(from: Date())
-        
-        selectedMenu = dailyMenus.first { $0.date == selectedDate }
         
         $selectedDate
             .sink { [weak self] dateString in
@@ -90,10 +90,17 @@ class FavoriteViewModel: ObservableObject {
                 guard let self = self else { return }
                 
                 if let menu = menu {
-                    let br = Array(menu.getRestaurants(.breakfast))
-                    let lu = Array(menu.getRestaurants(.lunch))
-                    let dn = Array(menu.getRestaurants(.dinner))
+                    let br = Array(menu.getRestaurants(.breakfast)).filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
+                    let lu = Array(menu.getRestaurants(.lunch)).filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
+                    let dn = Array(menu.getRestaurants(.dinner)).filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
                     self.restaurantsLists = [br, lu, dn]
+                    
+                    if br.count == 0, lu.count == 0, dn.count == 0 {
+                        self.noFavorites = true
+                    } else {
+                        self.noFavorites = false
+                    }
+                    
                     self.noMenu = false
                 } else {
                     self.noMenu = true
