@@ -33,7 +33,7 @@ final class MenuRepository {
     }
     
     func getMenuPublisher(startDate: String, endDate: String) -> AnyPublisher<URLSession.DataTaskPublisher.Output, URLSession.DataTaskPublisher.Failure> {
-        let url = "-/menus/"
+        let url = Config.shared.baseURL + "/menus/"
         
         var component = URLComponents(string: url)
         var parameters = [URLQueryItem]()

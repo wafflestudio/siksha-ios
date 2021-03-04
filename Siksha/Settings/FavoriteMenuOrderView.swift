@@ -12,6 +12,14 @@ struct FavoriteMenuOrderView: View {
     
     @ObservedObject var viewModel: SettingsViewModel
     
+    private var leading: CGFloat {
+        if UIScreen.main.bounds.width > 380 {
+            return -44
+        } else {
+            return -40
+        }
+    }
+    
     init(_ viewModel: SettingsViewModel) {
         self.viewModel = viewModel
     }
@@ -56,7 +64,7 @@ struct FavoriteMenuOrderView: View {
                         }
                         .onMove(perform: move)
                     }
-                    .padding(.leading, -44)
+                    .padding(.leading, leading)
                     .environment(\.editMode, .constant(.active))
                 } else {
                     VStack {

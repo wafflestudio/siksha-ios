@@ -12,6 +12,14 @@ struct MenuOrderView: View {
     
     @ObservedObject var viewModel: SettingsViewModel
     
+    private var leading: CGFloat {
+        if UIScreen.main.bounds.width > 380 {
+            return -44
+        } else {
+            return -40
+        }
+    }
+    
     init(_ viewModel: SettingsViewModel) {
         self.viewModel = viewModel
     }
@@ -56,7 +64,7 @@ struct MenuOrderView: View {
                     }
                     .onMove(perform: move)
                 }
-                .padding(.leading, -44)
+                .padding(.leading, leading)
                 .environment(\.editMode, .constant(.active))
                 
                 
@@ -80,6 +88,9 @@ struct MenuOrderView: View {
 
 struct MenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        MenuOrderView(SettingsViewModel())
+        Group {
+            MenuOrderView(SettingsViewModel())
+                .previewDevice(PreviewDevice(rawValue: "iPhone 7"))
+        }
     }
 }

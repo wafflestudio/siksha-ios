@@ -60,7 +60,6 @@ public class MenuViewModel: ObservableObject {
                 self.nextFormatted = self.formatter.string(from: next)
                 self.prevFormatted = self.formatter.string(from: prev)
                 
-                self.getMenuStatus = .loading
                 self.getMenu(date: dateString)
             }
             .store(in: &cancellables)
@@ -108,6 +107,7 @@ public class MenuViewModel: ObservableObject {
     }
     
     func getMenu(date: String) {
+        self.getMenuStatus = .loading
         repository.getMenuPublisher(startDate: date, endDate: date)
             .delay(for: 0.1, scheduler: RunLoop.main)
             .receive(on: RunLoop.main)

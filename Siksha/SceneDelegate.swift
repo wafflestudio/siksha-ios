@@ -66,6 +66,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
             if accessToken != nil {
+                print(accessToken!)
                 let contentView = ContentView().environmentObject(appState)
                 window.rootViewController = UIHostingController(rootView: contentView)
             } else {
