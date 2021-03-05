@@ -7,7 +7,6 @@
 
 import UIKit
 import KakaoSDKCommon
-import Firebase
 import GoogleSignIn
 
 @main
@@ -17,20 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         #if DEBUG
             print("debug")
-            let infoName = "GoogleService-Info-dev"
             let configKey = "debug"
         #else
-            let infoName = "GoogleService-Info"
             let configKey = "release"
         #endif
         
         let dictPath = Bundle.main.path(forResource: "config", ofType: "plist")
         let configDict = NSDictionary(contentsOfFile: dictPath!)!.object(forKey: configKey) as! NSDictionary
-        
-        let firebasePath = Bundle.main.path(forResource: infoName, ofType: "plist")
-        let firebaseOption = FirebaseOptions(contentsOfFile: firebasePath!)
-        
-        FirebaseApp.configure(options: firebaseOption!)
         
         Config.shared.baseURL = (configDict.object(forKey: "server_url") as! String)
         
