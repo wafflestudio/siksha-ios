@@ -11,8 +11,6 @@ target 'Siksha' do
   pod 'KakaoSDKCommon'
   pod 'KakaoSDKAuth'
   pod 'KakaoSDKUser'
-  pod 'Firebase/Analytics'
-  pod 'Firebase/Auth'
   pod 'GoogleSignIn'
 
 end
