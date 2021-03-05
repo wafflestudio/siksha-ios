@@ -6,10 +6,10 @@
 //
 
 import SwiftUI
-import KakaoSDKAuth
 import UIKit
 
 struct SettingsView: View {
+    @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @ObservedObject var viewModel = SettingsViewModel()
     @EnvironmentObject var appState: AppState
     
@@ -34,7 +34,7 @@ struct SettingsView: View {
                         }
 
                         Button(action: {
-                            
+                            viewModel.showSignOutAlert = true
                         }) {
                             SettingsCell(text: "앱 로그아웃") {
                                 EmptyView()
@@ -73,29 +73,6 @@ struct SettingsView: View {
                             }
                         }
                         
-                        Text("로그인")
-                            .foregroundColor(.init("DefaultFontColor"))
-                            .font(.footnote)
-                            .padding(.top, 25)
-                        
-                        Button(action : {
-                            // checks whether KakaoTalk is installed
-                            if (AuthApi.isKakaoTalkLoginAvailable()) {
-                                AuthApi.shared.loginWithKakaoTalk {(oauthToken, error) in
-                                    print(oauthToken?.accessToken)
-                                    print(error)
-                                }
-                            } else {
-                                // Login through Safari
-                                AuthApi.shared.loginWithKakaoAccount {(oauthToken, error) in
-                                    print(oauthToken?.accessToken)
-                                    print(error)
-                                }
-                            }
-                        }){
-                            Text("카카오 로그인")
-                        }
-                
                         Spacer()
                     }
                     .padding(.top, 32)
@@ -103,6 +80,20 @@ struct SettingsView: View {
                     .navigationBarHidden(true)
                 }
             }
+            .actionSheet(isPresented: $viewModel.showSignOutAlert, content: {
+                ActionSheet(title: Text("로그아웃"),
+                            message: Text("앱에서 로그아웃합니다."),
+                            buttons: [
+                                .destructive(Text("로그아웃"), action: {
+                                    UserDefaults.standard.set(nil, forKey: "accessToken")
+                                    viewControllerHolder?.present(style: .fullScreen) {
+                                        LoginView().environmentObject(appState)
+                                    }
+                                }),
+                                .cancel(Text("취소"))
+                            ]
+                )
+            })
         }
     }
 }

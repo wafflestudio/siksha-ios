@@ -89,5 +89,8 @@ iOSInjectionProject/
 Siksha-Release.xcconfig
 Siksha.xcconfig
 Config.plist
+config.plist
   
-
+GoogleService-Info.plist
+GoogleService-Info-dev.plist
+GoogleService-Info-rea.plist

@@ -16,6 +16,7 @@ class SettingsViewModel: ObservableObject {
     @Published var restaurantIds = [Int]()
     @Published var favRestaurantIds = [Int]()
     @Published var networkStatus: NetworkStatus = .idle
+    @Published var showSignOutAlert: Bool = false
     
     var restaurantOrder: [String : Int]
     var favRestaurantOrder: [String : Int]
@@ -63,8 +64,9 @@ class SettingsViewModel: ObservableObject {
     
     func getRestaurants() {
         networkStatus = .loading
+        let url = Config.shared.baseURL + "/restaurants/"
         
-        URLSession.shared.dataTaskPublisher(for: URL(string: "-/restaurants/")!)
+        URLSession.shared.dataTaskPublisher(for: URL(string: url)!)
             .receive(on: RunLoop.main)
             .sink
             { _ in }

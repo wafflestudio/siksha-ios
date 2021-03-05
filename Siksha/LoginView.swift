@@ -7,13 +7,14 @@
 
 import SwiftUI
 import AuthenticationServices
+import KakaoSDKAuth
+import GoogleSignIn
 
 struct LoginView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @EnvironmentObject var appState: AppState
     
-    @State var signInDelegate: AppleSignInDelegate! = nil
-    @State var signInFailed: Bool = false
+    @ObservedObject var viewModel = LoginViewModel()
     
     var body: some View {
         GeometryReader { geometry in
@@ -22,7 +23,7 @@ struct LoginView: View {
                     .resizable()
                     .frame(width: geometry.size.width, height: geometry.size.height + geometry.safeAreaInsets.bottom + geometry.safeAreaInsets.top)
                     .padding(.top, -geometry.safeAreaInsets.top)
-                    
+                
                 
                 VStack {
                     Spacer()
@@ -31,22 +32,67 @@ struct LoginView: View {
                         .frame(width: 100, height: 100)
                     
                     Spacer()
-
-                    Button(action: {
-                        handleAuthorizationAppleIDButtonPress()
-                    }, label: {
-                        HStack {
-                            Image(systemName: "applelogo")
-                                .font(.system(size: 12))
-                            Text("Apple로 로그인")
-                                .font(.system(size: 15, weight: .semibold))
-                        }
-                        .frame(width: 200, height: 40)
-                        .foregroundColor(.black)
-                        .background(Color.white)
-                        .cornerRadius(5.5)
-                    })
                     
+                    VStack(spacing: 5) {
+                        Button(action : {
+                            handleKakaoLogin()
+                        }){
+                            HStack {
+                                Image("KakaoLogo")
+                                    .resizable()
+                                    .frame(width: 18, height: 18)
+                                    .padding(.leading, 15)
+                                Text("카카오톡으로 로그인")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .padding(.leading, 15)
+                                
+                                Spacer()
+                            }
+                            .frame(width: 220, height: 40)
+                            .foregroundColor(.black)
+                            .background(Color.init(red: 254/255, green: 229/255, blue: 0))
+                            .cornerRadius(5.5)
+                        }
+                        
+                        Button(action : {
+                            handleGoogleLogin()
+                        }){
+                            HStack {
+                                Image("GoogleLogo")
+                                    .resizable()
+                                    .frame(width: 18, height: 18)
+                                    .padding(.leading, 15)
+                                Text("Google로 로그인")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .padding(.leading, 15)
+                                
+                                Spacer()
+                            }
+                            .frame(width: 220, height: 40)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .cornerRadius(5.5)
+                        }
+                        
+                        Button(action: {
+                            handleAppleLogin()
+                        }, label: {
+                            HStack {
+                                Image(systemName: "applelogo")
+                                    .font(.system(size: 17))
+                                    .padding(.leading, 16)
+                                Text("Apple로 로그인")
+                                    .font(.system(size: 15, weight: .semibold))
+                                    .padding(.leading, 16)
+                                
+                                Spacer()
+                            }
+                            .frame(width: 220, height: 40)
+                            .foregroundColor(.black)
+                            .background(Color.white)
+                            .cornerRadius(5.5)
+                        })
+                    }
                     
                     Spacer()
                     
@@ -56,29 +102,56 @@ struct LoginView: View {
                         .padding(.bottom, 55 + geometry.safeAreaInsets.bottom)
                 }
             }
-            .alert(isPresented: $signInFailed, content: {
+            .alert(isPresented: $viewModel.signInFailed, content: {
                 Alert(title: Text("로그인"), message: Text("로그인을 실패했습니다. 다시 시도해주세요."), dismissButton: .default(Text("확인")))
             })
+            .onAppear {
+                viewModel.onSignedIn = presentMenu
+            }
         }
     }
     
-    func handleAuthorizationAppleIDButtonPress() {
-        signInDelegate = AppleSignInDelegate {
-            viewControllerHolder?.present(style: .fullScreen) {
-                ContentView().environmentObject(appState)
-            }
-        } onFailed: {
-            self.signInFailed = true
-        }
-        
+    func handleAppleLogin() {
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         let request = appleIDProvider.createRequest()
         request.requestedScopes = [.fullName, .email]
         
         let authorizationController = ASAuthorizationController(authorizationRequests: [request])
         
-        authorizationController.delegate = signInDelegate
+        authorizationController.delegate = viewModel
         authorizationController.performRequests()
+    }
+    
+    func handleKakaoLogin() {
+        // checks whether KakaoTalk is installed
+        if (AuthApi.isKakaoTalkLoginAvailable()) {
+            AuthApi.shared.loginWithKakaoTalk(completion: self.handleKakaoLoginResponse)
+        } else {
+            // Login through Safari
+            AuthApi.shared.loginWithKakaoAccount(completion: self.handleKakaoLoginResponse)
+        }
+    }
+    
+    func handleKakaoLoginResponse(oauthToken: OAuthToken?, error: Error?) {
+        if let oauthToken = oauthToken {
+            viewModel.kakaoIdToken = oauthToken.accessToken
+        } else {
+            viewModel.signInFailed = true
+        }
+    }
+    
+    func handleGoogleLogin() {
+        if GIDSignIn.sharedInstance()?.presentingViewController==nil {
+            GIDSignIn.sharedInstance()?.presentingViewController = UIApplication.shared.windows.last?.rootViewController
+        }
+        GIDSignIn.sharedInstance()?.delegate = viewModel
+        GIDSignIn.sharedInstance()?.signIn()
+    }
+    
+    func presentMenu() {
+        viewControllerHolder?.present(style: .fullScreen) {
+            ContentView().environmentObject(appState)
+        }
     }
 }
 

@@ -62,7 +62,6 @@ public class FavoriteViewModel: ObservableObject {
                 self.nextFormatted = self.formatter.string(from: next)
                 self.prevFormatted = self.formatter.string(from: prev)
                 
-                self.getMenuStatus = .loading
                 self.getMenu(date: dateString)
             }
             .store(in: &cancellables)
@@ -118,6 +117,7 @@ public class FavoriteViewModel: ObservableObject {
     }
     
     func getMenu(date: String) {
+        self.getMenuStatus = .loading
         repository.getMenuPublisher(startDate: date, endDate: date)
             .receive(on: RunLoop.main)
             .sink { [weak self] completion in
