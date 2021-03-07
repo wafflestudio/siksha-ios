@@ -34,12 +34,14 @@ class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDeleg
     }
     
     func requestTokenToSikshaAPI(token: String, endPoint: String) {
-        let url = Config.shared.baseURL + endPoint
+        let url = Config.shared.baseURL + "/auth/login/" + endPoint
         
-        var request = URLRequest(url: URL(string: url)!)
+        guard var request = try? URLRequest(url: URL(string: url)!, method: .post) else {
+            self.signInFailed = true
+            return
+        }
         print(token)
-        request.httpMethod = "POST"
-        request.setValue("Bearer " + token, forHTTPHeaderField: "authorization-token")
+        request.setValue("Bearer " + token, forHTTPHeaderField: "\(endPoint)-token")
         
         URLSession.shared.dataTaskPublisher(for: request)
             .receive(on: RunLoop.main)
@@ -83,13 +85,13 @@ class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDeleg
 
         let idToken = user.authentication.idToken ?? "" // Safe to send to the server
         
-        requestTokenToSikshaAPI(token: idToken, endPoint: "/auth/login/google")
+        requestTokenToSikshaAPI(token: idToken, endPoint: "google")
     }
     
     // MARK: - Kakao Sign in
     
     func getTokenFromKakao(token: String) {
-        requestTokenToSikshaAPI(token: token, endPoint: "/auth/login/kakao")
+        requestTokenToSikshaAPI(token: token, endPoint: "kakao")
     }
     
     // MARK: - Apple Sign in
@@ -102,10 +104,11 @@ class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDeleg
             let token = appleIDCredential.identityToken
             
             UserDefaults.standard.set(userIdentifier, forKey: "appleUserIdentifier")
+            UserDefaults.standard.set(true, forKey: "signedInWithApple")
             
             print(String(decoding: token!, as: UTF8.self))
             
-            requestTokenToSikshaAPI(token: String(decoding: token!, as: UTF8.self), endPoint: "/auth/login/apple")
+            requestTokenToSikshaAPI(token: String(decoding: token!, as: UTF8.self), endPoint: "apple")
         default:
             break
         }

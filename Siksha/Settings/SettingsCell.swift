@@ -20,6 +20,7 @@ struct SettingsCell<Content: View>: View {
         ZStack(alignment: .leading) {
             Image("SettingsCell")
                 .resizable()
+                .renderingMode(.original)
                 .frame(maxWidth: .infinity)
                 .frame(height: 54)
     

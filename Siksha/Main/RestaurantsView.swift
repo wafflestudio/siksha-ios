@@ -12,11 +12,9 @@ struct RestaurantsView: View {
     private let fontColor = Color("DefaultFontColor")
     
     var restaurantsList: [Restaurant]
-    let onlyFavorites: Bool
     
-    init(_ restaurants: [Restaurant], onlyFavorites: Bool = false){
+    init(_ restaurants: [Restaurant]){
         self.restaurantsList = restaurants
-        self.onlyFavorites = onlyFavorites
     }
     
     var body: some View {

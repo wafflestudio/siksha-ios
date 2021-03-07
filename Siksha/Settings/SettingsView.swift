@@ -29,6 +29,7 @@ struct SettingsView: View {
                             SettingsCell(text: "식샤 정보") {
                                 Image("Arrow")
                                     .resizable()
+                                    .renderingMode(.original)
                                     .frame(width: 8, height: 15)
                             }
                         }
@@ -50,6 +51,7 @@ struct SettingsView: View {
                             SettingsCell(text: "식당 순서 변경") {
                                 Image("Arrow")
                                     .resizable()
+                                    .renderingMode(.original)
                                     .frame(width: 8, height: 15)
                             }
                         }
@@ -58,6 +60,7 @@ struct SettingsView: View {
                             SettingsCell(text: "즐겨찾기 식당 순서 변경") {
                                 Image("Arrow")
                                     .resizable()
+                                    .renderingMode(.original)
                                     .frame(width: 8, height: 15)
                             }
                         }
@@ -69,6 +72,7 @@ struct SettingsView: View {
                             SettingsCell(text: "메뉴 없는 식당 숨기기") {
                                 Image(viewModel.noMenuHide ? "Checked" : "NotChecked")
                                     .resizable()
+                                    .renderingMode(.original)
                                     .frame(width: 26, height: 26)
                             }
                         }
@@ -77,6 +81,7 @@ struct SettingsView: View {
                     }
                     .padding(.top, 32)
                     .padding([.leading, .trailing], 16)
+                    .navigationBarTitle(Text(""), displayMode: .inline)
                     .navigationBarHidden(true)
                 }
             }

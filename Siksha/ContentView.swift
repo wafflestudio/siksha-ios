@@ -66,12 +66,11 @@ struct ContentView: View {
                 
                 tabBar(geometry)
             }
-            .sheet(isPresented: $appState.showSheet, height: appState.modalHeight) {
-                if let restaurant = appState.restaurantToShow {
-                    RestaurantInfoView(restaurant)
-                } else if let meal = appState.mealToReview {
-                    RatingView(meal)
-                }
+            .sheet(isPresented: $appState.showRestaurantInfo, height: appState.modalHeight) {
+                RestaurantInfoView(appState.restaurantToShow ?? Restaurant())
+            }
+            .sheet(isPresented: $appState.showMealInfo) {
+                MealInfoView(meal: appState.mealToShow ?? Meal())
             }
         }
     }

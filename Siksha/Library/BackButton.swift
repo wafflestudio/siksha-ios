@@ -21,6 +21,7 @@ struct BackButton: View {
             HStack {
                 Image("Back")
                     .resizable()
+                    .renderingMode(.original)
                     .frame(width: 13, height: 21)
                     .padding(.trailing, 5)
                 

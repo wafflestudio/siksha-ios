@@ -82,3 +82,15 @@ extension View {
             )
     }
 }
+
+extension UIApplication {
+    func endEditing() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
+extension URLRequest {
+    mutating func setToken(token: String) {
+        self.setValue("Bearer " + token, forHTTPHeaderField: "authorization-token")
+    }
+}

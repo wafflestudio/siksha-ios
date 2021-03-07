@@ -13,6 +13,8 @@ public class MenuViewModel: ObservableObject {
     
     private let repository = MenuRepository()
     private let formatter = DateFormatter()
+    
+    private let todayString: String
 
     @Published var selectedDate: String
     @Published var nextDate: String = ""
@@ -40,8 +42,10 @@ public class MenuViewModel: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         
         selectedDate = formatter.string(from: Date())
+        todayString = formatter.string(from: Date())
         
         $selectedDate
+            .removeDuplicates()
             .sink { [weak self] dateString in
                 guard let self = self else { return }
                 
@@ -71,6 +75,12 @@ public class MenuViewModel: ObservableObject {
                 guard let self = self else { return }
 
                 self.selectedMenu = menus.first { $0.date == self.selectedDate }
+                
+                if self.selectedDate == self.todayString {
+                    UserDefaults.standard.set(true, forKey: "canSubmitReview")
+                } else {
+                    UserDefaults.standard.set(false, forKey: "canSubmitReview")
+                }
             }
             .store(in: &cancellables)
         
@@ -109,8 +119,8 @@ public class MenuViewModel: ObservableObject {
     func getMenu(date: String) {
         self.getMenuStatus = .loading
         repository.getMenuPublisher(startDate: date, endDate: date)
-            .delay(for: 0.1, scheduler: RunLoop.main)
             .receive(on: RunLoop.main)
+            .delay(for: 0.1, scheduler: RunLoop.main)
             .sink { [weak self] completion in
                 guard let self = self else { return }
                 if case .failure = completion {

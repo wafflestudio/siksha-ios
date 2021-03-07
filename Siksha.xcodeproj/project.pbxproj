@@ -44,10 +44,15 @@
 		1ECB250325F16DE300875E18 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB250225F16DE300875E18 /* NavigationBar.swift */; };
 		1ECB251825F1700500875E18 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 1ECB251725F1700500875E18 /* config.plist */; };
 		1ECB251D25F1739D00875E18 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB251C25F1739D00875E18 /* Config.swift */; };
-		1ED44A3725CC6094001D916B /* RatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A3625CC6094001D916B /* RatingView.swift */; };
+		1ECB254D25F2975A00875E18 /* MealInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB254C25F2975A00875E18 /* MealInfoView.swift */; };
+		1ECB255225F2999100875E18 /* RatingStar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB255125F2999100875E18 /* RatingStar.swift */; };
+		1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */; };
+		1ECB257D25F5412300875E18 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB257C25F5412200875E18 /* TextView.swift */; };
+		1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */; };
+		1ED44A3725CC6094001D916B /* MealReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A3625CC6094001D916B /* MealReviewView.swift */; };
 		1ED44A3C25CC60B2001D916B /* RestaurantInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A3B25CC60B2001D916B /* RestaurantInfoView.swift */; };
 		1ED44A4125CC6135001D916B /* BottomModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A4025CC6135001D916B /* BottomModalView.swift */; };
-		1ED44A4625CC6579001D916B /* RatingViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A4525CC6579001D916B /* RatingViewModel.swift */; };
+		1ED44A4625CC6579001D916B /* MealInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */; };
 		1ED44A6325CDB709001D916B /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A6225CDB709001D916B /* FavoriteView.swift */; };
 		1ED44A6B25CDB77A001D916B /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A6A25CDB77A001D916B /* FavoriteViewModel.swift */; };
 		1EF11C2125ED7503005D8F57 /* FavoriteMenuOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EF11C2025ED7503005D8F57 /* FavoriteMenuOrderView.swift */; };
@@ -123,10 +128,15 @@
 		1ECB250225F16DE300875E18 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		1ECB251725F1700500875E18 /* config.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
 		1ECB251C25F1739D00875E18 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
-		1ED44A3625CC6094001D916B /* RatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingView.swift; sourceTree = "<group>"; };
+		1ECB254C25F2975A00875E18 /* MealInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealInfoView.swift; sourceTree = "<group>"; };
+		1ECB255125F2999100875E18 /* RatingStar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingStar.swift; sourceTree = "<group>"; };
+		1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewCell.swift; sourceTree = "<group>"; };
+		1ECB257C25F5412200875E18 /* TextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
+		1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealReviewViewModel.swift; sourceTree = "<group>"; };
+		1ED44A3625CC6094001D916B /* MealReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealReviewView.swift; sourceTree = "<group>"; };
 		1ED44A3B25CC60B2001D916B /* RestaurantInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInfoView.swift; sourceTree = "<group>"; };
 		1ED44A4025CC6135001D916B /* BottomModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomModalView.swift; sourceTree = "<group>"; };
-		1ED44A4525CC6579001D916B /* RatingViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingViewModel.swift; sourceTree = "<group>"; };
+		1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealInfoViewModel.swift; sourceTree = "<group>"; };
 		1ED44A6225CDB709001D916B /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
 		1ED44A6A25CDB77A001D916B /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
 		1EF11C1A25ED7502005D8F57 /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = InformationView.swift; path = "/Users/parkjongseok/Projects/iOS/Swift/New Siksha/Siksha/Siksha/Settings/InformationView.swift"; sourceTree = "<absolute>"; };
@@ -199,6 +209,7 @@
 				1E3A581A25C98F9A00DBB3F4 /* AppState.swift */,
 				1E96F95025E2525B0074940C /* LoginView.swift */,
 				1ECB248025F14C0F00875E18 /* LoginViewModel.swift */,
+				1ECB254525F2970C00875E18 /* MealDetail */,
 				1E3A572825C6FDC000DBB3F4 /* Main */,
 				1ED44A6125CDB6F5001D916B /* Favorite */,
 				1E3A572F25C6FDEC00DBB3F4 /* Settings */,
@@ -245,9 +256,6 @@
 				1E3A572325C6FDA300DBB3F4 /* MenuView.swift */,
 				1E3A575725C6FF2900DBB3F4 /* MenuViewModel.swift */,
 				1E3A582925C9C6E300DBB3F4 /* RestaurantsView.swift */,
-				1E3A583625CACC9A00DBB3F4 /* RestaurantCell.swift */,
-				1ED44A3625CC6094001D916B /* RatingView.swift */,
-				1ED44A4525CC6579001D916B /* RatingViewModel.swift */,
 				1ED44A3B25CC60B2001D916B /* RestaurantInfoView.swift */,
 			);
 			path = Main;
@@ -271,7 +279,7 @@
 			children = (
 				1ECB24FF25F16D1C00875E18 /* Repository */,
 				1ECB250025F16D4D00875E18 /* UIRepresentable */,
-				1ECB250125F16D7900875E18 /* CommonViews */,
+				1ECB250125F16D7900875E18 /* View Elements */,
 				1E3A573925C6FE2700DBB3F4 /* Extensions.swift */,
 				1EABA80A25EBE28000B79CB8 /* Utils.swift */,
 				1E3A581F25C9C28000DBB3F4 /* Enums.swift */,
@@ -316,20 +324,24 @@
 				1E96F94225E132250074940C /* ActivityIndicator.swift */,
 				1E3A57D725C724B200DBB3F4 /* PageViewController.swift */,
 				1E3A57E525C735F200DBB3F4 /* PageView.swift */,
+				1ECB257C25F5412200875E18 /* TextView.swift */,
 			);
 			path = UIRepresentable;
 			sourceTree = "<group>";
 		};
-		1ECB250125F16D7900875E18 /* CommonViews */ = {
+		1ECB250125F16D7900875E18 /* View Elements */ = {
 			isa = PBXGroup;
 			children = (
 				1EF11C1D25ED7503005D8F57 /* MenuRow.swift */,
+				1E3A583625CACC9A00DBB3F4 /* RestaurantCell.swift */,
 				1EF11C1F25ED7503005D8F57 /* SettingsCell.swift */,
+				1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */,
 				1ECB250225F16DE300875E18 /* NavigationBar.swift */,
 				1EF11C2E25ED7546005D8F57 /* BackButton.swift */,
 				1ED44A4025CC6135001D916B /* BottomModalView.swift */,
+				1ECB255125F2999100875E18 /* RatingStar.swift */,
 			);
-			path = CommonViews;
+			path = "View Elements";
 			sourceTree = "<group>";
 		};
 		1ECB251625F16FDB00875E18 /* Supporting Files */ = {
@@ -340,6 +352,17 @@
 				1ECB251725F1700500875E18 /* config.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		1ECB254525F2970C00875E18 /* MealDetail */ = {
+			isa = PBXGroup;
+			children = (
+				1ED44A3625CC6094001D916B /* MealReviewView.swift */,
+				1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */,
+				1ECB254C25F2975A00875E18 /* MealInfoView.swift */,
+				1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */,
+			);
+			path = MealDetail;
 			sourceTree = "<group>";
 		};
 		1ED44A6125CDB6F5001D916B /* Favorite */ = {
@@ -569,6 +592,8 @@
 			files = (
 				1EF11C2125ED7503005D8F57 /* FavoriteMenuOrderView.swift in Sources */,
 				1ED44A6B25CDB77A001D916B /* FavoriteViewModel.swift in Sources */,
+				1ECB255225F2999100875E18 /* RatingStar.swift in Sources */,
+				1ECB257D25F5412300875E18 /* TextView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
@@ -580,19 +605,21 @@
 				1EF11C2F25ED7546005D8F57 /* BackButton.swift in Sources */,
 				1EF11C2525ED7503005D8F57 /* MenuRow.swift in Sources */,
 				1ED44A6325CDB709001D916B /* FavoriteView.swift in Sources */,
+				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
 				1EF11C2625ED7503005D8F57 /* MenuOrderView.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
-				1ED44A4625CC6579001D916B /* RatingViewModel.swift in Sources */,
+				1ED44A4625CC6579001D916B /* MealInfoViewModel.swift in Sources */,
 				1ECB250325F16DE300875E18 /* NavigationBar.swift in Sources */,
 				1EF11C2225ED7503005D8F57 /* VersionView.swift in Sources */,
 				1ED44A3C25CC60B2001D916B /* RestaurantInfoView.swift in Sources */,
+				1ECB254D25F2975A00875E18 /* MealInfoView.swift in Sources */,
 				1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
 				1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */,
 				1E96F92F25DEC14F0074940C /* MenuRepository.swift in Sources */,
 				1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */,
 				1E3A575325C6FF1400DBB3F4 /* Review.swift in Sources */,
-				1ED44A3725CC6094001D916B /* RatingView.swift in Sources */,
+				1ED44A3725CC6094001D916B /* MealReviewView.swift in Sources */,
 				1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */,
 				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
 				1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */,
@@ -600,6 +627,7 @@
 				1ED44A4125CC6135001D916B /* BottomModalView.swift in Sources */,
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
+				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				1E3A575825C6FF2900DBB3F4 /* MenuViewModel.swift in Sources */,
 				1EF11C2725ED7503005D8F57 /* InformationView.swift in Sources */,
 				1E3A57D825C724B200DBB3F4 /* PageViewController.swift in Sources */,

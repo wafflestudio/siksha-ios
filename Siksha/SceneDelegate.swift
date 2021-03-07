@@ -36,30 +36,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let appleIDProvider = ASAuthorizationAppleIDProvider()
         
-        if let identifier = appleUserIdentifier {
-            appleIDProvider.getCredentialState(forUserID: appleUserIdentifier ?? "") { (credentialState, error) in
-                switch credentialState {
-                case .authorized:
-                    accessToken = nil
-                    break // The Apple ID credential is valid.
-                case .revoked, .notFound:
-                    accessToken = nil
-                    UserDefaults.standard.set(nil, forKey: "userToken")
-                    
-                    DispatchQueue.main.async {
-                        let loginView = LoginView().environmentObject(self.appState)
-                        let loginController = UIHostingController(rootView: loginView)
+        if UserDefaults.standard.bool(forKey: "signedInWithApple") {
+            if let identifier = appleUserIdentifier {
+                appleIDProvider.getCredentialState(forUserID: appleUserIdentifier ?? "") { (credentialState, error) in
+                    switch credentialState {
+                    case .authorized:
+                        break // The Apple ID credential is valid.
+                    case .revoked, .notFound:
+                        accessToken = nil
+                        UserDefaults.standard.set(nil, forKey: "userToken")
                         
-                        loginController.modalPresentationStyle = .fullScreen
-                        UIApplication.shared.windows.first?.rootViewController?.present(loginController, animated: true, completion: nil)
+                        DispatchQueue.main.async {
+                            let loginView = LoginView().environmentObject(self.appState)
+                            let loginController = UIHostingController(rootView: loginView)
+                            
+                            loginController.modalPresentationStyle = .fullScreen
+                            UIApplication.shared.windows.first?.rootViewController?.present(loginController, animated: true, completion: nil)
+                        }
+                    default:
+                        break
                     }
-                default:
-                    break
                 }
+            } else {
+                accessToken = nil
+                UserDefaults.standard.set(nil, forKey: "userToken")
             }
-        } else {
-            accessToken = nil
-            UserDefaults.standard.set(nil, forKey: "userToken")
         }
 
         // Use a UIHostingController as window root view controller.
@@ -70,7 +71,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let contentView = ContentView().environmentObject(appState)
                 window.rootViewController = UIHostingController(rootView: contentView)
             } else {
-                let loginView = LoginView().environmentObject(appState)
+                let loginView = LoginView()
                 window.rootViewController = UIHostingController(rootView: loginView)
             }
             self.window = window
