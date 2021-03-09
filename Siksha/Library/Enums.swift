@@ -48,3 +48,23 @@ enum NetworkStatus {
     case succeeded
     case idle
 }
+
+enum ReviewErrorCode: Int {
+    case noNetwork = 1
+    case authenticationFailed = 422
+    case multipleReview = 403
+    case invalidId = 404
+    
+    var message: String {
+        switch self {
+        case .noNetwork:
+            return "네트워크 연결이 불안정합니다."
+        case .authenticationFailed:
+            return "인증 오류입니다. 다시 로그인 해주세요."
+        case .multipleReview:
+            return "한 메뉴에 여러 번 평가할 수 없습니다."
+        case .invalidId:
+            return "유효하지 않은 메뉴 아이디입니다. 다시 시도해주세요."
+        }
+    }
+}

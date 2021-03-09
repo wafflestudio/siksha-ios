@@ -12,7 +12,6 @@ import GoogleSignIn
 
 struct LoginView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
-    @EnvironmentObject var appState: AppState
     
     @ObservedObject var viewModel = LoginViewModel()
     
@@ -60,6 +59,7 @@ struct LoginView: View {
                             HStack {
                                 Image("GoogleLogo")
                                     .resizable()
+                                    .renderingMode(.original)
                                     .frame(width: 18, height: 18)
                                     .padding(.leading, 15)
                                 Text("Google로 로그인")
@@ -78,8 +78,9 @@ struct LoginView: View {
                             handleAppleLogin()
                         }, label: {
                             HStack {
-                                Image(systemName: "applelogo")
-                                    .font(.system(size: 17))
+                                Image("AppleLogo")
+                                    .resizable()
+                                    .frame(width: 16.5, height: 17)
                                     .padding(.leading, 16)
                                 Text("Apple로 로그인")
                                     .font(.system(size: 15, weight: .semibold))
@@ -109,6 +110,7 @@ struct LoginView: View {
                 viewModel.onSignedIn = presentMenu
             }
         }
+        .edgesIgnoringSafeArea(.all)
     }
     
     func handleAppleLogin() {
@@ -149,6 +151,7 @@ struct LoginView: View {
     }
     
     func presentMenu() {
+        let appState = AppState()
         viewControllerHolder?.present(style: .fullScreen) {
             ContentView().environmentObject(appState)
         }

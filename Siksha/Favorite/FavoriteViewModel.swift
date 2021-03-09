@@ -11,6 +11,8 @@ import Combine
 public class FavoriteViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
+    private let todayString: String
+    
     private let repository = MenuRepository()
     private let formatter = DateFormatter()
 
@@ -42,6 +44,7 @@ public class FavoriteViewModel: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         
         selectedDate = formatter.string(from: Date())
+        todayString = formatter.string(from: Date())
         
         $selectedDate
             .sink { [weak self] dateString in
@@ -72,6 +75,11 @@ public class FavoriteViewModel: ObservableObject {
                 guard let self = self else { return }
                 
                 self.selectedMenu = menus.first { $0.date == self.selectedDate }
+                if self.selectedDate == self.todayString {
+                    UserDefaults.standard.set(true, forKey: "canSubmitReview")
+                } else {
+                    UserDefaults.standard.set(false, forKey: "canSubmitReview")
+                }
             }
             .store(in: &cancellables)
         

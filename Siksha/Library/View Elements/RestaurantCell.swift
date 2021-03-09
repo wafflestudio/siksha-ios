@@ -69,6 +69,7 @@ struct RestaurantCell: View {
                 }) {
                     Image("Info")
                         .resizable()
+                        .renderingMode(.original)
                         .frame(width: 14, height: 14)
                 }
                 
@@ -81,6 +82,7 @@ struct RestaurantCell: View {
                 }, label: {
                     Image(isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
+                        .renderingMode(.original)
                         .frame(width: 20, height: 20)
                 })
             }
@@ -101,7 +103,7 @@ struct RestaurantCell: View {
                         mealCell(meal: meal)
                             .onTapGesture {
                                 withAnimation {
-                                    appState.mealToReview = meal
+                                    appState.mealToShow = meal
                                 }
                             }
                     }

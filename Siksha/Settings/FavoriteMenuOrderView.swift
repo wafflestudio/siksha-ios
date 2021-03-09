@@ -21,6 +21,8 @@ struct FavoriteMenuOrderView: View {
     }
     
     init(_ viewModel: SettingsViewModel) {
+        UITableView.appearance().separatorStyle = .none
+        
         self.viewModel = viewModel
     }
     

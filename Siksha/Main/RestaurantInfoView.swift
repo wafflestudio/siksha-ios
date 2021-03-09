@@ -59,7 +59,7 @@ struct RestaurantInfoView: View {
                 
                 Button(action: {
                     withAnimation {
-                        appState.showSheet = false
+                        appState.showRestaurantInfo = false
                     }
                 }) {
                     Image("Close")
