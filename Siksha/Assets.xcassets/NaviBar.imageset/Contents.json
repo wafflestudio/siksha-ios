@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "naviBar_3x_change-2.png",
+      "filename" : "Rectangle-1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "naviBar_3x_change.png",
+      "filename" : "Rectangle.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "naviBar_3x_change-1.png",
+      "filename" : "Rectangle-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
