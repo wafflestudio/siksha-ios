@@ -45,6 +45,7 @@ struct RestaurantCell: View {
     var restaurant: Restaurant
     var meals: [Meal]
     @State var isFavorite: Bool = false
+    @State private var bottomModalShown = false
     @EnvironmentObject var appState: AppState
     @Environment(\.favoriteViewModel) var viewModel: FavoriteViewModel?
     
@@ -137,8 +138,14 @@ struct RestaurantCell_Previews: PreviewProvider {
         menu.nameKr = "식단"
         menu.reviewCnt = 1
         menu.score = 3
+        let menu2 = Meal()
+        menu2.price = 4000
+        menu2.nameKr = "식단2"
+        menu2.reviewCnt = 0
+        menu2.score = 4
         nonEmptyRes.menus.append(menu)
+        nonEmptyRes.menus.append(menu2)
 
-        return RestaurantCell(emptyRes)
+        return RestaurantCell(nonEmptyRes)
     }
 }

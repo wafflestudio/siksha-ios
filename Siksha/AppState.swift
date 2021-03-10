@@ -24,7 +24,7 @@ public class AppState: ObservableObject {
     
     var modalHeight: CGFloat {
         if restaurantToShow != nil {
-            return 400
+            return 450
         } else {
             return 0
         }
@@ -36,7 +36,7 @@ public class AppState: ObservableObject {
         
         let expDate = Date(timeIntervalSince1970: exp)
         
-        if DateInterval(start: Date(), end: expDate).duration < TimeInterval(15552000) { // 6 month
+//        if DateInterval(start: Date(), end: expDate).duration < TimeInterval(15552000) { // 6 month
             let url = Config.shared.baseURL + "/auth/refresh"
             
             if var request = try? URLRequest(url: url, method: .post), let token = token {
@@ -63,7 +63,7 @@ public class AppState: ObservableObject {
                         }
                     .store(in: &cancellables)
             }
-        }
+ //       }
         
         $restaurantToShow
             .filter { $0 != nil }

@@ -18,6 +18,7 @@ final class MenuRepository {
     
     private let realm = try! Realm()
     
+    
     init() {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
