@@ -12,7 +12,7 @@ struct Review: Codable {
     var mealId: Int
     var userId: Int
     var score: Double
-    var comment: String
+    var comment: String?
     var createdAt: Date
     var updatedAt: Date
     
@@ -27,12 +27,3 @@ struct Review: Codable {
     }
 }
 
-struct ReviewResponse: Codable {
-    var totalCount: Int
-    var reviews: [Review]
-    
-    enum CodingKeys: String, CodingKey {
-        case totalCount = "total_count"
-        case reviews = "result"
-    }
-}

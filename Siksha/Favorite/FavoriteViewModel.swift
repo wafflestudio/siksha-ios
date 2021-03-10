@@ -125,6 +125,10 @@ public class FavoriteViewModel: ObservableObject {
     }
     
     func getMenu(date: String) {
+        guard self.getMenuStatus != .loading else {
+            return
+        }
+        
         self.getMenuStatus = .loading
         repository.getMenuPublisher(startDate: date, endDate: date)
             .receive(on: RunLoop.main)

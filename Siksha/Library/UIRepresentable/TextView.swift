@@ -10,6 +10,7 @@ import SwiftUI
 
 struct TextView: UIViewRepresentable {
     @Binding var text: String
+    @Binding var placeHolder: String
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -24,22 +25,41 @@ struct TextView: UIViewRepresentable {
         view.isUserInteractionEnabled = true
         view.backgroundColor = UIColor(named: "AppBackgroundColor")
         view.layer.cornerRadius = 10
+        view.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        view.font = .systemFont(ofSize: 14)
         return view
     }
     
     func updateUIView(_ uiView: UITextView, context: Context) {
-        uiView.text = self.text
+        if self.text.count > 0 {
+            uiView.text = self.text
+            uiView.textColor = .black
+        } else {
+            uiView.text = self.placeHolder
+            uiView.textColor = .lightGray
+        }
+        
     }
     
     class Coordinator : NSObject, UITextViewDelegate {
-        @Binding var text: String
+        var parent: TextView
         
         init(_ uiTextView: TextView) {
-            self._text = uiTextView.$text
+            self.parent = uiTextView
+        }
+        
+        func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+            self.parent.placeHolder = ""
+            textView.textColor = .black
+            
+            return true
         }
         
         func textViewDidChange(_ textView: UITextView) {
-            self.text = textView.text
+            self.parent.text = textView.text
+            if textView.text.count > 0 {
+                self.parent.placeHolder = ""
+            }
         }
     }
 }

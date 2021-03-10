@@ -20,8 +20,8 @@ private extension MealReviewView {
                     .gesture(
                         DragGesture(minimumDistance: 0, coordinateSpace: .local)
                             .updating($score) { (value, state, transcation) in
-                                state = Int(value.location.x/20.5)
-                                viewModel.scoreToSubmit = Double(state)/2.0
+                                state = Int(value.location.x/50.0)+1
+                                viewModel.scoreToSubmit = Double(state)
                             }
                     )
             }
@@ -46,13 +46,13 @@ private extension MealReviewView {
             }
             .padding([.leading, .trailing], 36)
             
-            TextView(text: $viewModel.commentToSubmit)
+            TextView(text: $viewModel.commentToSubmit, placeHolder: $viewModel.commentPlaceHolder)
                 .frame(height: 148)
                 .padding(EdgeInsets(top: 11, leading: 28, bottom: 6, trailing: 28))
             
             HStack {
                 Spacer()
-                Text("\(viewModel.commentToSubmit.count) / 150자")
+                Text("\(viewModel.commentCount) / 150자")
                     .font(.custom("NanumSquareOTFL", size: 11))
                     .foregroundColor(fontColor)
             }
@@ -104,6 +104,9 @@ private extension MealReviewView {
         var action: (() -> Void)? = nil
         if viewModel.postReviewStatus == .succeeded {
             action = {
+                mealInfoViewModel.mealReviews = []
+                mealInfoViewModel.currentPage = 1
+                mealInfoViewModel.loadMoreReviewsIfNeeded(currentItem: nil)
                 presentationMode.wrappedValue.dismiss()
             }
         } else if viewModel.postReviewStatus == .failed {
@@ -132,11 +135,13 @@ struct MealReviewView: View {
     @GestureState var score: Int = 0
 
     @StateObject var viewModel: MealReviewViewModel = MealReviewViewModel()
+    @ObservedObject var mealInfoViewModel: MealInfoViewModel
     
     let meal: Meal
     
-    init(_ meal: Meal) {
+    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel) {
         self.meal = meal
+        self.mealInfoViewModel = mealInfoViewModel
     }
     
     var body: some View {
@@ -194,8 +199,8 @@ private extension MealReviewView13 {
                     .gesture(
                         DragGesture(minimumDistance: 0, coordinateSpace: .local)
                             .updating($score) { (value, state, transcation) in
-                                state = Int(value.location.x/20.5)
-                                viewModel.scoreToSubmit = Double(state)/2.0
+                                state = Int(value.location.x/50.0)+1
+                                viewModel.scoreToSubmit = Double(state)
                             }
                     )
             }
@@ -220,13 +225,13 @@ private extension MealReviewView13 {
             }
             .padding([.leading, .trailing], 36)
             
-            TextView(text: $viewModel.commentToSubmit)
+            TextView(text: $viewModel.commentToSubmit, placeHolder: $viewModel.commentPlaceHolder)
                 .frame(height: 148)
                 .padding(EdgeInsets(top: 11, leading: 28, bottom: 6, trailing: 28))
             
             HStack {
                 Spacer()
-                Text("\(viewModel.commentToSubmit.count) / 150자")
+                Text("\(viewModel.commentCount) / 150자")
                     .font(.custom("NanumSquareOTFL", size: 11))
                     .foregroundColor(fontColor)
             }

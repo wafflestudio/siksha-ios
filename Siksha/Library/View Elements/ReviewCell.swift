@@ -19,7 +19,7 @@ struct ReviewCell: View {
     var body: some View {
         VStack {
             HStack {
-                Text(review.comment)
+                Text(review.comment ?? "")
                     .font(.custom("NanumSquareOTFR", size: 12))
                     .foregroundColor(.init(white: 79/255))
                     .multilineTextAlignment(.leading)
