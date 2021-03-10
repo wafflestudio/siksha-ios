@@ -29,8 +29,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let googleClientId = configDict.object(forKey: "google_client_id") as! String
         let kakaoAppKey = configDict.object(forKey: "kakao_app_key") as! String
+        let naverMapClientId = configDict.object(forKey: "naver_map_client_id") as! String
         
-        NMFAuthManager.shared().clientId = "###"
+        NMFAuthManager.shared().clientId = naverMapClientId
         
         GIDSignIn.sharedInstance()?.clientID = googleClientId
         

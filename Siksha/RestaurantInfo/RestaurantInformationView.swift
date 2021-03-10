@@ -11,25 +11,25 @@ import NMapsMap
 struct RestaurantInformationView: View {
     
     var restaurant: Restaurant
+    
+    let position: NMGLatLng
         
     init(_ restaurant: Restaurant) {
         self.restaurant = restaurant
+        self.position = NMGLatLng(lat: Double(restaurant.lat)!, lng: Double(restaurant.lng)!)
     }
-    
-    @EnvironmentObject var appState: AppState
 
     var body: some View {
                 
         VStack(spacing: 0) {
             
-            HStack(alignment: .top, spacing: 11) {
+            HStack {
                 Text(restaurant.addr)
                     .font(.custom("NanumSquareOTFR", size: 14))
                     .foregroundColor(Color("DefaultFontColor"))
                 Spacer()
             }
-            .padding([.leading, .trailing], 14)
-            .padding(.top, 12)
+            .padding(EdgeInsets(top: 20, leading: 30, bottom: 0, trailing: 30))
             
             HStack {
                 Text(restaurant.nameKr)
@@ -37,28 +37,25 @@ struct RestaurantInformationView: View {
                     .foregroundColor(Color("DefaultFontColor"))
                 Spacer()
             }
-            .padding([.leading, .trailing], 14)
-            .padding(.top, 5)
-            .padding([.bottom], 12)
+            .padding(EdgeInsets(top: 4, leading: 30, bottom: 8, trailing: 30))
             
             Color.init("MainThemeColor")
                 .frame(height: 2)
-                .frame(maxWidth: .infinity)
+                .padding([.leading, .trailing], 16)
             
-            HStack(alignment: .top, spacing: 11) {
+            HStack {
                 Text("식당 위치")
                     .font(.custom("NanumSquareOTFB", size: 16))
                     .foregroundColor(Color("DefaultFontColor"))
                 
                 Spacer()
             }
-            .padding([.leading, .trailing], 16)
-            .padding(.top, 20)
+            .padding(EdgeInsets(top: 24, leading: 32, bottom: 0, trailing: 32))
             
-            let position = NMGLatLng(lat: Double(restaurant.lat)!, lng: Double(restaurant.lng)!)
             MapView(coordinate: position)
                 .frame(height: 200)
-                .padding([.top, .bottom])
+                .cornerRadius(10)
+                .padding(EdgeInsets(top: 4, leading: 28, bottom: 0, trailing: 28))
 
             HStack(alignment: .top, spacing: 11) {
                 Text("영업 시간")
@@ -72,7 +69,7 @@ struct RestaurantInformationView: View {
                 }
                 Spacer()
             }
-            .padding(16)
+            .padding(EdgeInsets(top: 20, leading: 32, bottom: 0, trailing: 32))
             
             Spacer()
         }
