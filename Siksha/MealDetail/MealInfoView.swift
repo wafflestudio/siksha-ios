@@ -24,7 +24,7 @@ private extension MealInfoView {
                 if showSubmitButton {
                     if #available(iOS 14.0, *) {
                         NavigationLink(
-                            destination: MealReviewView(viewModel.meal),
+                            destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel),
                             label: {
                                 ZStack {
                                     Image("RateButton")
@@ -78,7 +78,11 @@ private extension MealInfoView {
                     }
             }
             if viewModel.hasMorePages && viewModel.getReviewStatus == .loading {
-                ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                HStack {
+                    Spacer()
+                    ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                    Spacer()
+                }
             }
         }
         .listStyle(PlainListStyle())
@@ -134,6 +138,7 @@ struct MealInfoView: View {
             )
             .onAppear {
                 self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
+                viewModel.mealReviews = []
                 viewModel.currentPage = 1
                 viewModel.loadMoreReviewsIfNeeded(currentItem: nil)
             }

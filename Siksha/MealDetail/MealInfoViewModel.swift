@@ -19,8 +19,6 @@ public class MealInfoViewModel: ObservableObject {
     
     init(_ meal: Meal) {
         self.meal = meal
-        
-        loadMoreReviews()
     }
     
     func loadMoreReviewsIfNeeded(currentItem item: Review?) {
@@ -70,7 +68,7 @@ public class MealInfoViewModel: ObservableObject {
                 self.currentPage += 1
                 self.getReviewStatus = .succeeded
             })
-            .map { $0.reviews + self.mealReviews }
+            .map { self.mealReviews + $0.reviews }
             .catch { _ -> Just<[Review]> in
                 self.getReviewStatus = .failed
 

@@ -128,6 +128,9 @@ struct MenuView: View {
             .onAppear {
                 viewModel.getMenu(date: viewModel.selectedDate)
             }
+            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                viewModel.getMenu(date: viewModel.selectedDate)
+            }
         }
     }
 }
