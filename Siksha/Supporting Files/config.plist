@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>debug</key>
+	<dict>
+		<key>naver_map_client_id</key>
+		<string>###</string>
+		<key>kakao_app_key</key>
+		<string>###</string>
+		<key>google_client_id</key>
+		<string>###</string>
+		<key>server_url</key>
+		<string>https://siksha-api.wafflestudio.com</string>
+	</dict>
+	<key>release</key>
+	<dict>
+		<key>naver_map_client_id</key>
+		<string>###</string>
+		<key>kakao_app_key</key>
+		<string>###</string>
+		<key>google_client_id</key>
+		<string>###</string>
+		<key>server_url</key>
+		<string>https://siksha-api.wafflestudio.com</string>
+	</dict>
+</dict>
+</plist>

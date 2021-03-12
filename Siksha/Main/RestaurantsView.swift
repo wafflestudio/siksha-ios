@@ -30,16 +30,16 @@ struct RestaurantsView: View {
             .padding(.bottom, 4)
             .background(Color.init("AppBackgroundColor"))
         } else {
-                VStack {
-                    HStack{
-                        Text("식단 정보가 없습니다")
-                            .font(.custom("NanumSquareOTFB", size: 15))
-                            .foregroundColor(fontColor)
-                    }
-                    .frame(maxHeight: .infinity)
+            VStack {
+                HStack{
+                    Text("식단 정보가 없습니다")
+                        .font(.custom("NanumSquareOTFB", size: 15))
+                        .foregroundColor(fontColor)
                 }
-                .frame(maxWidth: .infinity)
-                .background(Color.init("AppBackgroundColor"))
+                .frame(maxHeight: .infinity)
+            }
+            .frame(maxWidth: .infinity)
+            .background(Color.init("AppBackgroundColor"))
         }
     }
 }

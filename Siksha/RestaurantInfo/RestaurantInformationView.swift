@@ -32,7 +32,7 @@ struct RestaurantInformationView: View {
                 Spacer()
             }
             .padding(EdgeInsets(top: 20, leading: 30, bottom: 0, trailing: 30))
-
+            
             HStack {
                 Text(restaurant.nameKr)
                     .font(.custom("NanumSquareOTFB", size: 24))
@@ -79,8 +79,7 @@ struct RestaurantInformationView: View {
                 
                 Spacer()
             }
-            .padding(.top, 14)
-            .padding(.leading, 33)
+            .padding(EdgeInsets(top: 20, leading: 32, bottom: 0, trailing: 32))
             
             Spacer()
         }
