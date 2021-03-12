@@ -11,6 +11,27 @@ import Realm
 import RealmSwift
 
 class Restaurant: Object {
+    enum OperatingHourType : Int {
+        case weekdays = 0
+        case saturday = 1
+        case holiday = 2
+        
+        var stringValue: String {
+            switch self {
+            case .weekdays:
+                return "weekdays"
+            case .saturday:
+                return "saturday"
+            case .holiday:
+                return "holiday"
+            }
+        }
+        
+        static var getAllTypes: [OperatingHourType] {
+            return [weekdays, saturday, holiday]
+        }
+    }
+    
     @objc dynamic var id: Int = 0
     @objc dynamic var code: String = ""
     @objc dynamic var nameKr: String = ""
@@ -18,10 +39,7 @@ class Restaurant: Object {
     @objc dynamic var addr: String = ""
     @objc dynamic var lat: String = ""
     @objc dynamic var lng: String = ""
-    var openHours = Dictionary<String, [String]>()
-    @objc dynamic var weekdays: String = ""
-    @objc dynamic var saturday: String = ""
-    @objc dynamic var holiday: String = ""
+    var operatingHours = List<String>()
     var menus = List<Meal>()
     
     convenience init(_ json: JSON) {
@@ -30,14 +48,24 @@ class Restaurant: Object {
         self.code = json["code"].stringValue
         self.nameKr = json["name_kr"].stringValue
         self.nameEn = json["name_en"].stringValue
-        self.addr = json["addr"].stringValue
+        self.addr = json["addr"].stringValue.replacingOccurrences(of: "서울 관악구 관악로 1 서울대학교 ", with: "")
         self.lat = json["lat"].stringValue
         self.lng = json["lng"].stringValue
-        self.openHours["weekdays"] = json["etc"]["operating_hours"]["weekdays"].arrayValue.map{$0.stringValue}
-        self.openHours["saturday"] = json["etc"]["operating_hours"]["saturday"].arrayValue.map{$0.stringValue}
-        self.openHours["holiday"] = json["etc"]["operating_hours"]["holiday"].arrayValue.map{$0.stringValue}
-
-        getOpenHours(dictionary: self.openHours)
+        
+        OperatingHourType.getAllTypes.forEach { type in
+            let timeList = json["etc"]["operating_hours"][type.stringValue].arrayValue.map{$0.stringValue}
+            
+            var hours = ""
+            timeList.forEach { time in
+                hours += time + "\n"
+            }
+            
+            if hours.count == 0 {
+                operatingHours.append("정보가 없습니다.")
+            } else {
+                operatingHours.append(hours.replacingOccurrences(of: "-", with: " ~ "))
+            }
+        }
         addMenus(json["menus"])
     }
     
@@ -45,26 +73,6 @@ class Restaurant: Object {
         json.forEach { (str, mealJson) in
             let newMeal = Meal(mealJson)
             self.menus.append(newMeal)
-        }
-    }
-    
-    private func getOpenHours(dictionary: [String : [String]]) {
-        for (kind, list) in dictionary {
-            if (kind == "weekdays" && list != []) {
-                list.forEach { time in
-                    self.weekdays += time + "\n"
-                }
-            }
-            if (kind == "saturday" && list != []) {
-                list.forEach { time in
-                    self.saturday += time + "\n"
-                }
-            }
-            if (kind == "holiday" && list != []) {
-                list.forEach { time in
-                    self.holiday += time + "\n"
-                }
-            }
         }
     }
 }

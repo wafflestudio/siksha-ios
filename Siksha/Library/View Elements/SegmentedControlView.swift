@@ -26,8 +26,8 @@ struct SegmentedControlView: View {
                 {
                     VStack {
                         Text(segment.name)
-                            .padding(.horizontal, 10)
-                            .padding([.top, .bottom], 3)
+                            .padding(.horizontal, 13)
+                            .padding(.vertical, 4)
                             .font(.custom("NanumSquareOTFR", size: 12))
                     }
                 }
@@ -37,7 +37,8 @@ struct SegmentedControlView: View {
             }
         }
         .overlay(RoundedRectangle(cornerRadius: 25)
-                    .stroke(Color.init("MainThemeColor"), lineWidth: 1))
+                    .stroke(Color.init("MainThemeColor"), lineWidth: 1)
+                    .padding(0.5))
         .cornerRadius(25.0)
         
     }

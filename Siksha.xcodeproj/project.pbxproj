@@ -32,6 +32,7 @@
 		1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A581F25C9C28000DBB3F4 /* Enums.swift */; };
 		1E3A582A25C9C6E300DBB3F4 /* RestaurantsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A582925C9C6E300DBB3F4 /* RestaurantsView.swift */; };
 		1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A583625CACC9A00DBB3F4 /* RestaurantCell.swift */; };
+		1E7226F825FBDE72008C272E /* MealCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E7226F725FBDE72008C272E /* MealCell.swift */; };
 		1E96F92F25DEC14F0074940C /* MenuRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E96F92E25DEC14F0074940C /* MenuRepository.swift */; };
 		1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E96F94225E132250074940C /* ActivityIndicator.swift */; };
 		1E96F95125E2525B0074940C /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E96F95025E2525B0074940C /* LoginView.swift */; };
@@ -119,6 +120,7 @@
 		1E3A581F25C9C28000DBB3F4 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		1E3A582925C9C6E300DBB3F4 /* RestaurantsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantsView.swift; sourceTree = "<group>"; };
 		1E3A583625CACC9A00DBB3F4 /* RestaurantCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantCell.swift; sourceTree = "<group>"; };
+		1E7226F725FBDE72008C272E /* MealCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealCell.swift; sourceTree = "<group>"; };
 		1E96F92E25DEC14F0074940C /* MenuRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuRepository.swift; sourceTree = "<group>"; };
 		1E96F94225E132250074940C /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		1E96F95025E2525B0074940C /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
@@ -339,6 +341,7 @@
 			isa = PBXGroup;
 			children = (
 				1E3A583625CACC9A00DBB3F4 /* RestaurantCell.swift */,
+				1E7226F725FBDE72008C272E /* MealCell.swift */,
 				1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */,
 				231C9D1325F8568C0072C07A /* MapView.swift */,
 				1ECB250225F16DE300875E18 /* NavigationBar.swift */,
@@ -644,6 +647,7 @@
 				1ED44A4125CC6135001D916B /* BottomModalView.swift in Sources */,
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
+				1E7226F825FBDE72008C272E /* MealCell.swift in Sources */,
 				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				1E3A575825C6FF2900DBB3F4 /* MenuViewModel.swift in Sources */,
@@ -830,7 +834,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ###;
+				PRODUCT_BUNDLE_IDENTIFIER = ###dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

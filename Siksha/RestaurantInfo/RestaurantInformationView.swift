@@ -60,7 +60,7 @@ struct RestaurantInformationView: View {
                 .frame(height: 150)
                 .padding(EdgeInsets(top: 4, leading: 28, bottom: 0, trailing: 28))
 
-            HStack(alignment: .top, spacing: 11) {
+            HStack(alignment: .center, spacing: 0) {
                 Text("영업 시간")
                     .font(.custom("NanumSquareOTFB", size: 16))
                     .foregroundColor(Color("DefaultFontColor"))
@@ -73,13 +73,15 @@ struct RestaurantInformationView: View {
             .padding(EdgeInsets(top: 20, leading: 32, bottom: 0, trailing: 32))
             
             HStack(alignment: .top) {
-                Text(self.selected == 1 ? restaurant.saturday : self.selected == 2 ? restaurant.holiday : restaurant.weekdays)
-                    .font(.custom("NanumSquareOTFB", size: 14))
+                Text(restaurant.operatingHours[self.selected])
+                    .font(.custom("NanumSquareOTFR", size: 14))
                     .foregroundColor(Color("DefaultFontColor"))
                 
                 Spacer()
             }
-            .padding(EdgeInsets(top: 20, leading: 32, bottom: 0, trailing: 32))
+            .id("hours\(self.selected)")
+            .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+            .padding(EdgeInsets(top: 14, leading: 32, bottom: 0, trailing: 32))
             
             Spacer()
         }
@@ -94,9 +96,9 @@ struct RestaurantInformationView_Previews: PreviewProvider {
         rest.addr = "서울대학교 302동"
         rest.lat = "37.5666102"
         rest.lng = "126.9783881"
-        rest.weekdays = "오전 11:30 ~ 오후 1:30 \n오후 5:30 ~ 오후 7:30"
-        rest.saturday = "오전 11:30 ~ 오후 1:30 \n오후 5:30 ~ 오후 6:30"
-        rest.holiday = "오전 11:30 ~ 오후 1:30"
+        rest.operatingHours[0] = "오전 11:30 ~ 오후 1:30 \n오후 5:30 ~ 오후 7:30"
+        rest.operatingHours[1] = "오전 11:30 ~ 오후 1:30 \n오후 5:30 ~ 오후 6:30"
+        rest.operatingHours[2] = "오전 11:30 ~ 오후 1:30"
         return RestaurantInformationView(rest)
     }
 }
