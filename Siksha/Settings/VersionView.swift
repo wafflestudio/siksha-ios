@@ -4,7 +4,6 @@
 //
 //  Created by You Been Lee on 2021/02/05.
 //
-
 import SwiftUI
 
 struct VersionView: View {

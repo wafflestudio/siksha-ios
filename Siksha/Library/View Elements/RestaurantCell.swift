@@ -7,33 +7,6 @@
 
 import SwiftUI
 
-private extension RestaurantCell {
-    func mealCell(meal: Meal) -> some View {
-        HStack {
-            ZStack {
-                Image("PriceBox")
-                    .resizable()
-                    .frame(width: 52, height: 23)
-
-                Text(String(format: "%d", meal.price))
-                    .font(.custom("NanumSquareOTFR", size: 13))
-                    .foregroundColor(.white)
-            }
-
-            Text("\(meal.nameKr)")
-                .font(.custom("NanumSquareOTFL", size: 14))
-                .foregroundColor(.black)
-
-            Spacer()
-
-            Text(meal.reviewCnt > 0 ? String(format: "%.1f", meal.score) : "-")
-                .font(.custom("NanumSquareOTFR", size: 13))
-                .foregroundColor(.black)
-        }
-        .background(Color.white)
-    }
-}
-
 // MARK: - Restaurant Cell
 
 struct RestaurantCell: View {
@@ -100,7 +73,7 @@ struct RestaurantCell: View {
             VStack(spacing: 7) {
                 if meals.count > 0 {
                     ForEach(meals, id: \.id) { meal in
-                        mealCell(meal: meal)
+                        MealCell(meal: meal)
                             .onTapGesture {
                                 withAnimation {
                                     appState.mealToShow = meal
@@ -137,8 +110,14 @@ struct RestaurantCell_Previews: PreviewProvider {
         menu.nameKr = "식단"
         menu.reviewCnt = 1
         menu.score = 3
+        let menu2 = Meal()
+        menu2.price = 4000
+        menu2.nameKr = "식단2"
+        menu2.reviewCnt = 0
+        menu2.score = 4
         nonEmptyRes.menus.append(menu)
+        nonEmptyRes.menus.append(menu2)
 
-        return RestaurantCell(emptyRes)
+        return RestaurantCell(nonEmptyRes)
     }
 }

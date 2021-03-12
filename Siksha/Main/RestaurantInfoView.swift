@@ -107,12 +107,6 @@ struct RestaurantInfoView: View {
                     .font(.custom("NanumSquareOTFB", size: 13))
                     .foregroundColor(fontColor)
                 
-                VStack(alignment: .leading) {
-                    Text(restaurant.etc != "" ? restaurant.etc : "정보 없음")
-                        .font(.custom("NanumSquareOTFR", size: 13))
-                        .foregroundColor(fontColor)
-                }
-                
                 Spacer()
             }
             .padding(16)

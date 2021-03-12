@@ -24,7 +24,7 @@ public class AppState: ObservableObject {
     
     var modalHeight: CGFloat {
         if restaurantToShow != nil {
-            return 400
+            return 450
         } else {
             return 0
         }
