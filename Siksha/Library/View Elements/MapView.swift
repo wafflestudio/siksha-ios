@@ -16,11 +16,14 @@ struct MapView: UIViewRepresentable {
     }
     
     func makeUIView(context: Context) -> NMFMapView {
-        NMFMapView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 250))
+        let mapView = NMFMapView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width-56, height: 200))
+        mapView.allowsTilting = false
+        
+        return mapView
     }
     
     func updateUIView(_ view: NMFMapView, context: Context) {
-        let cameraUpdate = NMFCameraUpdate(scrollTo: coordinate)
+        let cameraUpdate = NMFCameraUpdate(position: NMFCameraPosition(coordinate, zoom: 15))
         view.moveCamera(cameraUpdate)
         let marker = NMFMarker(position: coordinate)
         marker.mapView = view        

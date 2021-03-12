@@ -64,6 +64,7 @@
 		231C9CE525F835B40072C07A /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9CE425F835B40072C07A /* BackButton.swift */; };
 		231C9CF825F83A850072C07A /* RestaurantInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9CF725F83A850072C07A /* RestaurantInformationView.swift */; };
 		231C9D1425F8568C0072C07A /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9D1325F8568C0072C07A /* MapView.swift */; };
+		231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9D2025FB5E490072C07A /* SegmentedControlView.swift */; };
 		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
 /* End PBXBuildFile section */
 
@@ -150,6 +151,7 @@
 		231C9CE425F835B40072C07A /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		231C9CF725F83A850072C07A /* RestaurantInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInformationView.swift; sourceTree = "<group>"; };
 		231C9D1325F8568C0072C07A /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		231C9D2025FB5E490072C07A /* SegmentedControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlView.swift; sourceTree = "<group>"; };
 		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
 		808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -344,6 +346,7 @@
 				231C9D1325F8568C0072C07A /* MapView.swift */,
 				1ECB250225F16DE300875E18 /* NavigationBar.swift */,
 				231C9CE425F835B40072C07A /* BackButton.swift */,
+				231C9D2025FB5E490072C07A /* SegmentedControlView.swift */,
 				1ED44A4025CC6135001D916B /* BottomModalView.swift */,
 				1ECB255125F2999100875E18 /* RatingStar.swift */,
 			);
@@ -645,6 +648,7 @@
 				1ED44A4125CC6135001D916B /* BottomModalView.swift in Sources */,
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
+				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				1E3A575825C6FF2900DBB3F4 /* MenuViewModel.swift in Sources */,
 				1E3A57D825C724B200DBB3F4 /* PageViewController.swift in Sources */,
@@ -830,7 +834,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ###dev;
+				PRODUCT_BUNDLE_IDENTIFIER = ###;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

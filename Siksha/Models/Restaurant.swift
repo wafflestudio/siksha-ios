@@ -18,7 +18,10 @@ class Restaurant: Object {
     @objc dynamic var addr: String = ""
     @objc dynamic var lat: String = ""
     @objc dynamic var lng: String = ""
-    @objc dynamic var etc: String = ""
+    var openHours = Dictionary<String, [String]>()
+    @objc dynamic var weekdays: String = ""
+    @objc dynamic var saturday: String = ""
+    @objc dynamic var holiday: String = ""
     var menus = List<Meal>()
     
     convenience init(_ json: JSON) {
@@ -26,12 +29,15 @@ class Restaurant: Object {
         self.id = json["id"].intValue
         self.code = json["code"].stringValue
         self.nameKr = json["name_kr"].stringValue
-        self.nameEn = json["name_kr"].stringValue
+        self.nameEn = json["name_en"].stringValue
         self.addr = json["addr"].stringValue
         self.lat = json["lat"].stringValue
         self.lng = json["lng"].stringValue
-        self.etc = json["etc"].stringValue
-        
+        self.openHours["weekdays"] = json["etc"]["operating_hours"]["weekdays"].arrayValue.map{$0.stringValue}
+        self.openHours["saturday"] = json["etc"]["operating_hours"]["saturday"].arrayValue.map{$0.stringValue}
+        self.openHours["holiday"] = json["etc"]["operating_hours"]["holiday"].arrayValue.map{$0.stringValue}
+
+        getOpenHours(dictionary: self.openHours)
         addMenus(json["menus"])
     }
     
@@ -39,6 +45,26 @@ class Restaurant: Object {
         json.forEach { (str, mealJson) in
             let newMeal = Meal(mealJson)
             self.menus.append(newMeal)
+        }
+    }
+    
+    private func getOpenHours(dictionary: [String : [String]]) {
+        for (kind, list) in dictionary {
+            if (kind == "weekdays" && list != []) {
+                list.forEach { time in
+                    self.weekdays += time + "\n"
+                }
+            }
+            if (kind == "saturday" && list != []) {
+                list.forEach { time in
+                    self.saturday += time + "\n"
+                }
+            }
+            if (kind == "holiday" && list != []) {
+                list.forEach { time in
+                    self.holiday += time + "\n"
+                }
+            }
         }
     }
 }

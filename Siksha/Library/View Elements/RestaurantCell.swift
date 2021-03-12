@@ -45,7 +45,6 @@ struct RestaurantCell: View {
     var restaurant: Restaurant
     var meals: [Meal]
     @State var isFavorite: Bool = false
-    @State private var bottomModalShown = false
     @EnvironmentObject var appState: AppState
     @Environment(\.favoriteViewModel) var viewModel: FavoriteViewModel?
     

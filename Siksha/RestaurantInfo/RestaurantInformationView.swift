@@ -11,68 +11,76 @@ import NMapsMap
 struct RestaurantInformationView: View {
     
     var restaurant: Restaurant
+    
+    let position: NMGLatLng
         
     init(_ restaurant: Restaurant) {
         self.restaurant = restaurant
+        self.position = NMGLatLng(lat: Double(restaurant.lat)!, lng: Double(restaurant.lng)!)
     }
     
-    @EnvironmentObject var appState: AppState
-
+    @State var selected = 0
+    
     var body: some View {
-                
+                        
         VStack(spacing: 0) {
             
-            HStack(alignment: .top, spacing: 11) {
+            HStack {
                 Text(restaurant.addr)
                     .font(.custom("NanumSquareOTFR", size: 14))
                     .foregroundColor(Color("DefaultFontColor"))
                 Spacer()
             }
-            .padding([.leading, .trailing], 14)
-            .padding(.top, 12)
-            
+            .padding(EdgeInsets(top: 20, leading: 30, bottom: 0, trailing: 30))
+
             HStack {
                 Text(restaurant.nameKr)
                     .font(.custom("NanumSquareOTFB", size: 24))
                     .foregroundColor(Color("DefaultFontColor"))
                 Spacer()
             }
-            .padding([.leading, .trailing], 14)
-            .padding(.top, 5)
-            .padding([.bottom], 12)
-            
+            .padding(EdgeInsets(top: 4, leading: 30, bottom: 8, trailing: 30))
+
             Color.init("MainThemeColor")
                 .frame(height: 2)
                 .frame(maxWidth: .infinity)
-            
-            HStack(alignment: .top, spacing: 11) {
+                .padding([.leading, .trailing], 16)
+
+            HStack {
                 Text("식당 위치")
                     .font(.custom("NanumSquareOTFB", size: 16))
                     .foregroundColor(Color("DefaultFontColor"))
                 
                 Spacer()
             }
-            .padding([.leading, .trailing], 16)
-            .padding(.top, 20)
-            
-            let position = NMGLatLng(lat: Double(restaurant.lat)!, lng: Double(restaurant.lng)!)
+            .padding(EdgeInsets(top: 24, leading: 32, bottom: 0, trailing: 32))
+
             MapView(coordinate: position)
-                .frame(height: 200)
-                .padding([.top, .bottom])
+                .cornerRadius(10.0)
+                .frame(height: 150)
+                .padding(EdgeInsets(top: 4, leading: 28, bottom: 0, trailing: 28))
 
             HStack(alignment: .top, spacing: 11) {
                 Text("영업 시간")
                     .font(.custom("NanumSquareOTFB", size: 16))
                     .foregroundColor(Color("DefaultFontColor"))
+                    .padding(.trailing, 10)
+                                
+                SegmentedControlView(selected: self.$selected, segments: [Segment(id: 0, name: "주중"), Segment(id: 1, name: "주말"), Segment(id: 2, name: "방학")])
                 
-                VStack(alignment: .leading) {
-                    Text(restaurant.etc != "" ? restaurant.etc : "정보 없음")
-                        .font(.custom("NanumSquareOTFR", size: 13))
-                        .foregroundColor(Color("DefaultFontColor"))
-                }
                 Spacer()
             }
-            .padding(16)
+            .padding(EdgeInsets(top: 20, leading: 32, bottom: 0, trailing: 32))
+            
+            HStack(alignment: .top) {
+                Text(self.selected == 1 ? restaurant.saturday : self.selected == 2 ? restaurant.holiday : restaurant.weekdays)
+                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .foregroundColor(Color("DefaultFontColor"))
+                
+                Spacer()
+            }
+            .padding(.top, 14)
+            .padding(.leading, 33)
             
             Spacer()
         }
@@ -85,9 +93,11 @@ struct RestaurantInformationView_Previews: PreviewProvider {
         let rest = Restaurant()
         rest.nameKr = "302동 식당"
         rest.addr = "서울대학교 302동"
-        rest.etc = "오전 11:30 ~ 오후 1:30\n오후 5:30 ~ 오후 7:30"
         rest.lat = "37.5666102"
         rest.lng = "126.9783881"
+        rest.weekdays = "오전 11:30 ~ 오후 1:30 \n오후 5:30 ~ 오후 7:30"
+        rest.saturday = "오전 11:30 ~ 오후 1:30 \n오후 5:30 ~ 오후 6:30"
+        rest.holiday = "오전 11:30 ~ 오후 1:30"
         return RestaurantInformationView(rest)
     }
 }

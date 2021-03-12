@@ -13,9 +13,7 @@ import KakaoSDKAuth
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    
-    @ObservedObject var appState = AppState()
-    
+        
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {
             if (AuthApi.isKakaoTalkLoginUrl(url)) {
@@ -47,7 +45,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         UserDefaults.standard.set(nil, forKey: "userToken")
                         
                         DispatchQueue.main.async {
-                            let loginView = LoginView().environmentObject(self.appState)
+                            let loginView = LoginView()
                             let loginController = UIHostingController(rootView: loginView)
                             
                             loginController.modalPresentationStyle = .fullScreen
@@ -68,11 +66,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let window = UIWindow(windowScene: windowScene)
             if accessToken != nil {
                 print(accessToken!)
+                let appState = AppState()
                 let contentView = ContentView().environmentObject(appState)
                 window.rootViewController = UIHostingController(rootView: contentView)
             } else {
-                let loginView = LoginView()
-                window.rootViewController = UIHostingController(rootView: loginView)
+                window.rootViewController = UIHostingController(rootView: LoginView())
             }
             self.window = window
             window.makeKeyAndVisible()
