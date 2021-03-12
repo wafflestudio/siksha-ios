@@ -14,7 +14,7 @@ struct MenuRow: View {
             Color.white.cornerRadius(10).shadow(color: .init(white: 0.75), radius: 2, x: 0, y: 0)
             
             Text(text)
-                .padding(.leading, 20)
+                .padding(.leading, 15)
                 .font(.custom("NanumSquareOTFB", size: 15))
                 .foregroundColor(.init("DefaultFontColor"))
         }

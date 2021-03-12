@@ -74,6 +74,7 @@ struct RestaurantCell: View {
                 if meals.count > 0 {
                     ForEach(meals, id: \.id) { meal in
                         MealCell(meal: meal)
+                            .id("\(meal.id)\(meal.score)")
                             .onTapGesture {
                                 withAnimation {
                                     appState.mealToShow = meal

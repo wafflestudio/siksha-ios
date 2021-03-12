@@ -278,7 +278,6 @@
 				231C9C7F25F7FBDC0072C07A /* VersionView.swift */,
 				231C9C6725F7FAFB0072C07A /* InformationView.swift */,
 				231C9C8A25F82D290072C07A /* SettingsCell.swift */,
-				231C9C8F25F82D660072C07A /* MenuRow.swift */,
 				231C9C6F25F7FB720072C07A /* MenuOrderView.swift */,
 			);
 			path = Settings;
@@ -343,6 +342,7 @@
 		1ECB250125F16D7900875E18 /* View Elements */ = {
 			isa = PBXGroup;
 			children = (
+				231C9C8F25F82D660072C07A /* MenuRow.swift */,
 				1E3A583625CACC9A00DBB3F4 /* RestaurantCell.swift */,
 				1E7226F725FBDE72008C272E /* MealCell.swift */,
 				1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */,
