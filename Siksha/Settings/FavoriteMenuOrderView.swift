@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct FavoriteMenuOrderView: View {
+    private let backgroundColor = Color.init("AppBackgroundColor")
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @ObservedObject var viewModel: SettingsViewModel
@@ -21,6 +23,7 @@ struct FavoriteMenuOrderView: View {
     
     init(_ viewModel: SettingsViewModel) {
         UITableView.appearance().separatorStyle = .none
+        UITableView.appearance().backgroundColor = .clear
         
         self.viewModel = viewModel
     }
@@ -61,7 +64,7 @@ struct FavoriteMenuOrderView: View {
                             MenuRow(text: row)
                                 .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                                 .listRowInsets(EdgeInsets())
-                                .background(Color.white)
+                                .background(backgroundColor)
                         }
                         .onMove(perform: move)
                     }
@@ -84,7 +87,7 @@ struct FavoriteMenuOrderView: View {
             .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)
             .navigationBarTitle("", displayMode: .inline)
-            
+            .background(backgroundColor)
         } //Geometry
         .onAppear {
             viewModel.setRestaurantIdList()

@@ -23,13 +23,14 @@ private extension MenuView {
     
     var dayPageTab: some View {
         HStack(alignment: .top) {
+            Spacer()
+            
             Button(action: {
                 viewModel.selectedPage = 0
                 viewModel.selectedDate = viewModel.prevDate
             }, label: {
                 Text(viewModel.prevFormatted)
             })
-            .frame(width: 80, alignment: .leading)
             .font(.custom("NanumSquareOTFR", size: 14))
             .foregroundColor(lightGrayColor)
             
@@ -53,11 +54,12 @@ private extension MenuView {
             }, label: {
                 Text(viewModel.nextFormatted)
             })
-            .frame(width: 80, alignment: .trailing)
             .font(.custom("NanumSquareOTFR", size: 14))
             .foregroundColor(lightGrayColor)
+            
+            Spacer()
         }
-        .padding(EdgeInsets(top: 2, leading: 25, bottom: 0, trailing: 25))
+        .padding(EdgeInsets(top: 2, leading: 0, bottom: 0, trailing: 0))
         .background(Color.white.shadow(color: .init(white: 0.9), radius: 2, x: 0, y: 3.5))
     }
     
@@ -126,6 +128,7 @@ struct MenuView: View {
                 Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))
             })
             .onAppear {
+                viewModel.firstShow = false
                 viewModel.getMenu(date: viewModel.selectedDate)
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
@@ -140,6 +143,5 @@ struct MenuView: View {
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MenuView()
-            .environmentObject(AppState())
     }
 }

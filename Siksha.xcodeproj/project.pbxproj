@@ -275,9 +275,7 @@
 				1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */,
 				1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */,
 				231C9C7725F7FB9E0072C07A /* FavoriteMenuOrderView.swift */,
-				231C9C7F25F7FBDC0072C07A /* VersionView.swift */,
 				231C9C6725F7FAFB0072C07A /* InformationView.swift */,
-				231C9C8A25F82D290072C07A /* SettingsCell.swift */,
 				231C9C6F25F7FB720072C07A /* MenuOrderView.swift */,
 			);
 			path = Settings;
@@ -343,7 +341,9 @@
 			isa = PBXGroup;
 			children = (
 				231C9C8F25F82D660072C07A /* MenuRow.swift */,
+				231C9C7F25F7FBDC0072C07A /* VersionView.swift */,
 				1E3A583625CACC9A00DBB3F4 /* RestaurantCell.swift */,
+				231C9C8A25F82D290072C07A /* SettingsCell.swift */,
 				1E7226F725FBDE72008C272E /* MealCell.swift */,
 				1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */,
 				231C9D1325F8568C0072C07A /* MapView.swift */,

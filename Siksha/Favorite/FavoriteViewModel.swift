@@ -11,10 +11,15 @@ import Combine
 public class FavoriteViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
-    private let todayString: String
-    
     private let repository = MenuRepository()
     private let formatter = DateFormatter()
+    
+    private var todayString: String {
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: Date())
+    }
+    
+    var firstShow: Bool = true
 
     @Published var selectedDate: String
     @Published var nextDate: String = ""
@@ -44,7 +49,17 @@ public class FavoriteViewModel: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         
         selectedDate = formatter.string(from: Date())
-        todayString = formatter.string(from: Date())
+        
+        let calendar = Calendar.current
+        
+        let components = calendar.dateComponents([.hour], from: Date())
+        if let hour = components.hour {
+            if hour > 16 {
+                selectedPage = 2
+            } else if hour > 11 {
+                selectedPage = 1
+            }
+        }
         
         $selectedDate
             .sink { [weak self] dateString in
@@ -65,7 +80,9 @@ public class FavoriteViewModel: ObservableObject {
                 self.nextFormatted = self.formatter.string(from: next)
                 self.prevFormatted = self.formatter.string(from: prev)
                 
-                self.getMenu(date: dateString)
+                if !self.firstShow {
+                    self.getMenu(date: dateString)
+                }
             }
             .store(in: &cancellables)
         

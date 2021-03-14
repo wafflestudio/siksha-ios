@@ -7,6 +7,8 @@
 import SwiftUI
 
 struct MenuOrderView: View {
+    private let backgroundColor = Color.init("AppBackgroundColor")
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @ObservedObject var viewModel: SettingsViewModel
@@ -21,6 +23,7 @@ struct MenuOrderView: View {
     
     init(_ viewModel: SettingsViewModel) {
         UITableView.appearance().separatorStyle = .none
+        UITableView.appearance().backgroundColor = .clear
         
         self.viewModel = viewModel
     }
@@ -61,25 +64,22 @@ struct MenuOrderView: View {
                         MenuRow(text: row)
                             .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                             .listRowInsets(EdgeInsets())
-                            .background(Color.white)
+                            .background(backgroundColor)
                     }
                     .onMove(perform: move)
                 }
                 .padding(.leading, leading)
                 .environment(\.editMode, .constant(.active))
-                
-                
             } // VStack
             .contentShape(Rectangle())
             .navigationBarHidden(true)
             .navigationBarBackButtonHidden(true)
             .navigationBarTitle("", displayMode: .inline)
-            
+            .background(backgroundColor)
         } //Geometry
         .onAppear {
             viewModel.setRestaurantIdList()
         }
-        
     } // View
     
     func move(from source: IndexSet, to destination: Int) {
