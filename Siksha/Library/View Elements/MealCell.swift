@@ -25,7 +25,7 @@ struct MealCell: View {
                     .resizable()
                     .frame(width: 52, height: 23)
 
-                Text(String(format: "%d", meal.price))
+                Text(meal.price > 0 ? String(format: "%d", meal.price) : "-")
                     .font(.custom("NanumSquareOTFR", size: 13))
                     .foregroundColor(.white)
             }

@@ -369,10 +369,10 @@
 		1ECB254525F2970C00875E18 /* MealDetail */ = {
 			isa = PBXGroup;
 			children = (
+				1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */,
 				1ED44A3625CC6094001D916B /* MealReviewView.swift */,
 				1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */,
 				1ECB254C25F2975A00875E18 /* MealInfoView.swift */,
-				1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */,
 			);
 			path = MealDetail;
 			sourceTree = "<group>";
@@ -828,7 +828,7 @@
 				BUNDLE_NAME = "식샤-Debug";
 				CODE_SIGN_ENTITLEMENTS = Siksha/Siksha.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.2;
+				CURRENT_PROJECT_VERSION = 1.0.0;
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = ###;
 				ENABLE_PREVIEWS = YES;
@@ -838,7 +838,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ###dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -855,7 +855,7 @@
 				BUNDLE_NAME = "식샤";
 				CODE_SIGN_ENTITLEMENTS = Siksha/Siksha.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.2;
+				CURRENT_PROJECT_VERSION = 1.0.0;
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = ###;
 				ENABLE_PREVIEWS = YES;
@@ -865,7 +865,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.0;
+				MARKETING_VERSION = 2.1.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ###;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

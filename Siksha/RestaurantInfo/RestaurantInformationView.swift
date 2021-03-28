@@ -66,7 +66,7 @@ struct RestaurantInformationView: View {
                     .foregroundColor(Color("DefaultFontColor"))
                     .padding(.trailing, 10)
                                 
-                SegmentedControlView(selected: self.$selected, segments: [Segment(id: 0, name: "주중"), Segment(id: 1, name: "주말"), Segment(id: 2, name: "방학")])
+                SegmentedControlView(selected: self.$selected, segments: [Segment(id: 0, name: "주중"), Segment(id: 1, name: "토요일"), Segment(id: 2, name: "휴일")])
                 
                 Spacer()
             }
