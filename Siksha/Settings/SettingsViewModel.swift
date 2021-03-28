@@ -22,7 +22,7 @@ class SettingsViewModel: ObservableObject {
     var favRestaurantOrder: [String : Int]
     
     init() {
-        noMenuHide = UserDefaults.standard.bool(forKey: "noMenuHide")
+        noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide")
         
         restaurantOrder = UserDefaults.standard.dictionary(forKey: "restaurantOrder") as? [String : Int] ?? [String : Int]()
         favRestaurantOrder = UserDefaults.standard.dictionary(forKey: "favRestaurantOrder") as? [String : Int] ?? [String : Int]()

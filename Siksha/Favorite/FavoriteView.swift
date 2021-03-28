@@ -27,7 +27,6 @@ private extension FavoriteView {
             Spacer()
             
             Button(action: {
-                viewModel.selectedPage = 0
                 viewModel.selectedDate = viewModel.prevDate
             }, label: {
                 Text(viewModel.prevFormatted)
@@ -50,7 +49,6 @@ private extension FavoriteView {
             Spacer()
             
             Button(action: {
-                viewModel.selectedPage = 0
                 viewModel.selectedDate = viewModel.nextDate
             }, label: {
                 Text(viewModel.nextFormatted)

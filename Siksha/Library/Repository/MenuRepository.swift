@@ -40,7 +40,7 @@ final class MenuRepository {
         
         parameters.append(URLQueryItem(name: "start_date", value: startDate))
         parameters.append(URLQueryItem(name: "end_date", value: endDate))
-        parameters.append(URLQueryItem(name: "except_empty", value: UserDefaults.standard.bool(forKey: "noMenuHide") ? "true" : "false"))
+        parameters.append(URLQueryItem(name: "except_empty", value: !UserDefaults.standard.bool(forKey: "notNoMenuHide") ? "true" : "false"))
         
         component?.queryItems = parameters
         

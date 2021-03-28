@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftyJSON
 
 public class FavoriteViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
@@ -40,7 +41,7 @@ public class FavoriteViewModel: ObservableObject {
     
     @Published var selectedPage: Int = 0
     
-    @Published var noFavorites: Bool = false
+    @Published var noFavorites: Bool = true
     
     init() {
         dailyMenus = repository.dailyMenus
@@ -60,6 +61,8 @@ public class FavoriteViewModel: ObservableObject {
                 selectedPage = 1
             }
         }
+        
+        initNoFavorites()
         
         $selectedDate
             .sink { [weak self] dateString in
@@ -127,12 +130,6 @@ public class FavoriteViewModel: ObservableObject {
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     self.restaurantsLists = [br, lu, dn]
                     
-                    if br.count == 0, lu.count == 0, dn.count == 0 {
-                        self.noFavorites = true
-                    } else {
-                        self.noFavorites = false
-                    }
-                    
                     self.noMenu = false
                 } else {
                     self.noMenu = true
@@ -163,6 +160,34 @@ public class FavoriteViewModel: ObservableObject {
                 }
                 self.getMenuStatus = .succeeded
                 self.dailyMenus = self.repository.dailyMenus
+            }
+            .store(in: &cancellables)
+    }
+    
+    func initNoFavorites() {
+        let url = Config.shared.baseURL + "/restaurants/"
+        
+        URLSession.shared.dataTaskPublisher(for: URL(string: url)!)
+            .receive(on: RunLoop.main)
+            .sink
+            { _ in }
+            receiveValue: { [weak self] (data, response) in
+                guard let self = self else { return }
+                guard let response = response as? HTTPURLResponse,
+                      200..<300 ~= response.statusCode,
+                      let restJSON = try? JSON(data: data)["result"].array else {
+                    self.noFavorites = false
+                    return
+                }
+                var hasFavorite = false
+                restJSON.forEach { json in
+                    let id = json["id"].intValue
+                    if UserDefaults.standard.bool(forKey: "fav\(id)") {
+                        hasFavorite = true
+                        return
+                    }
+                }
+                self.noFavorites = !hasFavorite
             }
             .store(in: &cancellables)
     }
