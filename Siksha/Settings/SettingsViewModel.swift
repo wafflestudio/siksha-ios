@@ -33,7 +33,7 @@ class SettingsViewModel: ObservableObject {
         
         $noMenuHide
             .sink { hide in
-                UserDefaults.standard.set(hide, forKey: "noMenuHide")
+                UserDefaults.standard.set(!hide, forKey: "notNoMenuHide")
             }
             .store(in: &cancellables)
         
