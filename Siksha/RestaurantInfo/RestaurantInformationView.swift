@@ -24,66 +24,61 @@ struct RestaurantInformationView: View {
     var body: some View {
                         
         VStack(spacing: 0) {
-            
             HStack {
-                Text(restaurant.addr)
-                    .font(.custom("NanumSquareOTFR", size: 14))
-                    .foregroundColor(Color("DefaultFontColor"))
                 Spacer()
-            }
-            .padding(EdgeInsets(top: 20, leading: 30, bottom: 0, trailing: 30))
-            
-            HStack {
                 Text(restaurant.nameKr)
-                    .font(.custom("NanumSquareOTFB", size: 24))
-                    .foregroundColor(Color("DefaultFontColor"))
+                    .font(.custom("NanumSquareOTFB", size: 20))
+                    .foregroundColor(.black)
                 Spacer()
             }
-            .padding(EdgeInsets(top: 4, leading: 30, bottom: 8, trailing: 30))
+            .padding(EdgeInsets(top: 14, leading: 16, bottom: 10, trailing: 16))
 
             Color.init("MainThemeColor")
-                .frame(height: 2)
+                .frame(height: 1)
                 .frame(maxWidth: .infinity)
                 .padding([.leading, .trailing], 16)
-
-            HStack {
-                Text("식당 위치")
-                    .font(.custom("NanumSquareOTFB", size: 16))
-                    .foregroundColor(Color("DefaultFontColor"))
-                
-                Spacer()
-            }
-            .padding(EdgeInsets(top: 24, leading: 32, bottom: 0, trailing: 32))
-
-            MapView(coordinate: position)
-                .cornerRadius(10.0)
-                .frame(height: 150)
-                .padding(EdgeInsets(top: 4, leading: 28, bottom: 0, trailing: 28))
-
-            HStack(alignment: .center, spacing: 0) {
-                Text("영업 시간")
-                    .font(.custom("NanumSquareOTFB", size: 16))
-                    .foregroundColor(Color("DefaultFontColor"))
-                    .padding(.trailing, 10)
-                                
-                SegmentedControlView(selected: self.$selected, segments: [Segment(id: 0, name: "주중"), Segment(id: 1, name: "토요일"), Segment(id: 2, name: "휴일")])
-                
-                Spacer()
-            }
-            .padding(EdgeInsets(top: 20, leading: 32, bottom: 0, trailing: 32))
             
-            HStack(alignment: .top) {
-                Text(restaurant.operatingHours[self.selected])
-                    .font(.custom("NanumSquareOTFR", size: 14))
-                    .foregroundColor(Color("DefaultFontColor"))
+            ScrollView {
+                HStack {
+                    Text("식당 위치")
+                        .font(.custom("NanumSquareOTFR", size: 14))
+                        .foregroundColor(.black)
+                    Spacer()
+                    
+                    Image("Location")
+                        .resizable()
+                        .frame(width: 16, height: 16)
+                    Text(restaurant.addr)
+                        .font(.custom("NanumSquareOTFR", size: 14))
+                        .foregroundColor(Color("LightFontColor"))
+                }
+                .padding(EdgeInsets(top: 16, leading: 16, bottom: 12, trailing: 16))
+
+                MapView(coordinate: position, markerText: restaurant.addr)
+                    .cornerRadius(10.0)
+                    .frame(height: 250)
+                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 24, trailing: 16))
+                
+                Color.init("DarkBackgroundColor")
+                    .frame(height: 10)
+                    .frame(maxWidth: .infinity)
+
+                HStack(alignment: .center, spacing: 0) {
+                    Text("영업 시간")
+                        .font(.custom("NanumSquareOTFR", size: 14))
+                    Spacer()
+                }
+                .padding(EdgeInsets(top: 24, leading: 16, bottom: 8, trailing: 16))
+                
+                Color.init("MainThemeColor")
+                    .frame(height: 1)
+                    .frame(maxWidth: .infinity)
+                    .padding([.leading, .trailing], 16)
+                
+                OperatingHoursTable(hours: Array(restaurant.operatingHours))
                 
                 Spacer()
             }
-            .id("hours\(self.selected)")
-            .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-            .padding(EdgeInsets(top: 14, leading: 32, bottom: 0, trailing: 32))
-            
-            Spacer()
         }
         .padding(.bottom)
     }

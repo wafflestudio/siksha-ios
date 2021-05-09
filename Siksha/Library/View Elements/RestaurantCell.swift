@@ -51,7 +51,7 @@ struct RestaurantCell: View {
                 Button(action: {
                     isFavorite.toggle()
                     UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                    viewModel?.getMenuStatus = .idle
+                    viewModel?.getMenuStatus = .needRerender
                 }, label: {
                     Image(isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()

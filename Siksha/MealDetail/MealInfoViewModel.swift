@@ -40,40 +40,23 @@ public class MealInfoViewModel: ObservableObject {
         }
         
         getReviewStatus = .loading
-        
-        let url = Config.shared.baseURL + "/reviews/"
-        var component = URLComponents(string: url)
-        var parameters = [URLQueryItem]()
-        
-        parameters.append(URLQueryItem(name: "menu_id", value: "\(meal.id)"))
-        parameters.append(URLQueryItem(name: "page", value: "\(currentPage)"))
-        parameters.append(URLQueryItem(name: "per_page", value: "10"))
-        
-        component?.queryItems = parameters
-        
-        let request = URLRequest(url: component?.url ?? URL(string: url)!)
-        
-        let decoder = JSONDecoder()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        decoder.dateDecodingStrategy = .formatted(formatter)
 
-        URLSession.shared.dataTaskPublisher(for: request)
-            .map(\.data)
-            .decode(type: ReviewResponse.self, decoder: decoder)
+        Networking.shared.getReviews(menuId: meal.id, page: currentPage, perPage: 10)
+            .map(\.value)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in
                 guard let self = self else { return }
+                guard let response = response else {
+                    self.getReviewStatus = .failed
+                    return
+                }
                 self.hasMorePages = (self.currentPage < (response.totalCount+9)/10)
                 self.currentPage += 1
                 self.getReviewStatus = .succeeded
             })
-            .map { self.mealReviews + $0.reviews }
-            .catch { _ -> Just<[Review]> in
-                self.getReviewStatus = .failed
-
-                return Just(self.mealReviews)
-            }
+            .map(\.?.reviews)
+            .replaceNil(with: [])
+            .map { self.mealReviews + $0 }
             .assign(to: \.mealReviews, on: self)
             .store(in: &cancellables)
     }
