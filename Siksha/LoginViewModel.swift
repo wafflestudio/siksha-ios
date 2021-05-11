@@ -34,34 +34,24 @@ class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDeleg
     }
     
     func requestTokenToSikshaAPI(token: String, endPoint: String) {
-        let url = Config.shared.baseURL + "/auth/login/" + endPoint
-        
-        guard var request = try? URLRequest(url: URL(string: url)!, method: .post) else {
-            self.signInFailed = true
-            return
-        }
+        #if DEBUG
         print(token)
-        request.setValue("Bearer " + token, forHTTPHeaderField: "\(endPoint)-token")
+        #endif
         
-        URLSession.shared.dataTaskPublisher(for: request)
+        Networking.shared.getAccessToken(token: token, endPoint: endPoint)
             .receive(on: RunLoop.main)
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                if case .failure = completion {
-                    self.signInFailed = true
-                }
-            } receiveValue: { [weak self] (data, response) in
-                guard let self = self else { return }
-                guard let response = response as? HTTPURLResponse,
-                      200..<300 ~= response.statusCode,
+            .sink { result in
+                guard let data = result.value,
                       let accessToken = try? JSON(data: data)["access_token"].stringValue,
                       let expDate = Utils.shared.decode(jwtToken: accessToken)["exp"] as? Double else {
                     self.signInFailed = true
                     return
                 }
-
+                
+                #if DEBUG
                 print(expDate)
                 print(accessToken)
+                #endif
                 
                 UserDefaults.standard.set(expDate, forKey: "tokenExpDate")
                 UserDefaults.standard.set(accessToken, forKey: "accessToken")

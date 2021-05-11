@@ -9,87 +9,138 @@ import SwiftUI
 import UIKit
 
 struct SettingsView: View {
-    private let backgroundColor = Color.init("AppBackgroundColor")
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @ObservedObject var viewModel = SettingsViewModel()
     @EnvironmentObject var appState: AppState
     
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) {
-                NavigationBar(geometry)
-                
-                NavigationView {
+            NavigationView {
+                VStack(alignment: .leading, spacing: 0) {
+                    NavigationBar(geometry)
                     ScrollView {
-                        VStack(alignment: .leading) {
-                            Text("식샤 설정")
-                                .foregroundColor(.init(white: 79/255))
-                                .font(.custom("NanumSquareOTFB", size: 18))
-                                .padding(.top, 10)
-                            
-                            NavigationLink(destination: InformationView()) {
-                                SettingsCell(text: "식샤 정보") {
-                                    Image("Arrow")
-                                        .resizable()
-                                        .renderingMode(.original)
-                                        .frame(width: 8, height: 15)
+                        NavigationLink(destination: InformationView(viewModel)) {
+                            HStack {
+                                Image("LogoEllipse")
+                                    .resizable()
+                                    .frame(width: 48, height: 48)
+                                    .padding(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 16))
+                                
+                                VStack(alignment: .leading) {
+                                    Text(viewModel.isUpdateAvailable ? "업데이트가 가능합니다." : "최신버전을 이용중입니다.")
+                                        .font(.custom("NanumSquareOTFR", size: 14))
+                                        .foregroundColor(.black)
+                                    Text("siksha-\(viewModel.version)")
+                                        .font(.custom("NanumSquareOTFR", size: 14))
+                                        .foregroundColor(.black)
                                 }
+                                
+                                Spacer()
+                                
+                                Image("Arrow")
+                                    .resizable()
+                                    .renderingMode(.original)
+                                    .frame(width: 10, height: 16)
+                                    .padding(.trailing, 11)
                             }
-                            
-                            Button(action: {
-                                viewModel.showSignOutAlert = true
-                            }) {
-                                SettingsCell(text: "앱 로그아웃") {
-                                    EmptyView()
-                                }
-                            }
-                            
-                            Text("식당 설정")
-                                .foregroundColor(.init(white: 79/255))
-                                .font(.custom("NanumSquareOTFB", size: 18))
-                                .padding(.top, 25)
-                            
+                            .background(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.init(white: 232/255), lineWidth: 1)
+                                    .padding(1)
+                            )
+                        }
+                        .padding(.top, 24)
+                        
+                        VStack(spacing: 0) {
                             NavigationLink(destination: MenuOrderView(viewModel)) {
-                                SettingsCell(text: "식당 순서 변경") {
+                                HStack(alignment: .center) {
+                                    Text("식당 순서 변경")
+                                        .font(.custom("NanumSquareOTFR", size: 15))
+                                        .foregroundColor(.black)
+                                        .padding(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 0))
+                                    
+                                    Spacer()
+                                    
                                     Image("Arrow")
                                         .resizable()
                                         .renderingMode(.original)
                                         .frame(width: 8, height: 15)
+                                        .padding(.trailing, 11)
                                 }
                             }
+                            
+                            Color.init(white: 232/255)
+                                .frame(height: 1)
+                                .padding([.leading, .trailing], 8)
                             
                             NavigationLink(destination: FavoriteMenuOrderView(viewModel)) {
-                                SettingsCell(text: "즐겨찾기 식당 순서 변경") {
+                                HStack(alignment: .center) {
+                                    Text("즐겨찾기 식당 순서 변경")
+                                        .font(.custom("NanumSquareOTFR", size: 15))
+                                        .foregroundColor(.black)
+                                        .padding(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 0))
+                                    
+                                    Spacer()
+                                    
                                     Image("Arrow")
                                         .resizable()
                                         .renderingMode(.original)
                                         .frame(width: 8, height: 15)
+                                        .padding(.trailing, 11)
                                 }
                             }
+                            
+                            Color.init(white: 232/255)
+                                .frame(height: 1)
+                                .padding([.leading, .trailing], 8)
                             
                             Button(action: {
                                 // change button
                                 viewModel.noMenuHide.toggle()
                             }) {
-                                SettingsCell(text: "메뉴 없는 식당 숨기기") {
+                                HStack(alignment: .center) {
+                                    Text("메뉴 없는 식당 숨기기")
+                                        .font(.custom("NanumSquareOTFR", size: 15))
+                                        .foregroundColor(.black)
+                                        .padding(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 0))
+                                    
+                                    Spacer()
+                                    
                                     Image(viewModel.noMenuHide ? "Checked" : "NotChecked")
                                         .resizable()
                                         .renderingMode(.original)
-                                        .frame(width: 26, height: 26)
+                                        .frame(width: 20, height: 20)
+                                        .padding(.trailing, 11)
                                 }
+                            }
+                        }
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.init(white: 232/255), lineWidth: 1)
+                                .padding(1)
+                        )
+                        
+                        HStack {
+                            Button(action: {
+                                viewModel.showSignOutAlert = true
+                            }) {
+                                Text("앱 로그아웃")
+                                    .font(.custom("NanumSquareOTFR", size: 15))
+                                    .foregroundColor(.black)
                             }
                             
                             Spacer()
                         }
-                        .padding(.top, 32)
-                        .padding([.leading, .trailing], 16)
+                        .padding(16)
+                        
+                        
+                        Spacer()
+                        
                     }
-                    .navigationBarTitle(Text(""), displayMode: .inline)
-                    .navigationBarHidden(true)
-                    .background(backgroundColor)
+                    .padding([.leading, .trailing], 8)
                 }
+                .navigationBarHidden(true)
             }
-            .background(backgroundColor)
             .actionSheet(isPresented: $viewModel.showSignOutAlert, content: {
                 ActionSheet(title: Text("로그아웃"),
                             message: Text("앱에서 로그아웃합니다."),

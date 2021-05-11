@@ -7,53 +7,64 @@
 import SwiftUI
 import Combine
 
+private extension InformationView {
+    var versionView: some View {
+        ZStack {
+            VStack {
+                Image("LogoEllipse")
+                    .resizable()
+                    .frame(width: 100, height: 100)
+                Text(viewModel.isUpdateAvailable ? "업데이트가 가능합니다" : "최신버전을 이용중입니다.")
+                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .foregroundColor(fontColor)
+                    .padding(.top, 20)
+                Text("siksha-\(viewModel.version)")
+                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .foregroundColor(fontColor)
+            }
+        }
+    }
+}
+
 struct InformationView: View {
     private let backgroundColor = Color.init("AppBackgroundColor")
+    private let fontColor = Color.init(white: 185/255)
     
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
-    @GestureState private var dragOffset = CGSize.zero
+    
     @State var showRemoveAccountAlert: Bool = false
     @State var removeAccountFailed: Bool = false
     @State private var cancellable: AnyCancellable? = nil
+    
+    @ObservedObject var viewModel: SettingsViewModel
+    
+    init(_ viewModel: SettingsViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading) {
-
-                HStack {
-                    BackButton(presentationMode)
-
-                    Spacer()
-                    
-                    Text("식샤 정보")
-                        .font(.custom("NanumSquareOTFB", size: 18))
-                        .foregroundColor(.init(white: 79/255))
-                    Spacer()
-                    Text("")
-                        .frame(width: 100)
-                }
-                .padding([.leading, .trailing], 16)
-                .padding(.top, 26)
+                NavigationBar(title: "식샤 정보", showBack: true, geometry)
                 
-                VersionView()
+                versionView
                     .padding(.vertical, 50)
                     .frame(maxWidth: .infinity)
-                
-                Spacer()
                 
                 HStack {
                     Spacer()
                     Button(action: {
                         self.showRemoveAccountAlert = true
                     }, label: {
-                        Text("식샤 회원 탈퇴")
+                        Text("회원 탈퇴")
                             .foregroundColor(.red)
                             .font(.custom("NanumSquareOTFR", size: 16))
                     })
                     Spacer()
                 }
-                .padding(.bottom, 20)
+                .padding(.top, 20)
+                
+                Spacer()
                 
                 HStack {
                     Spacer()
@@ -119,6 +130,6 @@ struct InformationView: View {
 
 struct InformationView_Previews: PreviewProvider {
     static var previews: some View {
-        InformationView()
+        InformationView(SettingsViewModel())
     }
 }

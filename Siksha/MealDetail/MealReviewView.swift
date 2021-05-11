@@ -88,9 +88,9 @@ private extension MealReviewView {
     
     var alertMessage: Text {
         var message = ""
-        if viewModel.postReviewStatus == .succeeded {
+        if viewModel.postReviewSucceeded {
             message = "평가가 등록되었습니다."
-        } else if viewModel.postReviewStatus == .failed {
+        } else {
             if let error = viewModel.errorCode {
                 message = error.message
             } else {
@@ -102,14 +102,14 @@ private extension MealReviewView {
     
     var alertButton: Alert.Button {
         var action: (() -> Void)? = nil
-        if viewModel.postReviewStatus == .succeeded {
+        if viewModel.postReviewSucceeded {
             action = {
                 mealInfoViewModel.mealReviews = []
                 mealInfoViewModel.currentPage = 1
                 mealInfoViewModel.loadMoreReviewsIfNeeded(currentItem: nil)
                 presentationMode.wrappedValue.dismiss()
             }
-        } else if viewModel.postReviewStatus == .failed {
+        } else {
             if let _ = viewModel.errorCode {
                 action = {
                     presentationMode.wrappedValue.dismiss()
@@ -267,9 +267,9 @@ private extension MealReviewView13 {
     
     var alertMessage: Text {
         var message = ""
-        if viewModel.postReviewStatus == .succeeded {
+        if viewModel.postReviewSucceeded {
             message = "평가가 등록되었습니다."
-        } else if viewModel.postReviewStatus == .failed {
+        } else {
             if let error = viewModel.errorCode {
                 message = error.message
             } else {
@@ -281,11 +281,11 @@ private extension MealReviewView13 {
     
     var alertButton: Alert.Button {
         var action: (() -> Void)? = nil
-        if viewModel.postReviewStatus == .succeeded {
+        if viewModel.postReviewSucceeded {
             action = {
                 presentationMode.wrappedValue.dismiss()
             }
-        } else if viewModel.postReviewStatus == .failed {
+        } else {
             if let _ = viewModel.errorCode {
                 action = {
                     presentationMode.wrappedValue.dismiss()
