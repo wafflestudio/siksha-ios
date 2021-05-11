@@ -9,61 +9,70 @@ import SwiftUI
 
 private extension MealInfoView {
     var scoreSummary: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 3) {
-                Text("\(String(format: "%.1f", viewModel.meal.score))점")
-                    .font(.custom("NanumSquareOTFB", size: 22))
-                    .foregroundColor(darkFontColor)
-                
-                RatingStar(.constant(viewModel.meal.score), size: 17)
-                
-                Text("누적 평가 \(viewModel.meal.reviewCnt)개")
-                    .font(.custom("NanumSquareOTFB", size: 12))
-                    .foregroundColor(lightGrayColor)
-                
-                if showSubmitButton {
-                    if #available(iOS 14.0, *) {
-                        NavigationLink(
-                            destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel),
-                            label: {
-                                ZStack {
-                                    Image("RateButton")
-                                        .resizable()
-                                        .renderingMode(.original)
-                                        .frame(width: 122, height: 26)
-                                        .padding(.top, 3)
-                                    
-                                    Text("나의 평가 남기기")
-                                        .font(.custom("NanumSquareOTFB", size: 12))
-                                        .foregroundColor(.white)
-                                }
-                            })
-                            .padding(.top, 10)
-                    } else {
-                        NavigationLink(
-                            destination: MealReviewView13(viewModel.meal),
-                            label: {
-                                ZStack {
-                                    Image("RateButton")
-                                        .resizable()
-                                        .renderingMode(.original)
-                                        .frame(width: 122, height: 26)
-                                        .padding(.top, 3)
-                                    
-                                    Text("나의 평가 남기기")
-                                        .font(.custom("NanumSquareOTFB", size: 12))
-                                        .foregroundColor(.white)
-                                }
-                            })
-                            .padding(.top, 10)
-                    }
+        
+        VStack {
+            
+            HStack (alignment: .bottom) {
+                VStack(alignment: .center, spacing: 3) {
+                    Text("\(String(format: "%.1f", viewModel.meal.score))점")
+                        .font(.custom("NanumSquareOTFB", size: 32))
+                        .foregroundColor(darkFontColor)
+                    
+                    RatingStar(.constant(viewModel.meal.score), size: 17)
+                    
                 }
+                            
+                VStack(alignment: .leading) {
+                    Text("총 \(viewModel.meal.reviewCnt)명이 평가했어요!")
+                        .font(.custom("NanumSquareOTFB", size: 12))
+                        .foregroundColor(lightGrayColor)
+                                    
+                    HorizontalGraph(five: 10, four: 20, three: 30, two: 40, one: 50)
+                }
+                .padding(.leading, 20)
                 
+                Spacer()
             }
+            .padding(EdgeInsets(top: 20, leading: 0, bottom: 10, trailing: 0))
+            
+            if showSubmitButton {
+                if #available(iOS 14.0, *) {
+                    NavigationLink(
+                        destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel),
+                        label: {
+                            ZStack {
+                                Image("RateButton-new")
+                                    .resizable()
+                                    .renderingMode(.original)
+                                    .frame(width: 200, height: 32)
 
-            Spacer()
+                                Text("나의 평가 남기기")
+                                    .font(.custom("NanumSquareOTFB", size: 14))
+                                    .foregroundColor(.white)
+                            }
+                        })
+                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 24, trailing: 0))
+                } else {
+                    NavigationLink(
+                        destination: MealReviewView13(viewModel.meal),
+                        label: {
+                            ZStack {
+                                Image("RateButton-new")
+                                    .resizable()
+                                    .renderingMode(.original)
+                                    .frame(width: 200, height: 32)
+                                    .padding(.top, 3)
+
+                                Text("나의 평가 남기기")
+                                    .font(.custom("NanumSquareOTFB", size: 12))
+                                    .foregroundColor(.white)
+                            }
+                        })
+                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 24, trailing: 0))
+                }
+            }
         }
-        .padding(EdgeInsets(top: 20, leading: 0, bottom: 50, trailing: 0))
+        
     }
     
     var reviewList: some View {
@@ -88,11 +97,20 @@ private extension MealInfoView {
         .listStyle(PlainListStyle())
         .padding([.leading, .trailing], -10)
     }
+    
+    var pictureList: some View {
+        ScrollView (.horizontal) {
+            HStack {
+//                ForEach
+            }
+        }.frame(height: 150)    }
+    
 }
 
 struct MealInfoView: View {
     private let darkFontColor = Color.init("DarkFontColor")
     private let lightGrayColor = Color.init("LightGrayColor")
+    private let orangeColor = Color.init("MainThemeColor")
     @ObservedObject var viewModel: MealInfoViewModel
     @State var showSubmitButton: Bool = true
     
@@ -110,7 +128,16 @@ struct MealInfoView: View {
     var body: some View {
         NavigationView {
             VStack {
+                
+                HStack {
+                    orangeColor
+                        .frame(height: 1)
+                        .frame(maxWidth: .infinity)
+                }
+                .padding([.leading, .trailing], 12)
+                
                 scoreSummary
+                
                 
                 HStack {
                     Text("메뉴 평가")
@@ -119,7 +146,7 @@ struct MealInfoView: View {
                     
                     Spacer()
                 }
-                
+                                
                 if viewModel.mealReviews.count > 0 {
                     reviewList
                 } else {

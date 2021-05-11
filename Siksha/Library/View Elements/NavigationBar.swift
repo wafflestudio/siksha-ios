@@ -20,7 +20,7 @@ struct NavigationBar: View {
                 .resizable()
                 .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+55)
                 .padding(.top, -geometry.safeAreaInsets.top)
-            Image("Logo")
+            Image("Logo-new")
                 .padding(.bottom, 5)
         }
     }

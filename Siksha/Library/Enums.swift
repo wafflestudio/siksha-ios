@@ -20,6 +20,7 @@ struct TypeInfo: Identifiable {
     var icon: String
     var height: CGFloat
     var width: CGFloat
+    var name: String
     
     init(type: TypeSelection) {
         self.id = type.rawValue
@@ -30,14 +31,17 @@ struct TypeInfo: Identifiable {
             self.icon = "Breakfast"
             self.width = 20
             self.height = 12
+            self.name = "아침"
         case .lunch:
             self.icon = "Lunch"
             self.width = 20
             self.height = 20
+            self.name = "점심"
         case .dinner:
             self.icon = "Dinner"
             self.width = 14
             self.height = 14
+            self.name = "저녁"
         }
     }
 }
