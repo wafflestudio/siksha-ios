@@ -15,6 +15,7 @@ struct Review: Codable {
     var comment: String?
     var createdAt: Date
     var updatedAt: Date
+//    var image: UIinag?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -24,6 +25,7 @@ struct Review: Codable {
         case comment = "comment"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
+//        case image = "image"
     }
 }
 

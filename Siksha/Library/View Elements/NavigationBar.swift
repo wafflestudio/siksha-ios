@@ -24,7 +24,6 @@ struct NavigationBar: View {
             Color.init("MainThemeColor")
                 .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+55)
                 .padding(.top, -geometry.safeAreaInsets.top)
-            
             HStack {
                 if showBack {
                     Button(action: {

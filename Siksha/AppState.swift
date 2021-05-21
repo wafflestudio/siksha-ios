@@ -20,6 +20,8 @@ public class AppState: ObservableObject {
     @Published var restaurantToShow: Restaurant? = nil
     @Published var mealToShow: Meal? = nil
     @Published var canSubmitReview: Bool = true
+    @Published var monthToShow: Int? = nil
+    @Published var showCalendar: Bool = false
     
     @Published var ratingEnabled: Bool = true
 
@@ -81,5 +83,39 @@ public class AppState: ObservableObject {
                 self.showSheet = true
             }
             .store(in: &cancellables)
+        
+        $monthToShow
+            .filter { $0 != nil }
+            .sink { [weak self] meal in
+                guard let self = self else { return }
+                self.showCalendar = true
+            }
+            .store(in: &cancellables)
+        
+        $showRestaurantInfo
+            .filter { !$0 }
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.restaurantToShow = nil
+            }
+            .store(in: &cancellables)
+        
+        $showMealInfo
+            .filter { !$0 }
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.mealToShow = nil
+>>>>>>> f333f6a304618972a0aa2b037df58be9b37c731d
+            }
+            .store(in: &cancellables)
+        
+        $showCalendar
+            .filter { !$0 }
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.monthToShow = nil
+            }
+            .store(in: &cancellables)
+        
     }
 }
