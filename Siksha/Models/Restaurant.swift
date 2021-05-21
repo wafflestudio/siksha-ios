@@ -61,9 +61,9 @@ class Restaurant: Object {
             }
             
             if hours.count == 0 {
-                operatingHours.append("정보가 없습니다.")
+                operatingHours.append("")
             } else {
-                operatingHours.append(hours.replacingOccurrences(of: "-", with: " ~ "))
+                operatingHours.append(hours.replacingOccurrences(of: "-", with: " - "))
             }
         }
         addMenus(json["menus"])

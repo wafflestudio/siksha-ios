@@ -20,6 +20,7 @@ struct TypeInfo: Identifiable {
     var icon: String
     var height: CGFloat
     var width: CGFloat
+    var name: String
     
     init(type: TypeSelection) {
         self.id = type.rawValue
@@ -30,16 +31,28 @@ struct TypeInfo: Identifiable {
             self.icon = "Breakfast"
             self.width = 20
             self.height = 12
+            self.name = "아침"
         case .lunch:
             self.icon = "Lunch"
             self.width = 20
             self.height = 20
+            self.name = "점심"
         case .dinner:
             self.icon = "Dinner"
             self.width = 14
             self.height = 14
+            self.name = "저녁"
         }
     }
+}
+
+enum MenuStatus {
+    case loading
+    case failed
+    case showCached
+    case succeeded
+    case idle
+    case needRerender // use when the user removes restaurants from favorite view
 }
 
 enum NetworkStatus {
@@ -50,7 +63,7 @@ enum NetworkStatus {
 }
 
 enum ReviewErrorCode: Int {
-    case noNetwork = 1
+    case noNetwork = 0
     case authenticationFailed = 422
     case multipleReview = 403
     case invalidId = 404

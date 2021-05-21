@@ -38,6 +38,9 @@
 		1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E96F94225E132250074940C /* ActivityIndicator.swift */; };
 		1E96F95125E2525B0074940C /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E96F95025E2525B0074940C /* LoginView.swift */; };
 		1EABA80B25EBE28000B79CB8 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EABA80A25EBE28000B79CB8 /* Utils.swift */; };
+		1EB5F43C263E8EDE0012201A /* OperatingHoursTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB5F43B263E8EDE0012201A /* OperatingHoursTable.swift */; };
+		1EB5F43F264467B80012201A /* SikshaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB5F43E264467B80012201A /* SikshaAPI.swift */; };
+		1EB5F4412644710A0012201A /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB5F4402644710A0012201A /* Networking.swift */; };
 		1ECB248125F14C0F00875E18 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB248025F14C0F00875E18 /* LoginViewModel.swift */; };
 		1ECB250325F16DE300875E18 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB250225F16DE300875E18 /* NavigationBar.swift */; };
 		1ECB251D25F1739D00875E18 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB251C25F1739D00875E18 /* Config.swift */; };
@@ -57,8 +60,6 @@
 		231C9C6825F7FAFB0072C07A /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C6725F7FAFB0072C07A /* InformationView.swift */; };
 		231C9C7025F7FB720072C07A /* MenuOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C6F25F7FB720072C07A /* MenuOrderView.swift */; };
 		231C9C7825F7FB9E0072C07A /* FavoriteMenuOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C7725F7FB9E0072C07A /* FavoriteMenuOrderView.swift */; };
-		231C9C8025F7FBDC0072C07A /* VersionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C7F25F7FBDC0072C07A /* VersionView.swift */; };
-		231C9C8B25F82D290072C07A /* SettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C8A25F82D290072C07A /* SettingsCell.swift */; };
 		231C9C9025F82D660072C07A /* MenuRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C8F25F82D660072C07A /* MenuRow.swift */; };
 		231C9CB625F834D40072C07A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A56F025C6FCE800DBB3F4 /* Assets.xcassets */; };
 		231C9CCA25F8350F0072C07A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A56F325C6FCE800DBB3F4 /* Preview Assets.xcassets */; };
@@ -66,6 +67,8 @@
 		231C9CF825F83A850072C07A /* RestaurantInformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9CF725F83A850072C07A /* RestaurantInformationView.swift */; };
 		231C9D1425F8568C0072C07A /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9D1325F8568C0072C07A /* MapView.swift */; };
 		231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9D2025FB5E490072C07A /* SegmentedControlView.swift */; };
+		23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */; };
+		234DB0D9264156150049FE6B /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234DB0D8264156150049FE6B /* CalendarView.swift */; };
 		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
 /* End PBXBuildFile section */
 
@@ -128,6 +131,9 @@
 		1E96F95025E2525B0074940C /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1E96F95825E255B00074940C /* Siksha.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Siksha.entitlements; sourceTree = "<group>"; };
 		1EABA80A25EBE28000B79CB8 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		1EB5F43B263E8EDE0012201A /* OperatingHoursTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatingHoursTable.swift; sourceTree = "<group>"; };
+		1EB5F43E264467B80012201A /* SikshaAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SikshaAPI.swift; sourceTree = "<group>"; };
+		1EB5F4402644710A0012201A /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		1ECB248025F14C0F00875E18 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		1ECB250225F16DE300875E18 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		1ECB251C25F1739D00875E18 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -147,13 +153,13 @@
 		231C9C6725F7FAFB0072C07A /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
 		231C9C6F25F7FB720072C07A /* MenuOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOrderView.swift; sourceTree = "<group>"; };
 		231C9C7725F7FB9E0072C07A /* FavoriteMenuOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMenuOrderView.swift; sourceTree = "<group>"; };
-		231C9C7F25F7FBDC0072C07A /* VersionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionView.swift; sourceTree = "<group>"; };
-		231C9C8A25F82D290072C07A /* SettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsCell.swift; sourceTree = "<group>"; };
 		231C9C8F25F82D660072C07A /* MenuRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuRow.swift; sourceTree = "<group>"; };
 		231C9CE425F835B40072C07A /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		231C9CF725F83A850072C07A /* RestaurantInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInformationView.swift; sourceTree = "<group>"; };
 		231C9D1325F8568C0072C07A /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		231C9D2025FB5E490072C07A /* SegmentedControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlView.swift; sourceTree = "<group>"; };
+		23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalGraph.swift; sourceTree = "<group>"; };
+		234DB0D8264156150049FE6B /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
 		808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -210,10 +216,12 @@
 			isa = PBXGroup;
 			children = (
 				1E96F95825E255B00074940C /* Siksha.entitlements */,
+				1ECB24FF25F16D1C00875E18 /* Repository */,
 				1E3A574125C6FEC600DBB3F4 /* Models */,
-				1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */,
+				1EB5F43D264467A90012201A /* Networking */,
 				1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */,
 				1E3A56EE25C6FCE600DBB3F4 /* ContentView.swift */,
+				1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */,
 				1E3A581A25C98F9A00DBB3F4 /* AppState.swift */,
 				1E96F95025E2525B0074940C /* LoginView.swift */,
 				1ECB248025F14C0F00875E18 /* LoginViewModel.swift */,
@@ -284,10 +292,9 @@
 		1E3A573825C6FE1600DBB3F4 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				1ECB24FF25F16D1C00875E18 /* Repository */,
 				1ECB250025F16D4D00875E18 /* UIRepresentable */,
-				1ECB250125F16D7900875E18 /* View Elements */,
 				1E3A573925C6FE2700DBB3F4 /* Extensions.swift */,
+				1ECB250125F16D7900875E18 /* View Elements */,
 				1EABA80A25EBE28000B79CB8 /* Utils.swift */,
 				1E3A581F25C9C28000DBB3F4 /* Enums.swift */,
 				1ECB251C25F1739D00875E18 /* Config.swift */,
@@ -318,6 +325,15 @@
 			path = Font;
 			sourceTree = "<group>";
 		};
+		1EB5F43D264467A90012201A /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				1EB5F43E264467B80012201A /* SikshaAPI.swift */,
+				1EB5F4402644710A0012201A /* Networking.swift */,
+			);
+			path = Networking;
+			sourceTree = "<group>";
+		};
 		1ECB24FF25F16D1C00875E18 /* Repository */ = {
 			isa = PBXGroup;
 			children = (
@@ -341,11 +357,12 @@
 			isa = PBXGroup;
 			children = (
 				231C9C8F25F82D660072C07A /* MenuRow.swift */,
-				231C9C7F25F7FBDC0072C07A /* VersionView.swift */,
+				1EB5F43B263E8EDE0012201A /* OperatingHoursTable.swift */,
 				1E3A583625CACC9A00DBB3F4 /* RestaurantCell.swift */,
-				231C9C8A25F82D290072C07A /* SettingsCell.swift */,
 				1E7226F725FBDE72008C272E /* MealCell.swift */,
 				1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */,
+				23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */,
+				234DB0D8264156150049FE6B /* CalendarView.swift */,
 				231C9D1325F8568C0072C07A /* MapView.swift */,
 				1ECB250225F16DE300875E18 /* NavigationBar.swift */,
 				231C9CE425F835B40072C07A /* BackButton.swift */,
@@ -612,16 +629,16 @@
 			files = (
 				231C9C6825F7FAFB0072C07A /* InformationView.swift in Sources */,
 				1ED44A6B25CDB77A001D916B /* FavoriteViewModel.swift in Sources */,
+				234DB0D9264156150049FE6B /* CalendarView.swift in Sources */,
 				1ECB255225F2999100875E18 /* RatingStar.swift in Sources */,
+				1EB5F4412644710A0012201A /* Networking.swift in Sources */,
 				1ECB257D25F5412300875E18 /* TextView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
-				231C9C8025F7FBDC0072C07A /* VersionView.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
 				231C9D1425F8568C0072C07A /* MapView.swift in Sources */,
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
 				1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */,
 				1EABA80B25EBE28000B79CB8 /* Utils.swift in Sources */,
-				231C9C8B25F82D290072C07A /* SettingsCell.swift in Sources */,
 				1E3A581B25C98F9A00DBB3F4 /* AppState.swift in Sources */,
 				1E3A582A25C9C6E300DBB3F4 /* RestaurantsView.swift in Sources */,
 				1E3A57FB25C73FDD00DBB3F4 /* DailyMenu.swift in Sources */,
@@ -634,8 +651,10 @@
 				1ECB250325F16DE300875E18 /* NavigationBar.swift in Sources */,
 				1ECB254D25F2975A00875E18 /* MealInfoView.swift in Sources */,
 				1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */,
+				1EB5F43F264467B80012201A /* SikshaAPI.swift in Sources */,
 				231C9CE525F835B40072C07A /* BackButton.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
+				23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */,
 				1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */,
 				1E96F92F25DEC14F0074940C /* MenuRepository.swift in Sources */,
 				1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */,
@@ -648,6 +667,7 @@
 				1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */,
 				231C9C7025F7FB720072C07A /* MenuOrderView.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
+				1EB5F43C263E8EDE0012201A /* OperatingHoursTable.swift in Sources */,
 				1ED44A4125CC6135001D916B /* BottomModalView.swift in Sources */,
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
@@ -838,7 +858,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ###dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -865,7 +885,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.1.2;
+				MARKETING_VERSION = 2.2.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ###;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

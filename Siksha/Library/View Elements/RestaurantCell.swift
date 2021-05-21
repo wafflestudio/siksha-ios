@@ -32,8 +32,8 @@ struct RestaurantCell: View {
             // Restaurant Name
             HStack {
                 Text(restaurant.nameKr)
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(titleColor)
+                    .font(.custom("NanumSquareOTF", size: 15))
+                    .foregroundColor(orangeColor)
                 
                 Button(action: {
                     withAnimation {
@@ -46,25 +46,36 @@ struct RestaurantCell: View {
                         .frame(width: 14, height: 14)
                 }
                 
-                Spacer()
-                
                 Button(action: {
                     isFavorite.toggle()
                     UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                    viewModel?.getMenuStatus = .idle
+                    viewModel?.getMenuStatus = .needRerender
                 }, label: {
                     Image(isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
                         .renderingMode(.original)
-                        .frame(width: 20, height: 20)
+                        .frame(width: 16, height: 16)
                 })
+                
+                Spacer()
+                
+                Text("Price")
+                    .font(.custom("NanumSquareOTF", size: 12))
+                    .foregroundColor(orangeColor)
+                    .padding(.trailing, 21)
+                
+                Text("Rate")
+                    .font(.custom("NanumSquareOTF", size: 12))
+                    .foregroundColor(orangeColor)
+                    .padding(.trailing, 11)
+                
             }
             .padding([.leading, .trailing], 16)
             .padding([.top, .bottom], 10)
             
             HStack {
                 orangeColor
-                    .frame(height: 2)
+                    .frame(height: 1)
                     .frame(maxWidth: .infinity)
             }
             .padding([.leading, .trailing], 12)

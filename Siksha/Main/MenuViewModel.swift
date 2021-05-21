@@ -18,8 +18,6 @@ public class MenuViewModel: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: Date())
     }
-    
-    var firstShow: Bool = true
 
     @Published var selectedDate: String
     @Published var nextDate: String = ""
@@ -28,21 +26,18 @@ public class MenuViewModel: ObservableObject {
     @Published var selectedFormatted: String = ""
     @Published var nextFormatted: String = ""
     @Published var prevFormatted: String = ""
-    
-    @Published var dailyMenus: [DailyMenu]
+
     @Published var selectedMenu: DailyMenu? = nil
     @Published var restaurantsLists: [[Restaurant]] = []
     @Published var noMenu = false
     
-    @Published var getMenuStatus: NetworkStatus = .idle
+    @Published var getMenuStatus: MenuStatus = .idle
     
     @Published var showNetworkAlert: Bool = false
     
     @Published var selectedPage: Int = 0
     
     init() {
-        dailyMenus = repository.dailyMenus
-        
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
         
@@ -74,35 +69,36 @@ public class MenuViewModel: ObservableObject {
                 self.nextDate = self.formatter.string(from: next)
                 self.prevDate = self.formatter.string(from: prev)
                 
-                self.formatter.dateFormat = "MM. dd. E"
+//                self.formatter.dateFormat = "MM. dd. E"
+                self.formatter.dateFormat = "yyyy-MM-dd (E)"
                 self.selectedFormatted = self.formatter.string(from: selected)
                 self.nextFormatted = self.formatter.string(from: next)
                 self.prevFormatted = self.formatter.string(from: prev)
                 
-                if !self.firstShow {
-                    self.getMenu(date: dateString)
-                }
+                self.getMenu(date: dateString)
             }
             .store(in: &cancellables)
         
         $getMenuStatus
-            .filter { $0 != .idle && $0 != .loading }
-            .combineLatest($dailyMenus)
-            .sink { [weak self] (status, menus) in
+            .filter { $0 == .succeeded || $0 == .showCached }
+            .combineLatest($selectedDate)
+            .sink { [weak self] (_, date) in
                 guard let self = self else { return }
 
-                self.selectedMenu = menus.first { $0.date == self.selectedDate }
+                self.selectedMenu = self.repository.getMenu(date: date)
                 
                 if self.selectedDate == self.todayString {
                     UserDefaults.standard.set(true, forKey: "canSubmitReview")
                 } else {
                     UserDefaults.standard.set(false, forKey: "canSubmitReview")
                 }
+                
+                self.getMenuStatus = .idle
             }
             .store(in: &cancellables)
         
         $getMenuStatus
-            .filter { $0 == .failed }
+            .filter { $0 == .showCached }
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 
@@ -125,7 +121,6 @@ public class MenuViewModel: ObservableObject {
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     self.restaurantsLists = [br, lu, dn]
                     self.noMenu = false
-                    
                 } else {
                     self.noMenu = true
                 }
@@ -139,24 +134,10 @@ public class MenuViewModel: ObservableObject {
         }
         
         self.getMenuStatus = .loading
-        repository.getMenuPublisher(startDate: date, endDate: date)
+        
+        repository.fetchMenu(date: date)
             .receive(on: RunLoop.main)
-            .delay(for: 0.1, scheduler: RunLoop.main)
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                if case .failure = completion {
-                    self.getMenuStatus = .failed
-                }
-            } receiveValue: { [weak self] (data, response) in
-                guard let self = self else { return }
-                guard let response = response as? HTTPURLResponse,
-                      200..<300 ~= response.statusCode else {
-                    self.getMenuStatus = .failed
-                    return
-                }
-                self.dailyMenus = self.repository.dailyMenus
-                self.getMenuStatus = .succeeded
-            }
+            .assign(to: \.getMenuStatus, on: self)
             .store(in: &cancellables)
     }
 }

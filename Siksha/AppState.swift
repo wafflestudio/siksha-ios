@@ -14,21 +14,16 @@ import Combine
 public class AppState: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
+    @Published var showSheet: Bool = false
     @Published var showRestaurantInfo: Bool = false
     @Published var showMealInfo: Bool = false
     @Published var restaurantToShow: Restaurant? = nil
     @Published var mealToShow: Meal? = nil
     @Published var canSubmitReview: Bool = true
+    @Published var monthToShow: Int? = nil
+    @Published var showCalendar: Bool = false
     
     @Published var ratingEnabled: Bool = true
-    
-    var modalHeight: CGFloat {
-        if restaurantToShow != nil {
-            return 450
-        } else {
-            return 0
-        }
-    }
 
     init(){
         let token = UserDefaults.standard.string(forKey: "accessToken")
@@ -65,11 +60,19 @@ public class AppState: ObservableObject {
             }
         }
         
+        $showSheet
+            .filter { !$0 }
+            .sink { [weak self] _ in
+                self?.restaurantToShow = nil
+                self?.mealToShow = nil
+            }
+            .store(in: &cancellables)
+        
         $restaurantToShow
             .filter { $0 != nil }
             .sink { [weak self] restaurant in
                 guard let self = self else { return }
-                self.showRestaurantInfo = true
+                self.showSheet = true
             }
             .store(in: &cancellables)
         
@@ -77,7 +80,15 @@ public class AppState: ObservableObject {
             .filter { $0 != nil }
             .sink { [weak self] meal in
                 guard let self = self else { return }
-                self.showMealInfo = true
+                self.showSheet = true
+            }
+            .store(in: &cancellables)
+        
+        $monthToShow
+            .filter { $0 != nil }
+            .sink { [weak self] meal in
+                guard let self = self else { return }
+                self.showCalendar = true
             }
             .store(in: &cancellables)
         
@@ -94,7 +105,17 @@ public class AppState: ObservableObject {
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.mealToShow = nil
+>>>>>>> f333f6a304618972a0aa2b037df58be9b37c731d
             }
             .store(in: &cancellables)
+        
+        $showCalendar
+            .filter { !$0 }
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                self.monthToShow = nil
+            }
+            .store(in: &cancellables)
+        
     }
 }

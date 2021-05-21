@@ -15,11 +15,41 @@ class SettingsViewModel: ObservableObject {
     @Published var noMenuHide = false
     @Published var restaurantIds = [Int]()
     @Published var favRestaurantIds = [Int]()
-    @Published var networkStatus: NetworkStatus = .idle
+    @Published var networkStatus: MenuStatus = .idle
     @Published var showSignOutAlert: Bool = false
+    
+    @Published var version: String = ""
+    @Published var appStoreVersion: String = ""
     
     var restaurantOrder: [String : Int]
     var favRestaurantOrder: [String : Int]
+    
+    func getVersion() {
+        guard let dictionary = Bundle.main.infoDictionary,
+            let version = dictionary["CFBundleShortVersionString"] as? String else {
+            return
+        }
+        self.version = version
+    }
+    
+    func getAppStoreVersion() {
+        guard let url = URL(string: "http://itunes.apple.com/lookup?id=1032700617"),
+            let data = try? Data(contentsOf: url),
+            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
+            let results = json["results"] as? [[String: Any]],
+            results.count > 0,
+            let appStoreVersion = results[0]["version"] as? String
+            else { return }
+        self.appStoreVersion = appStoreVersion
+    }
+    
+    var isUpdateAvailable: Bool {
+        if self.version == self.appStoreVersion && self.version != "" {
+            return false
+        } else {
+            return true
+        }
+    }
     
     init() {
         noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide")
@@ -30,6 +60,9 @@ class SettingsViewModel: ObservableObject {
         getRestaurants()
         
         setRestaurantIdList()
+        
+        getVersion()
+        getAppStoreVersion()
         
         $noMenuHide
             .sink { hide in

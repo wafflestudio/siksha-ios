@@ -31,21 +31,7 @@ struct FavoriteMenuOrderView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .leading) {
-                // Navigation Bar
-                HStack {
-                    BackButton(self.presentationMode)
-                    Spacer()
-                    
-                    Text("식단 순서 변경")
-                        .font(.custom("NanumSquareOTFB", size: 18))
-                        .foregroundColor(.init(white: 79/255))
-                    Spacer()
-                    
-                    Text("")
-                        .frame(width: 100, alignment: .trailing)
-                }
-                .padding([.leading, .trailing], 16)
-                .padding(.top, 26)
+                NavigationBar(title: "즐겨찾기 순서 변경", showBack: true, geometry)
                 
                 // Description
                 HStack {
