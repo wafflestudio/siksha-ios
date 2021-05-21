@@ -27,8 +27,7 @@ private extension MenuView {
     }
     
     var dayPageTab: some View {
-        HStack(alignment: .top) {
-            
+        HStack(alignment: .center) {
             Button(action: {
                 viewModel.selectedDate = viewModel.prevDate
             }, label: {
@@ -40,11 +39,9 @@ private extension MenuView {
             
             Spacer()
             
-            
             Text(viewModel.selectedFormatted)
                 .font(.custom("NanumSquareOTFB", size: 15))
                 .foregroundColor(orangeColor)
-                .padding(.bottom, 10)
             
             Spacer()
             
@@ -56,49 +53,23 @@ private extension MenuView {
                     .frame(width: 10, height: 16)
             })
             .padding(.trailing, 16)
-            
-            
-//            Button(action: {
-//                viewModel.selectedDate = viewModel.prevDate
-//            }, label: {
-//                Text(viewModel.prevFormatted)
-//            })
-//            .font(.custom("NanumSquareOTFR", size: 14))
-//            .foregroundColor(lightGrayColor)
-//
-//            Spacer()
-//
-//            VStack(spacing: 0) {
-//                Text(viewModel.selectedFormatted)
-//                    .font(.custom("NanumSquareOTFB", size: 15))
-//                    .foregroundColor(orangeColor)
-//                    .padding(.bottom, 10)
-//
-//                orangeColor
-//                    .frame(width: 150, height: 2)
-//            }
-//
-//            Spacer()
-//
-//            Button(action: {
-//                viewModel.selectedDate = viewModel.nextDate
-//            }, label: {
-//                Text(viewModel.nextFormatted)
-//            })
-//            .font(.custom("NanumSquareOTFR", size: 14))
-//            .foregroundColor(lightGrayColor)
-
         }
-        .padding(EdgeInsets(top: 20, leading: 0, bottom: 16, trailing: 0))
-        .background(Color.white.shadow(color: .init(white: 0.9), radius: 2, x: 0, y: 3.5))
+        .padding(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
     }
     
     var menuList: some View {
         // Menus
         VStack(alignment: .center) {
-            if !viewModel.noMenu {
-                ZStack {
-                    
+            if viewModel.getMenuStatus == .loading {
+                Spacer()
+                HStack {
+                    Spacer()
+                    ActivityIndicator(isAnimating: .constant(true), style: .large)
+                    Spacer()
+                }
+                Spacer()
+            } else {
+                if !viewModel.noMenu {
                     HStack(alignment: .bottom, spacing: 30) {
                         Spacer()
                         ForEach(typeInfos) { type in
@@ -108,33 +79,19 @@ private extension MenuView {
                     }
                     .padding(.top, 8)
                     
+                    PageView(currentPage: $viewModel.selectedPage, viewModel.restaurantsLists.map { RestaurantsView($0) })
                     
-                    Button(action: {
-                        withAnimation {
-//                            appState.monthToShow = viewModel.selectedDate
-                        }
-                    }, label: {
-                        Image("CalendarSettings")
-                            .resizable()
-                            .frame(width: 19.5, height: 16)
-                            .padding(.leading, UIScreen.main.bounds.width - 46)
-                    })
-                    .padding(.top, 8)
-
+                } else {
+                    VStack {
+                        Spacer()
+                        Text("불러온 식단이 없습니다")
+                            .font(.custom("NanumSquareOTFB", size: 15))
+                            .foregroundColor(fontColor)
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(Color.init("AppBackgroundColor"))
                 }
-                
-                PageView(currentPage: $viewModel.selectedPage, viewModel.restaurantsLists.map { RestaurantsView($0) })
-                
-            } else {
-                VStack {
-                    Spacer()
-                    Text("불러온 식단이 없습니다")
-                        .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(fontColor)
-                    Spacer()
-                }
-                .frame(maxWidth: .infinity)
-                .background(Color.init("AppBackgroundColor"))
             }
         }
         .background(Color.init("AppBackgroundColor"))
@@ -146,7 +103,6 @@ private extension MenuView {
 
 struct MenuView: View {
     @ObservedObject var viewModel = MenuViewModel()
-    @EnvironmentObject var appState: AppState
     
     private let lightGrayColor = Color.init("LightGrayColor")
     private let orangeColor = Color.init("MainThemeColor")
@@ -160,7 +116,7 @@ struct MenuView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
+            NavigationView {
                 VStack {
                     NavigationBar(geometry)
                     
@@ -168,12 +124,8 @@ struct MenuView: View {
                     
                     menuList
                 }
-                .blur(radius: viewModel.getMenuStatus == .loading ? 5 : 0)
+                .navigationBarHidden(true)
                 .disabled(viewModel.getMenuStatus == .loading)
-                
-                if viewModel.getMenuStatus == .loading {
-                    ActivityIndicator(isAnimating: .constant(true), style: .large)
-                }
             }
             .alert(isPresented: $viewModel.showNetworkAlert, content: {
                 Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))

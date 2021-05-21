@@ -12,78 +12,86 @@ private extension FavoriteView {
         Button(action: {
             viewModel.selectedPage = type.id
         }) {
-            Image(type.icon)
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: type.width, height: type.height)
-                .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
-                .padding(.leading, type.id == 2 ? 6 : 0)
+            VStack {
+                Image(type.icon)
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: type.width, height: type.height)
+                    .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
+                    .padding(.leading, type.id == 2 ? 6 : 0)
+                Text(type.name)
+                    .font(.custom("NanumSquareOTFB", size: 10))
+                    .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
+            }
         }
     }
     
     var dayPageTab: some View {
-        // Day Page Tab
-        HStack(alignment: .top) {
-            Spacer()
-            
+        HStack(alignment: .center) {
             Button(action: {
                 viewModel.selectedDate = viewModel.prevDate
             }, label: {
-                Text(viewModel.prevFormatted)
+                Image("PrevDate")
+                    .resizable()
+                    .frame(width: 10, height: 16)
             })
-            .font(.custom("NanumSquareOTFR", size: 14))
-            .foregroundColor(lightGrayColor)
+            .padding(.leading, 16)
             
             Spacer()
             
-            VStack(spacing: 0) {
-                Text(viewModel.selectedFormatted)
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(orangeColor)
-                    .padding(.bottom, 10)
-                    
-                orangeColor
-                    .frame(width: 150, height: 2)
-            }
+            Text(viewModel.selectedFormatted)
+                .font(.custom("NanumSquareOTFB", size: 15))
+                .foregroundColor(orangeColor)
             
             Spacer()
             
             Button(action: {
                 viewModel.selectedDate = viewModel.nextDate
             }, label: {
-                Text(viewModel.nextFormatted)
+                Image("NextDate")
+                    .resizable()
+                    .frame(width: 10, height: 16)
             })
-            .font(.custom("NanumSquareOTFR", size: 14))
-            .foregroundColor(lightGrayColor)
-            
-            Spacer()
+            .padding(.trailing, 16)
         }
-        .padding(EdgeInsets(top: 2, leading: 0, bottom: 0, trailing: 0))
-        .background(Color.white.shadow(color: .init(white: 0.9), radius: 2, x: 0, y: 3.5))
+        .padding(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
     }
     
     var menuList: some View {
         // Menus
         VStack(alignment: .center) {
-            if viewModel.restaurantsLists.count > 0 {
-                HStack(spacing: 30) {
-                    ForEach(typeInfos) { type in
-                        typeButton(type: type)
-                    }
+            if viewModel.getMenuStatus == .loading {
+                Spacer()
+                HStack {
+                    Spacer()
+                    ActivityIndicator(isAnimating: .constant(true), style: .large)
+                    Spacer()
                 }
-                .padding(.top, 8)
-                
-                PageView(currentPage: $viewModel.selectedPage, viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.favoriteViewModel, viewModel) })
+                Spacer()
             } else {
-                VStack {
-                    Spacer()
-                    Text("불러온 식단이 없습니다")
-                        .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(fontColor)
-                    Spacer()
+                if viewModel.restaurantsLists.count > 0 {
+                    HStack(alignment: .bottom, spacing: 30) {
+                        Spacer()
+                        ForEach(typeInfos) { type in
+                            typeButton(type: type)
+                        }
+                        Spacer()
+                    }
+                    .padding(.top, 8)
+                    
+                    PageView(currentPage: $viewModel.selectedPage, viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.favoriteViewModel, viewModel) })
+                    
+                } else {
+                    VStack {
+                        Spacer()
+                        Text("불러온 식단이 없습니다")
+                            .font(.custom("NanumSquareOTFB", size: 15))
+                            .foregroundColor(fontColor)
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity)
+                    .background(Color.init("AppBackgroundColor"))
                 }
-                .frame(maxWidth: .infinity)
-                .background(Color.init("AppBackgroundColor"))
             }
         }
         .background(Color.init("AppBackgroundColor"))
@@ -108,10 +116,9 @@ struct FavoriteView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            ZStack {
+            NavigationView {
                 VStack {
                     NavigationBar(geometry)
-                    
                     if viewModel.noFavorites {
                         Spacer()
                         Text("즐겨찾기에 추가된 식당이 없습니다.\n식당 탭에서 별을 눌러 추가해보세요.")
@@ -124,12 +131,8 @@ struct FavoriteView: View {
                         menuList
                     }
                 }
-                .blur(radius: viewModel.getMenuStatus == .loading ? 5 : 0)
+                .navigationBarHidden(true)
                 .disabled(viewModel.getMenuStatus == .loading)
-                
-                if viewModel.getMenuStatus == .loading {
-                    ActivityIndicator(isAnimating: .constant(true), style: .large)
-                }
             }
             .alert(isPresented: $viewModel.showNetworkAlert, content: {
                 Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))

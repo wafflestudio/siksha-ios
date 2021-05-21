@@ -40,8 +40,8 @@ struct NavigationBar: View {
                 if title == "" {
                     Image("SikshaTitle")
                         .resizable()
-                        .frame(width: 42, height: 38)
-                        .padding(.bottom, 0)
+                        .frame(width: 52, height: 42)
+                        .padding(.bottom, -4)
                 } else {
                     Text(title)
                         .foregroundColor(.white)

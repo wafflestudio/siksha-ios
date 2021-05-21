@@ -105,7 +105,6 @@ public class AppState: ObservableObject {
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.mealToShow = nil
->>>>>>> f333f6a304618972a0aa2b037df58be9b37c731d
             }
             .store(in: &cancellables)
         

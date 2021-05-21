@@ -14,6 +14,7 @@ struct RestaurantCell: View {
     private let titleColor = Color("TitleFontColor")
     private let lightGrayColor = Color("LightGrayColor")
     private let orangeColor = Color.init("MainThemeColor")
+    private let restNameColor = Color.init(red: 225/255, green: 86/255, blue: 24/255, opacity: 1)
     
     var restaurant: Restaurant
     var meals: [Meal]
@@ -30,10 +31,10 @@ struct RestaurantCell: View {
     var body: some View {
         VStack(spacing: 0) {
             // Restaurant Name
-            HStack {
+            HStack(alignment: .center) {
                 Text(restaurant.nameKr)
-                    .font(.custom("NanumSquareOTF", size: 15))
-                    .foregroundColor(orangeColor)
+                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .foregroundColor(restNameColor)
                 
                 Button(action: {
                     withAnimation {
@@ -43,7 +44,7 @@ struct RestaurantCell: View {
                     Image("Info")
                         .resizable()
                         .renderingMode(.original)
-                        .frame(width: 14, height: 14)
+                        .frame(width: 17, height: 17)
                 }
                 
                 Button(action: {
@@ -54,7 +55,7 @@ struct RestaurantCell: View {
                     Image(isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
                         .renderingMode(.original)
-                        .frame(width: 16, height: 16)
+                        .frame(width: 18, height: 17)
                 })
                 
                 Spacer()
@@ -62,16 +63,15 @@ struct RestaurantCell: View {
                 Text("Price")
                     .font(.custom("NanumSquareOTF", size: 12))
                     .foregroundColor(orangeColor)
-                    .padding(.trailing, 21)
+                    .frame(width: 70)
                 
                 Text("Rate")
                     .font(.custom("NanumSquareOTF", size: 12))
                     .foregroundColor(orangeColor)
-                    .padding(.trailing, 11)
+                    .frame(width: 50)
                 
             }
-            .padding([.leading, .trailing], 16)
-            .padding([.top, .bottom], 10)
+            .padding(EdgeInsets(top: 16, leading: 16, bottom: 10, trailing: 16))
             
             HStack {
                 orangeColor
@@ -81,16 +81,15 @@ struct RestaurantCell: View {
             .padding([.leading, .trailing], 12)
             
             
-            VStack(spacing: 7) {
+            VStack(spacing: 20) {
                 if meals.count > 0 {
                     ForEach(meals, id: \.id) { meal in
-                        MealCell(meal: meal)
-                            .id("\(meal.id)\(meal.score)")
-                            .onTapGesture {
-                                withAnimation {
-                                    appState.mealToShow = meal
-                                }
-                            }
+                        NavigationLink(
+                            destination: MealInfoView(meal: meal),
+                            label: {
+                                MealCell(meal: meal)
+                                    .id("\(meal.id)\(meal.score)")
+                            })
                     }
                 } else {
                     HStack(alignment: .center) {
@@ -101,10 +100,13 @@ struct RestaurantCell: View {
                     .padding([.top, .bottom], 12)
                 }
             }
-            .padding([.leading, .trailing], 16)
-            .padding([.top, .bottom], 12)
+            .padding(EdgeInsets(top: 14, leading: 16, bottom: 16, trailing: 16))
         }
-        .background(Color.white.cornerRadius(10).shadow(color: .init(white: 0.8), radius: 3, x: 0, y: 0))
+        .background(Color.white)
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(Color.init(white: 232/255), lineWidth: 1)
+        )
     }
 }
 
