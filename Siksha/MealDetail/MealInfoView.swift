@@ -27,7 +27,7 @@ private extension MealInfoView {
                         .font(.custom("NanumSquareOTFB", size: 12))
                         .foregroundColor(lightGrayColor)
                                     
-                    HorizontalGraph(five: 10, four: 20, three: 30, two: 40, one: 50)
+                    HorizontalGraph(five: 5, four: 4, three: 3, two: 4, one: 1)
                 }
                 .padding(.leading, 20)
                 
@@ -75,6 +75,14 @@ private extension MealInfoView {
         
     }
     
+    var pictureList: some View {
+        ScrollView (.horizontal) {
+            HStack {
+//                ForEach
+            }
+        }.frame(height: 150)
+    }
+    
     var reviewList: some View {
         List {
             ForEach(viewModel.mealReviews, id: \.id) { review in
@@ -97,13 +105,6 @@ private extension MealInfoView {
         .listStyle(PlainListStyle())
         .padding([.leading, .trailing], -10)
     }
-    
-    var pictureList: some View {
-        ScrollView (.horizontal) {
-            HStack {
-//                ForEach
-            }
-        }.frame(height: 150)    }
     
 }
 
@@ -140,11 +141,13 @@ struct MealInfoView: View {
                 
                 
                 HStack {
-                    Text("메뉴 평가")
+                    Text("리뷰")
                         .font(.custom("NanumSquareOTFB", size: 16))
                         .foregroundColor(darkFontColor)
                     
                     Spacer()
+                    
+                    
                 }
                                 
                 if viewModel.mealReviews.count > 0 {

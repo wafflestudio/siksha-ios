@@ -46,6 +46,15 @@ struct TypeInfo: Identifiable {
     }
 }
 
+enum MenuStatus {
+    case loading
+    case failed
+    case showCached
+    case succeeded
+    case idle
+    case needRerender // use when the user removes restaurants from favorite view
+}
+
 enum NetworkStatus {
     case loading
     case failed
@@ -54,7 +63,7 @@ enum NetworkStatus {
 }
 
 enum ReviewErrorCode: Int {
-    case noNetwork = 1
+    case noNetwork = 0
     case authenticationFailed = 422
     case multipleReview = 403
     case invalidId = 404

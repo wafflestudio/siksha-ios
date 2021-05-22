@@ -46,13 +46,13 @@ struct MealCell: View {
                 .foregroundColor(.black)
             
             ZStack {
-                Image(meal.score > 4.0 ? "Review-high" : meal.score <= 4.0 && meal.score >= 3.0 ? "Review-medium" : meal.score < 3.0 ? "Review-low" : "SettingsCell")
+                Image(meal.score > 4.0 ? "Review-high" : meal.score <= 4.0 && meal.score >= 3.0 ? "Review-medium" : meal.score < 3.0 && meal.score > 0 ? "Review-low" : "SettingsCell")
                     .resizable()
                     .frame(width: 48, height: 20)
 
                 Text(meal.reviewCnt > 0 ? String(format: "%.1f", meal.score) : "-")
                     .font(.custom("NanumSquareOTFR", size: 13))
-                    .foregroundColor(.white)
+                    .foregroundColor(meal.reviewCnt > 0 ? .white : .black)
             }
             .padding(.leading, 8)
         }
@@ -65,7 +65,7 @@ struct MealCell_Previews: PreviewProvider {
         let meal = Meal()
         meal.nameKr = "음식"
         meal.reviewCnt = 1
-        meal.score = 2.1
+        meal.score = 4.2
         meal.price = 4000
         
         return MealCell(meal: meal)

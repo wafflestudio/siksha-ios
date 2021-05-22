@@ -19,8 +19,6 @@ public class FavoriteViewModel: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: Date())
     }
-    
-    var firstShow: Bool = true
 
     @Published var selectedDate: String
     @Published var nextDate: String = ""
@@ -30,12 +28,11 @@ public class FavoriteViewModel: ObservableObject {
     @Published var nextFormatted: String = ""
     @Published var prevFormatted: String = ""
     
-    @Published var dailyMenus: [DailyMenu]
     @Published var selectedMenu: DailyMenu? = nil
     @Published var restaurantsLists: [[Restaurant]] = []
     @Published var noMenu = false
     
-    @Published var getMenuStatus: NetworkStatus = .idle
+    @Published var getMenuStatus: MenuStatus = .idle
     
     @Published var showNetworkAlert: Bool = false
     
@@ -44,8 +41,6 @@ public class FavoriteViewModel: ObservableObject {
     @Published var noFavorites: Bool = true
     
     init() {
-        dailyMenus = repository.dailyMenus
-        
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
         
@@ -62,8 +57,6 @@ public class FavoriteViewModel: ObservableObject {
             }
         }
         
-        initNoFavorites()
-        
         $selectedDate
             .sink { [weak self] dateString in
                 guard let self = self else { return }
@@ -78,33 +71,42 @@ public class FavoriteViewModel: ObservableObject {
                 self.nextDate = self.formatter.string(from: next)
                 self.prevDate = self.formatter.string(from: prev)
                 
-                self.formatter.dateFormat = "MM. dd. E"
+                self.formatter.dateFormat = "yyyy-MM-dd (E)"
+//                self.formatter.dateFormat = "MM. dd. E"
                 self.selectedFormatted = self.formatter.string(from: selected)
                 self.nextFormatted = self.formatter.string(from: next)
                 self.prevFormatted = self.formatter.string(from: prev)
                 
-                if !self.firstShow {
-                    self.getMenu(date: dateString)
-                }
+                self.getMenu(date: dateString)
             }
             .store(in: &cancellables)
         
         $getMenuStatus
-            .combineLatest($dailyMenus)
-            .sink { [weak self] (_, menus) in
+            .filter { status in
+                if status == .succeeded || status == .needRerender || status == .showCached {
+                    return true
+                } else {
+                    return false
+                }
+            }
+            .combineLatest($selectedDate)
+            .sink { [weak self] (_, date) in
                 guard let self = self else { return }
+
+                self.selectedMenu = self.repository.getMenu(date: date)
                 
-                self.selectedMenu = menus.first { $0.date == self.selectedDate }
                 if self.selectedDate == self.todayString {
                     UserDefaults.standard.set(true, forKey: "canSubmitReview")
                 } else {
                     UserDefaults.standard.set(false, forKey: "canSubmitReview")
                 }
+                
+                self.getMenuStatus = .idle
             }
             .store(in: &cancellables)
         
         $getMenuStatus
-            .filter { $0 == .failed }
+            .filter { $0 == .showCached }
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 
@@ -130,7 +132,13 @@ public class FavoriteViewModel: ObservableObject {
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     self.restaurantsLists = [br, lu, dn]
                     
-                    self.noMenu = false
+                    if br.count == 0 && lu.count == 0 && dn.count == 0 {
+                        self.checkNoFavorites()
+                    } else {
+                        self.noFavorites = false
+                        self.noMenu = false
+                    }
+                    
                 } else {
                     self.noMenu = true
                 }
@@ -144,37 +152,19 @@ public class FavoriteViewModel: ObservableObject {
         }
         
         self.getMenuStatus = .loading
-        repository.getMenuPublisher(startDate: date, endDate: date)
+        
+        repository.fetchMenu(date: date)
             .receive(on: RunLoop.main)
-            .sink { [weak self] completion in
-                guard let self = self else { return }
-                if case .failure = completion {
-                    self.getMenuStatus = .failed
-                }
-            } receiveValue: { [weak self] (data, response) in
-                guard let self = self else { return }
-                guard let response = response as? HTTPURLResponse,
-                      200..<300 ~= response.statusCode else {
-                    self.getMenuStatus = .failed
-                    return
-                }
-                self.getMenuStatus = .succeeded
-                self.dailyMenus = self.repository.dailyMenus
-            }
+            .assign(to: \.getMenuStatus, on: self)
             .store(in: &cancellables)
     }
     
-    func initNoFavorites() {
-        let url = Config.shared.baseURL + "/restaurants/"
-        
-        URLSession.shared.dataTaskPublisher(for: URL(string: url)!)
+    func checkNoFavorites() {
+        Networking.shared.getRestaurants()
             .receive(on: RunLoop.main)
-            .sink
-            { _ in }
-            receiveValue: { [weak self] (data, response) in
+            .sink { [weak self] result in
                 guard let self = self else { return }
-                guard let response = response as? HTTPURLResponse,
-                      200..<300 ~= response.statusCode,
+                guard let data = result.data,
                       let restJSON = try? JSON(data: data)["result"].array else {
                     self.noFavorites = false
                     return

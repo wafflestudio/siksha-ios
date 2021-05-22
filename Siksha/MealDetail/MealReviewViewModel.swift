@@ -20,14 +20,14 @@ class MealReviewViewModel: ObservableObject {
     @Published var commentCount: Int = 0
     @Published var canSubmit: Bool = false
     
-    @Published var postReviewStatus: NetworkStatus = .idle
+    @Published var postReviewSucceeded = true
     @Published var errorCode: ReviewErrorCode? = nil
     @Published var requireLogin: Bool = false
     @Published var showAlert: Bool = false
     
     init() {
-        $postReviewStatus
-            .filter { $0 != .loading && $0 != .idle }
+        $postReviewSucceeded
+            .dropFirst()
             .sink { [weak self] status in
                 guard let self = self else { return }
                 self.showAlert = true
@@ -71,85 +71,50 @@ class MealReviewViewModel: ObservableObject {
     }
     
     private func getRecommendedComment(_ score: Int) {
-        let url = Config.shared.baseURL + "/reviews/comments/recommendation"
-        
-        var component = URLComponents(string: url)
-        var parameters = [URLQueryItem]()
-        
-        parameters.append(URLQueryItem(name: "score", value: "\(score)"))
-        
-        component?.queryItems = parameters
-        
-        let request = URLRequest(url: component?.url ?? URL(string: url)!)
-        
-        URLSession.shared.dataTaskPublisher(for: request)
-            .map(\.data)
-            .decode(type: CommentRecommendationResponse.self, decoder: JSONDecoder())
-            .receive(on: RunLoop.main)
-            .map(\.comment)
-            .catch { _ in
-                Just("")
-            }
+        Networking.shared.getCommentRecommendation(score: score)
+            .map(\.value?.comment)
+            .replaceNil(with: "")
             .assign(to: \.commentPlaceHolder, on: self)
             .store(in: &cancellables)
     }
     
     func submitReview() {
         guard let meal = meal else {
+            self.postReviewSucceeded = false
             return
         }
-        
-        postReviewStatus = .loading
-        let url = Config.shared.baseURL + "/reviews/"
-        
-        var json = [String : Any]()
-        
-        json["menu_id"] = meal.id
-        json["score"] = scoreToSubmit
-        json["comment"] = commentToSubmit.count > 0 ? commentToSubmit : commentPlaceHolder
-        
-        guard let data = try? JSONSerialization.data(withJSONObject: json, options: []),
-              var request = try? URLRequest(url: URL(string: url)!, method: .post),
-              let token = UserDefaults.standard.string(forKey: "accessToken") else {
-            self.postReviewStatus = .failed
-            return
-        }
-        
-        request.setToken(token: token)
-        request.httpBody = data
-        
-        URLSession.shared.dataTaskPublisher(for: request)
+
+        Networking.shared.submitReview(
+            menuId: meal.id,
+            score: scoreToSubmit,
+            comment: commentToSubmit.count > 0 ? commentToSubmit : commentPlaceHolder)
             .receive(on: RunLoop.main)
-            .sink { completion in
-                if case .failure = completion {
-                    self.errorCode = .noNetwork
-                    self.postReviewStatus = .failed
+            .sink { [weak self] result in
+                guard let self = self else { return }
+                guard let response = result.response else {
+                    self.postReviewSucceeded = false
+                    return
                 }
-            } receiveValue: { [weak self] (data, response) in
-                    guard let self = self else { return }
-                    guard let response = response as? HTTPURLResponse else {
-                        self.postReviewStatus = .failed
-                        return
+                
+                if 200..<300 ~= response.statusCode {
+                    self.postReviewSucceeded = true
+                    
+                    let score = meal.score
+                    let reviewCnt = meal.reviewCnt
+                    
+                    let newScore = (score * Double(reviewCnt) + self.scoreToSubmit) / Double(reviewCnt + 1)
+                    let newReviewCnt = reviewCnt + 1
+                    
+                    let realm = try! Realm()
+                    try! realm.write {
+                        meal.score = newScore
+                        meal.reviewCnt = newReviewCnt
                     }
-                    if 200..<300 ~= response.statusCode {
-                        self.postReviewStatus = .succeeded
-                        
-                        let score = meal.score
-                        let reviewCnt = meal.reviewCnt
-                        
-                        let newScore = (score * Double(reviewCnt) + self.scoreToSubmit) / Double(reviewCnt + 1)
-                        let newReviewCnt = reviewCnt + 1
-                        
-                        let realm = try! Realm()
-                        try! realm.write {
-                            meal.score = newScore
-                            meal.reviewCnt = newReviewCnt
-                        }
-                    } else {
-                        self.errorCode = ReviewErrorCode.init(rawValue: response.statusCode)
-                        self.postReviewStatus = .failed
-                    }
+                } else {
+//                    self.errorCode = .init(rawValue: response.statusCode) ?? ReviewErrorCode.noNetwork
+                    self.postReviewSucceeded = false
                 }
+            }
             .store(in: &cancellables)
     }
 }
