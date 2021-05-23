@@ -29,52 +29,51 @@ struct FavoriteMenuOrderView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack(alignment: .leading) {
-                NavigationBar(title: "즐겨찾기 순서 변경", showBack: true, geometry)
-                
-                // Description
-                HStack {
+        VStack(alignment: .leading) {
+            NavigationBar(title: "즐겨찾기 순서 변경", showBack: true)
+            
+            // Description
+            HStack {
+                Spacer()
+                Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
+                    .font(.custom("NanumSquareOTFR", size: 14))
+                    .foregroundColor(.init("DefaultFontColor"))
+                Spacer()
+            }
+            .padding(.top, 10)
+            .padding(.bottom, 5)
+            
+            if viewModel.favRestaurantIds.count > 0 {
+                List() {
+                    ForEach(viewModel.favRestaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
+                        MenuRow(text: row)
+                            .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+                            .listRowInsets(EdgeInsets())
+                            .background(backgroundColor)
+                    }
+                    .onMove(perform: move)
+                }
+                .padding(.leading, leading)
+                .environment(\.editMode, .constant(.active))
+            } else {
+                VStack {
                     Spacer()
-                    Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
-                        .font(.custom("NanumSquareOTFR", size: 14))
+                    
+                    Text("즐겨찾기에 추가된 식당이 없습니다.")
+                        .font(.custom("NanumSquareOTFB", size: 15))
                         .foregroundColor(.init("DefaultFontColor"))
+                    
                     Spacer()
                 }
-                .padding(.top, 20)
-                .padding(.bottom, 5)
-                
-                if viewModel.favRestaurantIds.count > 0 {
-                    List() {
-                        ForEach(viewModel.favRestaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
-                            MenuRow(text: row)
-                                .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
-                                .listRowInsets(EdgeInsets())
-                                .background(backgroundColor)
-                        }
-                        .onMove(perform: move)
-                    }
-                    .padding(.leading, leading)
-                    .environment(\.editMode, .constant(.active))
-                } else {
-                    VStack {
-                        Spacer()
-                        
-                        Text("즐겨찾기에 추가된 식당이 없습니다.")
-                            .font(.custom("NanumSquareOTFB", size: 15))
-                            .foregroundColor(.init("DefaultFontColor"))
-                        
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity)
-                }
-            } // VStack
-            .contentShape(Rectangle())
-            .navigationBarHidden(true)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarTitle("", displayMode: .inline)
-            .background(backgroundColor)
-        } //Geometry
+                .frame(maxWidth: .infinity)
+            }
+        } // VStack
+        .edgesIgnoringSafeArea(.all)
+        .contentShape(Rectangle())
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitle("", displayMode: .inline)
+        .background(backgroundColor)
         .onAppear {
             viewModel.setRestaurantIdList()
         }

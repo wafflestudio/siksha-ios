@@ -14,11 +14,8 @@ import Combine
 public class AppState: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var showSheet: Bool = false
     @Published var showRestaurantInfo: Bool = false
     @Published var showMealInfo: Bool = false
-    @Published var restaurantToShow: Restaurant? = nil
-    @Published var mealToShow: Meal? = nil
     @Published var canSubmitReview: Bool = true
     @Published var monthToShow: Int? = nil
     @Published var showCalendar: Bool = false
@@ -60,51 +57,11 @@ public class AppState: ObservableObject {
             }
         }
         
-        $showSheet
-            .filter { !$0 }
-            .sink { [weak self] _ in
-                self?.restaurantToShow = nil
-                self?.mealToShow = nil
-            }
-            .store(in: &cancellables)
-        
-        $restaurantToShow
-            .filter { $0 != nil }
-            .sink { [weak self] restaurant in
-                guard let self = self else { return }
-                self.showSheet = true
-            }
-            .store(in: &cancellables)
-        
-        $mealToShow
-            .filter { $0 != nil }
-            .sink { [weak self] meal in
-                guard let self = self else { return }
-                self.showSheet = true
-            }
-            .store(in: &cancellables)
-        
         $monthToShow
             .filter { $0 != nil }
             .sink { [weak self] meal in
                 guard let self = self else { return }
                 self.showCalendar = true
-            }
-            .store(in: &cancellables)
-        
-        $showRestaurantInfo
-            .filter { !$0 }
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                self.restaurantToShow = nil
-            }
-            .store(in: &cancellables)
-        
-        $showMealInfo
-            .filter { !$0 }
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                self.mealToShow = nil
             }
             .store(in: &cancellables)
         

@@ -246,6 +246,8 @@ struct MealReviewView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
+                NavigationBar(title: "나의 평가 남기기", showBack: true)
+                
                 starSection
                 
                 commentSection
@@ -260,19 +262,7 @@ struct MealReviewView: View {
             .background(Color.white.onTapGesture {
                 UIApplication.shared.endEditing()
             })
-            .navigationBarTitle(
-                Text("나의 평가 남기기"),
-                displayMode: .inline
-            )
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: Button(action: {
-                self.presentationMode.wrappedValue.dismiss()
-            }) {
-                Image("Back")
-                    .resizable()
-                    .renderingMode(.original)
-                    .frame(width: 10, height: 16)
-            })
+            .navigationBarHidden(true)
             .onAppear {
                 viewModel.meal = self.meal
             }
@@ -517,6 +507,8 @@ struct MealReviewView13: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
+                NavigationBar(title: "나의 평가 남기기", showBack: true)
+                
                 starSection
                 
                 commentSection
@@ -527,23 +519,11 @@ struct MealReviewView13: View {
                 
                 submitButton
             }
-//            .edgesIgnoringSafeArea(.bottom)
+            .edgesIgnoringSafeArea(.all)
             .background(Color.white.onTapGesture {
                 UIApplication.shared.endEditing()
             })
-            .navigationBarTitle(
-                Text("평가 남기기"),
-                displayMode: .inline
-            )
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: Button(action: {
-                self.presentationMode.wrappedValue.dismiss()
-            }) {
-                Image("BackButton")
-                    .resizable()
-                    .renderingMode(.original)
-                    .frame(width: 20, height: 17)
-            })
+            .navigationBarHidden(true)
             .alert(isPresented: $viewModel.showAlert, content: {
                 Alert(title: Text("평가 남기기"), message: alertMessage, dismissButton: alertButton)
             })

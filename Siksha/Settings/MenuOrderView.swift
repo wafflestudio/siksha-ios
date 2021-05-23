@@ -29,39 +29,38 @@ struct MenuOrderView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack(alignment: .leading) {
-                NavigationBar(title: "식단 순서 변경", showBack: true, geometry)
-                
-                // Description
-                HStack {
-                    Spacer()
-                    Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
-                        .font(.custom("NanumSquareOTFR", size: 14))
-                        .foregroundColor(.init("DefaultFontColor"))
-                    Spacer()
+        VStack(alignment: .leading) {
+            NavigationBar(title: "식단 순서 변경", showBack: true)
+            
+            // Description
+            HStack {
+                Spacer()
+                Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
+                    .font(.custom("NanumSquareOTFR", size: 14))
+                    .foregroundColor(.init("DefaultFontColor"))
+                Spacer()
+            }
+            .padding(.top, 10)
+            .padding(.bottom, 5)
+            
+            List {
+                ForEach(viewModel.restaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
+                    MenuRow(text: row)
+                        .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+                        .listRowInsets(EdgeInsets())
+                        .background(backgroundColor)
                 }
-                .padding(.top, 20)
-                .padding(.bottom, 5)
-                
-                List {
-                    ForEach(viewModel.restaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
-                        MenuRow(text: row)
-                            .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
-                            .listRowInsets(EdgeInsets())
-                            .background(backgroundColor)
-                    }
-                    .onMove(perform: move)
-                }
-                .padding(.leading, leading)
-                .environment(\.editMode, .constant(.active))
-            } // VStack
-            .contentShape(Rectangle())
-            .navigationBarHidden(true)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarTitle("", displayMode: .inline)
-            .background(backgroundColor)
-        } //Geometry
+                .onMove(perform: move)
+            }
+            .padding(.leading, leading)
+            .environment(\.editMode, .constant(.active))
+        } // VStack
+        .edgesIgnoringSafeArea(.all)
+        .contentShape(Rectangle())
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitle("", displayMode: .inline)
+        .background(backgroundColor)
         .onAppear {
             viewModel.setRestaurantIdList()
         }
