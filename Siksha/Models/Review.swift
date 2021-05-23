@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct Review: Codable {
     var id: Int
@@ -13,9 +14,9 @@ struct Review: Codable {
     var userId: Int
     var score: Double
     var comment: String?
+    var images: [Data]?
     var createdAt: Date
     var updatedAt: Date
-//    var image: UIImage?
     
     enum CodingKeys: String, CodingKey {
         case id = "id"
@@ -23,9 +24,11 @@ struct Review: Codable {
         case userId = "user_id"
         case score = "score"
         case comment = "comment"
+        case images = "etc"
         case createdAt = "created_at"
         case updatedAt = "updated_at"
-//        case image = "image"
     }
+    
+   
 }
 

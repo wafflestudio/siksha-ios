@@ -80,7 +80,7 @@ public class AppState: ObservableObject {
             .filter { $0 != nil }
             .sink { [weak self] meal in
                 guard let self = self else { return }
-                self.showMealInfo = true
+                self.showSheet = true
             }
             .store(in: &cancellables)
         
@@ -105,7 +105,6 @@ public class AppState: ObservableObject {
             .sink { [weak self] _ in
                 guard let self = self else { return }
                 self.mealToShow = nil
-                self.showSheet = true
             }
             .store(in: &cancellables)
         

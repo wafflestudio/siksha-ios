@@ -78,9 +78,18 @@ private extension MealInfoView {
     var pictureList: some View {
         ScrollView (.horizontal) {
             HStack {
-//                ForEach
+                ForEach(viewModel.mealImageReviews, id: \.id) { review in
+                    ForEach(review.images!, id: \.self) { data in
+                        let uiImage = UIImage(data: data)
+                        Image(uiImage: uiImage!)
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 120, height: 120)
+                            .cornerRadius(8)
+                    }
+                }
             }
-        }.frame(height: 150)
+        }
     }
     
     var reviewList: some View {
@@ -124,6 +133,9 @@ struct MealInfoView: View {
         UITableView.appearance().separatorStyle = .none
         
         self.viewModel = MealInfoViewModel(meal)
+        
+        print(meal.id)
+
     }
     
     var body: some View {
@@ -139,6 +151,27 @@ struct MealInfoView: View {
                 
                 scoreSummary
                 
+                // 조건문 바꾸기 (사진 없으면 숨기기)
+                if true {
+                    HStack {
+                        Text("사진 리뷰 모아보기")
+                            .font(.custom("NanumSquareOTFB", size: 16))
+                            .foregroundColor(darkFontColor)
+                        
+                        Spacer()
+                        
+                        NavigationLink(
+                            destination: ImageReviewView(viewModel.meal, mealInfoViewModel: viewModel),
+                            label: {
+                                Image("Arrow")
+                            })
+                        
+                    }
+                    
+                    pictureList
+                        .padding(.top, 17)
+
+                }
                 
                 HStack {
                     Text("리뷰")
@@ -149,8 +182,8 @@ struct MealInfoView: View {
                     
                     
                 }
-                                
-                if viewModel.mealReviews.count > 0 {
+                                                
+                if viewModel.meal.reviewCnt > 0 {
                     reviewList
                 } else {
                     Text("평가가 없습니다.")

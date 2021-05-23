@@ -25,6 +25,8 @@ class MealReviewViewModel: ObservableObject {
     @Published var requireLogin: Bool = false
     @Published var showAlert: Bool = false
     
+    @Published private var imagesJSON = [String]()
+    
     init() {
         $postReviewSucceeded
             .dropFirst()
@@ -68,6 +70,7 @@ class MealReviewViewModel: ObservableObject {
             .map { $0 > 0 && $1 > 0 }
             .assign(to: \.canSubmit, on: self)
             .store(in: &cancellables)
+        
     }
     
     private func getRecommendedComment(_ score: Int) {
@@ -111,10 +114,60 @@ class MealReviewViewModel: ObservableObject {
                         meal.reviewCnt = newReviewCnt
                     }
                 } else {
-//                    self.errorCode = .init(rawValue: response.statusCode) ?? ReviewErrorCode.noNetwork
+//                    self.errorCode = .init(rawValue: response.statusCode)
                     self.postReviewSucceeded = false
                 }
             }
             .store(in: &cancellables)
     }
+    
+    func submitReviewImages(images: [UIImage]) {
+        guard let meal = meal else {
+            self.postReviewSucceeded = false
+            return
+        }
+        
+        print(images.count)
+                
+        images.forEach { image in
+            let imageData = image.pngData()
+            let imageString = imageData?.base64EncodedString()
+            imagesJSON.append(imageString ?? "")
+        }
+        
+        Networking.shared.submitReviewImages(
+            menuId: meal.id,
+            score: scoreToSubmit,
+            comment: commentToSubmit.count > 0 ? commentToSubmit : commentPlaceHolder,
+            images: imagesJSON)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] result in
+                guard let self = self else { return }
+                guard let response = result.response else {
+                    self.postReviewSucceeded = false
+                    return
+                }
+                
+                if 200..<300 ~= response.statusCode {
+                    self.postReviewSucceeded = true
+                    
+                    let score = meal.score
+                    let reviewCnt = meal.reviewCnt
+                    
+                    let newScore = (score * Double(reviewCnt) + self.scoreToSubmit) / Double(reviewCnt + 1)
+                    let newReviewCnt = reviewCnt + 1
+                    
+                    let realm = try! Realm()
+                    try! realm.write {
+                        meal.score = newScore
+                        meal.reviewCnt = newReviewCnt
+                    }
+                } else {
+//                    self.errorCode = .init(rawValue: response.statusCode)
+                    self.postReviewSucceeded = false
+                }
+            }
+            .store(in: &cancellables)
+    }
+    
 }

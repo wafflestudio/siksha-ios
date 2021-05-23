@@ -45,6 +45,8 @@ enum SikshaAPI: URLRequestConvertible {
     case getReviews(menuId: Int, page: Int, perPage: Int)
     case getCommentRecommendation(score: Int)
     case submitReview(menuId: Int, score: Double, comment: String)
+    case submitReviewImages(menuId: Int, score: Double, comment: String, images: [String])
+    case getReviewImages(menuId: Int, page: Int, perPage: Int, comment: Bool, etc: Bool)
     
     static var baseURL = Config.shared.baseURL!
     
@@ -88,6 +90,10 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .submitReview:
             return .post
+        case .submitReviewImages:
+            return .post
+        case .getReviewImages:
+            return .get
         }
     }
 
@@ -105,6 +111,10 @@ enum SikshaAPI: URLRequestConvertible {
             return "/reviews/comments/recommendation"
         case .submitReview:
             return "/reviews/"
+        case .submitReviewImages:
+            return "/reviews/images/"
+        case .getReviewImages:
+            return "/reviews/filter/"
         }
     }
     
@@ -122,6 +132,10 @@ enum SikshaAPI: URLRequestConvertible {
             return ["score": score]
         case let .submitReview(menuId, score, comment):
             return ["menu_id": menuId, "score": score, "comment": comment]
+        case let .submitReviewImages(menuId, score, comment, images):
+            return ["menu_id": menuId, "score": score, "comment": comment, "images": images]
+        case let .getReviewImages(menuId, page, perPage, comment, etc):
+            return ["menu_id": menuId, "page": page, "per_page": perPage, "comment": comment, "etc": etc]
         }
     }
 }

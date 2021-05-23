@@ -54,4 +54,18 @@ class Networking {
         
         return request.validate().publishData()
     }
+    
+    func submitReviewImages(menuId: Int, score: Double, comment: String, images: [String]) -> DataResponsePublisher<Data> {
+        let request = AF.request(SikshaAPI.submitReviewImages(menuId: menuId, score: score, comment: comment, images: images))
+        return request.validate().publishData()
+    }
+    
+    func getReviewImages(menuId: Int, page: Int, perPage: Int, comment: Bool, etc: Bool) -> DataResponsePublisher<ReviewResponse> {
+        let request = AF.request(SikshaAPI.getReviewImages(menuId: menuId, page: page, perPage: perPage, comment: comment, etc: etc))
+        let decoder = JSONDecoder()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        decoder.dateDecodingStrategy = .formatted(formatter)
+        return request.validate().publishDecodable(type: ReviewResponse.self, decoder: decoder)
+    }
 }
