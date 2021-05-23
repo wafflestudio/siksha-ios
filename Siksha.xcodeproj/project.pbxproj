@@ -55,6 +55,7 @@
 		1ED44A6325CDB709001D916B /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A6225CDB709001D916B /* FavoriteView.swift */; };
 		1ED44A6B25CDB77A001D916B /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A6A25CDB77A001D916B /* FavoriteViewModel.swift */; };
 		2300D48C25FBD07F0037765D /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2300D48B25FBD07F0037765D /* config.plist */; };
+		2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303CF1D265A5E27002328F5 /* ImagePickerCoordinatorView.swift */; };
 		2307E0A52656658C0011ECF8 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2307E0A42656658C0011ECF8 /* ImagePicker.swift */; };
 		231C9C3E25F7FA7C0072C07A /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */; };
 		231C9C4325F7FA800072C07A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 231C9C4225F7FA800072C07A /* GoogleService-Info.plist */; };
@@ -152,6 +153,7 @@
 		1ED44A6225CDB709001D916B /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
 		1ED44A6A25CDB77A001D916B /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
 		2300D48B25FBD07F0037765D /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
+		2303CF1D265A5E27002328F5 /* ImagePickerCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerCoordinatorView.swift; sourceTree = "<group>"; };
 		2307E0A42656658C0011ECF8 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		231C9C4225F7FA800072C07A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -380,6 +382,7 @@
 				1ED44A4025CC6135001D916B /* BottomModalView.swift */,
 				1ECB255125F2999100875E18 /* RatingStar.swift */,
 				2307E0A42656658C0011ECF8 /* ImagePicker.swift */,
+				2303CF1D265A5E27002328F5 /* ImagePickerCoordinatorView.swift */,
 			);
 			path = "View Elements";
 			sourceTree = "<group>";
@@ -679,6 +682,7 @@
 				1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */,
 				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
+				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
 				1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */,
 				231C9C7025F7FB720072C07A /* MenuOrderView.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,

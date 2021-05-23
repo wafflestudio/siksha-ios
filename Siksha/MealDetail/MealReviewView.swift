@@ -131,7 +131,7 @@ private extension MealReviewView {
                 }
                 .padding(.top, 16)
                 .sheet(isPresented: $isShowingPhotoLibrary) {
-                    ImagePicker(sourceType: .photoLibrary, selectedImage: bindingForImage)
+                    ImagePickerCoordinatorView(selectedImages: $addedImages)
                 }
                 
                 Spacer()
@@ -411,7 +411,7 @@ private extension MealReviewView13 {
                 }
                 .padding(.top, 16)
                 .sheet(isPresented: $isShowingPhotoLibrary) {
-                    ImagePicker(sourceType: .photoLibrary, selectedImage: bindingForImage)
+                    ImagePickerCoordinatorView(selectedImages: $addedImages)
                 }
                 
                 Spacer()
