@@ -34,12 +34,8 @@ private extension MealInfoView {
                             .foregroundColor(lightGrayColor)
                     }
                                     
-<<<<<<< HEAD
                     HorizontalGraph([10, 20, 30, 40, 50])
                         .frame(width: 200, alignment: .leading)
-=======
-                    HorizontalGraph(five: 5, four: 4, three: 3, two: 4, one: 1)
->>>>>>> main
                 }
                 .padding(.leading, 20)
                 
@@ -140,9 +136,6 @@ struct MealInfoView: View {
         UITableView.appearance().separatorStyle = .none
         
         self.viewModel = MealInfoViewModel(meal)
-        
-        print(meal.id)
-
     }
     
     var body: some View {
