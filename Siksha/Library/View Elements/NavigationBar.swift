@@ -11,19 +11,18 @@ struct NavigationBar: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     var title: String
     var showBack: Bool
-    var geometry: GeometryProxy
+    var topSafeArea: CGFloat
     
-    init(title: String = "", showBack: Bool = false, _ geometry: GeometryProxy) {
+    init(title: String = "", showBack: Bool = false) {
         self.title = title
         self.showBack = showBack
-        self.geometry = geometry
+        
+        self.topSafeArea = UIApplication.shared.windows[0].safeAreaInsets.top
     }
     
     var body: some View {
         ZStack {
             Color.init("MainThemeColor")
-                .frame(width: geometry.size.width, height: geometry.safeAreaInsets.top+55)
-                .padding(.top, -geometry.safeAreaInsets.top)
             HStack {
                 if showBack {
                     Button(action: {
@@ -53,7 +52,10 @@ struct NavigationBar: View {
                 Text("")
                     .frame(width:10, height: 16)
             }
-            .padding([.leading, .trailing], 16)
+            .padding(EdgeInsets(top: 10 + topSafeArea, leading: 16, bottom: 0, trailing: 16))
         }
+        .frame(maxWidth: .infinity)
+        .frame(height: topSafeArea+55)
+        .edgesIgnoringSafeArea(.all)
     }
 }

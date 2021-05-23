@@ -147,7 +147,7 @@ struct MealReviewView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                NavigationBar(title: "나의 평가 남기기", showBack: true, geometry)
+                NavigationBar(title: "나의 평가 남기기", showBack: true)
                 
                 starSection
                 
@@ -307,7 +307,7 @@ struct MealReviewView13: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(spacing: 0) {
-                NavigationBar(title: "나의 평가 남기기", showBack: true, geometry)
+                NavigationBar(title: "나의 평가 남기기", showBack: true)
                 
                 starSection
                 
@@ -317,7 +317,7 @@ struct MealReviewView13: View {
                 
                 submitButton(geometry)
             }
-            .edgesIgnoringSafeArea(.bottom)
+            .edgesIgnoringSafeArea(.all)
             .background(Color.white.onTapGesture {
                 UIApplication.shared.endEditing()
             })

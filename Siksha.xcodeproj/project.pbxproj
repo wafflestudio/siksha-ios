@@ -24,8 +24,7 @@
 		1E3A57CE25C71F2200DBB3F4 /* NanumSquareOTFExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A578225C7014600DBB3F4 /* NanumSquareOTFExtraBold.otf */; };
 		1E3A57CF25C71F2400DBB3F4 /* NanumSquareOTFLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A578325C7014600DBB3F4 /* NanumSquareOTFLight.otf */; };
 		1E3A57D325C71F2600DBB3F4 /* NanumSquareOTFRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A578025C7014600DBB3F4 /* NanumSquareOTFRegular.otf */; };
-		1E3A57D825C724B200DBB3F4 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57D725C724B200DBB3F4 /* PageViewController.swift */; };
-		1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57E525C735F200DBB3F4 /* PageView.swift */; };
+		1E3A57D825C724B200DBB3F4 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57D725C724B200DBB3F4 /* PageView.swift */; };
 		1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57EF25C73EC700DBB3F4 /* Meal.swift */; };
 		1E3A57FB25C73FDD00DBB3F4 /* DailyMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57FA25C73FDD00DBB3F4 /* DailyMenu.swift */; };
 		1E3A581B25C98F9A00DBB3F4 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A581A25C98F9A00DBB3F4 /* AppState.swift */; };
@@ -116,8 +115,7 @@
 		1E3A578125C7014600DBB3F4 /* NanumSquareOTFBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFBold.otf; sourceTree = "<group>"; };
 		1E3A578225C7014600DBB3F4 /* NanumSquareOTFExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFExtraBold.otf; sourceTree = "<group>"; };
 		1E3A578325C7014600DBB3F4 /* NanumSquareOTFLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFLight.otf; sourceTree = "<group>"; };
-		1E3A57D725C724B200DBB3F4 /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
-		1E3A57E525C735F200DBB3F4 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
+		1E3A57D725C724B200DBB3F4 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		1E3A57EF25C73EC700DBB3F4 /* Meal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
 		1E3A57FA25C73FDD00DBB3F4 /* DailyMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMenu.swift; sourceTree = "<group>"; };
 		1E3A581A25C98F9A00DBB3F4 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -346,8 +344,7 @@
 			isa = PBXGroup;
 			children = (
 				1E96F94225E132250074940C /* ActivityIndicator.swift */,
-				1E3A57D725C724B200DBB3F4 /* PageViewController.swift */,
-				1E3A57E525C735F200DBB3F4 /* PageView.swift */,
+				1E3A57D725C724B200DBB3F4 /* PageView.swift */,
 				1ECB257C25F5412200875E18 /* TextView.swift */,
 			);
 			path = UIRepresentable;
@@ -664,7 +661,6 @@
 				1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */,
 				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
-				1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */,
 				231C9C7025F7FB720072C07A /* MenuOrderView.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
 				1EB5F43C263E8EDE0012201A /* OperatingHoursTable.swift in Sources */,
@@ -675,7 +671,7 @@
 				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				1E3A575825C6FF2900DBB3F4 /* MenuViewModel.swift in Sources */,
-				1E3A57D825C724B200DBB3F4 /* PageViewController.swift in Sources */,
+				1E3A57D825C724B200DBB3F4 /* PageView.swift in Sources */,
 				1ECB248125F14C0F00875E18 /* LoginViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

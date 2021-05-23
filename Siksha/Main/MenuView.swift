@@ -18,9 +18,10 @@ private extension MenuView {
                     .resizable()
                     .frame(width: type.width, height: type.height)
                     .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
-                    .padding(.leading, type.id == 2 ? 6 : 0)
+                    .padding(.leading, type.id == 2 ? 3 : 0)
+                    .padding(.bottom, type.id == 1 ? 0 : 2)
                 Text(type.name)
-                    .font(.custom("NanumSquareOTFB", size: 10))
+                    .font(.custom(viewModel.selectedPage == type.id ? "NanumSquareOTFB" : "NanumSquareOTFR", size: 10))
                     .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
             }
         }
@@ -54,23 +55,22 @@ private extension MenuView {
             })
             .padding(.trailing, 16)
         }
-        .padding(EdgeInsets(top: 12, leading: 0, bottom: 12, trailing: 0))
+        .frame(height: 40)
     }
     
     var menuList: some View {
         // Menus
         VStack(alignment: .center) {
             if viewModel.getMenuStatus == .loading {
-                Spacer()
-                HStack {
+                VStack {
                     Spacer()
                     ActivityIndicator(isAnimating: .constant(true), style: .large)
                     Spacer()
                 }
-                Spacer()
+                .frame(maxWidth: .infinity)
             } else {
-                if !viewModel.noMenu {
-                    HStack(alignment: .bottom, spacing: 30) {
+                if viewModel.restaurantsLists.count > 0 {
+                    HStack(alignment: .bottom, spacing: 28) {
                         Spacer()
                         ForEach(typeInfos) { type in
                             typeButton(type: type)
@@ -79,8 +79,10 @@ private extension MenuView {
                     }
                     .padding(.top, 8)
                     
-                    PageView(currentPage: $viewModel.selectedPage, viewModel.restaurantsLists.map { RestaurantsView($0) })
-                    
+                    PageView(
+                        currentPage: $viewModel.selectedPage,
+                        needReload: $viewModel.pageViewReload,
+                        viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.menuViewModel, viewModel) })
                 } else {
                     VStack {
                         Spacer()
@@ -115,28 +117,29 @@ struct MenuView: View {
     ]
     
     var body: some View {
-        GeometryReader { geometry in
-            NavigationView {
-                VStack {
-                    NavigationBar(geometry)
-                    
-                    dayPageTab
-                    
-                    menuList
-                }
-                .navigationBarHidden(true)
-                .disabled(viewModel.getMenuStatus == .loading)
+            VStack {
+                NavigationBar()
+                
+                dayPageTab
+                    .frame(height: 40)
+                
+                menuList
             }
+            .edgesIgnoringSafeArea(.all)
+            .navigationBarHidden(true)
             .alert(isPresented: $viewModel.showNetworkAlert, content: {
                 Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))
             })
             .onAppear {
-                viewModel.getMenu(date: viewModel.selectedDate)
+                if viewModel.reloadOnAppear {
+                    viewModel.getMenu(date: viewModel.selectedDate)
+                } else {
+                    viewModel.reloadOnAppear = true
+                }
             }
             .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
                 viewModel.getMenu(date: viewModel.selectedDate)
             }
-        }
     }
 }
 

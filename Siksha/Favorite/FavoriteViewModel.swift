@@ -37,8 +37,11 @@ public class FavoriteViewModel: ObservableObject {
     @Published var showNetworkAlert: Bool = false
     
     @Published var selectedPage: Int = 0
+    @Published var pageViewReload: Bool = false
     
     @Published var noFavorites: Bool = true
+    
+    @Published var reloadOnAppear: Bool = true
     
     init() {
         formatter.locale = Locale(identifier: "ko_kr")
@@ -71,11 +74,12 @@ public class FavoriteViewModel: ObservableObject {
                 self.nextDate = self.formatter.string(from: next)
                 self.prevDate = self.formatter.string(from: prev)
                 
-                self.formatter.dateFormat = "yyyy-MM-dd(E)"
+                self.formatter.dateFormat = "yyyy-MM-dd (E)"
                 self.selectedFormatted = self.formatter.string(from: selected)
                 self.nextFormatted = self.formatter.string(from: next)
                 self.prevFormatted = self.formatter.string(from: prev)
                 
+                self.pageViewReload = true
                 self.getMenu(date: dateString)
             }
             .store(in: &cancellables)

@@ -58,20 +58,15 @@ struct ContentView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack {
-                tabItems[selectedTab].content
-                    .padding(.bottom, -5)
-                
-                Spacer()
-                
-                tabBar(geometry)
-            }
-            .sheet(isPresented: $appState.showSheet) {
-                if appState.restaurantToShow != nil {
-                    RestaurantInformationView(appState.restaurantToShow ?? Restaurant())
-                } else if appState.mealToShow != nil {
-                    MealInfoView(meal: appState.mealToShow ?? Meal())
+            NavigationView {
+                VStack {
+                    tabItems[selectedTab].content
+                    
+                    Spacer()
+                    
+                    tabBar(geometry)
                 }
+                .navigationBarHidden(true)
             }
         }
     }

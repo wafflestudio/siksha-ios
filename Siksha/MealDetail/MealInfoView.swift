@@ -131,7 +131,7 @@ struct MealInfoView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack {
-                NavigationBar(title: "리뷰", showBack: true, geometry)
+                NavigationBar(title: "리뷰", showBack: true)
                 
                 Text(viewModel.meal.nameKr)
                     .font(.custom("NanumSquareOTFB", size: 20))
@@ -161,6 +161,7 @@ struct MealInfoView: View {
                 
                 Spacer()
             }
+            .edgesIgnoringSafeArea(.all)
             .navigationBarHidden(true)
             .onAppear {
                 self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")

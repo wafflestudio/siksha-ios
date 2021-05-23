@@ -19,8 +19,9 @@ struct RestaurantCell: View {
     var restaurant: Restaurant
     var meals: [Meal]
     @State var isFavorite: Bool = false
-    @EnvironmentObject var appState: AppState
-    @Environment(\.favoriteViewModel) var viewModel: FavoriteViewModel?
+    @State var showRestaurant: Bool = false
+    @Environment(\.favoriteViewModel) var favViewModel: FavoriteViewModel?
+    @Environment(\.menuViewModel) var viewModel: MenuViewModel?
     
     init(_ restaurant: Restaurant) {
         self.restaurant = restaurant
@@ -37,20 +38,21 @@ struct RestaurantCell: View {
                     .foregroundColor(restNameColor)
                 
                 Button(action: {
-                    withAnimation {
-                        appState.restaurantToShow = restaurant
-                    }
+                    self.showRestaurant = true
                 }) {
                     Image("Info")
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 17, height: 17)
                 }
+                .sheet(isPresented: $showRestaurant, content: {
+                    RestaurantInformationView(restaurant)
+                })
                 
                 Button(action: {
                     isFavorite.toggle()
                     UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                    viewModel?.getMenuStatus = .needRerender
+                    favViewModel?.getMenuStatus = .needRerender
                 }, label: {
                     Image(isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
@@ -85,7 +87,13 @@ struct RestaurantCell: View {
                 if meals.count > 0 {
                     ForEach(meals, id: \.id) { meal in
                         NavigationLink(
-                            destination: MealInfoView(meal: meal),
+                            destination:
+                                MealInfoView(meal: meal)
+                                .navigationBarHidden(true)
+                                .onAppear{
+                                    favViewModel?.reloadOnAppear = false
+                                    viewModel?.reloadOnAppear = false
+                                },
                             label: {
                                 MealCell(meal: meal)
                                     .id("\(meal.id)\(meal.score)")
@@ -102,6 +110,7 @@ struct RestaurantCell: View {
             }
             .padding(EdgeInsets(top: 14, leading: 16, bottom: 16, trailing: 16))
         }
+        .navigationBarHidden(true)
         .background(Color.white)
         .overlay(
             RoundedRectangle(cornerRadius: 8)
