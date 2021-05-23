@@ -54,6 +54,8 @@
 		1ED44A6325CDB709001D916B /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A6225CDB709001D916B /* FavoriteView.swift */; };
 		1ED44A6B25CDB77A001D916B /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A6A25CDB77A001D916B /* FavoriteViewModel.swift */; };
 		2300D48C25FBD07F0037765D /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2300D48B25FBD07F0037765D /* config.plist */; };
+		2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303CF1D265A5E27002328F5 /* ImagePickerCoordinatorView.swift */; };
+		2307E0A52656658C0011ECF8 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2307E0A42656658C0011ECF8 /* ImagePicker.swift */; };
 		231C9C3E25F7FA7C0072C07A /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */; };
 		231C9C4325F7FA800072C07A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 231C9C4225F7FA800072C07A /* GoogleService-Info.plist */; };
 		231C9C6825F7FAFB0072C07A /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C6725F7FAFB0072C07A /* InformationView.swift */; };
@@ -68,6 +70,9 @@
 		231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9D2025FB5E490072C07A /* SegmentedControlView.swift */; };
 		23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */; };
 		234DB0D9264156150049FE6B /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234DB0D8264156150049FE6B /* CalendarView.swift */; };
+		23EB1D0526597BF200EABD77 /* AddImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB1D0426597BF200EABD77 /* AddImageView.swift */; };
+		23EB1D2D265A0C3A00EABD77 /* ImageReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB1D2C265A0C3A00EABD77 /* ImageReviewView.swift */; };
+		23EB1D32265A11DE00EABD77 /* ImageReviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB1D31265A11DE00EABD77 /* ImageReviewCell.swift */; };
 		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
 /* End PBXBuildFile section */
 
@@ -146,6 +151,8 @@
 		1ED44A6225CDB709001D916B /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
 		1ED44A6A25CDB77A001D916B /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
 		2300D48B25FBD07F0037765D /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
+		2303CF1D265A5E27002328F5 /* ImagePickerCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerCoordinatorView.swift; sourceTree = "<group>"; };
+		2307E0A42656658C0011ECF8 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		231C9C4225F7FA800072C07A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		231C9C6725F7FAFB0072C07A /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
@@ -158,6 +165,9 @@
 		231C9D2025FB5E490072C07A /* SegmentedControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedControlView.swift; sourceTree = "<group>"; };
 		23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalGraph.swift; sourceTree = "<group>"; };
 		234DB0D8264156150049FE6B /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
+		23EB1D0426597BF200EABD77 /* AddImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddImageView.swift; sourceTree = "<group>"; };
+		23EB1D2C265A0C3A00EABD77 /* ImageReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageReviewView.swift; sourceTree = "<group>"; };
+		23EB1D31265A11DE00EABD77 /* ImageReviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageReviewCell.swift; sourceTree = "<group>"; };
 		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
 		808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -358,14 +368,18 @@
 				1E3A583625CACC9A00DBB3F4 /* RestaurantCell.swift */,
 				1E7226F725FBDE72008C272E /* MealCell.swift */,
 				1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */,
+				23EB1D31265A11DE00EABD77 /* ImageReviewCell.swift */,
 				23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */,
 				234DB0D8264156150049FE6B /* CalendarView.swift */,
 				231C9D1325F8568C0072C07A /* MapView.swift */,
+				23EB1D0426597BF200EABD77 /* AddImageView.swift */,
 				1ECB250225F16DE300875E18 /* NavigationBar.swift */,
 				231C9CE425F835B40072C07A /* BackButton.swift */,
 				231C9D2025FB5E490072C07A /* SegmentedControlView.swift */,
 				1ED44A4025CC6135001D916B /* BottomModalView.swift */,
 				1ECB255125F2999100875E18 /* RatingStar.swift */,
+				2307E0A42656658C0011ECF8 /* ImagePicker.swift */,
+				2303CF1D265A5E27002328F5 /* ImagePickerCoordinatorView.swift */,
 			);
 			path = "View Elements";
 			sourceTree = "<group>";
@@ -387,6 +401,7 @@
 				1ED44A3625CC6094001D916B /* MealReviewView.swift */,
 				1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */,
 				1ECB254C25F2975A00875E18 /* MealInfoView.swift */,
+				23EB1D2C265A0C3A00EABD77 /* ImageReviewView.swift */,
 			);
 			path = MealDetail;
 			sourceTree = "<group>";
@@ -627,12 +642,14 @@
 				231C9C6825F7FAFB0072C07A /* InformationView.swift in Sources */,
 				1ED44A6B25CDB77A001D916B /* FavoriteViewModel.swift in Sources */,
 				234DB0D9264156150049FE6B /* CalendarView.swift in Sources */,
+				2307E0A52656658C0011ECF8 /* ImagePicker.swift in Sources */,
 				1ECB255225F2999100875E18 /* RatingStar.swift in Sources */,
 				1EB5F4412644710A0012201A /* Networking.swift in Sources */,
 				1ECB257D25F5412300875E18 /* TextView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
 				231C9D1425F8568C0072C07A /* MapView.swift in Sources */,
+				23EB1D0526597BF200EABD77 /* AddImageView.swift in Sources */,
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
 				1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */,
 				1EABA80B25EBE28000B79CB8 /* Utils.swift in Sources */,
@@ -649,6 +666,7 @@
 				1ECB254D25F2975A00875E18 /* MealInfoView.swift in Sources */,
 				1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */,
 				1EB5F43F264467B80012201A /* SikshaAPI.swift in Sources */,
+				23EB1D32265A11DE00EABD77 /* ImageReviewCell.swift in Sources */,
 				231C9CE525F835B40072C07A /* BackButton.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
 				23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */,
@@ -661,6 +679,8 @@
 				1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */,
 				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
+				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
+				1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */,
 				231C9C7025F7FB720072C07A /* MenuOrderView.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
 				1EB5F43C263E8EDE0012201A /* OperatingHoursTable.swift in Sources */,
@@ -669,6 +689,7 @@
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
 				1E7226F825FBDE72008C272E /* MealCell.swift in Sources */,
 				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,
+				23EB1D2D265A0C3A00EABD77 /* ImageReviewView.swift in Sources */,
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				1E3A575825C6FF2900DBB3F4 /* MenuViewModel.swift in Sources */,
 				1E3A57D825C724B200DBB3F4 /* PageView.swift in Sources */,
@@ -855,7 +876,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 2.2.0;
-				PRODUCT_BUNDLE_IDENTIFIER = ###dev;
+				PRODUCT_BUNDLE_IDENTIFIER = ###;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;

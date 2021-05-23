@@ -5,6 +5,7 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.4.0)
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
+  - BSImagePicker (3.3.1)
   - GoogleSignIn (5.0.2):
     - AppAuth (~> 1.2)
     - GTMAppAuth (~> 1.0)
@@ -33,6 +34,7 @@ PODS:
   - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
+  - BSImagePicker
   - GoogleSignIn
   - KakaoSDKAuth
   - KakaoSDKCommon
@@ -45,6 +47,7 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - AppAuth
+    - BSImagePicker
     - GoogleSignIn
     - GTMAppAuth
     - GTMSessionFetcher
@@ -59,6 +62,7 @@ SPEC REPOS:
 SPEC CHECKSUMS:
   Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
+  BSImagePicker: 0fe04b574d4d6b81093785d2af6c26227efc8428
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
   GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
@@ -70,6 +74,6 @@ SPEC CHECKSUMS:
   RealmSwift: f80216fb8334b01ccf526e4f2dd5ff0da61863a2
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 7060b84f7fb44162e64c75a23423b7faded0783f
+PODFILE CHECKSUM: 278acf309c82b2f4dba1ab8c18872fca412216e2
 
 COCOAPODS: 1.10.1

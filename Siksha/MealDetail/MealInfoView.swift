@@ -34,8 +34,12 @@ private extension MealInfoView {
                             .foregroundColor(lightGrayColor)
                     }
                                     
+<<<<<<< HEAD
                     HorizontalGraph([10, 20, 30, 40, 50])
                         .frame(width: 200, alignment: .leading)
+=======
+                    HorizontalGraph(five: 5, four: 4, three: 3, two: 4, one: 1)
+>>>>>>> main
                 }
                 .padding(.leading, 20)
                 
@@ -83,6 +87,23 @@ private extension MealInfoView {
         
     }
     
+    var pictureList: some View {
+        ScrollView (.horizontal) {
+            HStack {
+                ForEach(viewModel.mealImageReviews, id: \.id) { review in
+                    ForEach(review.images!, id: \.self) { data in
+                        let uiImage = UIImage(data: data)
+                        Image(uiImage: uiImage!)
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 120, height: 120)
+                            .cornerRadius(8)
+                    }
+                }
+            }
+        }
+    }
+    
     var reviewList: some View {
         List {
             ForEach(viewModel.mealReviews, id: \.id) { review in
@@ -106,13 +127,6 @@ private extension MealInfoView {
         .padding([.leading, .trailing], 16)
     }
     
-    var pictureList: some View {
-        ScrollView (.horizontal) {
-            HStack {
-//                ForEach
-            }
-        }.frame(height: 150)    }
-    
 }
 
 struct MealInfoView: View {
@@ -126,6 +140,9 @@ struct MealInfoView: View {
         UITableView.appearance().separatorStyle = .none
         
         self.viewModel = MealInfoViewModel(meal)
+        
+        print(meal.id)
+
     }
     
     var body: some View {
@@ -141,8 +158,29 @@ struct MealInfoView: View {
                 
                 scoreSummary
                 
+                // 조건문 바꾸기 (사진 없으면 숨기기)
+                if true {
+                    HStack {
+                        Text("사진 리뷰 모아보기")
+                            .font(.custom("NanumSquareOTFB", size: 16))
+                            .foregroundColor(darkFontColor)
+                        
+                        Spacer()
+                        
+                        NavigationLink(
+                            destination: ImageReviewView(viewModel.meal, mealInfoViewModel: viewModel),
+                            label: {
+                                Image("Arrow")
+                            })
+                        
+                    }
+                    
+                    pictureList
+                        .padding(.top, 17)
+
+                }
                 HStack {
-                    Text("메뉴 평가")
+                    Text("리뷰")
                         .font(.custom("NanumSquareOTFB", size: 16))
                         .foregroundColor(darkFontColor)
                         .padding(.leading, 20)

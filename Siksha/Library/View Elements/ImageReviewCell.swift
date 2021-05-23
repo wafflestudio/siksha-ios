@@ -1,13 +1,13 @@
 //
-//  ReviewCell.swift
+//  ImageReviewCell.swift
 //  Siksha
 //
-//  Created by 박종석 on 2021/03/06.
+//  Created by You Been Lee on 2021/05/23.
 //
 
 import SwiftUI
 
-struct ReviewCell: View {
+struct ImageReviewCell: View {
     private let formatter = DateFormatter()
     var review: Review
     
@@ -63,12 +63,30 @@ struct ReviewCell: View {
                 Color.init("AppBackgroundColor")
                     .cornerRadius(10)
             )
+            
+            HStack {
+                ScrollView (.horizontal) {
+                    HStack {
+                        ForEach(review.images!, id: \.self) { data in
+                            let uiImage = UIImage(data: data)
+                            Image(uiImage: uiImage!)                               .resizable()
+                                .renderingMode(.original)
+                                .frame(width: 80, height: 80)
+                                .cornerRadius(8)
+                        }
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding([.leading, .trailing], 28)
+            .padding(.top, 8)
         }
         
     }
 }
 
-struct ReviewCell_Previews: PreviewProvider {
+struct ImageReviewCell_Previews: PreviewProvider {
     static var previews: some View {
         let jsonData = """
         {
@@ -87,6 +105,6 @@ struct ReviewCell_Previews: PreviewProvider {
         decoder.dateDecodingStrategy = .iso8601
         
         let review = try! decoder.decode(Review.self, from: jsonData)
-        return ReviewCell(review)
+        return ImageReviewCell(review)
     }
 }

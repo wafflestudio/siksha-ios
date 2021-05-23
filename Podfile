@@ -12,6 +12,7 @@ target 'Siksha' do
   pod 'KakaoSDKAuth'
   pod 'KakaoSDKUser'
   pod 'GoogleSignIn'
+  pod 'BSImagePicker'
 
 end
 
