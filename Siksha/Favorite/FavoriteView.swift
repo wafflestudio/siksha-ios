@@ -12,53 +12,54 @@ private extension FavoriteView {
         Button(action: {
             viewModel.selectedPage = type.id
         }) {
-            Image(type.icon)
-                .renderingMode(.template)
-                .resizable()
-                .frame(width: type.width, height: type.height)
-                .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
-                .padding(.leading, type.id == 2 ? 6 : 0)
+            VStack {
+                Image(type.icon)
+                    .renderingMode(.template)
+                    .resizable()
+                    .frame(width: type.width, height: type.height)
+                    .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
+                    .padding(.leading, type.id == 2 ? 6 : 0)
+                Text(type.name)
+                    .font(.custom("NanumSquareOTFB", size: 10))
+                    .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
+            }
         }
     }
     
     var dayPageTab: some View {
         // Day Page Tab
         HStack(alignment: .top) {
-            Spacer()
             
             Button(action: {
                 viewModel.selectedDate = viewModel.prevDate
             }, label: {
-                Text(viewModel.prevFormatted)
+                Image("PrevDate")
+                    .resizable()
+                    .frame(width: 10, height: 16)
             })
-            .font(.custom("NanumSquareOTFR", size: 14))
-            .foregroundColor(lightGrayColor)
+            .padding(.leading, 16)
             
             Spacer()
             
-            VStack(spacing: 0) {
-                Text(viewModel.selectedFormatted)
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(orangeColor)
-                    .padding(.bottom, 10)
-                    
-                orangeColor
-                    .frame(width: 150, height: 2)
-            }
+            
+            Text(viewModel.selectedFormatted)
+                .font(.custom("NanumSquareOTFB", size: 15))
+                .foregroundColor(orangeColor)
+                .padding(.bottom, 10)
             
             Spacer()
             
             Button(action: {
                 viewModel.selectedDate = viewModel.nextDate
             }, label: {
-                Text(viewModel.nextFormatted)
+                Image("NextDate")
+                    .resizable()
+                    .frame(width: 10, height: 16)
             })
-            .font(.custom("NanumSquareOTFR", size: 14))
-            .foregroundColor(lightGrayColor)
+            .padding(.trailing, 16)
             
-            Spacer()
         }
-        .padding(EdgeInsets(top: 2, leading: 0, bottom: 0, trailing: 0))
+        .padding(EdgeInsets(top: 20, leading: 0, bottom: 16, trailing: 0))
         .background(Color.white.shadow(color: .init(white: 0.9), radius: 2, x: 0, y: 3.5))
     }
     
@@ -66,12 +67,31 @@ private extension FavoriteView {
         // Menus
         VStack(alignment: .center) {
             if viewModel.restaurantsLists.count > 0 {
-                HStack(spacing: 30) {
-                    ForEach(typeInfos) { type in
-                        typeButton(type: type)
+                ZStack {
+                    
+                    HStack(alignment: .bottom, spacing: 30) {
+                        Spacer()
+                        ForEach(typeInfos) { type in
+                            typeButton(type: type)
+                        }
+                        Spacer()
                     }
+                    .padding(.top, 8)
+                    
+                    
+                    Button(action: {
+                        withAnimation {
+//                            appState.monthToShow = viewModel.selectedDate
+                        }
+                    }, label: {
+                        Image("CalendarSettings")
+                            .resizable()
+                            .frame(width: 19.5, height: 16)
+                            .padding(.leading, UIScreen.main.bounds.width - 46)
+                    })
+                    .padding(.top, 8)
+
                 }
-                .padding(.top, 8)
                 
                 PageView(currentPage: $viewModel.selectedPage, viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.favoriteViewModel, viewModel) })
             } else {

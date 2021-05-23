@@ -37,17 +37,17 @@ private extension MenuView {
                     .frame(width: 10, height: 16)
             })
             .padding(.leading, 16)
-            
+
             Spacer()
-            
-            
+
+
             Text(viewModel.selectedFormatted)
                 .font(.custom("NanumSquareOTFB", size: 15))
                 .foregroundColor(orangeColor)
                 .padding(.bottom, 10)
-            
+
             Spacer()
-            
+
             Button(action: {
                 viewModel.selectedDate = viewModel.nextDate
             }, label: {
@@ -56,37 +56,6 @@ private extension MenuView {
                     .frame(width: 10, height: 16)
             })
             .padding(.trailing, 16)
-            
-            
-//            Button(action: {
-//                viewModel.selectedDate = viewModel.prevDate
-//            }, label: {
-//                Text(viewModel.prevFormatted)
-//            })
-//            .font(.custom("NanumSquareOTFR", size: 14))
-//            .foregroundColor(lightGrayColor)
-//
-//            Spacer()
-//
-//            VStack(spacing: 0) {
-//                Text(viewModel.selectedFormatted)
-//                    .font(.custom("NanumSquareOTFB", size: 15))
-//                    .foregroundColor(orangeColor)
-//                    .padding(.bottom, 10)
-//
-//                orangeColor
-//                    .frame(width: 150, height: 2)
-//            }
-//
-//            Spacer()
-//
-//            Button(action: {
-//                viewModel.selectedDate = viewModel.nextDate
-//            }, label: {
-//                Text(viewModel.nextFormatted)
-//            })
-//            .font(.custom("NanumSquareOTFR", size: 14))
-//            .foregroundColor(lightGrayColor)
 
         }
         .padding(EdgeInsets(top: 20, leading: 0, bottom: 16, trailing: 0))
@@ -99,16 +68,6 @@ private extension MenuView {
             if !viewModel.noMenu {
                 ZStack {
                     
-                    HStack(alignment: .bottom, spacing: 30) {
-                        Spacer()
-                        ForEach(typeInfos) { type in
-                            typeButton(type: type)
-                        }
-                        Spacer()
-                    }
-                    .padding(.top, 8)
-                    
-                    
                     Button(action: {
                         withAnimation {
 //                            appState.monthToShow = viewModel.selectedDate
@@ -119,6 +78,15 @@ private extension MenuView {
                             .frame(width: 19.5, height: 16)
                             .padding(.leading, UIScreen.main.bounds.width - 46)
                     })
+                    .padding(.top, 8)
+                    
+                    HStack(alignment: .bottom, spacing: 30) {
+                        Spacer()
+                        ForEach(typeInfos) { type in
+                            typeButton(type: type)
+                        }
+                        Spacer()
+                    }
                     .padding(.top, 8)
 
                 }

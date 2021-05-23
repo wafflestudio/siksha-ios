@@ -11,10 +11,19 @@ import SwiftUI
 private extension MealReviewView {
     var starSection: some View {
         HStack {
-            VStack(alignment: .leading) {
-                Text(viewModel.meal?.nameKr ?? "")
+            
+            Spacer()
+            
+            VStack(alignment: .center) {
+                Text("\(Text("'\(viewModel.meal?.nameKr ?? "")'").foregroundColor(darkFontColor))는 어땠나요?")
                     .font(.custom("NanumSquareOTFB", size: 22))
-                    .foregroundColor(darkFontColor)
+                    .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
+                    .padding(.top, 24)
+                
+                Text("별점을 선택해주세요.")
+                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
+                    .padding(.top, 26)
                 
                 RatingStar($viewModel.scoreToSubmit, size: 35)
                     .gesture(
@@ -24,17 +33,24 @@ private extension MealReviewView {
                                 viewModel.scoreToSubmit = Double(state)
                             }
                     )
+                
+                // score
+                Text("\(String(Int(viewModel.scoreToSubmit)))")
+                    .font(.custom("NanumSquareOTFB", size: 20))
+                    .foregroundColor(darkFontColor)
+                    .padding(.top, 7)
+                                
             }
             
             Spacer()
         }
-        .padding(EdgeInsets(top: 20, leading: 34, bottom: 48, trailing: 34))
+        .padding(EdgeInsets(top: 20, leading: 28, bottom: 48, trailing: 28))
     }
     
     var commentSection: some View {
         VStack(spacing: 0) {
             HStack {
-                Image("Comment")
+                Image("Comment-new")
                     .resizable()
                     .frame(width: 17, height: 16)
                 
@@ -57,35 +73,106 @@ private extension MealReviewView {
                     .foregroundColor(fontColor)
             }
             .padding([.leading, .trailing], 28)
+            
         }
     }
     
-    func submitButton(_ geometry: GeometryProxy) -> some View {
+    var imageSection: some View {
+        VStack {
+            HStack {
+                ScrollView (.horizontal) {
+                    HStack {
+                        ForEach(addedImages, id: \.self) { image in
+                            ZStack {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .renderingMode(.original)
+                                    .frame(width: 80, height: 80)
+                                    .cornerRadius(8)
+                                
+                                Button(action: {
+                                    if self.addedImages.contains(image) {
+                                        self.addedImages.removeAll(where: { $0 == image })
+                                    }
+                                }) {
+                                    Image("XButton")
+                                        .resizable()
+                                        .renderingMode(.original)
+                                        .frame(width: 25, height: 25)
+                                        .padding(EdgeInsets(top: 5, leading: 70, bottom: 70, trailing: 5))
+                                }
+                                
+                            }
+                            
+                        }
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding([.leading, .trailing], 28)
+            .padding(.top, 8)
+            
+            HStack {
+                Button(action: {
+                    self.isShowingPhotoLibrary = true
+                }) {
+                    ZStack {
+                        Image("ReviewPictureButton")
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 134, height: 32)
+
+                        Image("AddPicture")
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 84, height: 16)
+                    }
+                }
+                .padding(.top, 16)
+                .sheet(isPresented: $isShowingPhotoLibrary) {
+                    ImagePickerCoordinatorView(selectedImages: $addedImages)
+                }
+                
+                Spacer()
+            }
+            .padding([.leading, .trailing], 28)
+        }
+    }
+    
+    var submitButton: some View {
         Button(action: {
-            viewModel.submitReview()
+            if addedImages.count > 0 {
+                viewModel.submitReviewImages(images: addedImages)
+            } else {
+                viewModel.submitReview()
+            }
         }) {
             ZStack(alignment: .top) {
                 if viewModel.canSubmit {
-                    Image("SubmitButton")
+                    Image("SubmitButton-new")
                         .resizable()
                         .renderingMode(.original)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50 + geometry.safeAreaInsets.bottom)
+                        .frame(width: 343, height: 56)
                 } else {
-                    Color.init("LightGrayColor")
+                    // need gray image
+                    Image("SubmitButton-new")
+                        .resizable()
+                        .renderingMode(.original)
+                        .frame(width: 343, height: 56)
+//                    Color.init("LightGrayColor")
                 }
                 
-                Text("평가하기")
+                Text("평가 등록")
                     .font(.custom("NanumSquareOTFB", size: 20))
                     .foregroundColor(.white)
                     .padding(.top, 15)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 50 + geometry.safeAreaInsets.bottom)
         }
+        .padding(.bottom, 66)
         .disabled(!viewModel.canSubmit)
     }
-    
+
     var alertMessage: Text {
         var message = ""
         if viewModel.postReviewSucceeded {
@@ -120,6 +207,15 @@ private extension MealReviewView {
         }
         return Alert.Button.default(Text("확인"), action: action)
     }
+    
+    var bindingForImage: Binding<UIImage> {
+        Binding<UIImage> { () -> UIImage in
+            return addedImages.last ?? UIImage()
+        } set: { (newImage) in
+            addedImages.append(newImage)
+            print("Images: \(addedImages.count)")
+        }
+    }
 }
 
 // MARK: - Rating View
@@ -137,6 +233,9 @@ struct MealReviewView: View {
     @StateObject var viewModel: MealReviewViewModel = MealReviewViewModel()
     @ObservedObject var mealInfoViewModel: MealInfoViewModel
     
+    @State private var isShowingPhotoLibrary = false
+    @State private var addedImages = [UIImage]()
+    
     let meal: Meal
     
     init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel) {
@@ -146,37 +245,39 @@ struct MealReviewView: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) {
+            VStack(alignment: .center, spacing: 0) {
                 starSection
                 
                 commentSection
                 
+                imageSection
+                
                 Spacer()
                 
-                submitButton(geometry)
+                submitButton
             }
-            .edgesIgnoringSafeArea(.bottom)
+//            .edgesIgnoringSafeArea(.bottom)
             .background(Color.white.onTapGesture {
                 UIApplication.shared.endEditing()
             })
             .navigationBarTitle(
-                Text("평가 남기기"),
+                Text("나의 평가 남기기"),
                 displayMode: .inline
             )
             .navigationBarBackButtonHidden(true)
             .navigationBarItems(leading: Button(action: {
                 self.presentationMode.wrappedValue.dismiss()
             }) {
-                Image("BackButton")
+                Image("Back")
                     .resizable()
                     .renderingMode(.original)
-                    .frame(width: 20, height: 17)
+                    .frame(width: 10, height: 16)
             })
             .onAppear {
                 viewModel.meal = self.meal
             }
             .alert(isPresented: $viewModel.showAlert, content: {
-                Alert(title: Text("평가 남기기"), message: alertMessage, dismissButton: alertButton)
+                Alert(title: Text("나의 평가 남기기"), message: alertMessage, dismissButton: alertButton)
             })
             
         }
@@ -190,10 +291,20 @@ struct MealReviewView: View {
 private extension MealReviewView13 {
     var starSection: some View {
         HStack {
-            VStack(alignment: .leading) {
+            
+            Spacer()
+            
+            VStack(alignment: .center) {
+                // "(메뉴)는 어땠나요?" 추가 안 됨 -> string interpolation only available in iOS 14.0
                 Text(viewModel.meal?.nameKr ?? "")
                     .font(.custom("NanumSquareOTFB", size: 22))
                     .foregroundColor(darkFontColor)
+                    .padding(.top, 24)
+                
+                Text("별점을 선택해주세요.")
+                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
+                    .padding(.top, 26)
                 
                 RatingStar($viewModel.scoreToSubmit, size: 35)
                     .gesture(
@@ -203,17 +314,24 @@ private extension MealReviewView13 {
                                 viewModel.scoreToSubmit = Double(state)
                             }
                     )
+                
+                // score
+                Text("\(String(Int(viewModel.scoreToSubmit)))")
+                    .font(.custom("NanumSquareOTFB", size: 20))
+                    .foregroundColor(darkFontColor)
+                    .padding(.top, 7)
+                                
             }
             
             Spacer()
         }
-        .padding(EdgeInsets(top: 20, leading: 34, bottom: 48, trailing: 34))
+        .padding(EdgeInsets(top: 20, leading: 28, bottom: 48, trailing: 28))
     }
     
     var commentSection: some View {
         VStack(spacing: 0) {
             HStack {
-                Image("Comment")
+                Image("Comment-new")
                     .resizable()
                     .frame(width: 17, height: 16)
                 
@@ -236,32 +354,102 @@ private extension MealReviewView13 {
                     .foregroundColor(fontColor)
             }
             .padding([.leading, .trailing], 28)
+            
         }
     }
     
-    func submitButton(_ geometry: GeometryProxy) -> some View {
+    var imageSection: some View {
+        VStack {
+            HStack {
+                ScrollView (.horizontal) {
+                    HStack {
+                        ForEach(addedImages, id: \.self) { image in
+                            ZStack {
+                                Image(uiImage: image)
+                                    .resizable()
+                                    .renderingMode(.original)
+                                    .frame(width: 80, height: 80)
+                                    .cornerRadius(8)
+                                
+                                Button(action: {
+                                    if self.addedImages.contains(image) {
+                                        self.addedImages.removeAll(where: { $0 == image })
+                                    }
+                                }) {
+                                    Image("XButton")
+                                        .resizable()
+                                        .renderingMode(.original)
+                                        .frame(width: 25, height: 25)
+                                        .padding(EdgeInsets(top: 5, leading: 70, bottom: 70, trailing: 5))
+                                }
+                                
+                            }
+                        }
+                    }
+                }
+                
+                Spacer()
+            }
+            .padding([.leading, .trailing], 28)
+            .padding(.top, 8)
+            
+            HStack {
+                Button(action: {
+                    self.isShowingPhotoLibrary = true
+                }) {
+                    ZStack {
+                        Image("ReviewPictureButton")
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 134, height: 32)
+
+                        Image("AddPicture")
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 84, height: 16)
+                    }
+                }
+                .padding(.top, 16)
+                .sheet(isPresented: $isShowingPhotoLibrary) {
+                    ImagePickerCoordinatorView(selectedImages: $addedImages)
+                }
+                
+                Spacer()
+            }
+            .padding([.leading, .trailing], 28)
+        }
+    }
+    
+    var submitButton: some View {
         Button(action: {
-            viewModel.submitReview()
+            if addedImages.count > 0 {
+                viewModel.submitReviewImages(images: addedImages)
+            } else {
+                viewModel.submitReview()
+            }
         }) {
             ZStack(alignment: .top) {
                 if viewModel.canSubmit {
-                    Image("SubmitButton")
+                    Image("SubmitButton-new")
                         .resizable()
                         .renderingMode(.original)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: 50 + geometry.safeAreaInsets.bottom)
+                        .frame(width: 343, height: 56)
                 } else {
-                    Color.init("LightGrayColor")
+                    // need gray image
+                    Image("SubmitButton-new")
+                        .resizable()
+                        .renderingMode(.original)
+                        .frame(width: 343, height: 56)
+//                    Color.init("LightGrayColor")
                 }
                 
-                Text("평가하기")
+                Text("평가 등록")
                     .font(.custom("NanumSquareOTFB", size: 20))
                     .foregroundColor(.white)
                     .padding(.top, 15)
             }
-            .frame(maxWidth: .infinity)
-            .frame(height: 50 + geometry.safeAreaInsets.bottom)
         }
+        .padding(.bottom, 66)
         .disabled(!viewModel.canSubmit)
     }
     
@@ -296,6 +484,15 @@ private extension MealReviewView13 {
         }
         return Alert.Button.default(Text("확인"), action: action)
     }
+    
+    var bindingForImage: Binding<UIImage> {
+        Binding<UIImage> { () -> UIImage in
+            return addedImages.last ?? UIImage()
+        } set: { (newImage) in
+            addedImages.append(newImage)
+            print("Images: \(addedImages.count)")
+        }
+    }
 }
 
 @available(iOS 13.0, *)
@@ -309,6 +506,9 @@ struct MealReviewView13: View {
     @GestureState var score: Int = 0
 
     @ObservedObject var viewModel: MealReviewViewModel = MealReviewViewModel()
+    
+    @State private var isShowingPhotoLibrary = false
+    @State private var addedImages = [UIImage]()
 
     init(_ meal: Meal) {
         viewModel.meal = meal
@@ -316,16 +516,18 @@ struct MealReviewView13: View {
     
     var body: some View {
         GeometryReader { geometry in
-            VStack(spacing: 0) {
+            VStack(alignment: .center, spacing: 0) {
                 starSection
                 
                 commentSection
                 
+                imageSection
+                
                 Spacer()
                 
-                submitButton(geometry)
+                submitButton
             }
-            .edgesIgnoringSafeArea(.bottom)
+//            .edgesIgnoringSafeArea(.bottom)
             .background(Color.white.onTapGesture {
                 UIApplication.shared.endEditing()
             })
@@ -351,15 +553,12 @@ struct MealReviewView13: View {
 
 // MARK: - Preview
 
+
 //struct MealReviewView_Previews: PreviewProvider {
-////    static var previews: some View {
-////        let meal = Meal()
-////        meal.nameKr = "올리브스테이크"
-////
-////        if #available(iOS 14.0, *) {
-////            return MealReviewView(meal)
-////        } else {
-////            return MealReviewView13(meal)
-////        }
-////    }
+//    static var previews: some View {
+//        let meal = Meal()
+//        meal.nameKr = "올리브스테이크"
+//
+//        return MealReviewView(meal, mealInfoViewModel: MealInfoViewModel(meal))
+//    }
 //}
