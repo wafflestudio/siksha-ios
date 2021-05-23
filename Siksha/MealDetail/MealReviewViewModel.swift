@@ -25,7 +25,7 @@ class MealReviewViewModel: ObservableObject {
     @Published var requireLogin: Bool = false
     @Published var showAlert: Bool = false
     
-    @Published private var imagesJSON = [String]()
+    private var imagesData = [Data]()
     
     init() {
         $postReviewSucceeded
@@ -114,7 +114,7 @@ class MealReviewViewModel: ObservableObject {
                         meal.reviewCnt = newReviewCnt
                     }
                 } else {
-//                    self.errorCode = .init(rawValue: response.statusCode)
+                    self.errorCode = .init(rawValue: response.statusCode)
                     self.postReviewSucceeded = false
                 }
             }
@@ -130,20 +130,22 @@ class MealReviewViewModel: ObservableObject {
         print(images.count)
                 
         images.forEach { image in
-            let imageData = image.pngData()
-            let imageString = imageData?.base64EncodedString()
-            imagesJSON.append(imageString ?? "")
+            guard let imageData = image.pngData() else {
+                return
+            }
+            imagesData.append(imageData)
         }
         
         Networking.shared.submitReviewImages(
             menuId: meal.id,
             score: scoreToSubmit,
             comment: commentToSubmit.count > 0 ? commentToSubmit : commentPlaceHolder,
-            images: imagesJSON)
+            images: imagesData)
             .receive(on: RunLoop.main)
             .sink { [weak self] result in
                 guard let self = self else { return }
                 guard let response = result.response else {
+                    print(result)
                     self.postReviewSucceeded = false
                     return
                 }
@@ -163,7 +165,8 @@ class MealReviewViewModel: ObservableObject {
                         meal.reviewCnt = newReviewCnt
                     }
                 } else {
-//                    self.errorCode = .init(rawValue: response.statusCode)
+                    print(result.debugDescription)
+                    self.errorCode = .init(rawValue: response.statusCode)
                     self.postReviewSucceeded = false
                 }
             }

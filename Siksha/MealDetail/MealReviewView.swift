@@ -553,15 +553,12 @@ struct MealReviewView13: View {
 
 // MARK: - Preview
 
+
 //struct MealReviewView_Previews: PreviewProvider {
-////    static var previews: some View {
-////        let meal = Meal()
-////        meal.nameKr = "올리브스테이크"
-////
-////        if #available(iOS 14.0, *) {
-////            return MealReviewView(meal)
-////        } else {
-////            return MealReviewView13(meal)
-////        }
-////    }
+//    static var previews: some View {
+//        let meal = Meal()
+//        meal.nameKr = "올리브스테이크"
+//
+//        return MealReviewView(meal, mealInfoViewModel: MealInfoViewModel(meal))
+//    }
 //}

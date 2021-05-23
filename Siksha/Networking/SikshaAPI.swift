@@ -17,6 +17,11 @@ enum SikshaAPI: URLRequestConvertible {
             request.setToken(token: token)
         }
         
+        if self.multiPartFormDataNeeded{
+            request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
+            request.timeoutInterval = 3
+        }
+        
         if self.askingForToken {
             switch self {
             case let .getAccessToken(token, endPoint):
@@ -45,7 +50,7 @@ enum SikshaAPI: URLRequestConvertible {
     case getReviews(menuId: Int, page: Int, perPage: Int)
     case getCommentRecommendation(score: Int)
     case submitReview(menuId: Int, score: Double, comment: String)
-    case submitReviewImages(menuId: Int, score: Double, comment: String, images: [String])
+    case submitReviewImages
     case getReviewImages(menuId: Int, page: Int, perPage: Int, comment: Bool, etc: Bool)
     
     static var baseURL = Config.shared.baseURL!
@@ -112,9 +117,18 @@ enum SikshaAPI: URLRequestConvertible {
         case .submitReview:
             return "/reviews/"
         case .submitReviewImages:
-            return "/reviews/images/"
+            return "/reviews/images"
         case .getReviewImages:
             return "/reviews/filter/"
+        }
+    }
+    
+    var multiPartFormDataNeeded: Bool {
+        switch self {
+        case .submitReviewImages:
+            return true
+        default:
+            return false
         }
     }
     
@@ -132,8 +146,8 @@ enum SikshaAPI: URLRequestConvertible {
             return ["score": score]
         case let .submitReview(menuId, score, comment):
             return ["menu_id": menuId, "score": score, "comment": comment]
-        case let .submitReviewImages(menuId, score, comment, images):
-            return ["menu_id": menuId, "score": score, "comment": comment, "images": images]
+        case .submitReviewImages:
+            return nil
         case let .getReviewImages(menuId, page, perPage, comment, etc):
             return ["menu_id": menuId, "page": page, "per_page": perPage, "comment": comment, "etc": etc]
         }
