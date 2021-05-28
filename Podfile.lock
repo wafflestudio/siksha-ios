@@ -18,6 +18,7 @@ PODS:
   - GTMSessionFetcher/Core (1.5.0)
   - GTMSessionFetcher/Full (1.5.0):
     - GTMSessionFetcher/Core (= 1.5.0)
+  - JTAppleCalendar (8.0.3)
   - KakaoSDKAuth (2.3.2):
     - KakaoSDKCommon (= 2.3.2)
   - KakaoSDKCommon (2.3.2):
@@ -36,6 +37,7 @@ PODS:
 DEPENDENCIES:
   - BSImagePicker
   - GoogleSignIn
+  - JTAppleCalendar
   - KakaoSDKAuth
   - KakaoSDKCommon
   - KakaoSDKUser
@@ -51,6 +53,7 @@ SPEC REPOS:
     - GoogleSignIn
     - GTMAppAuth
     - GTMSessionFetcher
+    - JTAppleCalendar
     - KakaoSDKAuth
     - KakaoSDKCommon
     - KakaoSDKUser
@@ -66,6 +69,7 @@ SPEC CHECKSUMS:
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
   GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
+  JTAppleCalendar: 932cadea40b1051beab10f67843451d48ba16c99
   KakaoSDKAuth: 8db7c7a0561b137477bb984bbdab2eeda7745d23
   KakaoSDKCommon: 4bb3981337921686948b7be094590f2edec5df87
   KakaoSDKUser: e6c0017a41e87a94bdcd873d0178ad75be8126d4
@@ -74,6 +78,6 @@ SPEC CHECKSUMS:
   RealmSwift: f80216fb8334b01ccf526e4f2dd5ff0da61863a2
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 278acf309c82b2f4dba1ab8c18872fca412216e2
+PODFILE CHECKSUM: ca053383e45566acf3790d37cfea047f30019e75
 
 COCOAPODS: 1.10.1

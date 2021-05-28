@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "패스 502-2.png",
+      "filename" : "Arrow.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "패스 502-5.png",
+      "filename" : "Arrow-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "패스 502-9.png",
+      "filename" : "Arrow-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

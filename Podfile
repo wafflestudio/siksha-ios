@@ -13,6 +13,7 @@ target 'Siksha' do
   pod 'KakaoSDKUser'
   pod 'GoogleSignIn'
   pod 'BSImagePicker'
+  pod 'JTAppleCalendar'
 
 end
 

@@ -32,27 +32,33 @@ private extension FavoriteView {
             Button(action: {
                 viewModel.selectedDate = viewModel.prevDate
             }, label: {
-                Image("PrevDate")
+                Image(viewModel.showCalendar ? "PrevDate-disabled" : "PrevDate")
                     .resizable()
                     .frame(width: 10, height: 16)
             })
+            .disabled(viewModel.showCalendar)
             .padding(.leading, 16)
             
             Spacer()
             
-            Text(viewModel.selectedFormatted)
-                .font(.custom("NanumSquareOTFB", size: 15))
-                .foregroundColor(orangeColor)
+            Button(action: {
+                viewModel.showCalendar.toggle()
+            }, label: {
+                Text(viewModel.selectedFormatted)
+                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .foregroundColor(orangeColor)
+            })
             
             Spacer()
             
             Button(action: {
                 viewModel.selectedDate = viewModel.nextDate
             }, label: {
-                Image("NextDate")
+                Image(viewModel.showCalendar ? "NextDate-disabled" : "NextDate")
                     .resizable()
                     .frame(width: 10, height: 16)
             })
+            .disabled(viewModel.showCalendar)
             .padding(.trailing, 16)
         }
         .frame(height: 40)
@@ -97,7 +103,6 @@ private extension FavoriteView {
             }
         }
         .background(Color.init("AppBackgroundColor"))
-        .padding(.top, -4)
     }
 }
 
@@ -130,7 +135,26 @@ struct FavoriteView: View {
                 dayPageTab
                     .frame(height: 40)
                 
-                menuList
+                ZStack(alignment: .top) {
+                    menuList
+                    
+                    if viewModel.showCalendar {
+                        Color.init(.sRGB, white: 0, opacity: 0.6)
+                            .onTapGesture {
+                                viewModel.showCalendar = false
+                            }
+                            .transition(.opacity.animation(.easeInOut))
+                            .zIndex(1)
+                        
+                        CalendarView(selectedDate: $viewModel.selectedDate)
+                            .frame(height: 300)
+                            .padding(EdgeInsets(top: 4, leading: 10, bottom: 15, trailing: 10))
+                            .background(Color.white)
+                            .transition(.opacity.animation(.easeInOut))
+                            .zIndex(2)
+                    }
+                }
+                .padding(.top, -4)
             }
         }
         .edgesIgnoringSafeArea(.all)

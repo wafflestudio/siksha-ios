@@ -145,7 +145,6 @@ class MealReviewViewModel: ObservableObject {
             .sink { [weak self] result in
                 guard let self = self else { return }
                 guard let response = result.response else {
-                    print(result)
                     self.postReviewSucceeded = false
                     return
                 }
@@ -165,7 +164,6 @@ class MealReviewViewModel: ObservableObject {
                         meal.reviewCnt = newReviewCnt
                     }
                 } else {
-                    print(result.debugDescription)
                     self.errorCode = .init(rawValue: response.statusCode)
                     self.postReviewSucceeded = false
                 }

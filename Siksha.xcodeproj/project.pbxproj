@@ -356,6 +356,7 @@
 				1E96F94225E132250074940C /* ActivityIndicator.swift */,
 				1E3A57D725C724B200DBB3F4 /* PageView.swift */,
 				1ECB257C25F5412200875E18 /* TextView.swift */,
+				234DB0D8264156150049FE6B /* CalendarView.swift */,
 			);
 			path = UIRepresentable;
 			sourceTree = "<group>";
@@ -370,7 +371,6 @@
 				1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */,
 				23EB1D31265A11DE00EABD77 /* ImageReviewCell.swift */,
 				23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */,
-				234DB0D8264156150049FE6B /* CalendarView.swift */,
 				231C9D1325F8568C0072C07A /* MapView.swift */,
 				23EB1D0426597BF200EABD77 /* AddImageView.swift */,
 				1ECB250225F16DE300875E18 /* NavigationBar.swift */,
