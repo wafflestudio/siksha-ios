@@ -119,18 +119,28 @@ struct SettingsView: View {
                     )
                     
                     HStack {
-                        Button(action: {
-                            viewModel.showSignOutAlert = true
-                        }) {
-                            Text("앱 로그아웃")
-                                .font(.custom("NanumSquareOTFR", size: 15))
-                                .foregroundColor(.black)
+                        VStack(alignment: .leading) {
+                            Button(action: {
+                                viewModel.showVOC = true
+                            }) {
+                                Text("1:1 문의하기")
+                                    .font(.custom("NanumSquareOTFR", size: 15))
+                                    .foregroundColor(Color("MainThemeColor"))
+                            }
+                            .padding(.bottom, 8)
+                            
+                            Button(action: {
+                                viewModel.showSignOutAlert = true
+                            }) {
+                                Text("앱 로그아웃")
+                                    .font(.custom("NanumSquareOTFR", size: 15))
+                                    .foregroundColor(.black)
+                            }
                         }
                         
                         Spacer()
                     }
                     .padding(16)
-                    
                     
                     Spacer()
                     
@@ -140,6 +150,13 @@ struct SettingsView: View {
             }
             .edgesIgnoringSafeArea(.all)
             .navigationBarHidden(true)
+        }
+        .sheet(isPresented: $viewModel.showVOC) {
+            if #available(iOS 14.0, *) {
+                VOCView(viewModel)
+            } else {
+                VOCView13(viewModel)
+            }
         }
         .actionSheet(isPresented: $viewModel.showSignOutAlert, content: {
             ActionSheet(title: Text("로그아웃"),

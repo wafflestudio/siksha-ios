@@ -1,15 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Frame 11.svg",
+      "filename" : "Frame 11-1.svg",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "Frame 11.svg",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "Frame 11-2.svg",
       "idiom" : "universal",
       "scale" : "3x"
     }

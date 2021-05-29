@@ -76,4 +76,16 @@ class Networking {
         decoder.dateDecodingStrategy = .formatted(formatter)
         return request.validate().publishDecodable(type: ReviewResponse.self, decoder: decoder)
     }
+    
+    func getUserInfo() -> DataResponsePublisher<UserInfoResponse> {
+        let request = AF.request(SikshaAPI.getUserInfo)
+        
+        return request.validate().publishDecodable(type: UserInfoResponse.self)
+    }
+    
+    func submitVOC(comment: String) -> DataResponsePublisher<Data> {
+        let request = AF.request(SikshaAPI.submitVOC(comment: comment))
+        
+        return request.validate().publishData()
+    }
 }

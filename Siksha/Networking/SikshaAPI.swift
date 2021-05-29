@@ -53,6 +53,8 @@ enum SikshaAPI: URLRequestConvertible {
     case submitReview(menuId: Int, score: Double, comment: String)
     case submitReviewImages(menuId: Int, score: Double, comment: String, images: [Data])
     case getReviewImages(menuId: Int, page: Int, perPage: Int, comment: Bool, etc: Bool)
+    case getUserInfo
+    case submitVOC(comment: String)
     
     static var baseURL = Config.shared.baseURL!
     
@@ -102,6 +104,10 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .getReviewImages:
             return .get
+        case .getUserInfo:
+            return .get
+        case .submitVOC:
+            return .post
         }
     }
 
@@ -125,6 +131,10 @@ enum SikshaAPI: URLRequestConvertible {
             return "/reviews/images"
         case .getReviewImages:
             return "/reviews/filter/"
+        case .getUserInfo:
+            return "/auth/me"
+        case .submitVOC:
+            return "/voc"
         }
     }
     
@@ -148,6 +158,10 @@ enum SikshaAPI: URLRequestConvertible {
             return nil
         case let .getReviewImages(menuId, page, perPage, comment, etc):
             return ["menu_id": menuId, "page": page, "per_page": perPage, "comment": comment, "etc": etc]
+        case .getUserInfo:
+            return nil
+        case let .submitVOC(comment):
+            return ["voc": comment]
         }
     }
     

@@ -20,3 +20,10 @@ struct ReviewResponse: Codable {
 struct CommentRecommendationResponse: Codable {
     var comment: String
 }
+
+struct UserInfoResponse: Codable {
+    var id: Int
+    var type: String
+    var identity: String
+    var etc: String?
+}

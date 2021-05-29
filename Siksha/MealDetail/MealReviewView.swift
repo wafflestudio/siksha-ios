@@ -73,7 +73,6 @@ private extension MealReviewView {
                     .foregroundColor(fontColor)
             }
             .padding([.leading, .trailing], 28)
-            
         }
     }
     

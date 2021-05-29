@@ -15,7 +15,7 @@ class SettingsViewModel: ObservableObject {
     @Published var noMenuHide = false
     @Published var restaurantIds = [Int]()
     @Published var favRestaurantIds = [Int]()
-    @Published var networkStatus: MenuStatus = .idle
+    @Published var networkStatus: NetworkStatus = .idle
     @Published var showSignOutAlert: Bool = false
     
     @Published var version: String = ""
@@ -23,6 +23,13 @@ class SettingsViewModel: ObservableObject {
     
     var restaurantOrder: [String : Int]
     var favRestaurantOrder: [String : Int]
+    
+    @Published var showVOC: Bool = false
+    @Published var postVOCStatus: NetworkStatus = .idle
+    @Published var userId: Int = 0
+    @Published var vocComment: String = ""
+    @Published var alertMessage: String = ""
+    @Published var showAlert: Bool = false
     
     func getVersion() {
         guard let dictionary = Bundle.main.infoDictionary,
@@ -56,6 +63,8 @@ class SettingsViewModel: ObservableObject {
         
         restaurantOrder = UserDefaults.standard.dictionary(forKey: "restaurantOrder") as? [String : Int] ?? [String : Int]()
         favRestaurantOrder = UserDefaults.standard.dictionary(forKey: "favRestaurantOrder") as? [String : Int] ?? [String : Int]()
+        
+        getUserId()
         
         getRestaurants()
         
@@ -93,21 +102,28 @@ class SettingsViewModel: ObservableObject {
                 UserDefaults.standard.set(self.favRestaurantOrder, forKey: "favRestaurantOrder")
             }
             .store(in: &cancellables)
+        
+        $postVOCStatus
+            .dropFirst()
+            .sink { [weak self] status in
+                guard let self = self else { return }
+                
+                self.alertMessage = status == .failed ? "전송에 실패했습니다. 다시 시도해주세요." : "전송했습니다."
+                self.showAlert = true
+            }
+            .store(in: &cancellables)
     }
     
     func getRestaurants() {
         networkStatus = .loading
-        let url = Config.shared.baseURL + "/restaurants/"
         
-        URLSession.shared.dataTaskPublisher(for: URL(string: url)!)
+        Networking.shared.getRestaurants()
             .receive(on: RunLoop.main)
-            .sink
-            { _ in }
-            receiveValue: { [weak self] (data, response) in
+            .sink { [weak self] result in
                 guard let self = self else { return }
-                guard let response = response as? HTTPURLResponse,
-                      200..<300 ~= response.statusCode,
+                guard let data = result.value,
                       let restJSON = try? JSON(data: data)["result"].array else {
+                    print("Failure")
                     self.networkStatus = .failed
                     return
                 }
@@ -157,5 +173,31 @@ class SettingsViewModel: ObservableObject {
         
         restaurantIds = restIds
         favRestaurantIds = favRestIds.filter { UserDefaults.standard.bool(forKey: "fav\($0)") }
+    }
+    
+    func getUserId() {
+        Networking.shared.getUserInfo()
+            .receive(on: RunLoop.main)
+            .map(\.value?.id)
+            .replaceNil(with: 0)
+            .assign(to: \.userId, on: self)
+            .store(in: &cancellables)
+    }
+    
+    func sendVOC() {
+        Networking.shared.submitVOC(comment: vocComment)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] result in
+                guard let self = self else { return }
+                
+                guard let response = result.response,
+                      200..<300 ~= response.statusCode else {
+                    self.postVOCStatus = .failed
+                    return
+                }
+                
+                self.postVOCStatus = .succeeded
+            }
+            .store(in: &cancellables)
     }
 }
