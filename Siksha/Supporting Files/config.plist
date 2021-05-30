@@ -11,7 +11,7 @@
 		<key>google_client_id</key>
 		<string>###</string>
 		<key>server_url</key>
-		<string>https://siksha-api.wafflestudio.com</string>
+		<string>http://3.36.80.144/docs</string>
 	</dict>
 	<key>release</key>
 	<dict>

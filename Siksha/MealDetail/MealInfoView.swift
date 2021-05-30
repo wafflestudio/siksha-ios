@@ -153,21 +153,22 @@ struct MealInfoView: View {
                 
                 // 조건문 바꾸기 (사진 없으면 숨기기)
                 if true {
-                    HStack {
-                        Text("사진 리뷰 모아보기")
-                            .font(.custom("NanumSquareOTFB", size: 16))
-                            .foregroundColor(darkFontColor)
-                        
-                        Spacer()
-                        
-                        NavigationLink(
-                            destination: ImageReviewView(viewModel.meal, mealInfoViewModel: viewModel),
-                            label: {
+                    NavigationLink(
+                        destination: ImageReviewView(viewModel.meal, mealInfoViewModel: viewModel),
+                        label: {
+                            HStack {
+                                Text("사진 리뷰 모아보기")
+                                    .font(.custom("NanumSquareOTFB", size: 16))
+                                    .foregroundColor(darkFontColor)
+                                
+                                Spacer()
+                                
                                 Image("Arrow")
-                            })
-                        
-                    }
-                    
+                                
+                            }
+                            
+                        })
+                   
                     pictureList
                         .padding(.top, 17)
 

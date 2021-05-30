@@ -53,7 +53,7 @@ struct ImageReviewView: View {
                         .foregroundColor(lightGrayColor)
                         .padding(.top, 20)
                 }
-                .frame(width: geometry.size.width)
+                .frame(maxWidth: .infinity)
                 
             }
 
