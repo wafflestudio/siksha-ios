@@ -9,31 +9,39 @@ import SwiftUI
 
 private extension MealInfoView {
     var scoreSummary: some View {
-        
         VStack {
-            
             HStack (alignment: .bottom) {
-                VStack(alignment: .center, spacing: 3) {
-                    Text("\(String(format: "%.1f", viewModel.meal.score))점")
+                Spacer()
+                
+                VStack(alignment: .center, spacing: 10) {
+                    Text("\(String(format: "%.1f", viewModel.meal.score))")
                         .font(.custom("NanumSquareOTFB", size: 32))
-                        .foregroundColor(darkFontColor)
+                        .foregroundColor(.black)
                     
-                    RatingStar(.constant(viewModel.meal.score), size: 17)
-                    
+                    RatingStar(.constant(viewModel.meal.score), size: 17, spacing: 0.8)
                 }
                             
                 VStack(alignment: .leading) {
-                    Text("총 \(viewModel.meal.reviewCnt)명이 평가했어요!")
-                        .font(.custom("NanumSquareOTFB", size: 12))
-                        .foregroundColor(lightGrayColor)
+                    HStack(spacing: 0) {
+                        Text("총 ")
+                            .font(.custom("NanumSquareOTFB", size: 12))
+                            .foregroundColor(lightGrayColor)
+                        Text("\(viewModel.meal.reviewCnt)명")
+                            .font(.custom("NanumSquareOTFB", size: 12))
+                            .foregroundColor(orangeColor)
+                        Text("이 평가했어요!")
+                            .font(.custom("NanumSquareOTFB", size: 12))
+                            .foregroundColor(lightGrayColor)
+                    }
                                     
-                    HorizontalGraph(five: 5, four: 4, three: 3, two: 4, one: 1)
+                    HorizontalGraph([10, 20, 30, 40, 50])
+                        .frame(width: 200, alignment: .leading)
                 }
                 .padding(.leading, 20)
                 
                 Spacer()
             }
-            .padding(EdgeInsets(top: 20, leading: 0, bottom: 10, trailing: 0))
+            .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
             
             if showSubmitButton {
                 if #available(iOS 14.0, *) {
@@ -51,7 +59,7 @@ private extension MealInfoView {
                                     .foregroundColor(.white)
                             }
                         })
-                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 24, trailing: 0))
+                        .padding(.top, 18)
                 } else {
                     NavigationLink(
                         destination: MealReviewView13(viewModel.meal),
@@ -68,7 +76,7 @@ private extension MealInfoView {
                                     .foregroundColor(.white)
                             }
                         })
-                        .padding(EdgeInsets(top: 10, leading: 0, bottom: 24, trailing: 0))
+                        .padding(EdgeInsets(top: 18, leading: 0, bottom: 24, trailing: 0))
                 }
             }
         }
@@ -112,7 +120,7 @@ private extension MealInfoView {
             }
         }
         .listStyle(PlainListStyle())
-        .padding([.leading, .trailing], -10)
+        .padding([.leading, .trailing], 16)
     }
     
 }
@@ -125,29 +133,22 @@ struct MealInfoView: View {
     @State var showSubmitButton: Bool = true
     
     init(meal: Meal) {
-        UINavigationBar.appearance().barTintColor = .white
-        UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
-        UINavigationBar.appearance().shadowImage = UIImage()
-        
-        UINavigationBar.appearance().titleTextAttributes = [.font: UIFont(name: "NanumSquareOTFB", size: 22)!, .foregroundColor: UIColor.init(white: 79/255, alpha: 1)]
         UITableView.appearance().separatorStyle = .none
         
         self.viewModel = MealInfoViewModel(meal)
         
-        print(meal.id)
-
     }
     
     var body: some View {
-        NavigationView {
+        GeometryReader { geometry in
             VStack {
+                NavigationBar(title: "리뷰", showBack: true)
                 
-                HStack {
-                    orangeColor
-                        .frame(height: 1)
-                        .frame(maxWidth: .infinity)
-                }
-                .padding([.leading, .trailing], 12)
+                Text(viewModel.meal.nameKr)
+                    .font(.custom("NanumSquareOTFB", size: 20))
+                    .foregroundColor(.black)
+                    .lineLimit(1)
+                    .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 16))
                 
                 scoreSummary
                 
@@ -164,27 +165,35 @@ struct MealInfoView: View {
                                 Spacer()
                                 
                                 Image("Arrow")
+                                    .padding(.trailing, 16)
                                 
                             }
                             
                         })
+                        .padding(EdgeInsets(top: 42, leading: 20, bottom: 0, trailing: 0))
                    
                     pictureList
                         .padding(.top, 17)
 
                 }
-                
                 HStack {
-                    Text("리뷰")
-                        .font(.custom("NanumSquareOTFB", size: 16))
-                        .foregroundColor(darkFontColor)
-                    
-                    Spacer()
-                    
-                    
+                    // 리뷰 navigation...
+                    NavigationLink(
+                        destination: /*@START_MENU_TOKEN@*/Text("Destination")/*@END_MENU_TOKEN@*/,
+                        label: {
+                            Text("리뷰")
+                                .font(.custom("NanumSquareOTFB", size: 16))
+                                .foregroundColor(darkFontColor)
+                                .padding(.leading, 20)
+                            
+                            Spacer()
+                            
+                            Image("Arrow")
+                                .padding(.trailing, 16)
+                        })
                 }
-                                                
-                if viewModel.meal.reviewCnt > 0 {
+                
+                if viewModel.mealReviews.count > 0 {
                     reviewList
                 } else {
                     Text("평가가 없습니다.")
@@ -195,11 +204,8 @@ struct MealInfoView: View {
                 
                 Spacer()
             }
-            .padding([.leading, .trailing], 36)
-            .navigationBarTitle(
-                Text(viewModel.meal.nameKr),
-                displayMode: .inline
-            )
+            .edgesIgnoringSafeArea(.all)
+            .navigationBarHidden(true)
             .onAppear {
                 self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
                 viewModel.mealReviews = []

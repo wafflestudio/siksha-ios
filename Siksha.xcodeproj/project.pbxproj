@@ -24,8 +24,7 @@
 		1E3A57CE25C71F2200DBB3F4 /* NanumSquareOTFExtraBold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A578225C7014600DBB3F4 /* NanumSquareOTFExtraBold.otf */; };
 		1E3A57CF25C71F2400DBB3F4 /* NanumSquareOTFLight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A578325C7014600DBB3F4 /* NanumSquareOTFLight.otf */; };
 		1E3A57D325C71F2600DBB3F4 /* NanumSquareOTFRegular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A578025C7014600DBB3F4 /* NanumSquareOTFRegular.otf */; };
-		1E3A57D825C724B200DBB3F4 /* PageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57D725C724B200DBB3F4 /* PageViewController.swift */; };
-		1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57E525C735F200DBB3F4 /* PageView.swift */; };
+		1E3A57D825C724B200DBB3F4 /* PageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57D725C724B200DBB3F4 /* PageView.swift */; };
 		1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57EF25C73EC700DBB3F4 /* Meal.swift */; };
 		1E3A57FB25C73FDD00DBB3F4 /* DailyMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A57FA25C73FDD00DBB3F4 /* DailyMenu.swift */; };
 		1E3A581B25C98F9A00DBB3F4 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A581A25C98F9A00DBB3F4 /* AppState.swift */; };
@@ -71,6 +70,7 @@
 		23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */; };
 		234DB0D9264156150049FE6B /* CalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234DB0D8264156150049FE6B /* CalendarView.swift */; };
 		2360CD7326633A83007E02DB /* ImageReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2360CD7226633A83007E02DB /* ImageReviewViewModel.swift */; };
+		2360CD8E266353F1007E02DB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2360CD90266353F1007E02DB /* Localizable.strings */; };
 		23EB1D2D265A0C3A00EABD77 /* ImageReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB1D2C265A0C3A00EABD77 /* ImageReviewView.swift */; };
 		23EB1D32265A11DE00EABD77 /* ImageReviewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23EB1D31265A11DE00EABD77 /* ImageReviewCell.swift */; };
 		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
@@ -120,8 +120,7 @@
 		1E3A578125C7014600DBB3F4 /* NanumSquareOTFBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFBold.otf; sourceTree = "<group>"; };
 		1E3A578225C7014600DBB3F4 /* NanumSquareOTFExtraBold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFExtraBold.otf; sourceTree = "<group>"; };
 		1E3A578325C7014600DBB3F4 /* NanumSquareOTFLight.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = NanumSquareOTFLight.otf; sourceTree = "<group>"; };
-		1E3A57D725C724B200DBB3F4 /* PageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageViewController.swift; sourceTree = "<group>"; };
-		1E3A57E525C735F200DBB3F4 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
+		1E3A57D725C724B200DBB3F4 /* PageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageView.swift; sourceTree = "<group>"; };
 		1E3A57EF25C73EC700DBB3F4 /* Meal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Meal.swift; sourceTree = "<group>"; };
 		1E3A57FA25C73FDD00DBB3F4 /* DailyMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyMenu.swift; sourceTree = "<group>"; };
 		1E3A581A25C98F9A00DBB3F4 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
@@ -166,6 +165,9 @@
 		23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizontalGraph.swift; sourceTree = "<group>"; };
 		234DB0D8264156150049FE6B /* CalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarView.swift; sourceTree = "<group>"; };
 		2360CD7226633A83007E02DB /* ImageReviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageReviewViewModel.swift; sourceTree = "<group>"; };
+		2360CD8F266353F1007E02DB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		2360CD9426635442007E02DB /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		2360CD9526635442007E02DB /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		23EB1D2C265A0C3A00EABD77 /* ImageReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageReviewView.swift; sourceTree = "<group>"; };
 		23EB1D31265A11DE00EABD77 /* ImageReviewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageReviewCell.swift; sourceTree = "<group>"; };
 		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
@@ -305,6 +307,7 @@
 				1ECB250125F16D7900875E18 /* View Elements */,
 				1EABA80A25EBE28000B79CB8 /* Utils.swift */,
 				1E3A581F25C9C28000DBB3F4 /* Enums.swift */,
+				2360CD90266353F1007E02DB /* Localizable.strings */,
 				1ECB251C25F1739D00875E18 /* Config.swift */,
 			);
 			path = Library;
@@ -354,8 +357,7 @@
 			isa = PBXGroup;
 			children = (
 				1E96F94225E132250074940C /* ActivityIndicator.swift */,
-				1E3A57D725C724B200DBB3F4 /* PageViewController.swift */,
-				1E3A57E525C735F200DBB3F4 /* PageView.swift */,
+				1E3A57D725C724B200DBB3F4 /* PageView.swift */,
 				1ECB257C25F5412200875E18 /* TextView.swift */,
 			);
 			path = UIRepresentable;
@@ -528,6 +530,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ko,
 			);
 			mainGroup = 1E3A56DE25C6FCE600DBB3F4;
 			productRefGroup = 1E3A56E825C6FCE600DBB3F4 /* Products */;
@@ -548,6 +551,7 @@
 			files = (
 				231C9CCA25F8350F0072C07A /* Preview Assets.xcassets in Resources */,
 				231C9CB625F834D40072C07A /* Assets.xcassets in Resources */,
+				2360CD8E266353F1007E02DB /* Localizable.strings in Resources */,
 				2300D48C25FBD07F0037765D /* config.plist in Resources */,
 				1E3A56F725C6FCE800DBB3F4 /* LaunchScreen.storyboard in Resources */,
 				1E3A57CF25C71F2400DBB3F4 /* NanumSquareOTFLight.otf in Resources */,
@@ -678,7 +682,6 @@
 				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
 				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
-				1E3A57E625C735F200DBB3F4 /* PageView.swift in Sources */,
 				231C9C7025F7FB720072C07A /* MenuOrderView.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
 				1EB5F43C263E8EDE0012201A /* OperatingHoursTable.swift in Sources */,
@@ -691,7 +694,7 @@
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				2360CD7326633A83007E02DB /* ImageReviewViewModel.swift in Sources */,
 				1E3A575825C6FF2900DBB3F4 /* MenuViewModel.swift in Sources */,
-				1E3A57D825C724B200DBB3F4 /* PageViewController.swift in Sources */,
+				1E3A57D825C724B200DBB3F4 /* PageView.swift in Sources */,
 				1ECB248125F14C0F00875E18 /* LoginViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -732,8 +735,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				1E3A56F625C6FCE800DBB3F4 /* Base */,
+				2360CD9426635442007E02DB /* ko */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		2360CD90266353F1007E02DB /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2360CD8F266353F1007E02DB /* en */,
+				2360CD9526635442007E02DB /* ko */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -743,6 +756,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -804,6 +818,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

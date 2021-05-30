@@ -80,14 +80,14 @@ struct OperatingHoursTable: View {
                 .frame(maxWidth: .infinity)
                 .padding([.leading, .trailing], 16)
             
-            OperatingHoursCell(type: "주말", hours: weHours)
+            OperatingHoursCell(type: "토요일", hours: weHours)
             
             dividerColor
                 .frame(height: 1)
                 .frame(maxWidth: .infinity)
                 .padding([.leading, .trailing], 16)
             
-            OperatingHoursCell(type: "방학", hours: hoHours)
+            OperatingHoursCell(type: "휴일", hours: hoHours)
         }
     }
 }

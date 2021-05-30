@@ -10,10 +10,12 @@ import SwiftUI
 struct RatingStar: View {
     @Binding var score: Double
     private var starSize: CGFloat
+    private var spacing: CGFloat
     
-    init(_ score: Binding<Double>, size: CGFloat){
+    init(_ score: Binding<Double>, size: CGFloat, spacing: CGFloat = 8){
         self._score = score
         self.starSize = size
+        self.spacing = spacing
     }
     
     func starImage(_ index: Int) -> some View {
@@ -28,11 +30,11 @@ struct RatingStar: View {
             image = "RatingEmpty"
         }
         
-        return Image(image).resizable().frame(width: starSize, height: starSize)
+        return Image(image).resizable().frame(width: starSize+1, height: starSize)
     }
     
     var body: some View {
-        HStack {
+        HStack(spacing: spacing) {
             ForEach(0..<5) { index in
                 starImage(index)
             }

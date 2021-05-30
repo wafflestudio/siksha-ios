@@ -43,58 +43,56 @@ struct InformationView: View {
     }
 
     var body: some View {
-        GeometryReader { geometry in
-            VStack(alignment: .leading) {
-                NavigationBar(title: "식샤 정보", showBack: true, geometry)
-                
-                versionView
-                    .padding(.vertical, 50)
-                    .frame(maxWidth: .infinity)
-                
-                HStack {
-                    Spacer()
-                    Button(action: {
-                        self.showRemoveAccountAlert = true
-                    }, label: {
-                        Text("회원 탈퇴")
-                            .foregroundColor(.red)
-                            .font(.custom("NanumSquareOTFR", size: 16))
-                    })
-                    Spacer()
-                }
-                .padding(.top, 20)
-                
+        VStack(alignment: .leading) {
+            NavigationBar(title: "식샤 정보", showBack: true)
+            
+            versionView
+                .padding(.vertical, 50)
+                .frame(maxWidth: .infinity)
+            
+            HStack {
                 Spacer()
-                
-                HStack {
-                    Spacer()
-                    Image("WaffleStudioLogo")
-                        .resizable()
-                        .frame(width: 127, height: 47)
-                    Spacer()
-                }
-                .padding(.bottom, 40)
+                Button(action: {
+                    self.showRemoveAccountAlert = true
+                }, label: {
+                    Text("회원 탈퇴")
+                        .foregroundColor(.red)
+                        .font(.custom("NanumSquareOTFR", size: 16))
+                })
+                Spacer()
             }
-            // VStack
-            .navigationBarHidden(true)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarTitle("", displayMode: .inline)
-            .background(backgroundColor)
-            .actionSheet(isPresented: $showRemoveAccountAlert, content: {
-                ActionSheet(title: Text("회원 탈퇴"),
-                            message: Text("앱 계정을 삭제합니다.\n이 계정으로 등록된 리뷰 정보들도 모두 함께 삭제됩니다."),
-                            buttons: [
-                                .destructive(Text("회원 탈퇴"), action: {
-                                    self.removeAccount()
-                                }),
-                                .cancel(Text("취소"))
-                            ]
-                )
-            })
-            .alert(isPresented: $removeAccountFailed, content: {
-                Alert(title: Text("회원 탈퇴"), message: Text("회원 탈퇴에 실패했습니다."), dismissButton: .default(Text("확인")))
-            })
+            .padding(.top, 20)
+            
+            Spacer()
+            
+            HStack {
+                Spacer()
+                Image("WaffleStudioLogo")
+                    .resizable()
+                    .frame(width: 127, height: 47)
+                Spacer()
+            }
+            .padding(.bottom, 40)
         }
+        // VStack
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
+        .navigationBarTitle("", displayMode: .inline)
+        .background(backgroundColor)
+        .actionSheet(isPresented: $showRemoveAccountAlert, content: {
+            ActionSheet(title: Text("회원 탈퇴"),
+                        message: Text("앱 계정을 삭제합니다.\n이 계정으로 등록된 리뷰 정보들도 모두 함께 삭제됩니다."),
+                        buttons: [
+                            .destructive(Text("회원 탈퇴"), action: {
+                                self.removeAccount()
+                            }),
+                            .cancel(Text("취소"))
+                        ]
+            )
+        })
+        .alert(isPresented: $removeAccountFailed, content: {
+            Alert(title: Text("회원 탈퇴"), message: Text("회원 탈퇴에 실패했습니다."), dismissButton: .default(Text("확인")))
+        })
     }
     
     func removeAccount() {

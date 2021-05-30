@@ -11,7 +11,7 @@
 		<key>google_client_id</key>
 		<string>###</string>
 		<key>server_url</key>
-		<string>http://3.36.80.144/docs</string>
+		<string>http://3.36.80.144</string>
 	</dict>
 	<key>release</key>
 	<dict>

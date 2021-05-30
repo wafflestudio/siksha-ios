@@ -15,10 +15,17 @@ private extension MealReviewView {
             Spacer()
             
             VStack(alignment: .center) {
-                Text("\(Text("'\(viewModel.meal?.nameKr ?? "")'").foregroundColor(darkFontColor))는 어땠나요?")
-                    .font(.custom("NanumSquareOTFB", size: 22))
-                    .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
-                    .padding(.top, 24)
+                HStack {
+                    Text("'\(viewModel.meal?.nameKr ?? "")'")
+                        .font(.custom("NanumSquareOTFB", size: 22))
+                        .foregroundColor(darkFontColor)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                    Text("는 어땠나요?")
+                        .font(.custom("NanumSquareOTFB", size: 22))
+                        .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
+                }
+                .padding(.top, 24)
                 
                 Text("별점을 선택해주세요.")
                     .font(.custom("NanumSquareOTFB", size: 14))
@@ -95,11 +102,18 @@ private extension MealReviewView {
                                         self.addedImages.removeAll(where: { $0 == image })
                                     }
                                 }) {
-                                    Image("XButton")
-                                        .resizable()
-                                        .renderingMode(.original)
-                                        .frame(width: 25, height: 25)
-                                        .padding(EdgeInsets(top: 5, leading: 70, bottom: 70, trailing: 5))
+                                    ZStack {
+                                        Image("Circle")
+                                            .resizable()
+                                            .renderingMode(.original)
+                                            .frame(width: 16, height: 16)
+                                            
+                                        Image("X")
+                                            .resizable()
+                                            .renderingMode(.original)
+                                            .frame(width: 11, height: 11)
+                                    }
+                                    .padding(EdgeInsets(top: 5, leading: 77, bottom: 79, trailing: 3))
                                 }
                                 
                             }
@@ -107,11 +121,9 @@ private extension MealReviewView {
                         }
                     }
                 }
-                
                 Spacer()
             }
-            .padding([.leading, .trailing], 28)
-            .padding(.top, 8)
+            .padding(EdgeInsets(top: 3, leading: 28, bottom: 0, trailing: 28))
             
             HStack {
                 Button(action: {
@@ -129,7 +141,7 @@ private extension MealReviewView {
                             .frame(width: 84, height: 16)
                     }
                 }
-                .padding(.top, 16)
+                .padding(EdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0))
                 .sheet(isPresented: $isShowingPhotoLibrary) {
                     ImagePickerCoordinatorView(selectedImages: $addedImages)
                 }
@@ -150,17 +162,13 @@ private extension MealReviewView {
         }) {
             ZStack(alignment: .top) {
                 if viewModel.canSubmit {
-                    Image("SubmitButton-new")
-                        .resizable()
-                        .renderingMode(.original)
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.init("MainThemeColor"))
                         .frame(width: 343, height: 56)
                 } else {
-                    // need gray image
-                    Image("SubmitButton-new")
-                        .resizable()
-                        .renderingMode(.original)
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.init("LightGrayColor"))
                         .frame(width: 343, height: 56)
-//                    Color.init("LightGrayColor")
                 }
                 
                 Text("평가 등록")
@@ -208,14 +216,6 @@ private extension MealReviewView {
         return Alert.Button.default(Text("확인"), action: action)
     }
     
-    var bindingForImage: Binding<UIImage> {
-        Binding<UIImage> { () -> UIImage in
-            return addedImages.last ?? UIImage()
-        } set: { (newImage) in
-            addedImages.append(newImage)
-            print("Images: \(addedImages.count)")
-        }
-    }
 }
 
 // MARK: - Rating View
@@ -241,38 +241,32 @@ struct MealReviewView: View {
     init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel) {
         self.meal = meal
         self.mealInfoViewModel = mealInfoViewModel
+        print(meal.id)
     }
     
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
-                starSection
+                NavigationBar(title: "나의 평가 남기기", showBack: true)
                 
-                commentSection
+                ScrollView {
+                    starSection
+                    
+                    commentSection
+                    
+                    imageSection
+                }
                 
-                imageSection
+                
                 
                 Spacer()
                 
                 submitButton
             }
-//            .edgesIgnoringSafeArea(.bottom)
             .background(Color.white.onTapGesture {
                 UIApplication.shared.endEditing()
             })
-            .navigationBarTitle(
-                Text("나의 평가 남기기"),
-                displayMode: .inline
-            )
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: Button(action: {
-                self.presentationMode.wrappedValue.dismiss()
-            }) {
-                Image("Back")
-                    .resizable()
-                    .renderingMode(.original)
-                    .frame(width: 10, height: 16)
-            })
+            .navigationBarHidden(true)
             .onAppear {
                 viewModel.meal = self.meal
             }
@@ -295,11 +289,17 @@ private extension MealReviewView13 {
             Spacer()
             
             VStack(alignment: .center) {
-                // "(메뉴)는 어땠나요?" 추가 안 됨 -> string interpolation only available in iOS 14.0
-                Text(viewModel.meal?.nameKr ?? "")
-                    .font(.custom("NanumSquareOTFB", size: 22))
-                    .foregroundColor(darkFontColor)
-                    .padding(.top, 24)
+                HStack {
+                    Text("'\(viewModel.meal?.nameKr ?? "")'")
+                        .font(.custom("NanumSquareOTFB", size: 22))
+                        .foregroundColor(darkFontColor)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                    Text("는 어땠나요?")
+                        .font(.custom("NanumSquareOTFB", size: 22))
+                        .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
+                }
+                .padding(.top, 24)
                 
                 Text("별점을 선택해주세요.")
                     .font(.custom("NanumSquareOTFB", size: 14))
@@ -376,11 +376,19 @@ private extension MealReviewView13 {
                                         self.addedImages.removeAll(where: { $0 == image })
                                     }
                                 }) {
-                                    Image("XButton")
-                                        .resizable()
-                                        .renderingMode(.original)
-                                        .frame(width: 25, height: 25)
-                                        .padding(EdgeInsets(top: 5, leading: 70, bottom: 70, trailing: 5))
+                                    ZStack {
+                                        Image("Circle")
+                                            .resizable()
+                                            .renderingMode(.original)
+                                            .frame(width: 16, height: 16)
+                                            
+                                        Image("X")
+                                            .resizable()
+                                            .renderingMode(.original)
+                                            .frame(width: 11, height: 11)
+                                    }
+                                    .padding(EdgeInsets(top: 5, leading: 77, bottom: 79, trailing: 3))
+
                                 }
                                 
                             }
@@ -390,8 +398,7 @@ private extension MealReviewView13 {
                 
                 Spacer()
             }
-            .padding([.leading, .trailing], 28)
-            .padding(.top, 8)
+            .padding(EdgeInsets(top: 3, leading: 28, bottom: 0, trailing: 28))
             
             HStack {
                 Button(action: {
@@ -409,7 +416,7 @@ private extension MealReviewView13 {
                             .frame(width: 84, height: 16)
                     }
                 }
-                .padding(.top, 16)
+                .padding(EdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0))
                 .sheet(isPresented: $isShowingPhotoLibrary) {
                     ImagePickerCoordinatorView(selectedImages: $addedImages)
                 }
@@ -430,17 +437,13 @@ private extension MealReviewView13 {
         }) {
             ZStack(alignment: .top) {
                 if viewModel.canSubmit {
-                    Image("SubmitButton-new")
-                        .resizable()
-                        .renderingMode(.original)
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.init("MainThemeColor"))
                         .frame(width: 343, height: 56)
                 } else {
-                    // need gray image
-                    Image("SubmitButton-new")
-                        .resizable()
-                        .renderingMode(.original)
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.init("LightGrayColor"))
                         .frame(width: 343, height: 56)
-//                    Color.init("LightGrayColor")
                 }
                 
                 Text("평가 등록")
@@ -485,14 +488,6 @@ private extension MealReviewView13 {
         return Alert.Button.default(Text("확인"), action: action)
     }
     
-    var bindingForImage: Binding<UIImage> {
-        Binding<UIImage> { () -> UIImage in
-            return addedImages.last ?? UIImage()
-        } set: { (newImage) in
-            addedImages.append(newImage)
-            print("Images: \(addedImages.count)")
-        }
-    }
 }
 
 @available(iOS 13.0, *)
@@ -512,38 +507,35 @@ struct MealReviewView13: View {
 
     init(_ meal: Meal) {
         viewModel.meal = meal
+        
+        print(meal.id)
+
     }
     
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
-                starSection
+                NavigationBar(title: "나의 평가 남기기", showBack: true)
                 
-                commentSection
+                ScrollView {
+                    starSection
+                    
+                    commentSection
+                    
+                    imageSection
+                }
                 
-                imageSection
+               
                 
                 Spacer()
                 
                 submitButton
             }
-//            .edgesIgnoringSafeArea(.bottom)
+            .edgesIgnoringSafeArea(.all)
             .background(Color.white.onTapGesture {
                 UIApplication.shared.endEditing()
             })
-            .navigationBarTitle(
-                Text("평가 남기기"),
-                displayMode: .inline
-            )
-            .navigationBarBackButtonHidden(true)
-            .navigationBarItems(leading: Button(action: {
-                self.presentationMode.wrappedValue.dismiss()
-            }) {
-                Image("BackButton")
-                    .resizable()
-                    .renderingMode(.original)
-                    .frame(width: 20, height: 17)
-            })
+            .navigationBarHidden(true)
             .alert(isPresented: $viewModel.showAlert, content: {
                 Alert(title: Text("평가 남기기"), message: alertMessage, dismissButton: alertButton)
             })
@@ -553,15 +545,12 @@ struct MealReviewView13: View {
 
 // MARK: - Preview
 
+
 //struct MealReviewView_Previews: PreviewProvider {
-////    static var previews: some View {
-////        let meal = Meal()
-////        meal.nameKr = "올리브스테이크"
-////
-////        if #available(iOS 14.0, *) {
-////            return MealReviewView(meal)
-////        } else {
-////            return MealReviewView13(meal)
-////        }
-////    }
+//    static var previews: some View {
+//        let meal = Meal()
+//        meal.nameKr = "올리브스테이크"
+//
+//        return MealReviewView(meal, mealInfoViewModel: MealInfoViewModel(meal))
+//    }
 //}

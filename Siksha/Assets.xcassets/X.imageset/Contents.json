@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Union.png",
+      "filename" : "Vector (Stroke).png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Union (1).png",
+      "filename" : "Vector (Stroke)-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Union (2).png",
+      "filename" : "Vector (Stroke)-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

@@ -55,8 +55,16 @@ class Networking {
         return request.validate().publishData()
     }
     
-    func submitReviewImages(menuId: Int, score: Double, comment: String, images: [String]) -> DataResponsePublisher<Data> {
-        let request = AF.request(SikshaAPI.submitReviewImages(menuId: menuId, score: score, comment: comment, images: images))
+    func submitReviewImages(menuId: Int, score: Double, comment: String, images: [Data]) -> DataResponsePublisher<Data> {
+        let request = AF.upload(multipartFormData: { multipartFormData in
+            multipartFormData.append("\(menuId)".data(using: .utf8)!, withName: "menu_id", mimeType: "text/plain")
+            multipartFormData.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
+            multipartFormData.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain")
+            for (index, image) in images.enumerated() {
+                multipartFormData.append(image, withName: "images[\(index)]", mimeType: "image/png")
+            }
+        }, with: SikshaAPI.submitReviewImages)
+        
         return request.validate().publishData()
     }
     

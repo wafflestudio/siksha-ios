@@ -36,6 +36,9 @@ public class MenuViewModel: ObservableObject {
     @Published var showNetworkAlert: Bool = false
     
     @Published var selectedPage: Int = 0
+    @Published var pageViewReload: Bool = false
+    
+    @Published var reloadOnAppear: Bool = true
     
     init() {
         formatter.locale = Locale(identifier: "ko_kr")
@@ -75,6 +78,7 @@ public class MenuViewModel: ObservableObject {
                 self.nextFormatted = self.formatter.string(from: next)
                 self.prevFormatted = self.formatter.string(from: prev)
                 
+                self.pageViewReload = true
                 self.getMenu(date: dateString)
             }
             .store(in: &cancellables)

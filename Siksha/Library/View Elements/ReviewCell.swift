@@ -25,7 +25,6 @@ struct ReviewCell: View {
                     .resizable()
                     .renderingMode(.original)
                     .frame(width: 32, height: 32)
-                    .padding(.leading, 16)
                 
                 VStack(alignment: .leading) {
                     Text("ID \(String(review.userId))")
@@ -45,7 +44,12 @@ struct ReviewCell: View {
                     .padding(.trailing, 16)
             }
             
-            VStack {
+            ZStack {
+                Image("SpeechBubble")
+                    .resizable()
+                    .renderingMode(.original)
+                    .frame(width: 331, height: 70)
+                
                 HStack {
                     Text(review.comment ?? "")
                         .font(.custom("NanumSquareOTFR", size: 12))
@@ -54,16 +58,29 @@ struct ReviewCell: View {
                     
                     Spacer()
                 }
+                .padding(.top, -23)
+                .padding(.leading, 23)
                 .frame(height: 70)
-                .padding(EdgeInsets(top: 12, leading: 18, bottom: 20, trailing: 18))
                 
             }
-            .padding(EdgeInsets(top: 0, leading: 45, bottom: 0, trailing: 16))
-            .background(
-                Color.init("AppBackgroundColor")
-                    .cornerRadius(10)
-            )
+            .padding(.trailing, 16)
+            
+            if review.images != nil {
+                ScrollView (.horizontal) {
+                    HStack {
+//                        ForEach(review.images, id: \.self) { image in
+//                            Image(uiImage: image)
+//                                .resizable()
+//                                .renderingMode(.original)
+//                                .frame(width: 80, height: 80)
+//                                .cornerRadius(8)
+//                        }
+                    }
+                }
+            }
+            
         }
+        .padding(.leading, 16)
         
     }
 }

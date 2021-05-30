@@ -22,13 +22,14 @@ struct RestaurantsView: View {
             ScrollView(.vertical) {
                 ForEach(restaurantsList, id: \.id) { restaurant in
                     RestaurantCell(restaurant)
-                        .padding([.leading, .trailing], 10)
+                        .padding([.leading, .trailing], 8)
                         .padding([.top, .bottom], 4)
                 }
             }
             .padding(.top, 2)
             .padding(.bottom, 4)
             .background(Color.init("AppBackgroundColor"))
+            .navigationBarHidden(true)
         } else {
             VStack {
                 HStack{
@@ -38,6 +39,7 @@ struct RestaurantsView: View {
                 }
                 .frame(maxHeight: .infinity)
             }
+            .navigationBarHidden(true)
             .frame(maxWidth: .infinity)
             .background(Color.init("AppBackgroundColor"))
         }

@@ -26,35 +26,40 @@ struct MealCell: View {
     }
     
     var body: some View {
-        HStack {
-
+        HStack(alignment: .top) {
             Text("\(meal.nameKr)")
-                .font(.custom("NanumSquareOTFL", size: 15))
+                .font(.custom("NanumSquareOTFR", size: 15))
                 .foregroundColor(.black)
+                .padding(.top, 3)
             
             if vegetarian {
                 Image("Vegetarian")
                     .resizable()
                     .renderingMode(.original)
                     .frame(width: 18, height: 18)
+                    .padding(.top, 3)
             }
 
             Spacer()
             
             Text(meal.price > 0 ? String(formattedPrice) : "-")
-                .font(.custom("NanumSquareOTFR", size: 13))
+                .font(.custom("NanumSquareOTFR", size: 14))
                 .foregroundColor(.black)
+                .frame(width: 70)
+                .padding(.top, 3)
             
             ZStack {
-                Image(meal.score > 4.0 ? "Review-high" : meal.score <= 4.0 && meal.score >= 3.0 ? "Review-medium" : meal.score < 3.0 && meal.score > 0 ? "Review-low" : "SettingsCell")
-                    .resizable()
-                    .frame(width: 48, height: 20)
+                if meal.reviewCnt > 0 {
+                    Image(meal.score > 4.0 ? "Review-high" : meal.score <= 4.0 && meal.score >= 3.0 ? "Review-medium" : meal.score < 3.0 ? "Review-low" : "SettingsCell")
+                        .resizable()
+                        .frame(width: 48, height: 20)
+                }
 
                 Text(meal.reviewCnt > 0 ? String(format: "%.1f", meal.score) : "-")
-                    .font(.custom("NanumSquareOTFR", size: 13))
+                    .font(.custom("NanumSquareOTFB", size: 15))
                     .foregroundColor(meal.reviewCnt > 0 ? .white : .black)
             }
-            .padding(.leading, 8)
+            .frame(width: 50, height: 20)
         }
         .background(Color.white)
     }
@@ -65,7 +70,7 @@ struct MealCell_Previews: PreviewProvider {
         let meal = Meal()
         meal.nameKr = "음식"
         meal.reviewCnt = 1
-        meal.score = 4.2
+        meal.score = 4.1
         meal.price = 4000
         
         return MealCell(meal: meal)
