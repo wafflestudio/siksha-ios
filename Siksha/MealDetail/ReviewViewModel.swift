@@ -1,21 +1,22 @@
 //
-//  RatingViewModel.swift
+//  ReviewViewModel.swift
 //  Siksha
 //
-//  Created by 박종석 on 2021/02/05.
+//  Created by You Been Lee on 2021/06/05.
 //
 
 import Foundation
 import Combine
 import UIKit
 
-public class MealInfoViewModel: ObservableObject {
+public class ReviewViewModel: ObservableObject {
+    
     private var cancellables = Set<AnyCancellable>()
     var currentPage: Int = 1
     
     @Published var meal: Meal
     @Published var mealReviews: [Review] = []
-    @Published var images: [String] = []
+    @Published var mealImageReviews: [Review] = []
     @Published var hasMorePages = true
     @Published var getReviewStatus: NetworkStatus = .idle
     
@@ -33,6 +34,19 @@ public class MealInfoViewModel: ObservableObject {
         
         if mealReviews.firstIndex(where: { $0.id == item.id }) == thresholdIndex {
             loadMoreReviews()
+        }
+    }
+    
+    func loadMoreImageReviewsIfNeeded(currentItem item: Review?) {
+        guard let item = item else {
+            loadMoreImageReviews()
+            return
+        }
+        
+        let thresholdIndex = mealImageReviews.index(mealImageReviews.endIndex, offsetBy: -5)
+        
+        if mealImageReviews.firstIndex(where: { $0.id == item.id }) == thresholdIndex {
+            loadMoreImageReviews()
         }
     }
     
@@ -63,20 +77,7 @@ public class MealInfoViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func loadMoreImagesIfNeeded(currentItem item: String?) {
-        guard let item = item else {
-            loadMoreImages()
-            return
-        }
-        
-        let thresholdIndex = images.index(images.endIndex, offsetBy: -5)
-        
-        if images.firstIndex(where: { $0 == item }) == thresholdIndex {
-            loadMoreImages()
-        }
-    }
-    
-    private func loadMoreImages() {
+    private func loadMoreImageReviews() {
         
         Networking.shared.getReviewImages(menuId: meal.id, page: currentPage, perPage: 10, comment: false, etc: true)
             .map(\.value)
@@ -90,20 +91,12 @@ public class MealInfoViewModel: ObservableObject {
                 self.hasMorePages = (self.currentPage < (response.totalCount+9)/10)
                 self.currentPage += 1
                 self.getReviewStatus = .succeeded
-                
             })
             .map(\.?.reviews)
             .replaceNil(with: [])
-            .map { $0.map {$0.images?["images"]?[0]} }
-            .flatMap({ image in
-                return image.publisher
-            })
-            .sink(receiveCompletion: {_ in}, receiveValue: { value in
-                if (!self.images.contains(value!)) {
-                    self.images.append(value ?? "null")
-                }
-            })
+            .map { self.mealImageReviews + $0 }
+            .assign(to: \.mealImageReviews, on: self)
             .store(in: &cancellables)
-        
     }
+    
 }

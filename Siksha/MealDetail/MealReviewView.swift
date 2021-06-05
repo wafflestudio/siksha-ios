@@ -158,6 +158,7 @@ private extension MealReviewView {
                 viewModel.submitReviewImages(images: addedImages)
             } else {
                 viewModel.submitReview()
+
             }
         }) {
             ZStack(alignment: .top) {
@@ -241,7 +242,6 @@ struct MealReviewView: View {
     init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel) {
         self.meal = meal
         self.mealInfoViewModel = mealInfoViewModel
-        print(meal.id)
     }
     
     var body: some View {
@@ -507,9 +507,6 @@ struct MealReviewView13: View {
 
     init(_ meal: Meal) {
         viewModel.meal = meal
-        
-        print(meal.id)
-
     }
     
     var body: some View {

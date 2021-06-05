@@ -9,10 +9,12 @@ import SwiftUI
 
 struct ReviewCell: View {
     private let formatter = DateFormatter()
-    var review: Review
+    private var review: Review
+    private var showPictures: Bool
     
-    init(_ review: Review) {
+    init(_ review: Review, _ showPictures: Bool) {
         self.review = review
+        self.showPictures = showPictures
         formatter.dateFormat = "yyyy년 M월 d일"
     }
     
@@ -44,43 +46,36 @@ struct ReviewCell: View {
                     .padding(.trailing, 16)
             }
             
-            ZStack {
+            ZStack(alignment: .top) {
                 Image("SpeechBubble")
                     .resizable()
                     .renderingMode(.original)
-                    .frame(width: 331, height: 70)
+                    .frame(width: 331, height: 90)
                 
-                HStack {
-                    Text(review.comment ?? "")
-                        .font(.custom("NanumSquareOTFR", size: 12))
-                        .foregroundColor(.init(white: 79/255))
-                        .multilineTextAlignment(.leading)
-                    
-                    Spacer()
-                }
-                .padding(.top, -23)
-                .padding(.leading, 23)
-                .frame(height: 70)
+                Text(review.comment ?? "")
+                    .font(.custom("NanumSquareOTFR", size: 12))
+                    .foregroundColor(.init(white: 79/255))
+                    .frame(width: 303, alignment: .leading)
+                    .padding(.leading, 20)
+                    .padding(.top, 13)
                 
             }
-            .padding(.trailing, 16)
+            .frame(width: 331, height: 90)
             
-            if review.images != nil {
+            if showPictures && review.images != nil {
                 ScrollView (.horizontal) {
                     HStack {
-//                        ForEach(review.images, id: \.self) { image in
-//                            Image(uiImage: image)
-//                                .resizable()
-//                                .renderingMode(.original)
-//                                .frame(width: 80, height: 80)
-//                                .cornerRadius(8)
-//                        }
+                        ForEach(review.images?["images"] ?? [], id: \.self) { image in
+                            ClickableImage(image)
+                        }
                     }
                 }
+                .frame(width: 314)
+                .padding(.leading, 16)
             }
             
         }
-        .padding(.leading, 16)
+        .padding([.leading, .trailing], 16)
         
     }
 }
@@ -93,7 +88,7 @@ struct ReviewCell_Previews: PreviewProvider {
             "menu_id": 0,
             "user_id": 0,
             "score": 4,
-            "comment": "strings",
+            "comment": "150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자15",
             "etc": {},
             "created_at": "2021-03-05T18:05:50Z",
             "updated_at": "2021-03-05T18:05:50Z"
@@ -104,6 +99,9 @@ struct ReviewCell_Previews: PreviewProvider {
         decoder.dateDecodingStrategy = .iso8601
         
         let review = try! decoder.decode(Review.self, from: jsonData)
-        return ReviewCell(review)
+        return Group {
+            ReviewCell(review, true)
+//                .previewDevice(PreviewDevice(rawValue: "iPhone11"))
+        }
     }
 }

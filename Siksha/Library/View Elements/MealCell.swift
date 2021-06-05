@@ -49,11 +49,9 @@ struct MealCell: View {
                 .padding(.top, 3)
             
             ZStack {
-                if meal.reviewCnt > 0 {
-                    Image(meal.score > 4.0 ? "Review-high" : meal.score <= 4.0 && meal.score >= 3.0 ? "Review-medium" : meal.score < 3.0 ? "Review-low" : "SettingsCell")
-                        .resizable()
-                        .frame(width: 48, height: 20)
-                }
+                Image(meal.score > 4.0 ? "Review-high" : meal.score <= 4.0 && meal.score >= 3.0 ? "Review-medium" : meal.score < 3.0 && meal.score > 0 ? "Review-low" : "")
+                    .resizable()
+                    .frame(width: 48, height: 20)
 
                 Text(meal.reviewCnt > 0 ? String(format: "%.1f", meal.score) : "-")
                     .font(.custom("NanumSquareOTFB", size: 15))

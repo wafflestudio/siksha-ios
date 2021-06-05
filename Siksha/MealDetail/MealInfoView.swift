@@ -84,26 +84,40 @@ private extension MealInfoView {
     }
     
     var pictureList: some View {
-        ScrollView (.horizontal) {
-            HStack {
-                ForEach(viewModel.mealImageReviews, id: \.id) { review in
-                    ForEach(review.images!, id: \.self) { data in
-                        let uiImage = UIImage(data: data)
-                        Image(uiImage: uiImage!)
-                            .resizable()
-                            .renderingMode(.original)
-                            .frame(width: 120, height: 120)
-                            .cornerRadius(8)
-                    }
-                }
+        HStack {
+            ClickableImage(viewModel.images[0])
+            if viewModel.images.count >= 2 {
+                ClickableImage(viewModel.images[1])
             }
+            if viewModel.images.indices.contains(2) {
+                NavigationLink(
+                    destination: ReviewView(viewModel.meal, true),
+                    label: {
+                        ZStack {
+                            RemoteImage(url: viewModel.images[2])
+                                .frame(width: 120, height: 120)
+                            
+                            Text("+\n\(viewModel.images.count)건 더 보기")
+                                .foregroundColor(.white)
+                                .font(.custom("NanumSquareOTFB", size: 12))
+                                .multilineTextAlignment(.center)
+                        }
+                        .background(Color.black)
+                        .opacity(0.5)
+                        .cornerRadius(8)
+                    })
+            }
+            
+            Spacer()
         }
+        .padding([.leading, .trailing], 16)
+        
     }
     
     var reviewList: some View {
         List {
             ForEach(viewModel.mealReviews, id: \.id) { review in
-                ReviewCell(review)
+                ReviewCell(review, false)
                     .padding(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
                     .listRowInsets(EdgeInsets())
                     .background(Color.white)
@@ -120,7 +134,6 @@ private extension MealInfoView {
             }
         }
         .listStyle(PlainListStyle())
-        .padding([.leading, .trailing], 16)
     }
     
 }
@@ -131,12 +144,12 @@ struct MealInfoView: View {
     private let orangeColor = Color.init("MainThemeColor")
     @ObservedObject var viewModel: MealInfoViewModel
     @State var showSubmitButton: Bool = true
+    @State var showDetailImage: Bool = false
     
     init(meal: Meal) {
         UITableView.appearance().separatorStyle = .none
         
         self.viewModel = MealInfoViewModel(meal)
-        
     }
     
     var body: some View {
@@ -144,65 +157,76 @@ struct MealInfoView: View {
             VStack {
                 NavigationBar(title: "리뷰", showBack: true)
                 
-                Text(viewModel.meal.nameKr)
-                    .font(.custom("NanumSquareOTFB", size: 20))
-                    .foregroundColor(.black)
-                    .lineLimit(1)
-                    .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 16))
-                
-                scoreSummary
-                
-                // 조건문 바꾸기 (사진 없으면 숨기기)
-                if true {
-                    NavigationLink(
-                        destination: ImageReviewView(viewModel.meal, mealInfoViewModel: viewModel),
-                        label: {
-                            HStack {
-                                Text("사진 리뷰 모아보기")
+                ScrollView {
+                    Text(viewModel.meal.nameKr)
+                        .font(.custom("NanumSquareOTFB", size: 20))
+                        .foregroundColor(.black)
+                        .lineLimit(1)
+                        .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 16))
+                    
+                    scoreSummary
+                    
+                    Rectangle()
+                        .fill(Color.init(UIColor(named: "AppBackgroundColor")!))
+                        .frame(height: 10)
+                        .edgesIgnoringSafeArea(.horizontal)
+                        .padding(.top, 16)
+                    
+                    if viewModel.images.count > 0 {
+                        NavigationLink(
+                            destination: ReviewView(viewModel.meal, true),
+                            label: {
+                                HStack {
+                                    Text("사진 리뷰 모아보기")
+                                        .font(.custom("NanumSquareOTFB", size: 16))
+                                        .foregroundColor(darkFontColor)
+                                    
+                                    Spacer()
+                                    
+                                    Image("Arrow")
+                                        .padding(.trailing, 16)
+                                    
+                                }
+                                
+                            })
+                            .navigationViewStyle(StackNavigationViewStyle())
+                            .padding(EdgeInsets(top: 16, leading: 20, bottom: 0, trailing: 0))
+                       
+                        pictureList
+                            .padding(.top, 17)
+
+                    }
+                    
+                    HStack {
+                        NavigationLink(
+                            destination: ReviewView(viewModel.meal, false),
+                            label: {
+                                Text("리뷰")
                                     .font(.custom("NanumSquareOTFB", size: 16))
                                     .foregroundColor(darkFontColor)
+                                    .padding(.leading, 20)
                                 
                                 Spacer()
                                 
                                 Image("Arrow")
                                     .padding(.trailing, 16)
-                                
-                            }
-                            
-                        })
-                        .padding(EdgeInsets(top: 42, leading: 20, bottom: 0, trailing: 0))
-                   
-                    pictureList
-                        .padding(.top, 17)
-
-                }
-                HStack {
-                    // 리뷰 navigation...
-                    NavigationLink(
-                        destination: /*@START_MENU_TOKEN@*/Text("Destination")/*@END_MENU_TOKEN@*/,
-                        label: {
-                            Text("리뷰")
-                                .font(.custom("NanumSquareOTFB", size: 16))
-                                .foregroundColor(darkFontColor)
-                                .padding(.leading, 20)
-                            
-                            Spacer()
-                            
-                            Image("Arrow")
-                                .padding(.trailing, 16)
-                        })
+                            })
+                    }
+                    .padding(.top, 20)
+                    
+                    if viewModel.mealReviews.count > 0 {
+                        reviewList
+                            .frame(width: geometry.size.width - 5, height: geometry.size.height - 200)
+                    } else {
+                        Text("평가가 없습니다.")
+                            .font(.custom("NanumSquareOTFB", size: 13))
+                            .foregroundColor(lightGrayColor)
+                            .padding(.top, 20)
+                    }
+                    
+                    Spacer()
                 }
                 
-                if viewModel.mealReviews.count > 0 {
-                    reviewList
-                } else {
-                    Text("평가가 없습니다.")
-                        .font(.custom("NanumSquareOTFB", size: 13))
-                        .foregroundColor(lightGrayColor)
-                        .padding(.top, 20)
-                }
-                
-                Spacer()
             }
             .edgesIgnoringSafeArea(.all)
             .navigationBarHidden(true)
@@ -211,6 +235,7 @@ struct MealInfoView: View {
                 viewModel.mealReviews = []
                 viewModel.currentPage = 1
                 viewModel.loadMoreReviewsIfNeeded(currentItem: nil)
+                viewModel.loadMoreImagesIfNeeded(currentItem: nil)
             }
         }
     }
