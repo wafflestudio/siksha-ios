@@ -182,7 +182,7 @@ enum SikshaAPI: URLRequestConvertible {
             data.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
             data.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain")
             for (index, image) in images.enumerated() {
-                data.append(image, withName: "images[\(index)]", mimeType: "image/png")
+                data.append(image, withName: "images", fileName: "image_\(index).png", mimeType: "image/png")
             }
             return data
         default:
