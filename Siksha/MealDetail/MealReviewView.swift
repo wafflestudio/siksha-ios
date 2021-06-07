@@ -204,6 +204,9 @@ private extension MealReviewView {
                 mealInfoViewModel.mealReviews = []
                 mealInfoViewModel.loadReviews()
                 mealInfoViewModel.loadImages()
+                mealInfoViewModel.loadDistribution()
+                favViewModel?.pageViewReload = true
+                menuViewModel?.pageViewReload = true
                 presentationMode.wrappedValue.dismiss()
             }
         } else {
@@ -228,6 +231,8 @@ struct MealReviewView: View {
     private let fontColor = Color("DefaultFontColor")
     private let orangeColor = Color.init("MainThemeColor")
 
+    @Environment(\.favoriteViewModel) var favViewModel: FavoriteViewModel?
+    @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @GestureState var score: Int = 0
@@ -471,6 +476,12 @@ private extension MealReviewView13 {
         var action: (() -> Void)? = nil
         if viewModel.postReviewSucceeded {
             action = {
+                mealInfoViewModel.mealReviews = []
+                mealInfoViewModel.loadReviews()
+                mealInfoViewModel.loadImages()
+                mealInfoViewModel.loadDistribution()
+                favViewModel?.pageViewReload = true
+                menuViewModel?.pageViewReload = true
                 presentationMode.wrappedValue.dismiss()
             }
         } else {
@@ -493,16 +504,20 @@ struct MealReviewView13: View {
     private let fontColor = Color("DefaultFontColor")
     private let orangeColor = Color.init("MainThemeColor")
 
+    @Environment(\.favoriteViewModel) var favViewModel: FavoriteViewModel?
+    @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @GestureState var score: Int = 0
 
     @ObservedObject var viewModel: MealReviewViewModel = MealReviewViewModel()
+    @ObservedObject var mealInfoViewModel: MealInfoViewModel
     
     @State private var isShowingPhotoLibrary = false
     @State private var addedImages = [UIImage]()
 
-    init(_ meal: Meal) {
+    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel) {
+        self.mealInfoViewModel = mealInfoViewModel
         viewModel.meal = meal
     }
     
@@ -518,8 +533,6 @@ struct MealReviewView13: View {
                     
                     imageSection
                 }
-                
-               
                 
                 Spacer()
                 

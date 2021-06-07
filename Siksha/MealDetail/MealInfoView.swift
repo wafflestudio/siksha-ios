@@ -10,9 +10,7 @@ import SwiftUI
 private extension MealInfoView {
     var scoreSummary: some View {
         VStack(spacing: 0) {
-            HStack (alignment: .bottom) {
-                Spacer()
-                
+            HStack (alignment: .center) {
                 VStack(alignment: .center, spacing: 10) {
                     Text("\(String(format: "%.1f", viewModel.meal.score))")
                         .font(.custom("NanumSquareOTFB", size: 32))
@@ -20,6 +18,7 @@ private extension MealInfoView {
                     
                     RatingStar(.constant(viewModel.meal.score), size: 17, spacing: 0.8)
                 }
+                .padding(.leading, 45)
                             
                 VStack(alignment: .leading) {
                     HStack(spacing: 0) {
@@ -34,7 +33,7 @@ private extension MealInfoView {
                             .foregroundColor(lightGrayColor)
                     }
                                     
-                    HorizontalGraph([10, 20, 30, 40, 50])
+                    HorizontalGraph(viewModel.scoreDistribution)
                         .frame(width: 200, alignment: .leading)
                 }
                 .padding(.leading, 20)
@@ -46,7 +45,9 @@ private extension MealInfoView {
             if showSubmitButton {
                 if #available(iOS 14.0, *) {
                     NavigationLink(
-                        destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel),
+                        destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel)
+                            .environment(\.menuViewModel, menuViewModel)
+                            .environment(\.favoriteViewModel, favViewModel),
                         label: {
                             ZStack {
                                 Image("RateButton-new")
@@ -61,7 +62,9 @@ private extension MealInfoView {
                         })
                 } else {
                     NavigationLink(
-                        destination: MealReviewView13(viewModel.meal),
+                        destination: MealReviewView13(viewModel.meal, mealInfoViewModel: viewModel)
+                            .environment(\.menuViewModel, menuViewModel)
+                            .environment(\.favoriteViewModel, favViewModel),
                         label: {
                             ZStack {
                                 Image("RateButton-new")
@@ -148,6 +151,8 @@ struct MealInfoView: View {
     private let darkFontColor = Color.init("DarkFontColor")
     private let lightGrayColor = Color.init("LightGrayColor")
     private let orangeColor = Color.init("MainThemeColor")
+    @Environment(\.favoriteViewModel) var favViewModel: FavoriteViewModel?
+    @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @ObservedObject var viewModel: MealInfoViewModel
     @State var showSubmitButton: Bool = true
     @State var showDetailImage: Bool = false
@@ -210,7 +215,7 @@ struct MealInfoView: View {
                                 .frame(width: 7.5, height: 12)
                         }
                     }
-                    .padding(EdgeInsets(top: 20, leading: 16, bottom: 0, trailing: 16))
+                    .padding(EdgeInsets(top: 20, leading: 16, bottom: 4, trailing: 16))
                     
                     if viewModel.mealReviews.count > 0 {
                         reviewList
@@ -231,6 +236,7 @@ struct MealInfoView: View {
                 viewModel.mealReviews = []
                 viewModel.loadReviews()
                 viewModel.loadImages()
+                viewModel.loadDistribution()
                 viewModel.loadedReviews = true
             }
         }

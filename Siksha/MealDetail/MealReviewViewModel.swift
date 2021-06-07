@@ -114,7 +114,7 @@ class MealReviewViewModel: ObservableObject {
                         meal.reviewCnt = newReviewCnt
                     }
                 } else {
-//                    self.errorCode = .init(rawValue: response.statusCode)
+                    self.errorCode = .init(rawValue: response.statusCode)
                     self.postReviewSucceeded = false
                 }
             }

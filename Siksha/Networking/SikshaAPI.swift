@@ -49,6 +49,7 @@ enum SikshaAPI: URLRequestConvertible {
     case getMenus(startDate: String, endDate: String, noMenuHide: Bool)
     case getRestaurants
     case getReviews(menuId: Int, page: Int, perPage: Int)
+    case getScoreDistribution(menuId: Int)
     case getCommentRecommendation(score: Int)
     case submitReview(menuId: Int, score: Double, comment: String)
     case submitReviewImages(menuId: Int, score: Double, comment: String, images: [Data])
@@ -67,6 +68,8 @@ enum SikshaAPI: URLRequestConvertible {
         case .getRestaurants:
             return false
         case .getReviews:
+            return false
+        case .getScoreDistribution:
             return false
         case .getCommentRecommendation:
             return false
@@ -96,6 +99,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .getReviews:
             return .get
+        case .getScoreDistribution:
+            return .get
         case .getCommentRecommendation:
             return .get
         case .submitReview:
@@ -123,6 +128,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/restaurants/"
         case .getReviews:
             return "/reviews/"
+        case .getScoreDistribution:
+            return "/reviews/dist"
         case .getCommentRecommendation:
             return "/reviews/comments/recommendation"
         case .submitReview:
@@ -150,6 +157,8 @@ enum SikshaAPI: URLRequestConvertible {
             return nil
         case let .getReviews(menuId, page, perPage):
             return ["menu_id": menuId, "page": page, "per_page": perPage]
+        case let .getScoreDistribution(menuId):
+            return ["menu_id": menuId]
         case let .getCommentRecommendation(score):
             return ["score": score]
         case let .submitReview(menuId, score, comment):
@@ -182,7 +191,7 @@ enum SikshaAPI: URLRequestConvertible {
             data.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
             data.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain")
             for (index, image) in images.enumerated() {
-                data.append(image, withName: "images", fileName: "image_\(index).png", mimeType: "image/png")
+                data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }
             return data
         default:

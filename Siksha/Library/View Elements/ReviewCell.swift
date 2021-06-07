@@ -49,6 +49,7 @@ struct ReviewCell: View {
                     .resizable()
                     .renderingMode(.original)
                     .padding(EdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 0))
+                    .frame(height: 85)
                 
                 HStack {
                     Text(review.comment ?? "")

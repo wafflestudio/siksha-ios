@@ -87,8 +87,9 @@ struct RestaurantCell: View {
                 if meals.count > 0 {
                     ForEach(meals, id: \.id) { meal in
                         NavigationLink(
-                            destination:
-                                MealInfoView(meal: meal)
+                            destination: MealInfoView(meal: meal)
+                                .environment(\.menuViewModel, viewModel)
+                                .environment(\.favoriteViewModel, favViewModel)
                                 .navigationBarHidden(true)
                                 .onAppear{
                                     favViewModel?.reloadOnAppear = false

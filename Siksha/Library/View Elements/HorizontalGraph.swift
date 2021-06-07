@@ -13,11 +13,14 @@ struct HorizontalGraph: View {
 //    var barGraph: BarGraph
     
     init(_ distribution: [CGFloat]) {
-        self.distribution = distribution.reversed()
-        
-        let maxVal = distribution.max() ?? 0
-        if maxVal > 200 {
-            multiple = 0.8
+        if !distribution.isEmpty {
+            self.distribution = distribution.reversed()
+            
+            let maxVal = distribution.max() ?? 0
+            if maxVal != 0 {
+                multiple = 100.0 / CGFloat(maxVal)
+            }
+            
         }
     }
     

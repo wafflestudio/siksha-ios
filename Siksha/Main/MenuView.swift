@@ -136,14 +136,14 @@ struct MenuView: View {
                             .onTapGesture {
                                 viewModel.showCalendar = false
                             }
-                            .transition(.opacity.animation(.easeInOut))
+                            .transition(.opacity.animation(.easeInOut(duration: 0.3)))
                             .zIndex(1)
                         
                         CalendarView(selectedDate: $viewModel.selectedDate)
                             .frame(height: 300)
                             .padding(EdgeInsets(top: 4, leading: 10, bottom: 15, trailing: 10))
                             .background(Color.white)
-                            .transition(.opacity.animation(.easeInOut))
+                            .transition(.opacity.animation(.easeInOut(duration: 0.3)))
                             .zIndex(2)
                     }
                 }
