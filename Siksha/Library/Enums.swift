@@ -65,6 +65,7 @@ enum NetworkStatus {
 enum ReviewErrorCode: Int {
     case noNetwork = 0
     case authenticationFailed = 422
+    case signatureVerifyFailed = 401
     case multipleReview = 403
     case invalidId = 404
     
@@ -74,6 +75,8 @@ enum ReviewErrorCode: Int {
             return "네트워크 연결이 불안정합니다."
         case .authenticationFailed:
             return "인증 오류입니다. 다시 로그인 해주세요."
+        case .signatureVerifyFailed:
+            return "로그인 상태가 만료되었습니다. 다시 로그인 해주세요."
         case .multipleReview:
             return "한 메뉴에 여러 번 평가할 수 없습니다."
         case .invalidId:

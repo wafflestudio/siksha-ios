@@ -17,11 +17,6 @@ enum SikshaAPI: URLRequestConvertible {
             request.setToken(token: token)
         }
         
-        if self.multiPartFormDataNeeded{
-            request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
-            request.timeoutInterval = 3
-        }
-        
         if self.askingForToken {
             switch self {
             case let .getAccessToken(token, endPoint):
@@ -29,6 +24,11 @@ enum SikshaAPI: URLRequestConvertible {
             default:
                 break
             }
+        }
+        
+        if self.multiPartFormDataNeeded{
+            request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
+            request.timeoutInterval = 3
         }
         
         #if DEBUG
@@ -45,13 +45,16 @@ enum SikshaAPI: URLRequestConvertible {
     }
     
     case getAccessToken(token: String, endPoint: String)
+    case refreshAccessToken(token: String)
     case getMenus(startDate: String, endDate: String, noMenuHide: Bool)
     case getRestaurants
     case getReviews(menuId: Int, page: Int, perPage: Int)
     case getCommentRecommendation(score: Int)
     case submitReview(menuId: Int, score: Double, comment: String)
-    case submitReviewImages
+    case submitReviewImages(menuId: Int, score: Double, comment: String, images: [Data])
     case getReviewImages(menuId: Int, page: Int, perPage: Int, comment: Bool, etc: Bool)
+    case getUserInfo
+    case submitVOC(comment: String)
     
     static var baseURL = Config.shared.baseURL!
     
@@ -85,6 +88,8 @@ enum SikshaAPI: URLRequestConvertible {
         switch self {
         case .getAccessToken:
             return .post
+        case .refreshAccessToken:
+            return .post
         case .getMenus:
             return .get
         case .getRestaurants:
@@ -99,6 +104,10 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .getReviewImages:
             return .get
+        case .getUserInfo:
+            return .get
+        case .submitVOC:
+            return .post
         }
     }
 
@@ -106,6 +115,8 @@ enum SikshaAPI: URLRequestConvertible {
         switch self {
         case let .getAccessToken(_, endPoint):
             return "/auth/login/\(endPoint)"
+        case .refreshAccessToken:
+            return "/auth/refresh"
         case .getMenus:
             return "/menus/"
         case .getRestaurants:
@@ -120,21 +131,18 @@ enum SikshaAPI: URLRequestConvertible {
             return "/reviews/images"
         case .getReviewImages:
             return "/reviews/filter/"
-        }
-    }
-    
-    var multiPartFormDataNeeded: Bool {
-        switch self {
-        case .submitReviewImages:
-            return true
-        default:
-            return false
+        case .getUserInfo:
+            return "/auth/me"
+        case .submitVOC:
+            return "/voc"
         }
     }
     
     var parameters: [String: Any]? {
         switch self {
         case .getAccessToken:
+            return nil
+        case .refreshAccessToken:
             return nil
         case let .getMenus(startDate, endDate, noMenuHide):
             return ["start_date": startDate, "end_date": endDate, "except_empty": noMenuHide]
@@ -150,6 +158,35 @@ enum SikshaAPI: URLRequestConvertible {
             return nil
         case let .getReviewImages(menuId, page, perPage, comment, etc):
             return ["menu_id": menuId, "page": page, "per_page": perPage, "comment": comment, "etc": etc]
+        case .getUserInfo:
+            return nil
+        case let .submitVOC(comment):
+            return ["voc": comment]
+        }
+    }
+    
+    var multiPartFormDataNeeded: Bool {
+        switch self {
+        case .submitReviewImages:
+            return true
+        default:
+            return false
+        }
+    }
+    
+    var multipartFormData: MultipartFormData? {
+        switch self {
+        case let .submitReviewImages(menuId, score, comment, images):
+            let data = MultipartFormData()
+            data.append("\(menuId)".data(using: .utf8)!, withName: "menu_id", mimeType: "text/plain")
+            data.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
+            data.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain")
+            for (index, image) in images.enumerated() {
+                data.append(image, withName: "images", fileName: "image_\(index).png", mimeType: "image/png")
+            }
+            return data
+        default:
+            return nil
         }
     }
 }

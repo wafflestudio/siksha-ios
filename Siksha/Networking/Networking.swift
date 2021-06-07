@@ -20,6 +20,12 @@ class Networking {
         
         return request.validate().publishData()
     }
+    
+    func refreshAccessToken(token: String) -> DataResponsePublisher<Data> {
+        let request = AF.request(SikshaAPI.refreshAccessToken(token: token))
+        
+        return request.validate().publishData()
+    }
 
     func getMenus(startDate: String, endDate: String, noMenuHide: Bool) -> DataResponsePublisher<Data> {
         let request = AF.request(SikshaAPI.getMenus(startDate: startDate, endDate: endDate, noMenuHide: noMenuHide))
@@ -56,14 +62,8 @@ class Networking {
     }
     
     func submitReviewImages(menuId: Int, score: Double, comment: String, images: [Data]) -> DataResponsePublisher<Data> {
-        let request = AF.upload(multipartFormData: { multipartFormData in
-            multipartFormData.append("\(menuId)".data(using: .utf8)!, withName: "menu_id", mimeType: "text/plain")
-            multipartFormData.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
-            multipartFormData.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain")
-            for (index, image) in images.enumerated() {
-                multipartFormData.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
-            }
-        }, with: SikshaAPI.submitReviewImages)
+        let api = SikshaAPI.submitReviewImages(menuId: menuId, score: score, comment: comment, images: images)
+        let request = AF.upload(multipartFormData: api.multipartFormData!, with: api)
         
         return request.validate().publishData()
     }
@@ -75,5 +75,17 @@ class Networking {
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         decoder.dateDecodingStrategy = .formatted(formatter)
         return request.validate().publishDecodable(type: ReviewResponse.self, decoder: decoder)
+    }
+    
+    func getUserInfo() -> DataResponsePublisher<UserInfoResponse> {
+        let request = AF.request(SikshaAPI.getUserInfo)
+        
+        return request.validate().publishDecodable(type: UserInfoResponse.self)
+    }
+    
+    func submitVOC(comment: String) -> DataResponsePublisher<Data> {
+        let request = AF.request(SikshaAPI.submitVOC(comment: comment))
+        
+        return request.validate().publishData()
     }
 }

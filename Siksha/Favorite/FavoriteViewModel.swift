@@ -19,14 +19,14 @@ public class FavoriteViewModel: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: Date())
     }
+    
+    @Published var showCalendar: Bool = false
 
     @Published var selectedDate: String
     @Published var nextDate: String = ""
     @Published var prevDate: String = ""
     
     @Published var selectedFormatted: String = ""
-    @Published var nextFormatted: String = ""
-    @Published var prevFormatted: String = ""
     
     @Published var selectedMenu: DailyMenu? = nil
     @Published var restaurantsLists: [[Restaurant]] = []
@@ -64,6 +64,8 @@ public class FavoriteViewModel: ObservableObject {
             .sink { [weak self] dateString in
                 guard let self = self else { return }
                 
+                self.showCalendar = false
+                
                 self.formatter.dateFormat = "yyyy-MM-dd"
                 let selected = self.formatter.date(from: dateString) ?? Date()
                 
@@ -76,10 +78,7 @@ public class FavoriteViewModel: ObservableObject {
                 
                 self.formatter.dateFormat = "yyyy-MM-dd (E)"
                 self.selectedFormatted = self.formatter.string(from: selected)
-                self.nextFormatted = self.formatter.string(from: next)
-                self.prevFormatted = self.formatter.string(from: prev)
                 
-                self.pageViewReload = true
                 self.getMenu(date: dateString)
             }
             .store(in: &cancellables)
@@ -145,6 +144,7 @@ public class FavoriteViewModel: ObservableObject {
                 } else {
                     self.noMenu = true
                 }
+                self.pageViewReload = true
             }
             .store(in: &cancellables)
     }

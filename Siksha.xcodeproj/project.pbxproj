@@ -36,6 +36,7 @@
 		1E96F92F25DEC14F0074940C /* MenuRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E96F92E25DEC14F0074940C /* MenuRepository.swift */; };
 		1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E96F94225E132250074940C /* ActivityIndicator.swift */; };
 		1E96F95125E2525B0074940C /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E96F95025E2525B0074940C /* LoginView.swift */; };
+		1E9859A926629229003A483A /* VOCView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9859A826629229003A483A /* VOCView.swift */; };
 		1EABA80B25EBE28000B79CB8 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EABA80A25EBE28000B79CB8 /* Utils.swift */; };
 		1EB5F43C263E8EDE0012201A /* OperatingHoursTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB5F43B263E8EDE0012201A /* OperatingHoursTable.swift */; };
 		1EB5F43F264467B80012201A /* SikshaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB5F43E264467B80012201A /* SikshaAPI.swift */; };
@@ -135,6 +136,7 @@
 		1E96F94225E132250074940C /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		1E96F95025E2525B0074940C /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1E96F95825E255B00074940C /* Siksha.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Siksha.entitlements; sourceTree = "<group>"; };
+		1E9859A826629229003A483A /* VOCView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VOCView.swift; sourceTree = "<group>"; };
 		1EABA80A25EBE28000B79CB8 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		1EB5F43B263E8EDE0012201A /* OperatingHoursTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatingHoursTable.swift; sourceTree = "<group>"; };
 		1EB5F43E264467B80012201A /* SikshaAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SikshaAPI.swift; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 				1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */,
 				1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */,
 				231C9C7725F7FB9E0072C07A /* FavoriteMenuOrderView.swift */,
+				1E9859A826629229003A483A /* VOCView.swift */,
 				231C9C6725F7FAFB0072C07A /* InformationView.swift */,
 				231C9C6F25F7FB720072C07A /* MenuOrderView.swift */,
 			);
@@ -324,7 +327,6 @@
 				1E3A57EF25C73EC700DBB3F4 /* Meal.swift */,
 				1E3A574D25C6FF0500DBB3F4 /* Restaurant.swift */,
 				1E3A575225C6FF1400DBB3F4 /* Review.swift */,
-				1E72267A25F916A6008C272E /* Responses.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -345,6 +347,7 @@
 			children = (
 				1EB5F43E264467B80012201A /* SikshaAPI.swift */,
 				1EB5F4402644710A0012201A /* Networking.swift */,
+				1E72267A25F916A6008C272E /* Responses.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -363,6 +366,7 @@
 				1E96F94225E132250074940C /* ActivityIndicator.swift */,
 				1E3A57D725C724B200DBB3F4 /* PageView.swift */,
 				1ECB257C25F5412200875E18 /* TextView.swift */,
+				234DB0D8264156150049FE6B /* CalendarView.swift */,
 			);
 			path = UIRepresentable;
 			sourceTree = "<group>";
@@ -377,7 +381,6 @@
 				23DFD2032664110B0049F8D7 /* RemoteImage.swift */,
 				1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */,
 				23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */,
-				234DB0D8264156150049FE6B /* CalendarView.swift */,
 				231C9D1325F8568C0072C07A /* MapView.swift */,
 				1ECB250225F16DE300875E18 /* NavigationBar.swift */,
 				231C9CE425F835B40072C07A /* BackButton.swift */,
@@ -697,6 +700,7 @@
 				23DFD2172664CD400049F8D7 /* ThumbnailImage.swift in Sources */,
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
+				1E9859A926629229003A483A /* VOCView.swift in Sources */,
 				1E7226F825FBDE72008C272E /* MealCell.swift in Sources */,
 				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
