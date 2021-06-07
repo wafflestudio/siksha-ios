@@ -11,17 +11,19 @@ import SwiftUI
 private extension MealReviewView {
     var starSection: some View {
         HStack {
-            
             Spacer()
             
             VStack(alignment: .center) {
-                HStack {
-                    Text("'\(viewModel.meal?.nameKr ?? "")'")
+                HStack(spacing: 0) {
+                    Text("'\(viewModel.meal?.nameKr ?? "")")
                         .font(.custom("NanumSquareOTFB", size: 22))
                         .foregroundColor(darkFontColor)
                         .lineLimit(1)
                         .truncationMode(.tail)
-                    Text("는 어땠나요?")
+                    Text("'")
+                        .font(.custom("NanumSquareOTFB", size: 22))
+                        .foregroundColor(darkFontColor)
+                    Text("\((viewModel.meal?.nameKr ?? "").inspectFinalConsonant() == .hasConsonant ? "은" : "는") 어땠나요?")
                         .font(.custom("NanumSquareOTFB", size: 22))
                         .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
                 }
@@ -69,61 +71,60 @@ private extension MealReviewView {
             }
             .padding([.leading, .trailing], 36)
             
-            TextView(text: $viewModel.commentToSubmit, placeHolder: $viewModel.commentPlaceHolder)
-                .frame(height: 148)
-                .padding(EdgeInsets(top: 11, leading: 28, bottom: 6, trailing: 28))
-            
-            HStack {
-                Spacer()
-                Text("\(viewModel.commentCount) / 150자")
-                    .font(.custom("NanumSquareOTFL", size: 11))
-                    .foregroundColor(fontColor)
+            ZStack(alignment: .bottomTrailing) {
+                TextView(text: $viewModel.commentToSubmit, placeHolder: $viewModel.commentPlaceHolder)
+                    .frame(height: 148)
+                    
+                HStack {
+                    Spacer()
+                    Text("\(viewModel.commentCount)자 / 150자")
+                        .font(.custom("NanumSquareOTFL", size: 11))
+                        .foregroundColor(fontColor)
+                }
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 12, trailing: 13))
             }
-            .padding([.leading, .trailing], 28)
-            
+            .padding(EdgeInsets(top: 11, leading: 28, bottom: 0, trailing: 28))
         }
     }
     
     var imageSection: some View {
-        VStack {
-            HStack {
-                ScrollView (.horizontal) {
-                    HStack {
-                        ForEach(addedImages, id: \.self) { image in
-                            ZStack {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .renderingMode(.original)
-                                    .frame(width: 80, height: 80)
-                                    .cornerRadius(8)
-                                
-                                Button(action: {
-                                    if self.addedImages.contains(image) {
-                                        self.addedImages.removeAll(where: { $0 == image })
-                                    }
-                                }) {
-                                    ZStack {
-                                        Image("Circle")
-                                            .resizable()
-                                            .renderingMode(.original)
-                                            .frame(width: 16, height: 16)
-                                            
-                                        Image("X")
-                                            .resizable()
-                                            .renderingMode(.original)
-                                            .frame(width: 11, height: 11)
-                                    }
-                                    .padding(EdgeInsets(top: 5, leading: 77, bottom: 79, trailing: 3))
-                                }
-                                
-                            }
+        VStack(spacing: 0) {
+            ScrollView (.horizontal) {
+                HStack {
+                    ForEach(addedImages, id: \.self) { image in
+                        ZStack(alignment: .topTrailing) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .renderingMode(.original)
+                                .scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .cornerRadius(8)
+                                .clipped()
+                                .padding([.top, .trailing], 5)
                             
+                            Button(action: {
+                                if self.addedImages.contains(image) {
+                                    self.addedImages.removeAll(where: { $0 == image })
+                                }
+                            }) {
+                                ZStack {
+                                    Image("Circle")
+                                        .resizable()
+                                        .renderingMode(.original)
+                                        .frame(width: 16, height: 16)
+                                    
+                                    Image("X")
+                                        .resizable()
+                                        .renderingMode(.original)
+                                        .frame(width: 11, height: 11)
+                                }
+                                .padding(EdgeInsets(top: 0, leading: 8, bottom: 8, trailing: 0))
+                            }
                         }
                     }
                 }
-                Spacer()
             }
-            .padding(EdgeInsets(top: 3, leading: 28, bottom: 0, trailing: 28))
+            .padding(EdgeInsets(top: 0, leading: 28, bottom: 0, trailing: 28))
             
             HStack {
                 Button(action: {
@@ -141,7 +142,7 @@ private extension MealReviewView {
                             .frame(width: 84, height: 16)
                     }
                 }
-                .padding(EdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0))
+                .padding(EdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0))
                 .sheet(isPresented: $isShowingPhotoLibrary) {
                     ImagePickerCoordinatorView(selectedImages: $addedImages)
                 }
@@ -178,7 +179,7 @@ private extension MealReviewView {
                     .padding(.top, 15)
             }
         }
-        .padding(.bottom, 66)
+        .padding(.bottom, 20)
         .disabled(!viewModel.canSubmit)
     }
 
@@ -201,8 +202,8 @@ private extension MealReviewView {
         if viewModel.postReviewSucceeded {
             action = {
                 mealInfoViewModel.mealReviews = []
-                mealInfoViewModel.currentPage = 1
-                mealInfoViewModel.loadMoreReviewsIfNeeded(currentItem: nil)
+                mealInfoViewModel.loadReviews()
+                mealInfoViewModel.loadImages()
                 presentationMode.wrappedValue.dismiss()
             }
         } else {
@@ -257,12 +258,11 @@ struct MealReviewView: View {
                     imageSection
                 }
                 
-                
-                
                 Spacer()
                 
                 submitButton
             }
+            .edgesIgnoringSafeArea(.top)
             .background(Color.white.onTapGesture {
                 UIApplication.shared.endEditing()
             })
@@ -273,7 +273,6 @@ struct MealReviewView: View {
             .alert(isPresented: $viewModel.showAlert, content: {
                 Alert(title: Text("나의 평가 남기기"), message: alertMessage, dismissButton: alertButton)
             })
-            
         }
         .ignoresSafeArea(.keyboard)
     }
@@ -289,7 +288,7 @@ private extension MealReviewView13 {
             Spacer()
             
             VStack(alignment: .center) {
-                HStack {
+                HStack(spacing: 0) {
                     Text("'\(viewModel.meal?.nameKr ?? "")'")
                         .font(.custom("NanumSquareOTFB", size: 22))
                         .foregroundColor(darkFontColor)
@@ -343,62 +342,60 @@ private extension MealReviewView13 {
             }
             .padding([.leading, .trailing], 36)
             
-            TextView(text: $viewModel.commentToSubmit, placeHolder: $viewModel.commentPlaceHolder)
-                .frame(height: 148)
-                .padding(EdgeInsets(top: 11, leading: 28, bottom: 6, trailing: 28))
-            
-            HStack {
-                Spacer()
-                Text("\(viewModel.commentCount) / 150자")
-                    .font(.custom("NanumSquareOTFL", size: 11))
-                    .foregroundColor(fontColor)
+            ZStack(alignment: .bottomTrailing) {
+                TextView(text: $viewModel.commentToSubmit, placeHolder: $viewModel.commentPlaceHolder)
+                    .frame(height: 148)
+                    
+                HStack {
+                    Spacer()
+                    Text("\(viewModel.commentCount)자 / 150자")
+                        .font(.custom("NanumSquareOTFL", size: 11))
+                        .foregroundColor(fontColor)
+                }
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 12, trailing: 13))
             }
-            .padding([.leading, .trailing], 28)
-            
+            .padding(EdgeInsets(top: 11, leading: 28, bottom: 6, trailing: 28))
         }
     }
     
     var imageSection: some View {
-        VStack {
-            HStack {
-                ScrollView (.horizontal) {
-                    HStack {
-                        ForEach(addedImages, id: \.self) { image in
-                            ZStack {
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .renderingMode(.original)
-                                    .frame(width: 80, height: 80)
-                                    .cornerRadius(8)
-                                
-                                Button(action: {
-                                    if self.addedImages.contains(image) {
-                                        self.addedImages.removeAll(where: { $0 == image })
-                                    }
-                                }) {
-                                    ZStack {
-                                        Image("Circle")
-                                            .resizable()
-                                            .renderingMode(.original)
-                                            .frame(width: 16, height: 16)
-                                            
-                                        Image("X")
-                                            .resizable()
-                                            .renderingMode(.original)
-                                            .frame(width: 11, height: 11)
-                                    }
-                                    .padding(EdgeInsets(top: 5, leading: 77, bottom: 79, trailing: 3))
-
+        VStack(spacing: 0) {
+            ScrollView (.horizontal) {
+                HStack {
+                    ForEach(addedImages, id: \.self) { image in
+                        ZStack(alignment: .topTrailing) {
+                            Image(uiImage: image)
+                                .resizable()
+                                .renderingMode(.original)
+                                .scaledToFill()
+                                .frame(width: 80, height: 80)
+                                .cornerRadius(8)
+                                .clipped()
+                                .padding([.top, .trailing], 4)
+                            
+                            Button(action: {
+                                if self.addedImages.contains(image) {
+                                    self.addedImages.removeAll(where: { $0 == image })
                                 }
-                                
+                            }) {
+                                ZStack {
+                                    Image("Circle")
+                                        .resizable()
+                                        .renderingMode(.original)
+                                        .frame(width: 16, height: 16)
+                                    
+                                    Image("X")
+                                        .resizable()
+                                        .renderingMode(.original)
+                                        .frame(width: 11, height: 11)
+                                }
+                                .padding(EdgeInsets(top: 0, leading: 8, bottom: 8, trailing: 0))
                             }
                         }
                     }
                 }
-                
-                Spacer()
             }
-            .padding(EdgeInsets(top: 3, leading: 28, bottom: 0, trailing: 28))
+            .padding(EdgeInsets(top: 0, leading: 28, bottom: 0, trailing: 28))
             
             HStack {
                 Button(action: {
@@ -416,7 +413,7 @@ private extension MealReviewView13 {
                             .frame(width: 84, height: 16)
                     }
                 }
-                .padding(EdgeInsets(top: 8, leading: 0, bottom: 16, trailing: 0))
+                .padding(EdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0))
                 .sheet(isPresented: $isShowingPhotoLibrary) {
                     ImagePickerCoordinatorView(selectedImages: $addedImages)
                 }
@@ -452,7 +449,7 @@ private extension MealReviewView13 {
                     .padding(.top, 15)
             }
         }
-        .padding(.bottom, 66)
+        .padding(.bottom, 20)
         .disabled(!viewModel.canSubmit)
     }
     
@@ -528,7 +525,7 @@ struct MealReviewView13: View {
                 
                 submitButton
             }
-            .edgesIgnoringSafeArea(.all)
+            .edgesIgnoringSafeArea(.top)
             .background(Color.white.onTapGesture {
                 UIApplication.shared.endEditing()
             })

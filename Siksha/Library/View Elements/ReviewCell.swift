@@ -19,10 +19,8 @@ struct ReviewCell: View {
     }
     
     var body: some View {
-        
-        VStack {
-            
-            HStack {
+        VStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 0) {
                 Image("LogoEllipse")
                     .resizable()
                     .renderingMode(.original)
@@ -30,50 +28,49 @@ struct ReviewCell: View {
                 
                 VStack(alignment: .leading) {
                     Text("ID \(String(review.userId))")
-                        .font(.custom("NanumSquareOTF", size: 12))
+                        .font(.custom("NanumSquareOTFB", size: 12))
                         .foregroundColor(.black)
-                    RatingStar(.constant(review.score), size: 13)
+                    RatingStar(.constant(review.score), size: 11, spacing: 0.75)
                         .padding(.top, -6)
                 }
                 .padding(.leading, 7)
                 
                 Spacer()
                 
-                Text(formatter.string(from: review.createdAt))
-                    .font(.custom("NanumSquareOTFR", size: 12))
+                Text(review.createdAt.toLegibleString())
+                    .font(.custom("NanumSquareOTFB", size: 12))
                     .foregroundColor(.init(white: 185/255))
                     .multilineTextAlignment(.leading)
-                    .padding(.trailing, 16)
+                    .padding(.trailing, 2)
             }
             
             ZStack(alignment: .top) {
                 Image("SpeechBubble")
                     .resizable()
                     .renderingMode(.original)
-                    .frame(width: 331, height: 90)
+                    .padding(EdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 0))
                 
-                Text(review.comment ?? "")
-                    .font(.custom("NanumSquareOTFR", size: 12))
-                    .foregroundColor(.init(white: 79/255))
-                    .frame(width: 303, alignment: .leading)
-                    .padding(.leading, 20)
-                    .padding(.top, 13)
-                
+                HStack {
+                    Text(review.comment ?? "")
+                        .font(.custom("NanumSquareOTFR", size: 12))
+                        .foregroundColor(.init(white: 79/255))
+                        
+                    Spacer()
+                }
+                .padding(EdgeInsets(top: 13, leading: 40, bottom: 0, trailing: 0))
             }
-            .frame(width: 331, height: 90)
+            .padding(.top, 2)
             
             if showPictures && review.images != nil {
-                ScrollView (.horizontal) {
+                ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
                         ForEach(review.images?["images"] ?? [], id: \.self) { image in
-                            ClickableImage(image)
+                            ThumbnailImage(image)
                         }
                     }
                 }
-                .frame(width: 314)
-                .padding(.leading, 16)
+                .padding(EdgeInsets(top: 6, leading: 30, bottom: 0, trailing: 2))
             }
-            
         }
         .padding([.leading, .trailing], 16)
         

@@ -6,64 +6,76 @@
 //
 
 import SwiftUI
+import Combine
 
 struct RemoteImage: View {
-    
-    private enum LoadState {
-        case loading, success, failure
-    }
-    
     private class ImageLoader: ObservableObject {
-        var data = Data()
-        var state = LoadState.loading
+        private static let imageProcessingQueue = DispatchQueue.global(qos: .userInteractive)
         
-        init(url: String) {
-            guard let parsedURL = URL(string: url) else { fatalError("Invalid URL: \(url)") }
+        @Published var image: UIImage?
+        private let url: URL?
+        private var cache: ImageCache?
+        private var cancellable: AnyCancellable?
+        
+        private var isLoading = false
+        
+        init(url: String, cache: ImageCache? = nil) {
+            self.url = URL(string: url)
+            self.cache = cache
+        }
+        
+        deinit {
+            cancel()
+        }
+        
+        func load() {
+            guard !isLoading else { return }
+            guard let url = url else { return }
             
-            URLSession.shared.dataTask(with: parsedURL) { data, response, error in
-                if let data = data, data.count > 0 {
-                    self.data = data
-                    self.state = .success
-                } else {
-                    self.state = .failure
-                }
-                
-                DispatchQueue.main.async {
-                    self.objectWillChange.send()
-                }
+            if let image = cache?[url] {
+                self.image = image
+                return
             }
-            .resume()
+            
+            cancellable = URLSession.shared.dataTaskPublisher(for: url)
+                .subscribe(on: Self.imageProcessingQueue)
+                .map { UIImage(data: $0.data) }
+                .replaceError(with: nil)
+                .handleEvents(receiveOutput: { [weak self] in self?.cache($0) })
+                .receive(on: RunLoop.main)
+                .assign(to: \.image, on: self)
+        }
+        
+        func cancel() {
+            cancellable?.cancel()
+        }
+        
+        private func cache(_ image: UIImage?) {
+            guard let url = url else { return }
+            image.map { cache?[url] = $0 }
         }
     }
     
     @ObservedObject private var imageLoader: ImageLoader
-    var loading: Image
-    var failure: Image
     
-    init(url: String, loading: Image = Image(systemName: ""), failure: Image = Image(systemName: "")) {
-        _imageLoader = ObservedObject(wrappedValue: ImageLoader(url: url))
-        self.loading = loading
-        self.failure = failure
-    }
-    
-    private func selectImage() -> Image {
-        switch imageLoader.state {
-        case .loading:
-            return loading
-        case .failure:
-            return failure
-        default:
-            if let image = UIImage(data: imageLoader.data) {
-                return Image(uiImage: image)
-            } else {
-                return failure
-            }
-        }
+    init(url: String) {
+        _imageLoader = ObservedObject(wrappedValue: ImageLoader(url: url, cache: Environment(\.imageCache).wrappedValue))
     }
     
     var body: some View {
-        selectImage()
-            .resizable()
+        Group {
+            if let image = imageLoader.image {
+                Image(uiImage: image)
+                    .resizable()
+                    .renderingMode(.original)
+                    .scaledToFill()
+            } else {
+                ActivityIndicator(isAnimating: .constant(true), style: .medium)
+            }
+        }
+        .onAppear {
+            imageLoader.load()
+        }
     }
 }
 

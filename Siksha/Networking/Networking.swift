@@ -61,7 +61,7 @@ class Networking {
             multipartFormData.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
             multipartFormData.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain")
             for (index, image) in images.enumerated() {
-                multipartFormData.append(image, withName: "images", fileName: "image_\(index).png", mimeType: "image/png")
+                multipartFormData.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }
         }, with: SikshaAPI.submitReviewImages)
         

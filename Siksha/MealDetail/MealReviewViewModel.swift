@@ -127,7 +127,7 @@ class MealReviewViewModel: ObservableObject {
             return
         }
         
-        let imagesData = images.compactMap{ $0.pngData() }
+        let imagesData = images.compactMap{ $0.jpegData(compressionQuality: 0) }
         
         Networking.shared.submitReviewImages(
             menuId: meal.id,
@@ -138,7 +138,6 @@ class MealReviewViewModel: ObservableObject {
             .sink { [weak self] result in
                 guard let self = self else { return }
                 guard let response = result.response else {
-                    print(result)
                     self.postReviewSucceeded = false
                     return
                 }
@@ -158,9 +157,7 @@ class MealReviewViewModel: ObservableObject {
                         meal.reviewCnt = newReviewCnt
                     }
                 } else {
-                    print(result.debugDescription)
-                    print(response.statusCode)
-//                    self.errorCode = .init(rawValue: response.statusCode)
+                    self.errorCode = .init(rawValue: response.statusCode)
                     self.postReviewSucceeded = false
                 }
             }

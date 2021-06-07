@@ -84,58 +84,66 @@ private extension MealInfoView {
     }
     
     var pictureList: some View {
-        HStack {
-            ClickableImage(viewModel.images[0])
-            if viewModel.images.count >= 2 {
-                ClickableImage(viewModel.images[1])
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack {
+                ThumbnailImage(viewModel.images[0])
+                if viewModel.images.count >= 2 {
+                    ThumbnailImage(viewModel.images[1])
+                }
+                if viewModel.images.indices.contains(2) {
+                    NavigationLink(
+                        destination: ReviewListView(viewModel.meal, true),
+                        label: {
+                            ZStack {
+                                RemoteImage(url: viewModel.images[2])
+                                    .frame(width: 120, height: 120)
+                                    .clipped()
+                                
+                                Text("+\n\(viewModel.totalImageCount-3)건 더 보기")
+                                    .foregroundColor(.white)
+                                    .font(.custom("NanumSquareOTFB", size: 12))
+                                    .multilineTextAlignment(.center)
+                            }
+                            .background(Color.black)
+                            .opacity(0.5)
+                            .cornerRadius(8)
+                        })
+                }
+                Spacer()
             }
-            if viewModel.images.indices.contains(2) {
-                NavigationLink(
-                    destination: ReviewView(viewModel.meal, true),
-                    label: {
-                        ZStack {
-                            RemoteImage(url: viewModel.images[2])
-                                .frame(width: 120, height: 120)
-                            
-                            Text("+\n\(viewModel.images.count)건 더 보기")
-                                .foregroundColor(.white)
-                                .font(.custom("NanumSquareOTFB", size: 12))
-                                .multilineTextAlignment(.center)
-                        }
-                        .background(Color.black)
-                        .opacity(0.5)
-                        .cornerRadius(8)
-                    })
-            }
-            
-            Spacer()
         }
-        .padding([.leading, .trailing], 16)
-        
+        .padding(.leading, 16)
     }
     
     var reviewList: some View {
-        List {
+        VStack {
             ForEach(viewModel.mealReviews, id: \.id) { review in
                 ReviewCell(review, false)
-                    .padding(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
+                    .padding(EdgeInsets(top: 12, leading: 8, bottom: 0, trailing: 0))
                     .listRowInsets(EdgeInsets())
                     .background(Color.white)
-                    .onAppear {
-                        viewModel.loadMoreReviewsIfNeeded(currentItem: review)
-                    }
             }
-            if viewModel.hasMorePages && viewModel.getReviewStatus == .loading {
-                HStack {
-                    Spacer()
-                    ActivityIndicator(isAnimating: .constant(true), style: .medium)
-                    Spacer()
+            if viewModel.hasMorePages {
+                NavigationLink(destination: ReviewListView(viewModel.meal, false)) {
+                    HStack(alignment: .center) {
+                        Spacer()
+                        
+                        Text("리뷰 더 보기")
+                            .font(.custom("NanumSquareOTFB", size: 13))
+                            .foregroundColor(lightGrayColor)
+                        
+                        Image("Arrow")
+                            .resizable()
+                            .frame(width: 7.5, height: 12)
+                            .padding(.trailing, 8)
+                            .padding(.bottom, 2)
+                    }
+                    .padding(EdgeInsets(top: 16, leading: 0, bottom: 10, trailing: 16))
                 }
             }
         }
-        .listStyle(PlainListStyle())
+        .padding(.bottom, 30)
     }
-    
 }
 
 struct MealInfoView: View {
@@ -153,89 +161,79 @@ struct MealInfoView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack {
-                NavigationBar(title: "리뷰", showBack: true)
-                
-                ScrollView {
+        VStack(spacing: 0) {
+            NavigationBar(title: "리뷰", showBack: true)
+            
+            ScrollView {
+                VStack(spacing: 0) {
                     Text(viewModel.meal.nameKr)
                         .font(.custom("NanumSquareOTFB", size: 20))
                         .foregroundColor(.black)
                         .lineLimit(1)
-                        .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 16))
+                        .padding(EdgeInsets(top: 20, leading: 16, bottom: 0, trailing: 16))
                     
                     scoreSummary
                     
-                    Rectangle()
-                        .fill(Color.init(UIColor(named: "AppBackgroundColor")!))
+                    Color.init("DarkBackgroundColor")
                         .frame(height: 10)
-                        .edgesIgnoringSafeArea(.horizontal)
+                        .frame(maxWidth: .infinity)
                         .padding(.top, 16)
                     
                     if viewModel.images.count > 0 {
-                        NavigationLink(
-                            destination: ReviewView(viewModel.meal, true),
-                            label: {
-                                HStack {
-                                    Text("사진 리뷰 모아보기")
-                                        .font(.custom("NanumSquareOTFB", size: 16))
-                                        .foregroundColor(darkFontColor)
-                                    
-                                    Spacer()
-                                    
-                                    Image("Arrow")
-                                        .padding(.trailing, 16)
-                                    
-                                }
-                                
-                            })
-                            .navigationViewStyle(StackNavigationViewStyle())
-                            .padding(EdgeInsets(top: 16, leading: 20, bottom: 0, trailing: 0))
-                       
-                        pictureList
-                            .padding(.top, 17)
-
-                    }
-                    
-                    HStack {
-                        NavigationLink(
-                            destination: ReviewView(viewModel.meal, false),
-                            label: {
-                                Text("리뷰")
+                        NavigationLink(destination: ReviewListView(viewModel.meal, true)) {
+                            HStack {
+                                Text("사진 리뷰 모아보기")
                                     .font(.custom("NanumSquareOTFB", size: 16))
                                     .foregroundColor(darkFontColor)
-                                    .padding(.leading, 20)
                                 
                                 Spacer()
                                 
                                 Image("Arrow")
-                                    .padding(.trailing, 16)
-                            })
+                                    .resizable()
+                                    .frame(width: 7.5, height: 12)
+                            }
+                        }
+                        .padding(EdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16))
+                        
+                        pictureList
+                            .padding(.top, 17)
                     }
-                    .padding(.top, 20)
+                    
+                    HStack {
+                        NavigationLink(destination: ReviewListView(viewModel.meal, false)) {
+                            Text("리뷰")
+                                .font(.custom("NanumSquareOTFB", size: 16))
+                                .foregroundColor(darkFontColor)
+                            
+                            Spacer()
+                            
+                            Image("Arrow")
+                                .resizable()
+                                .frame(width: 7.5, height: 12)
+                        }
+                    }
+                    .padding(EdgeInsets(top: 20, leading: 16, bottom: 0, trailing: 16))
                     
                     if viewModel.mealReviews.count > 0 {
                         reviewList
-                            .frame(width: geometry.size.width - 5, height: geometry.size.height - 200)
                     } else {
                         Text("평가가 없습니다.")
                             .font(.custom("NanumSquareOTFB", size: 13))
                             .foregroundColor(lightGrayColor)
                             .padding(.top, 20)
                     }
-                    
-                    Spacer()
                 }
-                
             }
-            .edgesIgnoringSafeArea(.all)
-            .navigationBarHidden(true)
-            .onAppear {
-                self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
+        }
+        .edgesIgnoringSafeArea(.top)
+        .navigationBarHidden(true)
+        .onAppear {
+            self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
+            if !viewModel.loadedReviews {
                 viewModel.mealReviews = []
-                viewModel.currentPage = 1
-                viewModel.loadMoreReviewsIfNeeded(currentItem: nil)
-                viewModel.loadMoreImagesIfNeeded(currentItem: nil)
+                viewModel.loadReviews()
+                viewModel.loadImages()
+                viewModel.loadedReviews = true
             }
         }
     }

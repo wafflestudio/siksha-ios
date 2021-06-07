@@ -9,14 +9,14 @@ import Foundation
 import Combine
 import UIKit
 
-public class ReviewViewModel: ObservableObject {
+public class ReviewListViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
+    private var perPage = 10
     var currentPage: Int = 1
     
     @Published var meal: Meal
-    @Published var mealReviews: [Review] = []
-    @Published var mealImageReviews: [Review] = []
+    @Published var reviews: [Review] = []
     @Published var hasMorePages = true
     @Published var getReviewStatus: NetworkStatus = .idle
     
@@ -24,29 +24,24 @@ public class ReviewViewModel: ObservableObject {
         self.meal = meal
     }
     
-    func loadMoreReviewsIfNeeded(currentItem item: Review?) {
+    func loadMoreReviewsIfNeeded(currentItem item: Review?, _ onlyImage: Bool) {
         guard let item = item else {
-            loadMoreReviews()
+            if onlyImage {
+                loadMoreImageReviews()
+            } else {
+                loadMoreReviews()
+            }
             return
         }
         
-        let thresholdIndex = mealReviews.index(mealReviews.endIndex, offsetBy: -5)
+        let thresholdIndex = reviews.index(reviews.endIndex, offsetBy: -3)
         
-        if mealReviews.firstIndex(where: { $0.id == item.id }) == thresholdIndex {
-            loadMoreReviews()
-        }
-    }
-    
-    func loadMoreImageReviewsIfNeeded(currentItem item: Review?) {
-        guard let item = item else {
-            loadMoreImageReviews()
-            return
-        }
-        
-        let thresholdIndex = mealImageReviews.index(mealImageReviews.endIndex, offsetBy: -5)
-        
-        if mealImageReviews.firstIndex(where: { $0.id == item.id }) == thresholdIndex {
-            loadMoreImageReviews()
+        if reviews.firstIndex(where: { $0.id == item.id }) == thresholdIndex && hasMorePages {
+            if onlyImage {
+                loadMoreImageReviews()
+            } else {
+                loadMoreReviews()
+            }
         }
     }
     
@@ -57,7 +52,7 @@ public class ReviewViewModel: ObservableObject {
         
         getReviewStatus = .loading
 
-        Networking.shared.getReviews(menuId: meal.id, page: currentPage, perPage: 10)
+        Networking.shared.getReviews(menuId: meal.id, page: currentPage, perPage: perPage)
             .map(\.value)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in
@@ -66,20 +61,25 @@ public class ReviewViewModel: ObservableObject {
                     self.getReviewStatus = .failed
                     return
                 }
-                self.hasMorePages = (self.currentPage < (response.totalCount+9)/10)
+                self.hasMorePages = (self.currentPage < (response.totalCount+self.perPage-1)/self.perPage)
                 self.currentPage += 1
                 self.getReviewStatus = .succeeded
             })
             .map(\.?.reviews)
             .replaceNil(with: [])
-            .map { self.mealReviews + $0 }
-            .assign(to: \.mealReviews, on: self)
+            .map { self.reviews + $0 }
+            .assign(to: \.reviews, on: self)
             .store(in: &cancellables)
     }
     
     private func loadMoreImageReviews() {
+        guard getReviewStatus != .loading else {
+            return
+        }
         
-        Networking.shared.getReviewImages(menuId: meal.id, page: currentPage, perPage: 10, comment: false, etc: true)
+        getReviewStatus = .loading
+        
+        Networking.shared.getReviewImages(menuId: meal.id, page: currentPage, perPage: perPage, comment: false, etc: true)
             .map(\.value)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in
@@ -88,14 +88,14 @@ public class ReviewViewModel: ObservableObject {
                     self.getReviewStatus = .failed
                     return
                 }
-                self.hasMorePages = (self.currentPage < (response.totalCount+9)/10)
+                self.hasMorePages = (self.currentPage < (response.totalCount+self.perPage-1)/self.perPage)
                 self.currentPage += 1
                 self.getReviewStatus = .succeeded
             })
             .map(\.?.reviews)
             .replaceNil(with: [])
-            .map { self.mealImageReviews + $0 }
-            .assign(to: \.mealImageReviews, on: self)
+            .map { self.reviews + $0 }
+            .assign(to: \.reviews, on: self)
             .store(in: &cancellables)
     }
     

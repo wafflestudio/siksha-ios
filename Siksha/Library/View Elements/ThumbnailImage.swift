@@ -7,8 +7,7 @@
 
 import SwiftUI
 
-struct ClickableImage: View {
-    
+struct ThumbnailImage: View {
     private var url: String
     @State var showDetailImage: Bool = false
     
@@ -21,8 +20,9 @@ struct ClickableImage: View {
             self.showDetailImage = true
         }) {
             RemoteImage(url: url)
-                .cornerRadius(8)
                 .frame(width: 120, height: 120)
+                .cornerRadius(8)
+                .clipped()
         }
         .sheet(isPresented: $showDetailImage) {
             DetailImageView(RemoteImage(url: url))
@@ -30,7 +30,7 @@ struct ClickableImage: View {
     }
 }
 
-//struct ClickableImage_Previews: PreviewProvider {
+//struct ThumbanailImage_Previews: PreviewProvider {
 //    static var previews: some View {
 //        ClickableImage()
 //    }
