@@ -9,7 +9,7 @@ import SwiftUI
 
 private extension MealInfoView {
     var scoreSummary: some View {
-        VStack {
+        VStack(spacing: 0) {
             HStack (alignment: .bottom) {
                 Spacer()
                 
@@ -41,7 +41,7 @@ private extension MealInfoView {
                 
                 Spacer()
             }
-            .padding(EdgeInsets(top: 20, leading: 0, bottom: 0, trailing: 0))
+            .padding(EdgeInsets(top: 20, leading: 0, bottom: 16, trailing: 0))
             
             if showSubmitButton {
                 if #available(iOS 14.0, *) {
@@ -59,7 +59,6 @@ private extension MealInfoView {
                                     .foregroundColor(.white)
                             }
                         })
-                        .padding(.top, 18)
                 } else {
                     NavigationLink(
                         destination: MealReviewView13(viewModel.meal),
@@ -76,7 +75,6 @@ private extension MealInfoView {
                                     .foregroundColor(.white)
                             }
                         })
-                        .padding(EdgeInsets(top: 18, leading: 0, bottom: 24, trailing: 0))
                 }
             }
         }
