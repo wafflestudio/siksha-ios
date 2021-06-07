@@ -12,7 +12,7 @@ import BSImagePicker
 struct ImagePickerCoordinatorView {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var selectedImages: [UIImage]
-    
+        
     private func dismiss() {
         self.presentationMode.wrappedValue.dismiss()
     }
@@ -25,7 +25,9 @@ extension ImagePickerCoordinatorView: UIViewControllerRepresentable {
     
     public func makeUIViewController(context: Context) -> ImagePickerController {
         let picker = ImagePickerController()
+        picker.doneButtonTitle = "완료"
         picker.imagePickerDelegate = context.coordinator
+        picker.settings.selection.max = 5
         return picker
     }
     
@@ -75,7 +77,7 @@ extension ImagePickerCoordinatorView {
                 let option = PHImageRequestOptions()
                 var image = UIImage()
                 option.isSynchronous = true
-                manager.requestImage(for: asset, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
+                manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
                     image = result!
                 })
                 images.append(image)

@@ -14,7 +14,7 @@ struct Review: Codable {
     var userId: Int
     var score: Double
     var comment: String?
-    var images: [Data]?
+    var images: [String: [String]]?
     var createdAt: Date
     var updatedAt: Date
     
