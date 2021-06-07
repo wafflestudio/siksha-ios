@@ -11,39 +11,31 @@ import UIKit
 
 public class MealInfoViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
-    var currentPage: Int = 1
     
     @Published var meal: Meal
     @Published var mealReviews: [Review] = []
-    @Published var mealImageReviews: [Review] = []
     @Published var hasMorePages = true
+    
+    @Published var images: [String] = []
+    @Published var totalImageCount = 0
+    
     @Published var getReviewStatus: NetworkStatus = .idle
+    @Published var getImageStatus: NetworkStatus = .idle
+    
+    @Published var loadedReviews: Bool = false
     
     init(_ meal: Meal) {
         self.meal = meal
     }
     
-    func loadMoreReviewsIfNeeded(currentItem item: Review?) {
-        guard let item = item else {
-            loadMoreReviews()
-            return
-        }
-        
-        let thresholdIndex = mealReviews.index(mealReviews.endIndex, offsetBy: -5)
-        
-        if mealReviews.firstIndex(where: { $0.id == item.id }) == thresholdIndex {
-            loadMoreReviews()
-        }
-    }
-    
-    private func loadMoreReviews() {
+    func loadReviews() {
         guard getReviewStatus != .loading else {
             return
         }
         
         getReviewStatus = .loading
 
-        Networking.shared.getReviews(menuId: meal.id, page: currentPage, perPage: 10)
+        Networking.shared.getReviews(menuId: meal.id, page: 1, perPage: 5)
             .map(\.value)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in
@@ -52,21 +44,23 @@ public class MealInfoViewModel: ObservableObject {
                     self.getReviewStatus = .failed
                     return
                 }
-                self.hasMorePages = (self.currentPage < (response.totalCount+9)/10)
-                self.currentPage += 1
+                self.hasMorePages = (1 < (response.totalCount+4)/5)
                 self.getReviewStatus = .succeeded
             })
             .map(\.?.reviews)
             .replaceNil(with: [])
-            .map { self.mealReviews + $0 }
             .assign(to: \.mealReviews, on: self)
             .store(in: &cancellables)
     }
     
-    // 수정..
-    private func loadImages() {
+    func loadImages() {
+        guard getImageStatus != .loading else {
+            return
+        }
         
-        Networking.shared.getReviewImages(menuId: meal.id, page: currentPage, perPage: 10, comment: false, etc: true)
+        getImageStatus = .loading
+        
+        Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 3, comment: false, etc: true)
             .map(\.value)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in
@@ -75,14 +69,14 @@ public class MealInfoViewModel: ObservableObject {
                     self.getReviewStatus = .failed
                     return
                 }
-                self.hasMorePages = (self.currentPage < (response.totalCount+9)/10)
-                self.currentPage += 1
+                self.totalImageCount = response.totalCount
                 self.getReviewStatus = .succeeded
+                
             })
             .map(\.?.reviews)
             .replaceNil(with: [])
-            .map { self.mealReviews + $0 }
-            .assign(to: \.mealReviews, on: self)
+            .map { $0.map {$0.images?["images"]?[0] ?? ""} }
+            .assign(to: \.images, on: self)
             .store(in: &cancellables)
     }
 }

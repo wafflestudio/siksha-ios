@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import Combine
 
 struct ViewControllerHolder {
     weak var value: UIViewController?
@@ -64,7 +65,7 @@ extension UINavigationController: UIGestureRecognizerDelegate {
         super.viewDidLoad()
         interactivePopGestureRecognizer?.delegate = self
     }
-
+    
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return viewControllers.count > 1
     }
@@ -77,19 +78,19 @@ extension View {
             .overlay(
                 !isPresented.wrappedValue ? nil :
                     Color.init(white: 0, opacity: 0.3)
-                        .edgesIgnoringSafeArea(.all)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .onTapGesture {
-                            withAnimation {
-                                isPresented.wrappedValue = false
-                            }
+                    .edgesIgnoringSafeArea(.all)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .onTapGesture {
+                        withAnimation {
+                            isPresented.wrappedValue = false
                         }
+                    }
             )
             .overlay(
                 !isPresented.wrappedValue ? nil :
                     BottomModalView(isPresented: isPresented, title: title, height: height, content: content)
-                        .transition(.move(edge: .bottom))
-                        .animation(.easeInOut)
+                    .transition(.move(edge: .bottom))
+                    .animation(.easeInOut)
             )
     }
 }
@@ -103,5 +104,85 @@ extension UIApplication {
 extension URLRequest {
     mutating func setToken(token: String, type: String = "authorization") {
         self.setValue("Bearer " + token, forHTTPHeaderField: "\(type)-token")
+    }
+}
+
+protocol ImageCache {
+    subscript(_ url: URL) -> UIImage? { get set }
+}
+
+struct TemporaryImageCache: ImageCache {
+    private let cache = NSCache<NSURL, UIImage>()
+    
+    subscript(_ key: URL) -> UIImage? {
+        get { cache.object(forKey: key as NSURL) }
+        set { newValue == nil ? cache.removeObject(forKey: key as NSURL) : cache.setObject(newValue!, forKey: key as NSURL) }
+    }
+}
+
+struct ImageCacheKey: EnvironmentKey {
+    static let defaultValue: ImageCache = TemporaryImageCache()
+}
+
+extension EnvironmentValues {
+    var imageCache: ImageCache {
+        get { self[ImageCacheKey.self] }
+        set { self[ImageCacheKey.self] = newValue }
+    }
+}
+
+extension String {
+    enum FinalConsonantState {
+        case notKorean
+        case noConsonant
+        case hasConsonant
+        case exceptionConsonant // ㄹ 종성 + '으로'인 경우
+    }
+    
+    func inspectFinalConsonant() -> FinalConsonantState {
+        let last = self.last
+        
+        if let lastUtf = last?.utf16.first, (lastUtf > 0xAC00 && lastUtf < 0xD7A3) {
+            let lastConsonantIndex = (lastUtf.advanced(by: -0xAC00)) % 28
+            
+            if lastConsonantIndex > 0 {
+                if lastConsonantIndex == 8 {
+                    return .exceptionConsonant
+                } else {
+                    return .hasConsonant
+                }
+            }
+            
+            return .noConsonant
+        }
+        
+        return .notKorean
+    }
+}
+
+extension Date {
+    func toLegibleString() -> String {
+        let formatter = DateFormatter()
+        
+        formatter.locale = Locale(identifier: "ko_kr")
+        formatter.dateFormat = "yyyy년 M월 d일"
+        
+        let diff = Date().timeIntervalSince(self)
+        
+        let days = Int(diff/86400)
+        
+        let def = formatter.string(from: self)
+        
+        if days < 0 {
+            return def
+        } else if days == 0 {
+            return "오늘"
+        } else if days == 1{
+            return "어제"
+        } else if days < 7 {
+            return "\(days)일 전"
+        } else {
+            return def
+        }
     }
 }

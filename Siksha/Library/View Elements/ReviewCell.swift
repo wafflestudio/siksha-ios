@@ -9,61 +9,70 @@ import SwiftUI
 
 struct ReviewCell: View {
     private let formatter = DateFormatter()
-    var review: Review
+    private var review: Review
+    private var showPictures: Bool
     
-    init(_ review: Review) {
+    init(_ review: Review, _ showPictures: Bool) {
         self.review = review
+        self.showPictures = showPictures
         formatter.dateFormat = "yyyy년 M월 d일"
     }
     
     var body: some View {
-        
-        VStack {
-            
-            HStack {
+        VStack(spacing: 0) {
+            HStack(alignment: .top, spacing: 0) {
                 Image("LogoEllipse")
                     .resizable()
                     .renderingMode(.original)
                     .frame(width: 32, height: 32)
-                    .padding(.leading, 16)
                 
                 VStack(alignment: .leading) {
                     Text("ID \(String(review.userId))")
-                        .font(.custom("NanumSquareOTF", size: 12))
+                        .font(.custom("NanumSquareOTFB", size: 12))
                         .foregroundColor(.black)
-                    RatingStar(.constant(review.score), size: 13)
+                    RatingStar(.constant(review.score), size: 11, spacing: 0.75)
                         .padding(.top, -6)
                 }
                 .padding(.leading, 7)
                 
                 Spacer()
                 
-                Text(formatter.string(from: review.createdAt))
-                    .font(.custom("NanumSquareOTFR", size: 12))
+                Text(review.createdAt.toLegibleString())
+                    .font(.custom("NanumSquareOTFB", size: 12))
                     .foregroundColor(.init(white: 185/255))
                     .multilineTextAlignment(.leading)
-                    .padding(.trailing, 16)
+                    .padding(.trailing, 2)
             }
             
-            VStack {
+            ZStack(alignment: .top) {
+                Image("SpeechBubble")
+                    .resizable()
+                    .renderingMode(.original)
+                    .padding(EdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 0))
+                
                 HStack {
                     Text(review.comment ?? "")
                         .font(.custom("NanumSquareOTFR", size: 12))
                         .foregroundColor(.init(white: 79/255))
-                        .multilineTextAlignment(.leading)
-                    
+                        
                     Spacer()
                 }
-                .frame(height: 70)
-                .padding(EdgeInsets(top: 12, leading: 18, bottom: 20, trailing: 18))
-                
+                .padding(EdgeInsets(top: 13, leading: 40, bottom: 0, trailing: 0))
             }
-            .padding(EdgeInsets(top: 0, leading: 45, bottom: 0, trailing: 16))
-            .background(
-                Color.init("AppBackgroundColor")
-                    .cornerRadius(10)
-            )
+            .padding(.top, 2)
+            
+            if showPictures && review.images != nil {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack {
+                        ForEach(review.images?["images"] ?? [], id: \.self) { image in
+                            ThumbnailImage(image)
+                        }
+                    }
+                }
+                .padding(EdgeInsets(top: 6, leading: 30, bottom: 0, trailing: 2))
+            }
         }
+        .padding([.leading, .trailing], 16)
         
     }
 }
@@ -76,7 +85,7 @@ struct ReviewCell_Previews: PreviewProvider {
             "menu_id": 0,
             "user_id": 0,
             "score": 4,
-            "comment": "strings",
+            "comment": "150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자150자15",
             "etc": {},
             "created_at": "2021-03-05T18:05:50Z",
             "updated_at": "2021-03-05T18:05:50Z"
@@ -87,6 +96,9 @@ struct ReviewCell_Previews: PreviewProvider {
         decoder.dateDecodingStrategy = .iso8601
         
         let review = try! decoder.decode(Review.self, from: jsonData)
-        return ReviewCell(review)
+        return Group {
+            ReviewCell(review, true)
+//                .previewDevice(PreviewDevice(rawValue: "iPhone11"))
+        }
     }
 }

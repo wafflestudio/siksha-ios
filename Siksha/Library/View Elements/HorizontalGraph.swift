@@ -32,6 +32,7 @@ struct HorizontalGraph: View {
                         .font(.custom("NanumSquareOTF", size: 8))
                         .foregroundColor(.gray)
                         .bold()
+                        .padding(.top, 2)
                     Image("GrayStar")
                         .frame(width: 8, height: 8)
                     ZStack(alignment: .leading) {
