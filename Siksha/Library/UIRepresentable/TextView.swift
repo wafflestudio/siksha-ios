@@ -49,7 +49,9 @@ struct TextView: UIViewRepresentable {
         }
         
         func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-            self.parent.placeHolder = ""
+            if self.parent.placeHolder != "" {
+                self.parent.placeHolder = ""
+            }
             textView.textColor = .black
             
             return true

@@ -93,6 +93,7 @@ public class FavoriteViewModel: ObservableObject {
             .sink { [weak self] (_, date) in
                 guard let self = self else { return }
 
+                self.showCalendar = false
                 self.selectedMenu = self.repository.getMenu(date: date)
                 
                 if self.selectedDate == self.todayString {
@@ -143,7 +144,6 @@ public class FavoriteViewModel: ObservableObject {
                     self.noMenu = true
                 }
                 self.pageViewReload = true
-                self.showCalendar = false
             }
             .store(in: &cancellables)
     }

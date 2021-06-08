@@ -90,7 +90,6 @@ struct RestaurantCell: View {
                             destination: MealInfoView(meal: meal)
                                 .environment(\.menuViewModel, viewModel)
                                 .environment(\.favoriteViewModel, favViewModel)
-                                .navigationBarHidden(true)
                                 .onAppear{
                                     favViewModel?.reloadOnAppear = false
                                     viewModel?.reloadOnAppear = false
@@ -111,6 +110,8 @@ struct RestaurantCell: View {
             }
             .padding(EdgeInsets(top: 14, leading: 16, bottom: 16, trailing: 16))
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
         .background(Color.white)
         .overlay(

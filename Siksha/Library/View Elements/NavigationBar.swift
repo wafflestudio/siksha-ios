@@ -26,7 +26,7 @@ struct NavigationBar: View {
             HStack {
                 if showBack {
                     Button(action: {
-                        presentationMode.wrappedValue.dismiss()
+                        self.presentationMode.wrappedValue.dismiss()
                     }) {
                         Image("NavigationBack")
                             .resizable()

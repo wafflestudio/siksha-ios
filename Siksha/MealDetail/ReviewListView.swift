@@ -65,6 +65,8 @@ struct ReviewListView: View {
                 .frame(maxWidth: .infinity)
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
         .edgesIgnoringSafeArea(.top)
         .onAppear {

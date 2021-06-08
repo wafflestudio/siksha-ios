@@ -75,9 +75,9 @@ struct InformationView: View {
             .padding(.bottom, 40)
         }
         // VStack
-        .navigationBarHidden(true)
+        .navigationBarTitleDisplayMode(.inline)
         .navigationBarBackButtonHidden(true)
-        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarHidden(true)
         .background(backgroundColor)
         .actionSheet(isPresented: $showRemoveAccountAlert, content: {
             ActionSheet(title: Text("회원 탈퇴"),

@@ -84,7 +84,8 @@ public class MenuViewModel: ObservableObject {
             .combineLatest($selectedDate)
             .sink { [weak self] (_, date) in
                 guard let self = self else { return }
-
+                
+                self.showCalendar = false
                 self.selectedMenu = self.repository.getMenu(date: date)
                 
                 if self.selectedDate == self.todayString {
@@ -125,7 +126,6 @@ public class MenuViewModel: ObservableObject {
                     self.noMenu = true
                 }
                 self.pageViewReload = true
-                self.showCalendar = false
             }
             .store(in: &cancellables)
     }

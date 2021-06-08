@@ -43,45 +43,24 @@ private extension MealInfoView {
             .padding(EdgeInsets(top: 20, leading: 0, bottom: 16, trailing: 0))
             
             if showSubmitButton {
-                if #available(iOS 14.0, *) {
-                    NavigationLink(
-                        destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel)
-                            .environment(\.menuViewModel, menuViewModel)
-                            .environment(\.favoriteViewModel, favViewModel),
-                        label: {
-                            ZStack {
-                                Image("RateButton-new")
-                                    .resizable()
-                                    .renderingMode(.original)
-                                    .frame(width: 200, height: 32)
-
-                                Text("나의 평가 남기기")
-                                    .font(.custom("NanumSquareOTFB", size: 14))
-                                    .foregroundColor(.white)
-                            }
-                        })
-                } else {
-                    NavigationLink(
-                        destination: MealReviewView13(viewModel.meal, mealInfoViewModel: viewModel)
-                            .environment(\.menuViewModel, menuViewModel)
-                            .environment(\.favoriteViewModel, favViewModel),
-                        label: {
-                            ZStack {
-                                Image("RateButton-new")
-                                    .resizable()
-                                    .renderingMode(.original)
-                                    .frame(width: 200, height: 32)
-                                    .padding(.top, 3)
-
-                                Text("나의 평가 남기기")
-                                    .font(.custom("NanumSquareOTFB", size: 12))
-                                    .foregroundColor(.white)
-                            }
-                        })
-                }
+                NavigationLink(
+                    destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel)
+                        .environment(\.menuViewModel, menuViewModel)
+                        .environment(\.favoriteViewModel, favViewModel),
+                    label: {
+                        ZStack {
+                            Image("RateButton-new")
+                                .resizable()
+                                .renderingMode(.original)
+                                .frame(width: 200, height: 32)
+                            
+                            Text("나의 평가 남기기")
+                                .font(.custom("NanumSquareOTFB", size: 14))
+                                .foregroundColor(.white)
+                        }
+                    })
             }
         }
-        
     }
     
     var pictureList: some View {
@@ -229,6 +208,8 @@ struct MealInfoView: View {
             }
         }
         .edgesIgnoringSafeArea(.top)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
         .onAppear {
             self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")

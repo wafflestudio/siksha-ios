@@ -149,6 +149,8 @@ struct SettingsView: View {
                 .padding([.leading, .trailing], 8)
             }
             .edgesIgnoringSafeArea(.all)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
             .navigationBarHidden(true)
         }
         .sheet(isPresented: $viewModel.showVOC) {

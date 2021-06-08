@@ -142,8 +142,14 @@ struct VOCView13: View {
             .padding(EdgeInsets(top: 0, leading: 28, bottom: 8, trailing: 28))
             
             ZStack(alignment: .bottom) {
-                TextView(text: $viewModel.vocComment, placeHolder: .constant(""))
-                    .frame(height: 280)
+                TextEditor(text: $viewModel.vocComment)
+                    .font(.system(size: 14))
+                    .frame(height: 148)
+                    .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                    .background(
+                        Color.init("AppBackgroundColor")
+                            .cornerRadius(10)
+                    )
                 
                 HStack {
                     Spacer()
@@ -177,7 +183,8 @@ struct VOCView13: View {
         .background(Color.white.onTapGesture {
             UIApplication.shared.endEditing()
         })
-        .navigationBarTitle("", displayMode: .inline)
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden(true)
         .navigationBarHidden(true)
         .alert(isPresented: $viewModel.showAlert, content: {
             Alert(title: Text("1:1 문의하기"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("확인"), action: {

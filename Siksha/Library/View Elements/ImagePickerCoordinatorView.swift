@@ -16,7 +16,7 @@ struct ImagePickerCoordinatorView {
     private func dismiss() {
         self.presentationMode.wrappedValue.dismiss()
     }
-    
+
 }
 
 extension ImagePickerCoordinatorView: UIViewControllerRepresentable {
@@ -26,6 +26,7 @@ extension ImagePickerCoordinatorView: UIViewControllerRepresentable {
     public func makeUIViewController(context: Context) -> ImagePickerController {
         let picker = ImagePickerController()
         picker.doneButtonTitle = "완료"
+        picker.cancelButton.title = "취소"
         picker.imagePickerDelegate = context.coordinator
         picker.settings.selection.max = 5
         return picker
