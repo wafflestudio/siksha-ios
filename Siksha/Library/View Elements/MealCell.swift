@@ -28,6 +28,7 @@ struct MealCell: View {
     var body: some View {
         HStack(alignment: .top) {
             Text("\(meal.nameKr)")
+                .multilineTextAlignment(.leading)
                 .font(.custom("NanumSquareOTFR", size: 15))
                 .foregroundColor(.black)
                 .padding(.top, 3)

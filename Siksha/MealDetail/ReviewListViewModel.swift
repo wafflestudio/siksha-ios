@@ -10,19 +10,14 @@ import Combine
 import UIKit
 
 public class ReviewListViewModel: ObservableObject {
-    
     private var cancellables = Set<AnyCancellable>()
     private var perPage = 10
     var currentPage: Int = 1
     
-    @Published var meal: Meal
+    @Published var meal: Meal!
     @Published var reviews: [Review] = []
     @Published var hasMorePages = true
     @Published var getReviewStatus: NetworkStatus = .idle
-    
-    init(_ meal: Meal) {
-        self.meal = meal
-    }
     
     func loadMoreReviewsIfNeeded(currentItem item: Review?, _ onlyImage: Bool) {
         guard let item = item else {

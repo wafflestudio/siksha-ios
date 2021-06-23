@@ -39,7 +39,7 @@ private extension MealReviewView {
                         DragGesture(minimumDistance: 0, coordinateSpace: .local)
                             .updating($score) { (value, state, transcation) in
                                 state = Int(value.location.x/50.0)+1
-                                viewModel.scoreToSubmit = Double(state)
+                                viewModel.scoreToSubmit = min(Double(state), 5)
                             }
                     )
                 
@@ -233,6 +233,15 @@ private extension MealReviewView {
         return Alert.Button.default(Text("확인"), action: action)
     }
     
+    var backButton: some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            Image("NavigationBack")
+                .resizable()
+                .frame(width: 10, height: 16)
+        }
+    }
 }
 
 // MARK: - Rating View
@@ -248,7 +257,7 @@ struct MealReviewView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @GestureState var score: Int = 0
 
-    @ObservedObject var viewModel: MealReviewViewModel = MealReviewViewModel()
+    @StateObject var viewModel: MealReviewViewModel = MealReviewViewModel()
     @ObservedObject var mealInfoViewModel: MealInfoViewModel
     
     @State private var isShowingPhotoLibrary = false
@@ -265,8 +274,6 @@ struct MealReviewView: View {
     var body: some View {
         GeometryReader { geometry in
             VStack(alignment: .center, spacing: 0) {
-                NavigationBar(title: "나의 평가 남기기", showBack: true)
-                
                 ScrollView {
                     starSection
                     
@@ -282,8 +289,8 @@ struct MealReviewView: View {
                 
                 submitButton
             }
-            .edgesIgnoringSafeArea(.top)
-            .navigationBarHidden(true)
+            .customNavigationBar(title: "나의 평가 남기기")
+            .navigationBarItems(leading: backButton)
             .onAppear {
                 viewModel.meal = self.meal
             }

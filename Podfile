@@ -14,6 +14,7 @@ target 'Siksha' do
   pod 'GoogleSignIn'
   pod 'BSImagePicker'
   pod 'JTAppleCalendar'
+  pod 'SwiftUIPager'
 
 end
 

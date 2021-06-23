@@ -120,7 +120,7 @@ class MealReviewViewModel: ObservableObject {
             return
         }
         
-        let imagesData = images.compactMap{ $0.jpegData(compressionQuality: 0) }
+        let imagesData = images.compactMap{ $0.jpegData(compressionQuality: 0.5) }
         
         Networking.shared.submitReviewImages(
             menuId: meal.id,

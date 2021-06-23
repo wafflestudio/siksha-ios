@@ -44,9 +44,15 @@ private extension FavoriteView {
             Button(action: {
                 viewModel.showCalendar.toggle()
             }, label: {
-                Text(viewModel.selectedFormatted)
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(orangeColor)
+                HStack(alignment: .center, spacing: 0) {
+                    Image("Calendar")
+                        .renderingMode(.original)
+                        .frame(width: 20, height: 22)
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 2, trailing: 4))
+                    Text(viewModel.selectedFormatted)
+                        .font(.custom("NanumSquareOTFEB", size: 15))
+                        .foregroundColor(orangeColor)
+                }
             })
             
             Spacer()
@@ -61,7 +67,7 @@ private extension FavoriteView {
             .disabled(viewModel.showCalendar)
             .padding(.trailing, 16)
         }
-        .frame(height: 40)
+        .frame(height: 50)
     }
     
     var menuList: some View {
@@ -85,10 +91,25 @@ private extension FavoriteView {
                     }
                     .padding(.top, 8)
                     
-                    PageView(
-                        currentPage: $viewModel.selectedPage,
-                        needReload: $viewModel.pageViewReload,
-                        viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.favoriteViewModel, viewModel) })
+                    if #available(iOS 15, *) {
+                        TabView(selection: $viewModel.selectedPage) {
+                            RestaurantsView(viewModel.restaurantsLists[0])
+                                .environment(\.favoriteViewModel, viewModel)
+                                .tag(0)
+                            RestaurantsView(viewModel.restaurantsLists[1])
+                                .environment(\.favoriteViewModel, viewModel)
+                                .tag(1)
+                            RestaurantsView(viewModel.restaurantsLists[2])
+                                .environment(\.favoriteViewModel, viewModel)
+                                .tag(2)
+                        }
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                    } else {
+                        PageView(
+                            currentPage: $viewModel.selectedPage,
+                            needReload: $viewModel.pageViewReload,
+                            viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.favoriteViewModel, viewModel) })
+                    }
                 } else {
                     VStack {
                         Spacer()
@@ -122,9 +143,7 @@ struct FavoriteView: View {
     ]
     
     var body: some View {
-        VStack {
-            NavigationBar()
-            
+        VStack(spacing: 0) {
             if viewModel.noFavorites {
                 Spacer()
                 Text("즐겨찾기에 추가된 식당이 없습니다.\n식당 탭에서 별을 눌러 추가해보세요.")
@@ -133,7 +152,6 @@ struct FavoriteView: View {
                 Spacer()
             } else {
                 dayPageTab
-                    .frame(height: 40)
                 
                 ZStack(alignment: .top) {
                     menuList
@@ -154,13 +172,9 @@ struct FavoriteView: View {
                             .zIndex(2)
                     }
                 }
-                .padding(.top, -4)
             }
         }
-        .edgesIgnoringSafeArea(.all)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarHidden(true)
+        .customNavigationBar(title: "icon")
         .alert(isPresented: $viewModel.showNetworkAlert, content: {
             Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))
         })

@@ -37,12 +37,12 @@
 		1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E96F94225E132250074940C /* ActivityIndicator.swift */; };
 		1E96F95125E2525B0074940C /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E96F95025E2525B0074940C /* LoginView.swift */; };
 		1E9859A926629229003A483A /* VOCView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9859A826629229003A483A /* VOCView.swift */; };
+		1E9A6EAA2674BDFD005CAEA1 /* NavigationBarModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9A6EA92674BDFD005CAEA1 /* NavigationBarModifier.swift */; };
 		1EABA80B25EBE28000B79CB8 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EABA80A25EBE28000B79CB8 /* Utils.swift */; };
 		1EB5F43C263E8EDE0012201A /* OperatingHoursTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB5F43B263E8EDE0012201A /* OperatingHoursTable.swift */; };
 		1EB5F43F264467B80012201A /* SikshaAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB5F43E264467B80012201A /* SikshaAPI.swift */; };
 		1EB5F4412644710A0012201A /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EB5F4402644710A0012201A /* Networking.swift */; };
 		1ECB248125F14C0F00875E18 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB248025F14C0F00875E18 /* LoginViewModel.swift */; };
-		1ECB250325F16DE300875E18 /* NavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB250225F16DE300875E18 /* NavigationBar.swift */; };
 		1ECB251D25F1739D00875E18 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB251C25F1739D00875E18 /* Config.swift */; };
 		1ECB254D25F2975A00875E18 /* MealInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB254C25F2975A00875E18 /* MealInfoView.swift */; };
 		1ECB255225F2999100875E18 /* RatingStar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ECB255125F2999100875E18 /* RatingStar.swift */; };
@@ -137,12 +137,12 @@
 		1E96F95025E2525B0074940C /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		1E96F95825E255B00074940C /* Siksha.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Siksha.entitlements; sourceTree = "<group>"; };
 		1E9859A826629229003A483A /* VOCView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VOCView.swift; sourceTree = "<group>"; };
+		1E9A6EA92674BDFD005CAEA1 /* NavigationBarModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarModifier.swift; sourceTree = "<group>"; };
 		1EABA80A25EBE28000B79CB8 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		1EB5F43B263E8EDE0012201A /* OperatingHoursTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatingHoursTable.swift; sourceTree = "<group>"; };
 		1EB5F43E264467B80012201A /* SikshaAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SikshaAPI.swift; sourceTree = "<group>"; };
 		1EB5F4402644710A0012201A /* Networking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		1ECB248025F14C0F00875E18 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
-		1ECB250225F16DE300875E18 /* NavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBar.swift; sourceTree = "<group>"; };
 		1ECB251C25F1739D00875E18 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		1ECB254C25F2975A00875E18 /* MealInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealInfoView.swift; sourceTree = "<group>"; };
 		1ECB255125F2999100875E18 /* RatingStar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingStar.swift; sourceTree = "<group>"; };
@@ -311,6 +311,7 @@
 			children = (
 				1ECB250025F16D4D00875E18 /* UIRepresentable */,
 				1E3A573925C6FE2700DBB3F4 /* Extensions.swift */,
+				1E9A6EA92674BDFD005CAEA1 /* NavigationBarModifier.swift */,
 				1ECB250125F16D7900875E18 /* View Elements */,
 				1EABA80A25EBE28000B79CB8 /* Utils.swift */,
 				1E3A581F25C9C28000DBB3F4 /* Enums.swift */,
@@ -382,7 +383,6 @@
 				1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */,
 				23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */,
 				231C9D1325F8568C0072C07A /* MapView.swift */,
-				1ECB250225F16DE300875E18 /* NavigationBar.swift */,
 				231C9CE425F835B40072C07A /* BackButton.swift */,
 				231C9D2025FB5E490072C07A /* SegmentedControlView.swift */,
 				23DFD20E2664C2720049F8D7 /* DetailImageView.swift */,
@@ -408,9 +408,9 @@
 			isa = PBXGroup;
 			children = (
 				1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */,
+				1ECB254C25F2975A00875E18 /* MealInfoView.swift */,
 				1ED44A3625CC6094001D916B /* MealReviewView.swift */,
 				1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */,
-				1ECB254C25F2975A00875E18 /* MealInfoView.swift */,
 				231DEB3A266BC5C900AA32C0 /* ReviewListViewModel.swift */,
 				2360CD992663778B007E02DB /* ReviewListView.swift */,
 			);
@@ -675,12 +675,12 @@
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
 				1ED44A4625CC6579001D916B /* MealInfoViewModel.swift in Sources */,
-				1ECB250325F16DE300875E18 /* NavigationBar.swift in Sources */,
 				1ECB254D25F2975A00875E18 /* MealInfoView.swift in Sources */,
 				1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */,
 				1EB5F43F264467B80012201A /* SikshaAPI.swift in Sources */,
 				231C9CE525F835B40072C07A /* BackButton.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
+				1E9A6EAA2674BDFD005CAEA1 /* NavigationBarModifier.swift in Sources */,
 				23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */,
 				1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */,
 				1E96F92F25DEC14F0074940C /* MenuRepository.swift in Sources */,
@@ -891,7 +891,7 @@
 				BUNDLE_NAME = "식샤-Debug";
 				CODE_SIGN_ENTITLEMENTS = Siksha/Siksha.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.0;
+				CURRENT_PROJECT_VERSION = 1.0.6;
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = ###;
 				ENABLE_PREVIEWS = YES;
@@ -918,7 +918,7 @@
 				BUNDLE_NAME = "식샤";
 				CODE_SIGN_ENTITLEMENTS = Siksha/Siksha.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.0.0;
+				CURRENT_PROJECT_VERSION = 1.0.6;
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = ###;
 				ENABLE_PREVIEWS = YES;

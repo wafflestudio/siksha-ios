@@ -29,7 +29,7 @@ struct DetailImageView: View {
                         Image("XButton")
                             .resizable()
                             .frame(width: 25, height:25)
-                            .padding(EdgeInsets(top: 10, leading: 25, bottom: 15, trailing: 15))
+                            .padding(EdgeInsets(top: 10, leading: 10, bottom: 0, trailing: 0))
                     }
                     
                     Spacer()

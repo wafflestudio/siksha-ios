@@ -12,7 +12,7 @@ import UIKit
 public class MealInfoViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var meal: Meal
+    @Published var meal: Meal? = nil
     @Published var mealReviews: [Review] = []
     @Published var hasMorePages = true
     
@@ -27,12 +27,12 @@ public class MealInfoViewModel: ObservableObject {
     
     @Published var loadedReviews: Bool = false
     
-    init(_ meal: Meal) {
-        self.meal = meal
-    }
-    
     func loadReviews() {
         guard getReviewStatus != .loading else {
+            return
+        }
+        
+        guard let meal = meal else {
             return
         }
         
@@ -61,6 +61,10 @@ public class MealInfoViewModel: ObservableObject {
             return
         }
         
+        guard let meal = meal else {
+            return
+        }
+        
         getImageStatus = .loading
         
         Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 3, comment: false, etc: true)
@@ -84,6 +88,10 @@ public class MealInfoViewModel: ObservableObject {
     
     func loadDistribution() {
         guard getDistributionStatus != .loading else {
+            return
+        }
+        
+        guard let meal = meal else {
             return
         }
         

@@ -27,11 +27,7 @@ struct RestaurantsView: View {
                 }
             }
             .padding(.top, 2)
-            .padding(.bottom, 4)
             .background(Color.init("AppBackgroundColor"))
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarHidden(true)
         } else {
             VStack {
                 HStack{
@@ -41,9 +37,6 @@ struct RestaurantsView: View {
                 }
                 .frame(maxHeight: .infinity)
             }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarHidden(true)
             .frame(maxWidth: .infinity)
             .background(Color.init("AppBackgroundColor"))
         }

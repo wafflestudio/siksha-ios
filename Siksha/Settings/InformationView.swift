@@ -24,12 +24,23 @@ private extension InformationView {
             }
         }
     }
+    
+    var backButton: some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            Image("NavigationBack")
+                .resizable()
+                .frame(width: 10, height: 16)
+        }
+    }
 }
 
 struct InformationView: View {
     private let backgroundColor = Color.init("AppBackgroundColor")
     private let fontColor = Color.init(white: 185/255)
     
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     
     @State var showRemoveAccountAlert: Bool = false
@@ -44,8 +55,6 @@ struct InformationView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            NavigationBar(title: "식샤 정보", showBack: true)
-            
             versionView
                 .padding(.vertical, 50)
                 .frame(maxWidth: .infinity)
@@ -75,9 +84,8 @@ struct InformationView: View {
             .padding(.bottom, 40)
         }
         // VStack
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarHidden(true)
+        .customNavigationBar(title: "식샤 정보")
+        .navigationBarItems(leading: backButton)
         .background(backgroundColor)
         .actionSheet(isPresented: $showRemoveAccountAlert, content: {
             ActionSheet(title: Text("회원 탈퇴"),

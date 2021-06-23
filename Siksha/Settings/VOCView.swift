@@ -183,9 +183,6 @@ struct VOCView13: View {
         .background(Color.white.onTapGesture {
             UIApplication.shared.endEditing()
         })
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarHidden(true)
         .alert(isPresented: $viewModel.showAlert, content: {
             Alert(title: Text("1:1 문의하기"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("확인"), action: {
                 if viewModel.postVOCStatus == .succeeded {

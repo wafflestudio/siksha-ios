@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "Rectangle 21.png",
+      "filename" : "speech_bubble_tail.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "Rectangle 21-1.png",
+      "filename" : "speech_bubble_tail-1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "Rectangle 21-2.png",
+      "filename" : "speech_bubble_tail-2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

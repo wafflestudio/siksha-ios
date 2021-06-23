@@ -12,11 +12,11 @@ private extension MealInfoView {
         VStack(spacing: 0) {
             HStack (alignment: .center) {
                 VStack(alignment: .center, spacing: 10) {
-                    Text("\(String(format: "%.1f", viewModel.meal.score))")
+                    Text("\(String(format: "%.1f", meal.score))")
                         .font(.custom("NanumSquareOTFB", size: 32))
                         .foregroundColor(.black)
                     
-                    RatingStar(.constant(viewModel.meal.score), size: 17, spacing: 0.8)
+                    RatingStar(.constant(meal.score), size: 17, spacing: 0.8)
                 }
                 .padding(.leading, 45)
                             
@@ -25,10 +25,10 @@ private extension MealInfoView {
                         Text("총 ")
                             .font(.custom("NanumSquareOTFB", size: 12))
                             .foregroundColor(lightGrayColor)
-                        Text("\(viewModel.meal.reviewCnt)명")
+                        Text("\(meal.reviewCnt)개")
                             .font(.custom("NanumSquareOTFB", size: 12))
                             .foregroundColor(orangeColor)
-                        Text("이 평가했어요!")
+                        Text("의 평가가 있어요!")
                             .font(.custom("NanumSquareOTFB", size: 12))
                             .foregroundColor(lightGrayColor)
                     }
@@ -44,7 +44,7 @@ private extension MealInfoView {
             
             if showSubmitButton {
                 NavigationLink(
-                    destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel)
+                    destination: MealReviewView(meal, mealInfoViewModel: viewModel)
                         .environment(\.menuViewModel, menuViewModel)
                         .environment(\.favoriteViewModel, favViewModel),
                     label: {
@@ -72,14 +72,14 @@ private extension MealInfoView {
                 }
                 if viewModel.images.indices.contains(2) {
                     NavigationLink(
-                        destination: ReviewListView(viewModel.meal, true),
+                        destination: ReviewListView(meal, true),
                         label: {
                             ZStack {
                                 RemoteImage(url: viewModel.images[2])
                                     .frame(width: 120, height: 120)
                                     .clipped()
                                 
-                                Text("+\n\(viewModel.totalImageCount-3)건 더 보기")
+                                Text(viewModel.totalImageCount-3 > 0 ? "+\n\(viewModel.totalImageCount-3)건 더 보기" : "+\n더 보기")
                                     .foregroundColor(.white)
                                     .font(.custom("NanumSquareOTFB", size: 12))
                                     .multilineTextAlignment(.center)
@@ -104,7 +104,7 @@ private extension MealInfoView {
                     .background(Color.white)
             }
             if viewModel.hasMorePages {
-                NavigationLink(destination: ReviewListView(viewModel.meal, false)) {
+                NavigationLink(destination: ReviewListView(meal, false)) {
                     HStack(alignment: .center) {
                         Spacer()
                         
@@ -124,6 +124,16 @@ private extension MealInfoView {
         }
         .padding(.bottom, 30)
     }
+    
+    var backButton: some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            Image("NavigationBack")
+                .resizable()
+                .frame(width: 10, height: 16)
+        }
+    }
 }
 
 struct MealInfoView: View {
@@ -132,24 +142,26 @@ struct MealInfoView: View {
     private let orangeColor = Color.init("MainThemeColor")
     @Environment(\.favoriteViewModel) var favViewModel: FavoriteViewModel?
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
-    @ObservedObject var viewModel: MealInfoViewModel
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    @StateObject var viewModel = MealInfoViewModel()
     @State var showSubmitButton: Bool = true
     @State var showDetailImage: Bool = false
     
+    let meal: Meal
+    
     init(meal: Meal) {
-        UITableView.appearance().separatorStyle = .none
+        self.meal = meal
         
-        self.viewModel = MealInfoViewModel(meal)
+        UITableView.appearance().separatorStyle = .none
     }
     
     var body: some View {
         VStack(spacing: 0) {
-            NavigationBar(title: "리뷰", showBack: true)
-            
             ScrollView {
                 VStack(spacing: 0) {
-                    Text(viewModel.meal.nameKr)
-                        .font(.custom("NanumSquareOTFB", size: 20))
+                    Text(meal.nameKr)
+                        .font(.custom("NanumSquareOTFEB", size: 20))
                         .foregroundColor(.black)
                         .lineLimit(1)
                         .padding(EdgeInsets(top: 20, leading: 16, bottom: 0, trailing: 16))
@@ -162,7 +174,7 @@ struct MealInfoView: View {
                         .padding(.top, 16)
                     
                     if viewModel.images.count > 0 {
-                        NavigationLink(destination: ReviewListView(viewModel.meal, true)) {
+                        NavigationLink(destination: ReviewListView(meal, true)) {
                             HStack {
                                 Text("사진 리뷰 모아보기")
                                     .font(.custom("NanumSquareOTFB", size: 16))
@@ -182,7 +194,10 @@ struct MealInfoView: View {
                     }
                     
                     HStack {
-                        NavigationLink(destination: ReviewListView(viewModel.meal, false)) {
+                        NavigationLink(
+                            destination: EmptyView(),
+                            label: {})
+                        NavigationLink(destination: ReviewListView(meal, false)) {
                             Text("리뷰")
                                 .font(.custom("NanumSquareOTFB", size: 16))
                                 .foregroundColor(darkFontColor)
@@ -207,12 +222,11 @@ struct MealInfoView: View {
                 }
             }
         }
-        .edgesIgnoringSafeArea(.top)
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarHidden(true)
+        .customNavigationBar(title: "리뷰")
+        .navigationBarItems(leading: backButton)
         .onAppear {
             self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
+            viewModel.meal = meal
             if !viewModel.loadedReviews {
                 viewModel.mealReviews = []
                 viewModel.loadReviews()

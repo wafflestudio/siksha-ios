@@ -10,7 +10,6 @@ struct FavoriteMenuOrderView: View {
     private let backgroundColor = Color.init("AppBackgroundColor")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
     @ObservedObject var viewModel: SettingsViewModel
     
     private var leading: CGFloat {
@@ -18,6 +17,16 @@ struct FavoriteMenuOrderView: View {
             return -44
         } else {
             return -40
+        }
+    }
+    
+    var backButton: some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            Image("NavigationBack")
+                .resizable()
+                .frame(width: 10, height: 16)
         }
     }
     
@@ -30,8 +39,6 @@ struct FavoriteMenuOrderView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            NavigationBar(title: "즐겨찾기 순서 변경", showBack: true)
-            
             // Description
             HStack {
                 Spacer()
@@ -40,7 +47,7 @@ struct FavoriteMenuOrderView: View {
                     .foregroundColor(.init("DefaultFontColor"))
                 Spacer()
             }
-            .padding(.top, 10)
+            .padding(.top, 20)
             .padding(.bottom, 5)
             
             if viewModel.favRestaurantIds.count > 0 {
@@ -68,11 +75,9 @@ struct FavoriteMenuOrderView: View {
                 .frame(maxWidth: .infinity)
             }
         } // VStack
-        .edgesIgnoringSafeArea(.all)
+        .customNavigationBar(title: "즐겨찾기 순서 변경")
+        .navigationBarItems(leading: backButton)
         .contentShape(Rectangle())
-        .navigationBarHidden(true)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarTitle("", displayMode: .inline)
         .background(backgroundColor)
         .onAppear {
             viewModel.setRestaurantIdList()

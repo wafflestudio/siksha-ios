@@ -160,7 +160,7 @@ class DateHeader: JTACMonthReusableView {
         monthTitle.textAlignment = .center
         monthTitle.translatesAutoresizingMaskIntoConstraints = false
         monthTitle.textColor = UIColor(red: 254/255, green: 140/255, blue: 89/255, alpha: 1)
-        monthTitle.font = UIFont(name: "NanumSquareOTFB", size: 15)
+        monthTitle.font = UIFont(name: "NanumSquareOTFEB", size: 15)
         
         leftButton.translatesAutoresizingMaskIntoConstraints = false
         leftButton.trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: -54).isActive = true

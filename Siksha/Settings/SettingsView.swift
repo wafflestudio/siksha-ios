@@ -16,7 +16,6 @@ struct SettingsView: View {
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 0) {
-                NavigationBar()
                 ScrollView {
                     NavigationLink(destination: InformationView(viewModel)) {
                         HStack {
@@ -148,17 +147,11 @@ struct SettingsView: View {
                 .padding(.top, 24)
                 .padding([.leading, .trailing], 8)
             }
-            .edgesIgnoringSafeArea(.all)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarHidden(true)
+            .customNavigationBar(title: "icon")
         }
+        .navigationBarHidden(true)
         .sheet(isPresented: $viewModel.showVOC) {
-            if #available(iOS 14.0, *) {
-                VOCView(viewModel)
-            } else {
-                VOCView13(viewModel)
-            }
+            VOCView(viewModel)
         }
         .actionSheet(isPresented: $viewModel.showSignOutAlert, content: {
             ActionSheet(title: Text("로그아웃"),

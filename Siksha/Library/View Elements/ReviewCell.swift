@@ -19,7 +19,7 @@ struct ReviewCell: View {
     }
     
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .top, spacing: 0) {
                 Image("LogoEllipse")
                     .resizable()
@@ -44,23 +44,27 @@ struct ReviewCell: View {
                     .padding(.trailing, 2)
             }
             
-            ZStack(alignment: .top) {
-                Image("SpeechBubble")
+            HStack(alignment: .top, spacing: 0) {
+                Image("SpeechTail")
                     .resizable()
                     .renderingMode(.original)
-                    .padding(EdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 0))
-                    .frame(height: 85)
+                    .frame(width: 13.5, height: 17)
+                    .padding(.top, 7)
+                    .zIndex(1)
+                    .shadow(color: .init(white: 0, opacity: 0.08), radius: 1.5, x: -1.5)
                 
-                HStack {
-                    Text(review.comment ?? "")
-                        .font(.custom("NanumSquareOTFR", size: 12))
-                        .foregroundColor(.init(white: 79/255))
-                        
-                    Spacer()
-                }
-                .padding(EdgeInsets(top: 13, leading: 40, bottom: 0, trailing: 0))
+                Text(review.comment ?? "")
+                    .font(.custom("NanumSquareOTFR", size: 12))
+                    .foregroundColor(.init(white: 79/255))
+                    .padding(10)
+                    .frame(maxWidth: .infinity, minHeight: 75, alignment: .topLeading)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .foregroundColor(.white)
+                            .shadow(color: .init(white: 0, opacity: 0.15), radius: 1.5)
+                    )
             }
-            .padding(.top, 2)
+            .padding(EdgeInsets(top: 2, leading: 16, bottom: 0, trailing: 0))
             
             if showPictures && review.images != nil {
                 ScrollView(.horizontal, showsIndicators: false) {

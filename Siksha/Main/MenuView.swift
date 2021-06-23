@@ -44,9 +44,15 @@ private extension MenuView {
             Button(action: {
                 viewModel.showCalendar.toggle()
             }, label: {
-                Text(viewModel.selectedFormatted)
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(orangeColor)
+                HStack(alignment: .center, spacing: 0) {
+                    Image("Calendar")
+                        .renderingMode(.original)
+                        .frame(width: 20, height: 22)
+                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 2, trailing: 4))
+                    Text(viewModel.selectedFormatted)
+                        .font(.custom("NanumSquareOTFEB", size: 15))
+                        .foregroundColor(orangeColor)
+                }
             })
             
             Spacer()
@@ -61,7 +67,7 @@ private extension MenuView {
             .disabled(viewModel.showCalendar)
             .padding(.trailing, 16)
         }
-        .frame(height: 40)
+        .frame(height: 50)
     }
     
     var menuList: some View {
@@ -85,10 +91,26 @@ private extension MenuView {
                     }
                     .padding(.top, 8)
                     
-                    PageView(
-                        currentPage: $viewModel.selectedPage,
-                        needReload: $viewModel.pageViewReload,
-                        viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.menuViewModel, viewModel) })
+                    if #available(iOS 15, *) {
+                        TabView(selection: $viewModel.selectedPage) {
+                            RestaurantsView(viewModel.restaurantsLists[0])
+                                .environment(\.menuViewModel, viewModel)
+                                .tag(0)
+                            RestaurantsView(viewModel.restaurantsLists[1])
+                                .environment(\.menuViewModel, viewModel)
+                                .tag(1)
+                            RestaurantsView(viewModel.restaurantsLists[2])
+                                .environment(\.menuViewModel, viewModel)
+                                .tag(2)
+                        }
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                    } else {
+                        PageView(
+                            currentPage: $viewModel.selectedPage,
+                            needReload: $viewModel.pageViewReload,
+                            viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.menuViewModel, viewModel) })
+                    }
+                    
                 } else {
                     VStack {
                         Spacer()
@@ -109,7 +131,7 @@ private extension MenuView {
 // MARK: - Menu View
 
 struct MenuView: View {
-    @ObservedObject var viewModel = MenuViewModel()
+    @StateObject var viewModel = MenuViewModel()
     
     private let lightGrayColor = Color.init("LightGrayColor")
     private let orangeColor = Color.init("MainThemeColor")
@@ -122,50 +144,43 @@ struct MenuView: View {
     ]
     
     var body: some View {
-            VStack {
-                NavigationBar()
+        VStack(spacing: 0) {
+            dayPageTab
+            
+            ZStack(alignment: .top) {
+                menuList
                 
-                dayPageTab
-                    .frame(height: 40)
-                
-                ZStack(alignment: .top) {
-                    menuList
+                if viewModel.showCalendar {
+                    Color.init(.sRGB, white: 0, opacity: 0.6)
+                        .onTapGesture {
+                            viewModel.showCalendar = false
+                        }
+                        .transition(.opacity.animation(.easeInOut(duration: 0.3)))
+                        .zIndex(1)
                     
-                    if viewModel.showCalendar {
-                        Color.init(.sRGB, white: 0, opacity: 0.6)
-                            .onTapGesture {
-                                viewModel.showCalendar = false
-                            }
-                            .transition(.opacity.animation(.easeInOut(duration: 0.3)))
-                            .zIndex(1)
-                        
-                        CalendarView(selectedDate: $viewModel.selectedDate)
-                            .frame(height: 300)
-                            .padding(EdgeInsets(top: 4, leading: 10, bottom: 15, trailing: 10))
-                            .background(Color.white)
-                            .transition(.opacity.animation(.easeInOut(duration: 0.3)))
-                            .zIndex(2)
-                    }
-                }
-                .padding(.top, -4)
-            }
-            .edgesIgnoringSafeArea(.all)
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .navigationBarHidden(true)
-            .alert(isPresented: $viewModel.showNetworkAlert, content: {
-                Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))
-            })
-            .onAppear {
-                if viewModel.reloadOnAppear {
-                    viewModel.getMenu(date: viewModel.selectedDate)
-                } else {
-                    viewModel.reloadOnAppear = true
+                    CalendarView(selectedDate: $viewModel.selectedDate)
+                        .frame(height: 300)
+                        .padding(EdgeInsets(top: 4, leading: 10, bottom: 15, trailing: 10))
+                        .background(Color.white)
+                        .transition(.opacity.animation(.easeInOut(duration: 0.3)))
+                        .zIndex(2)
                 }
             }
-            .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+        }
+        .customNavigationBar(title: "icon")
+        .alert(isPresented: $viewModel.showNetworkAlert, content: {
+            Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))
+        })
+        .onAppear {
+            if viewModel.reloadOnAppear {
                 viewModel.getMenu(date: viewModel.selectedDate)
+            } else {
+                viewModel.reloadOnAppear = true
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+            viewModel.getMenu(date: viewModel.selectedDate)
+        }
     }
 }
 

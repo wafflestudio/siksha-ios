@@ -29,6 +29,12 @@ extension ImagePickerCoordinatorView: UIViewControllerRepresentable {
         picker.cancelButton.title = "취소"
         picker.imagePickerDelegate = context.coordinator
         picker.settings.selection.max = 5
+        let coloredAppearance = UINavigationBarAppearance()
+        coloredAppearance.backgroundColor = .clear
+        
+        UINavigationBar.appearance().standardAppearance = coloredAppearance
+        UINavigationBar.appearance().compactAppearance = coloredAppearance
+        UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
         return picker
     }
     
@@ -81,6 +87,7 @@ extension ImagePickerCoordinatorView {
                 manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
                     image = result!
                 })
+                image = image.resizeWithWidth(width: 800)!
                 images.append(image)
             }
             return images
