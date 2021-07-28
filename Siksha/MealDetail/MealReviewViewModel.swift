@@ -55,7 +55,7 @@ class MealReviewViewModel: ObservableObject {
         
         $scoreToSubmit
             .combineLatest($commentToSubmit)
-            .map { $0 > 0 && $1.count > 0 }
+            .map { $0 > 0 && $1.count > 0 && $1.count <= 150 }
             .assign(to: \.canSubmit, on: self)
             .store(in: &cancellables)
         
