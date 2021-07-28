@@ -28,7 +28,8 @@ struct LoginView: View {
                     Spacer()
                     
                     Image("LaunchLogo")
-                        .frame(width: 100, height: 100)
+                        .resizable()
+                        .frame(width: 115, height: 92)
                     
                     Spacer()
                     

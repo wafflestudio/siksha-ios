@@ -10,7 +10,6 @@ struct MenuOrderView: View {
     private let backgroundColor = Color.init("AppBackgroundColor")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
     @ObservedObject var viewModel: SettingsViewModel
     
     private var leading: CGFloat {
@@ -18,6 +17,16 @@ struct MenuOrderView: View {
             return -44
         } else {
             return -40
+        }
+    }
+    
+    var backButton: some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            Image("NavigationBack")
+                .resizable()
+                .frame(width: 10, height: 16)
         }
     }
     
@@ -30,8 +39,6 @@ struct MenuOrderView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            NavigationBar(title: "식단 순서 변경", showBack: true)
-            
             // Description
             HStack {
                 Spacer()
@@ -40,12 +47,12 @@ struct MenuOrderView: View {
                     .foregroundColor(.init("DefaultFontColor"))
                 Spacer()
             }
-            .padding(.top, 10)
+            .padding(.top, 20)
             .padding(.bottom, 5)
             
             List {
                 ForEach(viewModel.restaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
-                    MenuRow(text: row)
+                    RestaurantOrderRow(text: row)
                         .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                         .listRowInsets(EdgeInsets())
                         .background(backgroundColor)
@@ -55,11 +62,9 @@ struct MenuOrderView: View {
             .padding(.leading, leading)
             .environment(\.editMode, .constant(.active))
         } // VStack
-        .edgesIgnoringSafeArea(.all)
         .contentShape(Rectangle())
-        .navigationBarHidden(true)
-        .navigationBarBackButtonHidden(true)
-        .navigationBarTitle("", displayMode: .inline)
+        .customNavigationBar(title: "식당 순서 변경")
+        .navigationBarItems(leading: backButton)
         .background(backgroundColor)
         .onAppear {
             viewModel.setRestaurantIdList()

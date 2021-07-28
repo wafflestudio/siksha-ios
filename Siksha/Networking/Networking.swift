@@ -49,6 +49,12 @@ class Networking {
         return request.validate().publishDecodable(type: ReviewResponse.self, decoder: decoder)
     }
     
+    func getScoreDistribution(menuId: Int) -> DataResponsePublisher<ScoreDistributionResponse> {
+        let request = AF.request(SikshaAPI.getScoreDistribution(menuId: menuId))
+        
+        return request.validate().publishDecodable(type: ScoreDistributionResponse.self)
+    }
+    
     func getCommentRecommendation(score: Int) -> DataResponsePublisher<CommentRecommendationResponse> {
         let request = AF.request(SikshaAPI.getCommentRecommendation(score: score))
         

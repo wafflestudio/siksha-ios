@@ -61,7 +61,6 @@ public class MenuViewModel: ObservableObject {
             .removeDuplicates()
             .sink { [weak self] dateString in
                 guard let self = self else { return }
-                self.showCalendar = false
                 
                 self.formatter.dateFormat = "yyyy-MM-dd"
                 let selected = self.formatter.date(from: dateString) ?? Date()
@@ -85,7 +84,8 @@ public class MenuViewModel: ObservableObject {
             .combineLatest($selectedDate)
             .sink { [weak self] (_, date) in
                 guard let self = self else { return }
-
+                
+                self.showCalendar = false
                 self.selectedMenu = self.repository.getMenu(date: date)
                 
                 if self.selectedDate == self.todayString {

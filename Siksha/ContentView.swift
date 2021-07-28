@@ -66,8 +66,8 @@ struct ContentView: View {
                     
                     tabBar(geometry)
                 }
-                .navigationBarHidden(true)
             }
+            .navigationViewStyle(StackNavigationViewStyle())
         }
     }
 }

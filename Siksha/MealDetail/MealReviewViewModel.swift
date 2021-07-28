@@ -17,7 +17,7 @@ class MealReviewViewModel: ObservableObject {
     @Published var scoreToSubmit: Double = 0
     @Published var commentPlaceHolder: String = ""
     @Published var commentToSubmit: String = ""
-    @Published var commentCount: Int = 0
+    @Published var commentRecommended: Bool = false
     @Published var canSubmit: Bool = false
     
     @Published var postReviewSucceeded = true
@@ -36,38 +36,26 @@ class MealReviewViewModel: ObservableObject {
             }
             .store(in: &cancellables)
         
+        $commentRecommended
+            .dropFirst()
+            .filter { !$0 }
+            .map { _ in "" }
+            .assign(to: \.commentToSubmit, on: self)
+            .store(in: &cancellables)
+        
         $scoreToSubmit
             .filter { $0 > 0 }
             .debounce(for: 0.3, scheduler: RunLoop.main)
             .sink { [weak self] score in
                 guard let self = self else { return }
                 
-                if self.commentToSubmit.count == 0 {
-                    self.getRecommendedComment(Int(score))
-                }
+                self.getRecommendedComment(Int(score))
             }
             .store(in: &cancellables)
         
-        $commentToSubmit
-            .removeDuplicates()
-            .map { $0.count }
-            .assign(to: \.commentCount, on: self)
-            .store(in: &cancellables)
-        
-        $commentPlaceHolder
-            .removeDuplicates()
-            .map { $0.count }
-            .handleEvents (receiveOutput : { count in
-                if count > 0 {
-                    self.commentToSubmit = ""
-                }
-            })
-            .assign(to: \.commentCount, on: self)
-            .store(in: &cancellables)
-        
         $scoreToSubmit
-            .combineLatest($commentCount)
-            .map { $0 > 0 && $1 > 0 }
+            .combineLatest($commentToSubmit)
+            .map { $0 > 0 && $1.count > 0 && $1.count <= 150 }
             .assign(to: \.canSubmit, on: self)
             .store(in: &cancellables)
         
@@ -77,7 +65,12 @@ class MealReviewViewModel: ObservableObject {
         Networking.shared.getCommentRecommendation(score: score)
             .map(\.value?.comment)
             .replaceNil(with: "")
-            .assign(to: \.commentPlaceHolder, on: self)
+            .handleEvents(receiveOutput : { comment in
+                if comment.count > 0 {
+                    self.commentRecommended = true
+                }
+            })
+            .assign(to: \.commentToSubmit, on: self)
             .store(in: &cancellables)
     }
     
@@ -114,7 +107,7 @@ class MealReviewViewModel: ObservableObject {
                         meal.reviewCnt = newReviewCnt
                     }
                 } else {
-//                    self.errorCode = .init(rawValue: response.statusCode)
+                    self.errorCode = .init(rawValue: response.statusCode)
                     self.postReviewSucceeded = false
                 }
             }
@@ -127,7 +120,7 @@ class MealReviewViewModel: ObservableObject {
             return
         }
         
-        let imagesData = images.compactMap{ $0.jpegData(compressionQuality: 0) }
+        let imagesData = images.compactMap{ $0.jpegData(compressionQuality: 0.5) }
         
         Networking.shared.submitReviewImages(
             menuId: meal.id,

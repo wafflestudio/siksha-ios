@@ -12,24 +12,27 @@ import UIKit
 public class MealInfoViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var meal: Meal
+    @Published var meal: Meal? = nil
     @Published var mealReviews: [Review] = []
     @Published var hasMorePages = true
     
     @Published var images: [String] = []
     @Published var totalImageCount = 0
     
+    @Published var scoreDistribution: [CGFloat] = []
+    
     @Published var getReviewStatus: NetworkStatus = .idle
     @Published var getImageStatus: NetworkStatus = .idle
+    @Published var getDistributionStatus: NetworkStatus = .idle
     
     @Published var loadedReviews: Bool = false
     
-    init(_ meal: Meal) {
-        self.meal = meal
-    }
-    
     func loadReviews() {
         guard getReviewStatus != .loading else {
+            return
+        }
+        
+        guard let meal = meal else {
             return
         }
         
@@ -58,6 +61,10 @@ public class MealInfoViewModel: ObservableObject {
             return
         }
         
+        guard let meal = meal else {
+            return
+        }
+        
         getImageStatus = .loading
         
         Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 3, comment: false, etc: true)
@@ -66,17 +73,45 @@ public class MealInfoViewModel: ObservableObject {
             .handleEvents(receiveOutput: { [weak self] response in
                 guard let self = self else { return }
                 guard let response = response else {
-                    self.getReviewStatus = .failed
+                    self.getImageStatus = .failed
                     return
                 }
                 self.totalImageCount = response.totalCount
-                self.getReviewStatus = .succeeded
-                
+                self.getImageStatus = .succeeded
             })
             .map(\.?.reviews)
             .replaceNil(with: [])
             .map { $0.map {$0.images?["images"]?[0] ?? ""} }
             .assign(to: \.images, on: self)
+            .store(in: &cancellables)
+    }
+    
+    func loadDistribution() {
+        guard getDistributionStatus != .loading else {
+            return
+        }
+        
+        guard let meal = meal else {
+            return
+        }
+        
+        getDistributionStatus = .loading
+        
+        Networking.shared.getScoreDistribution(menuId: meal.id)
+            .map(\.value)
+            .receive(on: RunLoop.main)
+            .handleEvents(receiveOutput: { [weak self] response in
+                guard let self = self else { return }
+                guard let _ = response else {
+                    self.getDistributionStatus = .failed
+                    return
+                }
+                self.getDistributionStatus = .succeeded
+            })
+            .map(\.?.dist)
+            .replaceNil(with: [])
+            .map { dist in dist.map { CGFloat($0) } }
+            .assign(to: \.scoreDistribution, on: self)
             .store(in: &cancellables)
     }
 }

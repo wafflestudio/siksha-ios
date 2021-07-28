@@ -93,6 +93,10 @@ extension View {
                     .animation(.easeInOut)
             )
     }
+    
+    func customNavigationBar(title: String) -> some View {
+        self.modifier(NavigationBarModifier(title: title))
+    }
 }
 
 extension UIApplication {
@@ -169,14 +173,24 @@ extension Date {
         
         let diff = Date().timeIntervalSince(self)
         
-        let days = Int(diff/86400)
-        
         let def = formatter.string(from: self)
+        
+        let days = Int(diff/86400)
+        let hours = Int(diff/3600)
+        let minutes = Int(diff/60)
         
         if days < 0 {
             return def
         } else if days == 0 {
-            return "오늘"
+            if hours == 0 {
+                if minutes == 0 {
+                    return "방금 전"
+                } else {
+                    return "\(minutes)분 전"
+                }
+            } else {
+                return "\(hours)시간 전"
+            }
         } else if days == 1{
             return "어제"
         } else if days < 7 {
@@ -184,5 +198,19 @@ extension Date {
         } else {
             return def
         }
+    }
+}
+
+extension UIImage {
+    func resizeWithWidth(width: CGFloat) -> UIImage? {
+        let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))))
+        imageView.contentMode = .scaleAspectFit
+        imageView.image = self
+        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        imageView.layer.render(in: context)
+        guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
+        UIGraphicsEndImageContext()
+        return result
     }
 }

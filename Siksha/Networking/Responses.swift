@@ -27,3 +27,7 @@ struct UserInfoResponse: Codable {
     var identity: String
     var etc: String?
 }
+
+struct ScoreDistributionResponse: Codable {
+    var dist: [Int]
+}
