@@ -1,16 +1,16 @@
 //
-//  FavoriteMenuOrderView.swift
+//  FavoriteRestaurantOrderView.swift
 //  Siksha
 //
 //  Created by You Been Lee on 2021/02/09.
 //
 import SwiftUI
 
-struct FavoriteMenuOrderView: View {
+struct FavoriteRestaurantOrderView: View {
     private let backgroundColor = Color.init("AppBackgroundColor")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var viewModel: SettingsViewModel
+    @ObservedObject var viewModel: FavoriteRestaurantOrderViewModel
     
     private var leading: CGFloat {
         if UIScreen.main.bounds.width > 380 {
@@ -30,7 +30,7 @@ struct FavoriteMenuOrderView: View {
         }
     }
     
-    init(_ viewModel: SettingsViewModel) {
+    init(_ viewModel: FavoriteRestaurantOrderViewModel) {
         UITableView.appearance().separatorStyle = .none
         UITableView.appearance().backgroundColor = .clear
         
@@ -89,8 +89,8 @@ struct FavoriteMenuOrderView: View {
     }
 }
 
-struct FavoriteMenuOrderView_Previews: PreviewProvider {
+struct FavoriteRestaurantOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        MenuOrderView(SettingsViewModel())
+        FavoriteRestaurantOrderView(FavoriteRestaurantOrderViewModel())
     }
 }

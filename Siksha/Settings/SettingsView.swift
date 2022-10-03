@@ -70,7 +70,7 @@ struct SettingsView: View {
                             .frame(height: 1)
                             .padding([.leading, .trailing], 8)
                         
-                        NavigationLink(destination: FavoriteMenuOrderView(viewModel)) {
+                        NavigationLink(destination: FavoriteRestaurantOrderView(FavoriteRestaurantOrderViewModel())) {
                             HStack(alignment: .center) {
                                 Text("즐겨찾기 식당 순서 변경")
                                     .font(.custom("NanumSquareOTFR", size: 15))

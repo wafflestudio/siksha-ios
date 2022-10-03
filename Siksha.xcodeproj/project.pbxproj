@@ -60,7 +60,7 @@
 		231C9C4325F7FA800072C07A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 231C9C4225F7FA800072C07A /* GoogleService-Info.plist */; };
 		231C9C6825F7FAFB0072C07A /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C6725F7FAFB0072C07A /* InformationView.swift */; };
 		231C9C7025F7FB720072C07A /* MenuOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C6F25F7FB720072C07A /* MenuOrderView.swift */; };
-		231C9C7825F7FB9E0072C07A /* FavoriteMenuOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C7725F7FB9E0072C07A /* FavoriteMenuOrderView.swift */; };
+		231C9C7825F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C7725F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift */; };
 		231C9C9025F82D660072C07A /* RestaurantOrderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C8F25F82D660072C07A /* RestaurantOrderRow.swift */; };
 		231C9CB625F834D40072C07A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A56F025C6FCE800DBB3F4 /* Assets.xcassets */; };
 		231C9CCA25F8350F0072C07A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A56F325C6FCE800DBB3F4 /* Preview Assets.xcassets */; };
@@ -77,6 +77,7 @@
 		23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD20E2664C2720049F8D7 /* DetailImageView.swift */; };
 		23DFD2172664CD400049F8D7 /* ThumbnailImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD2162664CD400049F8D7 /* ThumbnailImage.swift */; };
 		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
+		BF3973AA28EB0B8200CD3452 /* FavoriteRestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3973A928EB0B8200CD3452 /* FavoriteRestaurantOrderViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -160,7 +161,7 @@
 		231C9C4225F7FA800072C07A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		231C9C6725F7FAFB0072C07A /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
 		231C9C6F25F7FB720072C07A /* MenuOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOrderView.swift; sourceTree = "<group>"; };
-		231C9C7725F7FB9E0072C07A /* FavoriteMenuOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMenuOrderView.swift; sourceTree = "<group>"; };
+		231C9C7725F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRestaurantOrderView.swift; sourceTree = "<group>"; };
 		231C9C8F25F82D660072C07A /* RestaurantOrderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderRow.swift; sourceTree = "<group>"; };
 		231C9CE425F835B40072C07A /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		231C9CF725F83A850072C07A /* RestaurantInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInformationView.swift; sourceTree = "<group>"; };
@@ -178,6 +179,7 @@
 		23DFD2162664CD400049F8D7 /* ThumbnailImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailImage.swift; sourceTree = "<group>"; };
 		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
 		808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF3973A928EB0B8200CD3452 /* FavoriteRestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRestaurantOrderViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,9 +298,9 @@
 		1E3A572F25C6FDEC00DBB3F4 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				BF3973A828EB0B4D00CD3452 /* FavoriteRestaurantOrder */,
 				1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */,
 				1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */,
-				231C9C7725F7FB9E0072C07A /* FavoriteMenuOrderView.swift */,
 				1E9859A826629229003A483A /* VOCView.swift */,
 				231C9C6725F7FAFB0072C07A /* InformationView.swift */,
 				231C9C6F25F7FB720072C07A /* MenuOrderView.swift */,
@@ -449,6 +451,15 @@
 				1CD81680B4947C1182765D1D /* Pods-Siksha.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		BF3973A828EB0B4D00CD3452 /* FavoriteRestaurantOrder */ = {
+			isa = PBXGroup;
+			children = (
+				231C9C7725F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift */,
+				BF3973A928EB0B8200CD3452 /* FavoriteRestaurantOrderViewModel.swift */,
+			);
+			path = FavoriteRestaurantOrder;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -669,7 +680,7 @@
 				1E3A581B25C98F9A00DBB3F4 /* AppState.swift in Sources */,
 				1E3A582A25C9C6E300DBB3F4 /* RestaurantsView.swift in Sources */,
 				1E3A57FB25C73FDD00DBB3F4 /* DailyMenu.swift in Sources */,
-				231C9C7825F7FB9E0072C07A /* FavoriteMenuOrderView.swift in Sources */,
+				231C9C7825F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift in Sources */,
 				1ED44A6325CDB709001D916B /* FavoriteView.swift in Sources */,
 				231C9CF825F83A850072C07A /* RestaurantInformationView.swift in Sources */,
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
@@ -683,6 +694,7 @@
 				1E9A6EAA2674BDFD005CAEA1 /* NavigationBarModifier.swift in Sources */,
 				23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */,
 				1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */,
+				BF3973AA28EB0B8200CD3452 /* FavoriteRestaurantOrderViewModel.swift in Sources */,
 				1E96F92F25DEC14F0074940C /* MenuRepository.swift in Sources */,
 				1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */,
 				231C9C9025F82D660072C07A /* RestaurantOrderRow.swift in Sources */,
