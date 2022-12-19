@@ -13,13 +13,6 @@ struct NavigationBarModifier: ViewModifier {
     
     init(title: String) {
         self.title = title
-        
-        let coloredAppearance = UINavigationBarAppearance()
-        coloredAppearance.backgroundColor = UIColor(named: "MainThemeColor")
-        
-        UINavigationBar.appearance().standardAppearance = coloredAppearance
-        UINavigationBar.appearance().compactAppearance = coloredAppearance
-        UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
     }
     
     func body(content: Content) -> some View {
