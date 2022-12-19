@@ -15,6 +15,9 @@ struct ImagePickerCoordinatorView {
         
     private func dismiss() {
         self.presentationMode.wrappedValue.dismiss()
+        
+        // Navigation Bar 배경색 세팅
+        UINavigationBar.changeBackgroundColor(color: UIColor(named: "MainThemeColor") ?? .clear)
     }
 
 }
@@ -29,12 +32,9 @@ extension ImagePickerCoordinatorView: UIViewControllerRepresentable {
         picker.cancelButton.title = "취소"
         picker.imagePickerDelegate = context.coordinator
         picker.settings.selection.max = 5
-        let coloredAppearance = UINavigationBarAppearance()
-        coloredAppearance.backgroundColor = .clear
         
-        UINavigationBar.appearance().standardAppearance = coloredAppearance
-        UINavigationBar.appearance().compactAppearance = coloredAppearance
-        UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
+        UINavigationBar.changeBackgroundColor(color: .clear)
+        
         return picker
     }
     
