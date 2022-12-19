@@ -15,21 +15,15 @@ struct NavigationBarModifier: ViewModifier {
         self.title = title
         
         let coloredAppearance = UINavigationBarAppearance()
+        coloredAppearance.backgroundColor = UIColor(named: "MainThemeColor")
         
-        if #available(iOS 16, *) {
-            coloredAppearance.backgroundColor = .clear
-        }
-        else {
-            coloredAppearance.backgroundColor = UIColor(named: "MainThemeColor")
-        }
-
         UINavigationBar.appearance().standardAppearance = coloredAppearance
         UINavigationBar.appearance().compactAppearance = coloredAppearance
         UINavigationBar.appearance().scrollEdgeAppearance = coloredAppearance
     }
     
     func body(content: Content) -> some View {
-        let mainContentView = content
+        content
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
             .toolbar {
@@ -45,25 +39,7 @@ struct NavigationBarModifier: ViewModifier {
                             .font(.custom("NanumSquareOTFEB", size: 18))
                     }
                 }
-                
             }
             .navigationViewStyle(StackNavigationViewStyle())
-        
-        if #available(iOS 16, *) {
-            ZStack {
-                mainContentView
-                VStack {
-                    GeometryReader { geometry in
-                        Color("MainThemeColor")
-                            .frame(height: geometry.safeAreaInsets.top)
-                            .edgesIgnoringSafeArea(.top)
-                        Spacer()
-                    }
-                }
-            }
-        }
-        else {
-            mainContentView
-        }
     }
 }
