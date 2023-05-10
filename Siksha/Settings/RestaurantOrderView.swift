@@ -1,12 +1,12 @@
 //
-//  FavoriteMenuOrderView.swift
+//  MenuOrderView.swift
 //  Siksha
 //
 //  Created by You Been Lee on 2021/02/09.
 //
 import SwiftUI
 
-struct FavoriteMenuOrderView: View {
+struct RestaurantOrderView: View {
     private let backgroundColor = Color.init("AppBackgroundColor")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -50,34 +50,21 @@ struct FavoriteMenuOrderView: View {
             .padding(.top, 20)
             .padding(.bottom, 5)
             
-            if viewModel.favRestaurantIds.count > 0 {
-                List() {
-                    ForEach(viewModel.favRestaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
-                        RestaurantOrderRow(text: row)
-                            .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
-                            .listRowInsets(EdgeInsets())
-                            .background(backgroundColor)
-                    }
-                    .onMove(perform: move)
+            List {
+                ForEach(viewModel.restaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
+                    RestaurantOrderRow(text: row)
+                        .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+                        .listRowInsets(EdgeInsets())
+                        .background(backgroundColor)
                 }
-                .padding(.leading, leading)
-                .environment(\.editMode, .constant(.active))
-            } else {
-                VStack {
-                    Spacer()
-                    
-                    Text("즐겨찾기에 추가된 식당이 없습니다.")
-                        .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(.init("DefaultFontColor"))
-                    
-                    Spacer()
-                }
-                .frame(maxWidth: .infinity)
+                .onMove(perform: move)
             }
+            .padding(.leading, leading)
+            .environment(\.editMode, .constant(.active))
         } // VStack
-        .customNavigationBar(title: "즐겨찾기 순서 변경")
-        .navigationBarItems(leading: backButton)
         .contentShape(Rectangle())
+        .customNavigationBar(title: "식당 순서 변경")
+        .navigationBarItems(leading: backButton)
         .background(backgroundColor)
         .onAppear {
             viewModel.setRestaurantIdList()
@@ -85,12 +72,15 @@ struct FavoriteMenuOrderView: View {
     } // View
     
     func move(from source: IndexSet, to destination: Int) {
-        viewModel.favRestaurantIds.move(fromOffsets: source, toOffset: destination)
+        viewModel.restaurantIds.move(fromOffsets: source, toOffset: destination)
     }
 }
 
-struct FavoriteMenuOrderView_Previews: PreviewProvider {
+struct MenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        MenuOrderView(SettingsViewModel())
+        Group {
+            RestaurantOrderView(SettingsViewModel())
+                .previewDevice(PreviewDevice(rawValue: "iPhone 7"))
+        }
     }
 }

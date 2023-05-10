@@ -49,7 +49,7 @@ struct SettingsView: View {
                     }
                     
                     VStack(spacing: 0) {
-                        NavigationLink(destination: MenuOrderView(viewModel)) {
+                        NavigationLink(destination: RestaurantOrderView(viewModel)) {
                             HStack(alignment: .center) {
                                 Text("식당 순서 변경")
                                     .font(.custom("NanumSquareOTFR", size: 15))
@@ -70,7 +70,7 @@ struct SettingsView: View {
                             .frame(height: 1)
                             .padding([.leading, .trailing], 8)
                         
-                        NavigationLink(destination: FavoriteMenuOrderView(viewModel)) {
+                        NavigationLink(destination: FavoriteRestaurantOrderView(viewModel)) {
                             HStack(alignment: .center) {
                                 Text("즐겨찾기 식당 순서 변경")
                                     .font(.custom("NanumSquareOTFR", size: 15))
