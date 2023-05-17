@@ -165,6 +165,11 @@ struct MealInfoView: View {
                         .foregroundColor(.black)
                         .lineLimit(1)
                         .padding(EdgeInsets(top: 20, leading: 16, bottom: 0, trailing: 16))
+                    Button(action: {
+                        viewModel.toggleLike()
+                    }){
+                        Text(viewModel.isLiked ? "liked" : "unliked")
+                    }
                     
                     scoreSummary
                     
@@ -227,6 +232,7 @@ struct MealInfoView: View {
         .onAppear {
             self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
             viewModel.meal = meal
+            viewModel.getIsLiked()
             if !viewModel.loadedReviews {
                 viewModel.mealReviews = []
                 viewModel.loadReviews()

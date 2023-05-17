@@ -47,6 +47,9 @@ enum SikshaAPI: URLRequestConvertible {
     case getAccessToken(token: String, endPoint: String)
     case refreshAccessToken(token: String)
     case getMenus(startDate: String, endDate: String, noMenuHide: Bool)
+    case getMenuFromId(menuId: Int)
+    case likeMenu(menuId:Int)
+    case unlikeMenu(menuId:Int)
     case getRestaurants
     case getReviews(menuId: Int, page: Int, perPage: Int)
     case getScoreDistribution(menuId: Int)
@@ -65,6 +68,8 @@ enum SikshaAPI: URLRequestConvertible {
             return false
         case .getMenus:
             return false
+        case .getMenuFromId:
+            return true
         case .getRestaurants:
             return false
         case .getReviews:
@@ -73,6 +78,10 @@ enum SikshaAPI: URLRequestConvertible {
             return false
         case .getCommentRecommendation:
             return false
+        case .likeMenu:
+            return true
+        case .unlikeMenu:
+            return true
         default:
             return true
         }
@@ -95,6 +104,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .getMenus:
             return .get
+        case .getMenuFromId:
+            return .get
         case .getRestaurants:
             return .get
         case .getReviews:
@@ -107,12 +118,17 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .submitReviewImages:
             return .post
+        case .likeMenu:
+            return .post
+        case .unlikeMenu:
+            return .post
         case .getReviewImages:
             return .get
         case .getUserInfo:
             return .get
         case .submitVOC:
             return .post
+        
         }
     }
 
@@ -124,6 +140,12 @@ enum SikshaAPI: URLRequestConvertible {
             return "/auth/refresh"
         case .getMenus:
             return "/menus/"
+        case let .getMenuFromId(menuId):
+            return "/menus/\(menuId)"
+        case let .likeMenu(menuId):
+            return "/menus/\(menuId)/like"
+        case let .unlikeMenu(menuId):
+            return "/menus/\(menuId)/unlike"
         case .getRestaurants:
             return "/restaurants/"
         case .getReviews:
@@ -142,6 +164,7 @@ enum SikshaAPI: URLRequestConvertible {
             return "/auth/me"
         case .submitVOC:
             return "/voc"
+            
         }
     }
     
@@ -153,6 +176,8 @@ enum SikshaAPI: URLRequestConvertible {
             return nil
         case let .getMenus(startDate, endDate, noMenuHide):
             return ["start_date": startDate, "end_date": endDate, "except_empty": noMenuHide]
+        case .getMenuFromId:
+            return nil
         case .getRestaurants:
             return nil
         case let .getReviews(menuId, page, perPage):
@@ -164,6 +189,10 @@ enum SikshaAPI: URLRequestConvertible {
         case let .submitReview(menuId, score, comment):
             return ["menu_id": menuId, "score": score, "comment": comment]
         case .submitReviewImages:
+            return nil
+        case .likeMenu:
+            return nil
+        case .unlikeMenu:
             return nil
         case let .getReviewImages(menuId, page, perPage, comment, etc):
             return ["menu_id": menuId, "page": page, "per_page": perPage, "comment": comment, "etc": etc]
