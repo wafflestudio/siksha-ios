@@ -24,7 +24,7 @@ public class MealInfoViewModel: ObservableObject {
     @Published var getReviewStatus: NetworkStatus = .idle
     @Published var getImageStatus: NetworkStatus = .idle
     @Published var getDistributionStatus: NetworkStatus = .idle
-    @Published var getLikeStatus: MenuLikeStatus = .idle
+    @Published var getLikeStatus: NetworkStatus = .idle
     @Published var isLiked = false
     @Published var loadedReviews: Bool = false
     
@@ -46,7 +46,7 @@ public class MealInfoViewModel: ObservableObject {
                     return
                 }
                 
-                self.getLikeStatus = .suceeded
+                self.getLikeStatus = .succeeded
             })
             .map(\.?.is_liked)
             .replaceNil(with: false)
@@ -74,7 +74,7 @@ public class MealInfoViewModel: ObservableObject {
                         return
                     }
                     
-                    self.getLikeStatus = .suceeded
+                    self.getLikeStatus = .succeeded
                 })
                 .map(\.?.is_liked)
                 .replaceNil(with: false)
@@ -92,7 +92,7 @@ public class MealInfoViewModel: ObservableObject {
                         return
                     }
                     
-                    self.getLikeStatus = .suceeded
+                    self.getLikeStatus = .succeeded
                 })
                 .map(\.?.is_liked)
                 .replaceNil(with: false)
