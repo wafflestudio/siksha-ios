@@ -31,3 +31,6 @@ struct UserInfoResponse: Codable {
 struct ScoreDistributionResponse: Codable {
     var dist: [Int]
 }
+struct MenuIdResponse:Codable{
+    var is_liked:Bool
+}
