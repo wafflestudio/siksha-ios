@@ -185,7 +185,7 @@ class SettingsViewModel: ObservableObject {
     }
     
     func sendVOC() {
-        Networking.shared.submitVOC(comment: vocComment)
+        Networking.shared.submitVOC(comment: vocComment, platform: "iOS")
             .receive(on: RunLoop.main)
             .sink { [weak self] result in
                 guard let self = self else { return }
