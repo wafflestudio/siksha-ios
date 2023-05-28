@@ -76,6 +76,9 @@
 		23DFD2042664110B0049F8D7 /* RemoteImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD2032664110B0049F8D7 /* RemoteImage.swift */; };
 		23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD20E2664C2720049F8D7 /* DetailImageView.swift */; };
 		23DFD2172664CD400049F8D7 /* ThumbnailImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD2162664CD400049F8D7 /* ThumbnailImage.swift */; };
+		4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8D929F8AB24005A1683 /* config.plist */; };
+		4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */; };
+		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
 		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
 		BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */; };
 /* End PBXBuildFile section */
@@ -178,6 +181,9 @@
 		23DFD20E2664C2720049F8D7 /* DetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageView.swift; sourceTree = "<group>"; };
 		23DFD2162664CD400049F8D7 /* ThumbnailImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailImage.swift; sourceTree = "<group>"; };
 		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
+		4ED0B8D929F8AB24005A1683 /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
+		4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
+		4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -401,7 +407,10 @@
 			isa = PBXGroup;
 			children = (
 				231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */,
+				4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */,
 				2300D48B25FBD07F0037765D /* config.plist */,
+				4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */,
+				4ED0B8D929F8AB24005A1683 /* config.plist */,
 				231C9C4225F7FA800072C07A /* GoogleService-Info.plist */,
 			);
 			path = "Supporting Files";
@@ -575,11 +584,14 @@
 				2300D48C25FBD07F0037765D /* config.plist in Resources */,
 				1E3A56F725C6FCE800DBB3F4 /* LaunchScreen.storyboard in Resources */,
 				1E3A57CF25C71F2400DBB3F4 /* NanumSquareOTFLight.otf in Resources */,
+				4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */,
 				231C9C4325F7FA800072C07A /* GoogleService-Info.plist in Resources */,
 				1E3A57CE25C71F2200DBB3F4 /* NanumSquareOTFExtraBold.otf in Resources */,
+				4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */,
 				1E3A57D325C71F2600DBB3F4 /* NanumSquareOTFRegular.otf in Resources */,
 				1E3A57CA25C71F2000DBB3F4 /* NanumSquareOTFBold.otf in Resources */,
 				231C9C3E25F7FA7C0072C07A /* GoogleService-Info-dev.plist in Resources */,
+				4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -932,7 +944,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1.1.1.0;
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
-				DEVELOPMENT_TEAM = ###;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Siksha/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;

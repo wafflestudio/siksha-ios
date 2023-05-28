@@ -223,10 +223,16 @@ struct MealInfoView: View {
             }
         }
         .customNavigationBar(title: "리뷰")
-        .navigationBarItems(leading: backButton)
+        .navigationBarItems(leading: backButton,
+                            trailing: Button(action: {
+                            viewModel.toggleLike()
+                            }){
+                                    Image(viewModel.isLiked ? "Heart-selected" : "Heart-default")
+                            })
         .onAppear {
             self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
             viewModel.meal = meal
+            viewModel.getIsLiked()
             if !viewModel.loadedReviews {
                 viewModel.mealReviews = []
                 viewModel.loadReviews()

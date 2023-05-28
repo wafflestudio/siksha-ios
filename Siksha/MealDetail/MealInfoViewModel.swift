@@ -24,9 +24,82 @@ public class MealInfoViewModel: ObservableObject {
     @Published var getReviewStatus: NetworkStatus = .idle
     @Published var getImageStatus: NetworkStatus = .idle
     @Published var getDistributionStatus: NetworkStatus = .idle
-    
+    @Published var getLikeStatus: NetworkStatus = .idle
+    @Published var isLiked = false
     @Published var loadedReviews: Bool = false
     
+    func getIsLiked(){
+        guard getLikeStatus != .loading else{
+            return
+        }
+        guard let meal = meal else{
+            return
+        }
+        getLikeStatus = .loading
+        Networking.shared.getMenuFromId(menuId: meal.id)
+            .map(\.value)
+            .receive(on:RunLoop.main)
+            .handleEvents(receiveOutput: { [weak self] response in
+                guard let self = self else { return }
+                guard let response = response else {
+                    self.getReviewStatus = .failed
+                    return
+                }
+                
+                self.getLikeStatus = .succeeded
+            })
+            .map(\.?.is_liked)
+            .replaceNil(with: false)
+            .assign(to: \.isLiked,on:self)
+            .store(in: &cancellables)
+        
+            
+    }
+    func toggleLike(){
+        guard getLikeStatus != .loading else{
+            return
+        }
+        guard let meal = meal else{
+            return
+        }
+        getLikeStatus = .loading
+        if isLiked{
+            Networking.shared.unlikeMenu(menuId: meal.id)
+                .map(\.value)
+                .receive(on:RunLoop.main)
+                .handleEvents(receiveOutput: { [weak self] response in
+                    guard let self = self else { return }
+                    guard let response = response else {
+                        self.getReviewStatus = .failed
+                        return
+                    }
+                    
+                    self.getLikeStatus = .succeeded
+                })
+                .map(\.?.is_liked)
+                .replaceNil(with: false)
+                .assign(to: \.isLiked,on:self)
+                .store(in: &cancellables)
+        }
+        else{
+            Networking.shared.likeMenu(menuId: meal.id)
+                .map(\.value)
+                .receive(on:RunLoop.main)
+                .handleEvents(receiveOutput: { [weak self] response in
+                    guard let self = self else { return }
+                    guard let response = response else {
+                        self.getReviewStatus = .failed
+                        return
+                    }
+                    
+                    self.getLikeStatus = .succeeded
+                })
+                .map(\.?.is_liked)
+                .replaceNil(with: false)
+                .assign(to: \.isLiked,on:self)
+                .store(in: &cancellables)
+        }
+    }
     func loadReviews() {
         guard getReviewStatus != .loading else {
             return
