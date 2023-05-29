@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct MenuOrderView: View {
+struct RestaurantOrderView: View {
     private let backgroundColor = Color.init("AppBackgroundColor")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -38,7 +38,7 @@ struct MenuOrderView: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .center) {
             // Description
             HStack {
                 Spacer()
@@ -49,17 +49,16 @@ struct MenuOrderView: View {
             }
             .padding(.top, 20)
             .padding(.bottom, 5)
-            
             List {
                 ForEach(viewModel.restaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
                     RestaurantOrderRow(text: row)
-                        .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
+//                        .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                         .listRowInsets(EdgeInsets())
                         .background(backgroundColor)
                 }
                 .onMove(perform: move)
             }
-            .padding(.leading, leading)
+//            .padding(.leading, leading)
             .environment(\.editMode, .constant(.active))
         } // VStack
         .contentShape(Rectangle())
@@ -79,7 +78,7 @@ struct MenuOrderView: View {
 struct MenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            MenuOrderView(SettingsViewModel())
+            RestaurantOrderView(SettingsViewModel())
                 .previewDevice(PreviewDevice(rawValue: "iPhone 7"))
         }
     }

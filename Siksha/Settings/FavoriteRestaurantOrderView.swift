@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct FavoriteMenuOrderView: View {
+struct FavoriteRestaurantOrderView: View {
     private let backgroundColor = Color.init("AppBackgroundColor")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -91,6 +91,6 @@ struct FavoriteMenuOrderView: View {
 
 struct FavoriteMenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        MenuOrderView(SettingsViewModel())
+        RestaurantOrderView(SettingsViewModel())
     }
 }

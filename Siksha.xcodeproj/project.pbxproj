@@ -59,8 +59,8 @@
 		231C9C3E25F7FA7C0072C07A /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */; };
 		231C9C4325F7FA800072C07A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 231C9C4225F7FA800072C07A /* GoogleService-Info.plist */; };
 		231C9C6825F7FAFB0072C07A /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C6725F7FAFB0072C07A /* InformationView.swift */; };
-		231C9C7025F7FB720072C07A /* MenuOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C6F25F7FB720072C07A /* MenuOrderView.swift */; };
-		231C9C7825F7FB9E0072C07A /* FavoriteMenuOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C7725F7FB9E0072C07A /* FavoriteMenuOrderView.swift */; };
+		231C9C7025F7FB720072C07A /* RestaurantOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C6F25F7FB720072C07A /* RestaurantOrderView.swift */; };
+		231C9C7825F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C7725F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift */; };
 		231C9C9025F82D660072C07A /* RestaurantOrderRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C8F25F82D660072C07A /* RestaurantOrderRow.swift */; };
 		231C9CB625F834D40072C07A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A56F025C6FCE800DBB3F4 /* Assets.xcassets */; };
 		231C9CCA25F8350F0072C07A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E3A56F325C6FCE800DBB3F4 /* Preview Assets.xcassets */; };
@@ -163,8 +163,8 @@
 		231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		231C9C4225F7FA800072C07A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		231C9C6725F7FAFB0072C07A /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
-		231C9C6F25F7FB720072C07A /* MenuOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuOrderView.swift; sourceTree = "<group>"; };
-		231C9C7725F7FB9E0072C07A /* FavoriteMenuOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteMenuOrderView.swift; sourceTree = "<group>"; };
+		231C9C6F25F7FB720072C07A /* RestaurantOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderView.swift; sourceTree = "<group>"; };
+		231C9C7725F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRestaurantOrderView.swift; sourceTree = "<group>"; };
 		231C9C8F25F82D660072C07A /* RestaurantOrderRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderRow.swift; sourceTree = "<group>"; };
 		231C9CE425F835B40072C07A /* BackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		231C9CF725F83A850072C07A /* RestaurantInformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantInformationView.swift; sourceTree = "<group>"; };
@@ -306,10 +306,10 @@
 			children = (
 				1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */,
 				1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */,
-				231C9C7725F7FB9E0072C07A /* FavoriteMenuOrderView.swift */,
+				231C9C7725F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift */,
 				1E9859A826629229003A483A /* VOCView.swift */,
 				231C9C6725F7FAFB0072C07A /* InformationView.swift */,
-				231C9C6F25F7FB720072C07A /* MenuOrderView.swift */,
+				231C9C6F25F7FB720072C07A /* RestaurantOrderView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -692,7 +692,7 @@
 				1E3A581B25C98F9A00DBB3F4 /* AppState.swift in Sources */,
 				1E3A582A25C9C6E300DBB3F4 /* RestaurantsView.swift in Sources */,
 				1E3A57FB25C73FDD00DBB3F4 /* DailyMenu.swift in Sources */,
-				231C9C7825F7FB9E0072C07A /* FavoriteMenuOrderView.swift in Sources */,
+				231C9C7825F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift in Sources */,
 				1ED44A6325CDB709001D916B /* FavoriteView.swift in Sources */,
 				231C9CF825F83A850072C07A /* RestaurantInformationView.swift in Sources */,
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
@@ -717,7 +717,7 @@
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
 				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
 				231DEB3B266BC5C900AA32C0 /* ReviewListViewModel.swift in Sources */,
-				231C9C7025F7FB720072C07A /* MenuOrderView.swift in Sources */,
+				231C9C7025F7FB720072C07A /* RestaurantOrderView.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
 				1EB5F43C263E8EDE0012201A /* OperatingHoursTable.swift in Sources */,
 				1ED44A4125CC6135001D916B /* BottomModalView.swift in Sources */,
@@ -840,7 +840,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -896,7 +896,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -920,7 +920,7 @@
 				DEVELOPMENT_TEAM = ###;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Siksha/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -947,7 +947,7 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Siksha/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

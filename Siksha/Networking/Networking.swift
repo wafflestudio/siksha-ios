@@ -100,8 +100,8 @@ class Networking {
         return request.validate().publishDecodable(type: UserInfoResponse.self)
     }
     
-    func submitVOC(comment: String) -> DataResponsePublisher<Data> {
-        let request = AF.request(SikshaAPI.submitVOC(comment: comment))
+    func submitVOC(comment: String, platform: String) -> DataResponsePublisher<Data> {
+        let request = AF.request(SikshaAPI.submitVOC(comment: comment, platform: platform))
         
         return request.validate().publishData()
     }
