@@ -160,6 +160,22 @@ struct MealInfoView: View {
         VStack(spacing: 0) {
             ScrollView {
                 VStack(spacing: 0) {
+                    Button(action: {
+                    viewModel.toggleLike()
+                    }){
+                        Image(viewModel.isLiked ? "Heart-selected" : "Heart-default")
+                            .frame(width: 21, height: 21)
+                    }.padding(.top, 16)
+                    
+                    HStack(spacing: 0) {
+                        Text("좋아요 ")
+                            .font(.custom("NanumSquareOTFB", size: 14))
+                            .foregroundColor(.black)
+                        Text(/*"\(meal.numberOfLikes)개"*/"0개")
+                            .font(.custom("NanumSquareOTFB", size: 14))
+                            .foregroundColor(.black)
+                    }.padding(.top, 5)
+                    
                     Text(meal.nameKr)
                         .font(.custom("NanumSquareOTFEB", size: 20))
                         .foregroundColor(.black)
@@ -223,12 +239,7 @@ struct MealInfoView: View {
             }
         }
         .customNavigationBar(title: "리뷰")
-        .navigationBarItems(leading: backButton,
-                            trailing: Button(action: {
-                            viewModel.toggleLike()
-                            }){
-                                    Image(viewModel.isLiked ? "Heart-selected" : "Heart-default")
-                            })
+        .navigationBarItems(leading: backButton)
         .onAppear {
             self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
             viewModel.meal = meal
