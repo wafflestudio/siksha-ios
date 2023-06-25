@@ -79,6 +79,7 @@
 		4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8D929F8AB24005A1683 /* config.plist */; };
 		4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */; };
 		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
+		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
 		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
 		BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */; };
 /* End PBXBuildFile section */
@@ -184,6 +185,7 @@
 		4ED0B8D929F8AB24005A1683 /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
 		4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderViewModel.swift; sourceTree = "<group>"; };
 		808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -310,6 +312,7 @@
 				1E9859A826629229003A483A /* VOCView.swift */,
 				231C9C6725F7FAFB0072C07A /* InformationView.swift */,
 				231C9C6F25F7FB720072C07A /* RestaurantOrderView.swift */,
+				4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -677,6 +680,7 @@
 			files = (
 				231C9C6825F7FAFB0072C07A /* InformationView.swift in Sources */,
 				1ED44A6B25CDB77A001D916B /* FavoriteViewModel.swift in Sources */,
+				4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */,
 				234DB0D9264156150049FE6B /* CalendarView.swift in Sources */,
 				1ECB255225F2999100875E18 /* RatingStar.swift in Sources */,
 				1EB5F4412644710A0012201A /* Networking.swift in Sources */,
