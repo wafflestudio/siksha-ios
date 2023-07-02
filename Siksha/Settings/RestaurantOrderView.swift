@@ -66,6 +66,7 @@ struct RestaurantOrderView: View {
         .navigationBarItems(leading: backButton)
         .background(backgroundColor)
         .onAppear {
+            viewModel.bind()
             viewModel.loadRestaurants()
         }
     } // View

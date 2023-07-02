@@ -19,28 +19,14 @@ import SwiftyJSON
 class RestaurantOrderViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
-  
     @Published var restaurantIds = [Int]()
     @Published var favRestaurantIds = [Int]()
     @Published var networkStatus: NetworkStatus = .idle
    
-    
- 
     var restaurantOrder: [String : Int] =  (UserDefaults.standard.dictionary(forKey: "restaurantOrder") as? [String : Int]) ?? [String : Int]()
     var favRestaurantOrder: [String : Int] = (UserDefaults.standard.dictionary(forKey: "favRestaurantOrder") as? [String : Int]) ?? [String : Int]()
     
-
-   
-
-  
-    
- 
-    
-   
-    init() {
-     
-    
-        
+    func bind(){
         $restaurantIds
             .debounce(for: 1, scheduler: RunLoop.main)
             .sink { [weak self] ids in
@@ -64,20 +50,8 @@ class RestaurantOrderViewModel: ObservableObject {
                 UserDefaults.standard.set(self.favRestaurantOrder, forKey: "favRestaurantOrder")
             }
             .store(in: &cancellables)
-         
-      
     }
-    func loadRestaurants(){
-    
-      
-        
-        getRestaurants()
-        
-       
-        
-    }
-    
-    func getRestaurants() {
+    func loadRestaurants() {
         networkStatus = .loading
         
         Networking.shared.getRestaurants()
