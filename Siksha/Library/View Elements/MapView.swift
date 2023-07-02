@@ -11,7 +11,8 @@ import NMapsMap
 struct MapView: UIViewRepresentable {
     private let coordinate: NMGLatLng
     private let markerText: String
-
+    private let LAT_ERROR = 0.002129
+    private let LNG_ERROR = -0.004098
     init(coordinate: NMGLatLng, markerText: String) {
         self.coordinate = coordinate
         self.markerText = markerText
@@ -25,7 +26,8 @@ struct MapView: UIViewRepresentable {
     }
     
     func updateUIView(_ view: NMFMapView, context: Context) {
-        let cameraUpdate = NMFCameraUpdate(position: NMFCameraPosition(coordinate, zoom: 15))
+        let cameraFixCoordinate = NMGLatLng(lat: coordinate.lat + LAT_ERROR, lng: coordinate.lng + LNG_ERROR)
+        let cameraUpdate = NMFCameraUpdate(position: NMFCameraPosition(cameraFixCoordinate, zoom: 15))
         view.moveCamera(cameraUpdate)
         let marker = NMFMarker(position: coordinate, iconImage: .init(name: "mapMarker"))
         marker.captionText = markerText
