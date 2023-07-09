@@ -18,7 +18,7 @@ struct RestaurantOrderRow: View {
                 .font(.custom("NanumSquareOTFB", size: 15))
                 .foregroundColor(.init("DefaultFontColor"))
         }
-        .frame(width: UIScreen.main.bounds.size.width-24, height: 40)
+        .frame(height: 40)
     }
 }
 
