@@ -13,6 +13,7 @@ struct MapView: UIViewRepresentable {
     private let markerText: String
     private let LAT_ERROR = 0.002129
     private let LNG_ERROR = -0.004098
+    //임시 픽스. 나중에 고칠 것
     init(coordinate: NMGLatLng, markerText: String) {
         self.coordinate = coordinate
         self.markerText = markerText
