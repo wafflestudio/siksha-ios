@@ -60,7 +60,6 @@ struct FavoriteRestaurantOrderView: View {
                     }
                     .onMove(perform: move)
                 }
-//                .padding(.leading, leading)
                 .environment(\.editMode, .constant(.active))
             } else {
                 VStack {

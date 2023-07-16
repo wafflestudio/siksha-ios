@@ -58,7 +58,6 @@ struct RestaurantOrderView: View {
                 }
                 .onMove(perform: move)
             }
-//            .padding(.leading, leading)
             .environment(\.editMode, .constant(.active))
         } // VStack
         .contentShape(Rectangle())
