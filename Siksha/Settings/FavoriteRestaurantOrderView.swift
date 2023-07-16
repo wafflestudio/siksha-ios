@@ -10,7 +10,7 @@ struct FavoriteRestaurantOrderView: View {
     private let backgroundColor = Color.init("AppBackgroundColor")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var viewModel: SettingsViewModel
+    @ObservedObject var viewModel: RestaurantOrderViewModel
     
     private var leading: CGFloat {
         if UIScreen.main.bounds.width > 380 {
@@ -30,7 +30,7 @@ struct FavoriteRestaurantOrderView: View {
         }
     }
     
-    init(_ viewModel: SettingsViewModel) {
+    init(_ viewModel: RestaurantOrderViewModel) {
         UITableView.appearance().separatorStyle = .none
         UITableView.appearance().backgroundColor = .clear
         
@@ -80,7 +80,8 @@ struct FavoriteRestaurantOrderView: View {
         .contentShape(Rectangle())
         .background(backgroundColor)
         .onAppear {
-            viewModel.setRestaurantIdList()
+            
+            viewModel.loadRestaurants()
         }
     } // View
     
@@ -91,6 +92,6 @@ struct FavoriteRestaurantOrderView: View {
 
 struct FavoriteMenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        RestaurantOrderView(SettingsViewModel())
+        RestaurantOrderView(RestaurantOrderViewModel())
     }
 }

@@ -11,6 +11,7 @@ import UIKit
 struct SettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @ObservedObject var viewModel = SettingsViewModel()
+    @ObservedObject var orderViewModel = RestaurantOrderViewModel()
     @EnvironmentObject var appState: AppState
     
     var body: some View {
@@ -49,7 +50,7 @@ struct SettingsView: View {
                     }
                     
                     VStack(spacing: 0) {
-                        NavigationLink(destination: RestaurantOrderView(viewModel)) {
+                        NavigationLink(destination: RestaurantOrderView(orderViewModel)) {
                             HStack(alignment: .center) {
                                 Text("식당 순서 변경")
                                     .font(.custom("NanumSquareOTFR", size: 15))
@@ -70,7 +71,7 @@ struct SettingsView: View {
                             .frame(height: 1)
                             .padding([.leading, .trailing], 8)
                         
-                        NavigationLink(destination: FavoriteRestaurantOrderView(viewModel)) {
+                        NavigationLink(destination: FavoriteRestaurantOrderView(orderViewModel)) {
                             HStack(alignment: .center) {
                                 Text("즐겨찾기 식당 순서 변경")
                                     .font(.custom("NanumSquareOTFR", size: 15))

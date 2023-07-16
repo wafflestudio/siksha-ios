@@ -10,7 +10,7 @@ struct RestaurantOrderView: View {
     private let backgroundColor = Color.init("AppBackgroundColor")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var viewModel: SettingsViewModel
+    @ObservedObject var viewModel: RestaurantOrderViewModel
     
     private var leading: CGFloat {
         if UIScreen.main.bounds.width > 380 {
@@ -30,7 +30,7 @@ struct RestaurantOrderView: View {
         }
     }
     
-    init(_ viewModel: SettingsViewModel) {
+    init(_ viewModel: RestaurantOrderViewModel) {
         UITableView.appearance().separatorStyle = .none
         UITableView.appearance().backgroundColor = .clear
         
@@ -66,7 +66,8 @@ struct RestaurantOrderView: View {
         .navigationBarItems(leading: backButton)
         .background(backgroundColor)
         .onAppear {
-            viewModel.setRestaurantIdList()
+            viewModel.bind()
+            viewModel.loadRestaurants()
         }
     } // View
     
@@ -78,7 +79,7 @@ struct RestaurantOrderView: View {
 struct MenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            RestaurantOrderView(SettingsViewModel())
+            RestaurantOrderView(RestaurantOrderViewModel())
                 .previewDevice(PreviewDevice(rawValue: "iPhone 7"))
         }
     }
