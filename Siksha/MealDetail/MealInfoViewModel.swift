@@ -8,11 +8,12 @@
 import Foundation
 import Combine
 import UIKit
+import RealmSwift
 
 public class MealInfoViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var meal: Meal? = nil
+    @Published var meal: Meal
     @Published var mealReviews: [Review] = []
     @Published var hasMorePages = true
     
@@ -28,84 +29,63 @@ public class MealInfoViewModel: ObservableObject {
     @Published var isLiked = false
     @Published var loadedReviews: Bool = false
     
-    func getIsLiked(){
-        guard getLikeStatus != .loading else{
-            return
-        }
-        guard let meal = meal else{
-            return
-        }
-        getLikeStatus = .loading
-        Networking.shared.getMenuFromId(menuId: meal.id)
-            .map(\.value)
-            .receive(on:RunLoop.main)
-            .handleEvents(receiveOutput: { [weak self] response in
-                guard let self = self else { return }
-                guard let response = response else {
-                    self.getReviewStatus = .failed
-                    return
-                }
-                
-                self.getLikeStatus = .succeeded
-            })
-            .map(\.?.is_liked)
-            .replaceNil(with: false)
-            .assign(to: \.isLiked,on:self)
-            .store(in: &cancellables)
-        
-            
+    init(meal: Meal) {
+            self.meal = meal
     }
+    
     func toggleLike(){
         guard getLikeStatus != .loading else{
             return
         }
-        guard let meal = meal else{
-            return
-        }
+        
         getLikeStatus = .loading
-        if isLiked{
+        
+        
+        if meal.isLiked{
             Networking.shared.unlikeMenu(menuId: meal.id)
                 .map(\.value)
                 .receive(on:RunLoop.main)
-                .handleEvents(receiveOutput: { [weak self] response in
+                .sink { [weak self] response in
                     guard let self = self else { return }
                     guard let response = response else {
-                        self.getReviewStatus = .failed
+                        self.getLikeStatus = .failed
                         return
                     }
                     
                     self.getLikeStatus = .succeeded
-                })
-                .map(\.?.is_liked)
-                .replaceNil(with: false)
-                .assign(to: \.isLiked,on:self)
+                    
+                    let realm = try! Realm()
+                    try! realm.write {
+                        self.meal.isLiked = response.is_liked
+                        self.meal.likeCnt = response.like_cnt
+                    }
+                }
                 .store(in: &cancellables)
         }
         else{
             Networking.shared.likeMenu(menuId: meal.id)
                 .map(\.value)
                 .receive(on:RunLoop.main)
-                .handleEvents(receiveOutput: { [weak self] response in
+                .sink { [weak self] response in
                     guard let self = self else { return }
                     guard let response = response else {
-                        self.getReviewStatus = .failed
+                        self.getLikeStatus = .failed
                         return
                     }
                     
                     self.getLikeStatus = .succeeded
-                })
-                .map(\.?.is_liked)
-                .replaceNil(with: false)
-                .assign(to: \.isLiked,on:self)
+                    
+                    let realm = try! Realm()
+                    try! realm.write {
+                        self.meal.isLiked = response.is_liked
+                        self.meal.likeCnt = response.like_cnt
+                    }
+                }
                 .store(in: &cancellables)
         }
     }
     func loadReviews() {
         guard getReviewStatus != .loading else {
-            return
-        }
-        
-        guard let meal = meal else {
             return
         }
         
@@ -134,10 +114,6 @@ public class MealInfoViewModel: ObservableObject {
             return
         }
         
-        guard let meal = meal else {
-            return
-        }
-        
         getImageStatus = .loading
         
         Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 3, comment: false, etc: true)
@@ -161,10 +137,6 @@ public class MealInfoViewModel: ObservableObject {
     
     func loadDistribution() {
         guard getDistributionStatus != .loading else {
-            return
-        }
-        
-        guard let meal = meal else {
             return
         }
         

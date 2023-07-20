@@ -18,6 +18,8 @@ class Meal: Object {
     @objc dynamic var price: Int = 0
     @objc dynamic var score: Double = 0
     @objc dynamic var reviewCnt: Int = 0
+    @objc dynamic var isLiked: Bool = false
+    @objc dynamic var likeCnt: Int = 0
     var etc = List<String>()
     
     convenience init(_ json: JSON) {
@@ -28,7 +30,9 @@ class Meal: Object {
         self.nameEn = json["name_en"].stringValue
         self.price = json["price"].intValue
         self.score = json["score"].doubleValue
+        self.isLiked = json["is_liked"].boolValue
         self.reviewCnt = json["review_cnt"].intValue
+        self.likeCnt = json["like_cnt"].intValue
         json["etc"].arrayValue.map{ $0.stringValue }.forEach { self.etc.append($0) }
     }
 }
