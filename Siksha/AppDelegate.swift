@@ -9,6 +9,7 @@ import UIKit
 import KakaoSDKCommon
 import GoogleSignIn
 import NMapsMap
+import RealmSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -37,6 +38,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GIDSignIn.sharedInstance()?.clientID = googleClientId
         
         KakaoSDKCommon.initSDK(appKey: kakaoAppKey)
+        
+        let config = Realm.Configuration(
+            schemaVersion: 2, // 새로운 스키마 버전 설정
+            migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 2 {
+                    // 1-1. 마이그레이션 수행
+                    migration.enumerateObjects(ofType: Meal.className()) { oldObject, newObject in
+                        newObject!["isLiked"] = false // Provide a default value for 'isLiked'
+                        newObject!["likeCnt"] = 0 // Provide a default value for 'likeCnt'
+                    }
+                }
+            }
+        )
+                
+        // 2. Realm이 새로운 Object를 쓸 수 있도록 설정
+        Realm.Configuration.defaultConfiguration = config
 
         return true
     }
