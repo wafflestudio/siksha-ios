@@ -8,26 +8,29 @@
 import SwiftUI
 
 struct MealCell: View {
-    let meal: Meal
+    @ObservedObject var viewModel: MealInfoViewModel
     private var vegetarian: Bool = false
     private let orangeColor = Color.init("MainThemeColor")
+    private let grayColor = Color.init("ReviewHighColor")
+    private let lightGrayColor = Color.init("ReviewMediumColor")
+    private let lighterGrayColor = Color.init("ReviewLowColor")
     var formattedPrice: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        let formattedNumber = formatter.string(from: NSNumber(value: meal.price))!
+        let formattedNumber = formatter.string(from: NSNumber(value: viewModel.meal.price))!
         return formattedNumber
     }
     
-    init(meal: Meal) {
-        self.meal = meal
-        if meal.etc.contains("No meat") {
+    init(viewModel: MealInfoViewModel) {
+        self.viewModel = viewModel
+        if viewModel.meal.etc.contains("No meat") {
             self.vegetarian = true
         }
     }
     
     var body: some View {
         HStack(alignment: .top) {
-            Text("\(meal.nameKr)")
+            Text("\(viewModel.meal.nameKr)")
                 .multilineTextAlignment(.leading)
                 .font(.custom("NanumSquareOTFR", size: 15))
                 .foregroundColor(.black)
@@ -43,24 +46,24 @@ struct MealCell: View {
 
             Spacer()
             
-            Text(meal.price > 0 ? String(formattedPrice) : "-")
+            Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
                 .font(.custom("NanumSquareOTFR", size: 14))
                 .foregroundColor(.black)
-                .frame(width: 70)
+                .frame(width: 50)
                 .padding(.top, 3)
-            
-            ZStack {
-                if meal.reviewCnt > 0 {
-                    Image(meal.score > 4.0 ? "Review-high" : meal.score <= 4.0 && meal.score >= 3.0 ? "Review-medium" : meal.score < 3.0 ? "Review-low" : "SettingsCell")
-                        .resizable()
-                        .frame(width: 48, height: 20)
-                }
 
-                Text(meal.reviewCnt > 0 ? String(format: "%.1f", meal.score) : "-")
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(meal.reviewCnt > 0 ? .white : .black)
+            Text(viewModel.meal.reviewCnt > 0 ? String(format: "%.1f", viewModel.meal.score) : "-")
+                .font(.custom("NanumSquareOTFB", size: 15))
+                .foregroundColor(viewModel.meal.reviewCnt > 0 ? viewModel.meal.score > 4.0 ? grayColor : viewModel.meal.score <= 4.0 && viewModel.meal.score >= 3.0 ? lightGrayColor : lighterGrayColor : lighterGrayColor)
+                .frame(width: 35, height: 20)
+                .padding(.top, 0.5)
+            
+            Button(action: {
+            viewModel.toggleLike()
+            }){
+                Image(viewModel.meal.isLiked ? "Heart-selected" : "Heart-default")
+                    .frame(width: 35, height: 20)
             }
-            .frame(width: 50, height: 20)
         }
         .background(Color.white)
     }
@@ -74,6 +77,6 @@ struct MealCell_Previews: PreviewProvider {
         meal.score = 4.1
         meal.price = 4000
         
-        return MealCell(meal: meal)
+        return MealCell(viewModel: MealInfoViewModel(meal: meal))
     }
 }

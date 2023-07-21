@@ -65,13 +65,17 @@ struct RestaurantCell: View {
                 Text("Price")
                     .font(.custom("NanumSquareOTF", size: 12))
                     .foregroundColor(orangeColor)
-                    .frame(width: 70)
+                    .frame(width: 50)
                 
                 Text("Rate")
                     .font(.custom("NanumSquareOTF", size: 12))
                     .foregroundColor(orangeColor)
-                    .frame(width: 50)
+                    .frame(width: 35)
                 
+                Text("Like")
+                    .font(.custom("NanumSquareOTF", size: 12))
+                    .foregroundColor(orangeColor)
+                    .frame(width: 35)
             }
             .padding(EdgeInsets(top: 16, leading: 16, bottom: 10, trailing: 16))
             
@@ -86,8 +90,9 @@ struct RestaurantCell: View {
             VStack(spacing: 20) {
                 if meals.count > 0 {
                     ForEach(meals, id: \.id) { meal in
+                        @ObservedObject var mealInfoViewModel = MealInfoViewModel(meal: meal)
                         NavigationLink(
-                            destination: MealInfoView(viewModel: MealInfoViewModel(meal: meal))
+                            destination: MealInfoView(viewModel: mealInfoViewModel)
                                 .environment(\.menuViewModel, viewModel)
                                 .environment(\.favoriteViewModel, favViewModel)
                                 .onAppear{
@@ -95,7 +100,7 @@ struct RestaurantCell: View {
                                     viewModel?.reloadOnAppear = false
                                 },
                             label: {
-                                MealCell(meal: meal)
+                                MealCell(viewModel: mealInfoViewModel)
                                     .id("\(meal.id)\(meal.score)")
                             })
                     }
