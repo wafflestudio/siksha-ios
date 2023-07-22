@@ -6,7 +6,6 @@ target 'Siksha' do
 
   # Pods for Siksha
   pod 'RealmSwift'
-  pod 'SwiftyJSON'
   pod 'NMapsMap'
   pod 'KakaoSDKCommon'
   pod 'KakaoSDKAuth'
@@ -14,7 +13,6 @@ target 'Siksha' do
   pod 'GoogleSignIn'
   pod 'BSImagePicker'
   pod 'JTAppleCalendar'
-  pod 'SwiftUIPager'
 
 end
 

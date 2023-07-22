@@ -32,8 +32,6 @@ PODS:
   - Realm/Headers (10.6.0)
   - RealmSwift (10.6.0):
     - Realm (= 10.6.0)
-  - SwiftUIPager (2.3.0)
-  - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
   - BSImagePicker
@@ -44,8 +42,6 @@ DEPENDENCIES:
   - KakaoSDKUser
   - NMapsMap
   - RealmSwift
-  - SwiftUIPager
-  - SwiftyJSON
 
 SPEC REPOS:
   trunk:
@@ -62,8 +58,6 @@ SPEC REPOS:
     - NMapsMap
     - Realm
     - RealmSwift
-    - SwiftUIPager
-    - SwiftyJSON
 
 SPEC CHECKSUMS:
   Alamofire: 2291f7d21ca607c491dd17642e5d40fdcda0e65c
@@ -79,9 +73,7 @@ SPEC CHECKSUMS:
   NMapsMap: e6dbea85c2c195c7532deb637a5e90fd70f94fed
   Realm: 1ef421d4581513400ad4f8bd39c8157f3266c62e
   RealmSwift: f80216fb8334b01ccf526e4f2dd5ff0da61863a2
-  SwiftUIPager: fa9b45ff5133f6aa2b4d82601d9e2662638f5459
-  SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: c390849dd498b6893f4c0c1bb4ab79dc45efa789
+PODFILE CHECKSUM: 271359294453e7647cfa63cfcbd678974f3b755e
 
 COCOAPODS: 1.12.1
