@@ -21,12 +21,13 @@ public class AppState: ObservableObject {
         let expDate = Date(timeIntervalSince1970: exp)
         
         if DateInterval(start: Date(), end: expDate).duration < TimeInterval(15552000), let token = token { // 6 month
-            Networking.shared.refreshAccessToken(token: token)
+            Networking.shared.refreshAccessTokenCodable(token: token)
                 .receive(on: RunLoop.main)
+                .map(\.value)
                 .sink { _ in }
                     receiveValue: { response in
-                        guard let data = response.value,
-                            let accessToken = try? JSON(data: data)["access_token"].stringValue,
+                        guard
+                            let accessToken = response?.access_token,
                             let expDate = Utils.shared.decode(jwtToken: accessToken)["exp"] as? Double else {
                             return
                         }

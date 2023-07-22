@@ -20,11 +20,20 @@ class Networking {
         
         return request.validate().publishData()
     }
-    
+    func getAccessTokenCodable(token:String,endPoint:String)->DataResponsePublisher<AccessTokenResponse>{
+        let request = AF.request(SikshaAPI.getAccessToken(token: token, endPoint: endPoint))
+        
+        return request.validate().publishDecodable(type:AccessTokenResponse.self,decoder: JSONDecoder())
+    }
     func refreshAccessToken(token: String) -> DataResponsePublisher<Data> {
         let request = AF.request(SikshaAPI.refreshAccessToken(token: token))
         
         return request.validate().publishData()
+    }
+    func refreshAccessTokenCodable(token: String) -> DataResponsePublisher<AccessTokenResponse> {
+        let request = AF.request(SikshaAPI.refreshAccessToken(token: token))
+        
+        return request.validate().publishDecodable(type:AccessTokenResponse.self,decoder: JSONDecoder())
     }
 
     func getMenus(startDate: String, endDate: String, noMenuHide: Bool) -> DataResponsePublisher<Data> {

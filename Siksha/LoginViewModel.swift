@@ -38,11 +38,12 @@ class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDeleg
         print(token)
         #endif
         
-        Networking.shared.getAccessToken(token: token, endPoint: endPoint)
+        Networking.shared.getAccessTokenCodable(token: token, endPoint: endPoint)
             .receive(on: RunLoop.main)
+            .map(\.value)
             .sink { result in
-                guard let data = result.value,
-                      let accessToken = try? JSON(data: data)["access_token"].stringValue,
+                guard let accessToken = result?.access_token,
+                 
                       let expDate = Utils.shared.decode(jwtToken: accessToken)["exp"] as? Double else {
                     self.signInFailed = true
                     return
