@@ -10,7 +10,7 @@ import SwiftyJSON
 import Realm
 import RealmSwift
 
-class Restaurant: Object {
+final class Restaurant: Object{
     enum OperatingHourType : Int {
         case weekdays = 0
         case saturday = 1
@@ -68,11 +68,45 @@ class Restaurant: Object {
         }
         addMenus(json["menus"])
     }
-    
+    convenience init(_ response:RestaurantResponse){
+        self.init()
+        self.id = response.id
+        self.code = response.code
+        self.nameKr = response.name_kr
+        self.nameEn = response.name_en ?? ""
+        self.addr = response.addr == nil ? "" :(
+            response.addr!.replacingOccurrences(of: "서울 관악구 관악로 1 서울대학교 ", with: "")
+        )
+        self.lat = "\(response.lat ?? -1)"
+        self.lng = "\(response.lng ?? -1)"
+        if let operatingHours = response.etc?.operating_hours{
+            self.operatingHours.append(getOperatingHoursAsString(operatingHours.weekdays))
+            self.operatingHours.append(getOperatingHoursAsString(operatingHours.saturday))
+            self.operatingHours.append(getOperatingHoursAsString(operatingHours.holiday))
+        }
+        addMenus(response.menus ?? [])
+        
+        
+        
+    }
+    private func getOperatingHoursAsString(_ operatingHours:[String]) -> String{
+        var hours = ""
+        operatingHours.forEach{
+            time in hours += time + "\n"
+            
+        }
+        return hours.replacingOccurrences(of: "-", with: " - ")
+    }
     private func addMenus(_ json: JSON) {
         json.forEach { (str, mealJson) in
             let newMeal = Meal(mealJson)
             self.menus.append(newMeal)
+        }
+    }
+    private func addMenus(_ menus:[MenuResponse]){
+        menus.forEach{
+            menu in
+            self.menus.append(Meal(menu))
         }
     }
 }

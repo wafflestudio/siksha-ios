@@ -137,7 +137,7 @@ public class MenuViewModel: ObservableObject {
         
         self.getMenuStatus = .loading
         
-        repository.fetchMenu(date: date)
+        repository.fetchMenuCodable(date: date)
             .receive(on: RunLoop.main)
             .assign(to: \.getMenuStatus, on: self)
             .store(in: &cancellables)

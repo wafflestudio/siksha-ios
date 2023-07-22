@@ -24,7 +24,19 @@ class DailyMenu: Object {
         addRestaurants(list: lu, json["LU"])
         addRestaurants(list: dn, json["DN"])
     }
-    
+    convenience init(_ response:DailyMenuResponse){
+        self.init()
+        self.date = response.date
+        addRestaurants(list: br, response.BR)
+        addRestaurants(list: lu, response.LU)
+        addRestaurants(list: dn, response.DN)
+    }
+    private func addRestaurants(list:List<Restaurant>,_  responses:[RestaurantResponse]){
+        responses.forEach{
+            response in
+            list.append(Restaurant(response))
+        }
+    }
     private func addRestaurants(list: List<Restaurant>, _ json: JSON){
         json.forEach { (str, restJson) in
             let newRest = Restaurant(restJson)

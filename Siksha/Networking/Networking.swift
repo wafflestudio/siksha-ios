@@ -32,6 +32,10 @@ class Networking {
         
         return request.validate().publishData()
     }
+    func getMenusCodable(startDate: String, endDate: String, noMenuHide: Bool) -> DataResponsePublisher<MenusResponse>{
+        let request = AF.request(SikshaAPI.getMenus(startDate: startDate, endDate: endDate, noMenuHide: noMenuHide))
+        return request.validate().publishDecodable(type:MenusResponse.self,decoder: JSONDecoder())
+    }
     func getMenuFromId(menuId:Int)->DataResponsePublisher<MenuIdResponse>{
         let request = AF.request(SikshaAPI.getMenuFromId(menuId: menuId))
         return request.validate().publishDecodable(type:MenuIdResponse.self,decoder: JSONDecoder())

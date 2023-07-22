@@ -29,7 +29,35 @@ final class MenuRepository {
             realm.delete(realm.objects(DailyMenu.self).filter{ formatter.date(from: $0.date)?.timeIntervalSince(Date()) ?? -1 < -3600*24 })
         }
     }
-    
+    func fetchMenuCodable(date:String) -> AnyPublisher<MenuStatus,Never>{
+        Networking.shared.getMenusCodable(startDate: date, endDate: date, noMenuHide: !UserDefaults.standard.bool(forKey: "notNoMenuHide"))
+            .map(\.value)
+            .handleEvents(receiveOutput:{
+                response in
+                print(response)
+                guard let response = response else {
+                    return
+                }
+                try! self.realm.write{
+                    response.result.forEach{
+                        dailyMenu in self.realm.add(DailyMenu(dailyMenu),update: .modified)
+                    }
+                }
+            })
+            .map{
+                response in
+                if response == nil{
+                    return MenuStatus.showCached
+                }
+                else{
+                    return MenuStatus.succeeded
+                }
+            }
+            .eraseToAnyPublisher()
+        
+            
+            
+    }
     func fetchMenu(date: String) -> AnyPublisher<MenuStatus, Never> {
         Networking.shared.getMenus(startDate: date, endDate: date, noMenuHide: !UserDefaults.standard.bool(forKey: "notNoMenuHide"))
             // Save menus to db
