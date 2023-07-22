@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftyJSON
 import Realm
 import RealmSwift
 
@@ -41,33 +40,7 @@ final class Restaurant: Object{
     @objc dynamic var lng: String = ""
     var operatingHours = List<String>()
     var menus = List<Meal>()
-    
-    convenience init(_ json: JSON) {
-        self.init()
-        self.id = json["id"].intValue
-        self.code = json["code"].stringValue
-        self.nameKr = json["name_kr"].stringValue
-        self.nameEn = json["name_en"].stringValue
-        self.addr = json["addr"].stringValue.replacingOccurrences(of: "서울 관악구 관악로 1 서울대학교 ", with: "")
-        self.lat = json["lat"].stringValue
-        self.lng = json["lng"].stringValue
-        
-        OperatingHourType.getAllTypes.forEach { type in
-            let timeList = json["etc"]["operating_hours"][type.stringValue].arrayValue.map{$0.stringValue}
-            
-            var hours = ""
-            timeList.forEach { time in
-                hours += time + "\n"
-            }
-            
-            if hours.count == 0 {
-                operatingHours.append("")
-            } else {
-                operatingHours.append(hours.replacingOccurrences(of: "-", with: " - "))
-            }
-        }
-        addMenus(json["menus"])
-    }
+
     convenience init(_ response:RestaurantResponse){
         self.init()
         self.id = response.id
@@ -97,12 +70,7 @@ final class Restaurant: Object{
         }
         return hours.replacingOccurrences(of: "-", with: " - ")
     }
-    private func addMenus(_ json: JSON) {
-        json.forEach { (str, mealJson) in
-            let newMeal = Meal(mealJson)
-            self.menus.append(newMeal)
-        }
-    }
+ 
     private func addMenus(_ menus:[MenuResponse]){
         menus.forEach{
             menu in

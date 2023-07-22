@@ -7,7 +7,7 @@
 
 import Foundation
 import Combine
-import SwiftyJSON
+
 
 class SettingsViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
@@ -38,12 +38,11 @@ class SettingsViewModel: ObservableObject {
     func getAppStoreVersion() {
         guard let url = URL(string: "http://itunes.apple.com/lookup?id=1032700617"),
             let data = try? Data(contentsOf: url),
-            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
-            let results = json["results"] as? [[String: Any]],
-            results.count > 0,
-            let appStoreVersion = results[0]["version"] as? String
+              let results = try? JSONDecoder().decode(AppStoreResponse.self, from: data).results,
+            results.count > 0
+            
             else { return }
-        self.appStoreVersion = appStoreVersion
+        self.appStoreVersion = results[0].version
     }
     
     var isUpdateAvailable: Bool {

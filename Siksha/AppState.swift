@@ -6,7 +6,7 @@
 //  Created by 박종석 on 2021/02/02.
 //
 import Foundation
-import SwiftyJSON
+
 import Realm
 import RealmSwift
 import Combine
@@ -21,7 +21,7 @@ public class AppState: ObservableObject {
         let expDate = Date(timeIntervalSince1970: exp)
         
         if DateInterval(start: Date(), end: expDate).duration < TimeInterval(15552000), let token = token { // 6 month
-            Networking.shared.refreshAccessTokenCodable(token: token)
+            Networking.shared.refreshAccessToken(token: token)
                 .receive(on: RunLoop.main)
                 .map(\.value)
                 .sink { _ in }

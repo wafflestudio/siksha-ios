@@ -14,7 +14,6 @@
 
 import Foundation
 import Combine
-import SwiftyJSON
 
 class RestaurantOrderViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
@@ -54,7 +53,7 @@ class RestaurantOrderViewModel: ObservableObject {
     func loadRestaurants() {
         networkStatus = .loading
         
-        Networking.shared.getRestaurantsCodable()
+        Networking.shared.getRestaurants()
             .receive(on: RunLoop.main)
             .map(\.value)
             .sink { [weak self] response in

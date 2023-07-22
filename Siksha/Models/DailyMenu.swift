@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftyJSON
 import Realm
 import RealmSwift
 
@@ -16,14 +15,7 @@ class DailyMenu: Object {
     var lu = List<Restaurant>()
     var dn = List<Restaurant>()
     
-    convenience init(_ json: JSON){
-        self.init()
-        self.date = json["date"].stringValue
-        
-        addRestaurants(list: br, json["BR"])
-        addRestaurants(list: lu, json["LU"])
-        addRestaurants(list: dn, json["DN"])
-    }
+ 
     convenience init(_ response:DailyMenuResponse){
         self.init()
         self.date = response.date
@@ -35,12 +27,6 @@ class DailyMenu: Object {
         responses.forEach{
             response in
             list.append(Restaurant(response))
-        }
-    }
-    private func addRestaurants(list: List<Restaurant>, _ json: JSON){
-        json.forEach { (str, restJson) in
-            let newRest = Restaurant(restJson)
-            list.append(newRest)
         }
     }
     

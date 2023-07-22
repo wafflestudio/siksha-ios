@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import SwiftyJSON
+
 import GoogleSignIn
 import AuthenticationServices
 import Combine
@@ -38,7 +38,7 @@ class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDeleg
         print(token)
         #endif
         
-        Networking.shared.getAccessTokenCodable(token: token, endPoint: endPoint)
+        Networking.shared.getAccessToken(token: token, endPoint: endPoint)
             .receive(on: RunLoop.main)
             .map(\.value)
             .sink { result in

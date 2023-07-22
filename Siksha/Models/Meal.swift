@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import SwiftyJSON
 import Realm
 import RealmSwift
 
@@ -20,17 +19,6 @@ class Meal: Object{
     @objc dynamic var reviewCnt: Int = 0
     var etc = List<String>()
     
-    convenience init(_ json: JSON) {
-        self.init()
-        self.id = json["id"].intValue
-        self.code = json["code"].stringValue
-        self.nameKr = json["name_kr"].stringValue
-        self.nameEn = json["name_en"].stringValue
-        self.price = json["price"].intValue
-        self.score = json["score"].doubleValue
-        self.reviewCnt = json["review_cnt"].intValue
-        json["etc"].arrayValue.map{ $0.stringValue }.forEach { self.etc.append($0) }
-    }
     convenience init(_ response:MenuResponse){
         self.init()
         self.id = response.id

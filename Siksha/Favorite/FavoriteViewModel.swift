@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import SwiftyJSON
 
 public class FavoriteViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
@@ -155,7 +154,7 @@ public class FavoriteViewModel: ObservableObject {
         
         self.getMenuStatus = .loading
         
-        repository.fetchMenuCodable(date: date)
+        repository.fetchMenu(date: date)
             .receive(on: RunLoop.main)
             .assign(to: \.getMenuStatus, on: self)
             .store(in: &cancellables)
@@ -164,16 +163,17 @@ public class FavoriteViewModel: ObservableObject {
     func checkNoFavorites() {
         Networking.shared.getRestaurants()
             .receive(on: RunLoop.main)
-            .sink { [weak self] result in
+            .map(\.value)
+            .sink { [weak self] response in
                 guard let self = self else { return }
-                guard let data = result.data,
-                      let restJSON = try? JSON(data: data)["result"].array else {
+                guard let response = response
+                     else {
                     self.noFavorites = false
                     return
                 }
                 var hasFavorite = false
-                restJSON.forEach { json in
-                    let id = json["id"].intValue
+                response.result.forEach { restaurant in
+                    let id = restaurant.id
                     if UserDefaults.standard.bool(forKey: "fav\(id)") {
                         hasFavorite = true
                         return

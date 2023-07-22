@@ -85,3 +85,9 @@ struct MenusResponse:Codable{
 struct AccessTokenResponse:Codable{
     var access_token:String
 }
+struct AppStoreResponse:Codable{
+    var results:[VersionResponse]
+    struct VersionResponse:Codable{
+        var version:String
+    }
+}
