@@ -53,6 +53,11 @@ class Networking {
         
         return request.validate().publishData()
     }
+    func getRestaurantsCodable()->DataResponsePublisher<RestaurantsResponse>{
+        let request = AF.request(SikshaAPI.getRestaurants)
+        return request.validate().publishDecodable(type:RestaurantsResponse.self,decoder: JSONDecoder())
+    }
+    
     
     func getReviews(menuId: Int, page: Int, perPage: Int) -> DataResponsePublisher<ReviewResponse> {
         let request = AF.request(SikshaAPI.getReviews(menuId: menuId, page: page, perPage: perPage))

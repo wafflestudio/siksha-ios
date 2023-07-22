@@ -54,12 +54,12 @@ class RestaurantOrderViewModel: ObservableObject {
     func loadRestaurants() {
         networkStatus = .loading
         
-        Networking.shared.getRestaurants()
+        Networking.shared.getRestaurantsCodable()
             .receive(on: RunLoop.main)
-            .sink { [weak self] result in
+            .map(\.value)
+            .sink { [weak self] response in
                 guard let self = self else { return }
-                guard let data = result.value,
-                      let restJSON = try? JSON(data: data)["result"].array else {
+                guard let response  else {
                     print("Failure")
                     self.networkStatus = .failed
                     return
@@ -67,10 +67,24 @@ class RestaurantOrderViewModel: ObservableObject {
                 var restOrder = (UserDefaults.standard.dictionary(forKey: "restaurantOrder") as? [String : Int]) ?? [String : Int]()
                 var favRestOrder = (UserDefaults.standard.dictionary(forKey: "favRestaurantOrder") as? [String : Int]) ?? [String : Int]()
                 
-                restJSON.forEach { json in
+                /*restJSON.forEach { json in
                     let id = json["id"].intValue
                     let name = json["name_kr"].stringValue
                     
+                    UserDefaults.standard.set(name, forKey: "restName\(id)")
+                    
+                    if restOrder["\(id)"] == nil {
+                     
+                        restOrder["\(id)"] = .max
+                    }
+                    if favRestOrder["\(id)"] == nil {
+                        favRestOrder["\(id)"] = .max
+                    }
+                }*/
+                response.result.forEach{
+                    restaurant in
+                    let id = restaurant.id
+                    let name = restaurant.name_kr
                     UserDefaults.standard.set(name, forKey: "restName\(id)")
                     
                     if restOrder["\(id)"] == nil {
