@@ -28,7 +28,9 @@ class Meal: Object{
         self.price = response.price ?? 0
         self.score = response.score ?? 0.0
         self.reviewCnt = response.review_cnt
-        
+        response.etc.forEach{
+            str in self.etc.append(str)
+        }
     }
 }
 

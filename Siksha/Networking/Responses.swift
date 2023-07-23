@@ -44,6 +44,7 @@ struct MenuResponse:Codable{
     var updated_at:String
     var score:Double?
     var review_cnt:Int
+    var etc:[String]
 }
 struct RestaurantResponse:Codable{
     var id:Int
