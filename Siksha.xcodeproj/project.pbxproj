@@ -242,6 +242,7 @@
 		1E3A56E925C6FCE600DBB3F4 /* Siksha */ = {
 			isa = PBXGroup;
 			children = (
+				4EB660B82A74DBC100E52314 /* Community */,
 				1E96F95825E255B00074940C /* Siksha.entitlements */,
 				1ECB24FF25F16D1C00875E18 /* Repository */,
 				1E3A574125C6FEC600DBB3F4 /* Models */,
@@ -448,6 +449,13 @@
 				231C9CF725F83A850072C07A /* RestaurantInformationView.swift */,
 			);
 			path = RestaurantInfo;
+			sourceTree = "<group>";
+		};
+		4EB660B82A74DBC100E52314 /* Community */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Community;
 			sourceTree = "<group>";
 		};
 		5127BCAAB12CF9DDFA269AEB /* Frameworks */ = {
