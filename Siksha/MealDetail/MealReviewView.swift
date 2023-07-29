@@ -103,6 +103,24 @@ private extension MealReviewView {
         VStack(spacing: 0) {
             ScrollView (.horizontal) {
                 HStack {
+                    Button(action: {
+                        self.isShowingPhotoLibrary = true
+                    }) {
+                        ZStack {
+                            Rectangle()
+                                .frame(width: 80, height: 80)
+
+                            Image(systemName: "plus")
+                                .resizable()
+                                .renderingMode(.original)
+                                .foregroundColor(Color.white)
+                                .frame(width: 40, height: 40)
+                        }
+                    }
+                    .sheet(isPresented: $isShowingPhotoLibrary) {
+                        ImagePickerCoordinatorView(selectedImages: $addedImages)
+                    }
+                    
                     ForEach(addedImages, id: \.self) { image in
                         ZStack(alignment: .topTrailing) {
                             Image(uiImage: image)
@@ -110,7 +128,6 @@ private extension MealReviewView {
                                 .renderingMode(.original)
                                 .scaledToFill()
                                 .frame(width: 80, height: 80)
-                                .cornerRadius(8)
                                 .clipped()
                                 .padding([.top, .trailing], 5)
                             
@@ -137,31 +154,6 @@ private extension MealReviewView {
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 28, bottom: 0, trailing: 28))
-            
-            HStack {
-                Button(action: {
-                    self.isShowingPhotoLibrary = true
-                }) {
-                    ZStack {
-                        Image("ReviewPictureButton")
-                            .resizable()
-                            .renderingMode(.original)
-                            .frame(width: 134, height: 32)
-
-                        Image("AddPicture")
-                            .resizable()
-                            .renderingMode(.original)
-                            .frame(width: 84, height: 16)
-                    }
-                }
-                .padding(EdgeInsets(top: 16, leading: 0, bottom: 16, trailing: 0))
-                .sheet(isPresented: $isShowingPhotoLibrary) {
-                    ImagePickerCoordinatorView(selectedImages: $addedImages)
-                }
-                
-                Spacer()
-            }
-            .padding([.leading, .trailing], 28)
         }
     }
     

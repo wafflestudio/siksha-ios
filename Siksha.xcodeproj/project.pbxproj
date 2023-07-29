@@ -81,6 +81,7 @@
 		4E3D4EEB2A74F743005C7AB2 /* TopPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */; };
 		4E3D4EEF2A750078005C7AB2 /* TopPosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */; };
 		4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BDE232A7F75BC00046ADC /* CommunityView.swift */; };
+		4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */; };
 		4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8D929F8AB24005A1683 /* config.plist */; };
 		4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */; };
 		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
@@ -192,6 +193,7 @@
 		4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPostCell.swift; sourceTree = "<group>"; };
 		4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPosts.swift; sourceTree = "<group>"; };
 		4E1BDE232A7F75BC00046ADC /* CommunityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
+		4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishView.swift; sourceTree = "<group>"; };
 		4ED0B8D929F8AB24005A1683 /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
 		4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -469,6 +471,7 @@
 				4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */,
 				4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */,
 				4E1BDE232A7F75BC00046ADC /* CommunityView.swift */,
+				4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */,
 			);
 			path = Community;
 			sourceTree = "<group>";
@@ -744,6 +747,7 @@
 				BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
 				1E9A6EAA2674BDFD005CAEA1 /* NavigationBarModifier.swift in Sources */,
+				4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */,
 				23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */,
 				1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */,
 				1E96F92F25DEC14F0074940C /* MenuRepository.swift in Sources */,
@@ -987,6 +991,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = ###;
 				ENABLE_PREVIEWS = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
 				INFOPLIST_FILE = Siksha/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
