@@ -16,16 +16,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         #if DEBUG
-            print("debug")
-            let configKey = "debug"
+        let configKey = "debug"
+        Config.shared.baseURL = "https://siksha-api-dev.wafflestudio.com"
         #else
-            let configKey = "release"
+        let configKey = "release"
+        Config.shared.baseURL = "https://siksha-api.wafflestudio.com"
         #endif
         
         let dictPath = Bundle.main.path(forResource: "config", ofType: "plist")
         let configDict = NSDictionary(contentsOfFile: dictPath!)!.object(forKey: configKey) as! NSDictionary
         
-        Config.shared.baseURL = (configDict.object(forKey: "server_url") as! String)
+        
         
         let googleClientId = configDict.object(forKey: "google_client_id") as! String
         let kakaoAppKey = configDict.object(forKey: "kakao_app_key") as! String
