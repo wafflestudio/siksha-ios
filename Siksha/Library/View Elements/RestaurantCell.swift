@@ -90,7 +90,7 @@ struct RestaurantCell: View {
             VStack(spacing: 20) {
                 if meals.count > 0 {
                     ForEach(meals, id: \.id) { meal in
-                        @ObservedObject var mealInfoViewModel = MealInfoViewModel(meal: meal)
+                        let mealInfoViewModel = MealInfoViewModel(meal: meal)
                         NavigationLink(
                             destination: MealInfoView(viewModel: mealInfoViewModel)
                                 .environment(\.menuViewModel, viewModel)
