@@ -21,7 +21,6 @@ private extension ContentView {
                         .frame(width: 30, height: 30)
                 }
                 .padding(.bottom, geometry.safeAreaInsets.bottom)
-                .padding([.leading, .trailing], item.id==1 ? 20 : 0)
                 .transaction { transaction in
                     transaction.animation = nil
                     transaction.disablesAnimations = true
@@ -53,7 +52,8 @@ struct ContentView: View {
     let tabItems = [
         TabItem(id: 0, content: AnyView(FavoriteView()), buttonImage: ["Favorite", "Favorite-disabled"]),
         TabItem(id: 1, content: AnyView(MenuView()), buttonImage: ["Main", "Main-disabled"]),
-        TabItem(id: 2, content: AnyView(SettingsView()), buttonImage: ["Settings", "Settings-disabled"])
+        TabItem(id: 2, content: AnyView(CommunityView()), buttonImage: ["Community", "Community-disabled"]),
+        TabItem(id: 3, content: AnyView(SettingsView()), buttonImage: ["Settings", "Settings-disabled"])
     ]
     
     var body: some View {
