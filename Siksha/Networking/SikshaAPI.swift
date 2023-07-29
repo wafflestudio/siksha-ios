@@ -67,7 +67,7 @@ enum SikshaAPI: URLRequestConvertible {
         case .getAccessToken:
             return false
         case .getMenus:
-            return false
+            return true
         case .getMenuFromId:
             return true
         case .getRestaurants:
@@ -139,7 +139,7 @@ enum SikshaAPI: URLRequestConvertible {
         case .refreshAccessToken:
             return "/auth/refresh"
         case .getMenus:
-            return "/menus/"
+            return "/menus/lo"
         case let .getMenuFromId(menuId):
             return "/menus/\(menuId)"
         case let .likeMenu(menuId):
