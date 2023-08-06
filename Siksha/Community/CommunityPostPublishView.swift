@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CommunityPostPublishView: View {
-    @State private var anonIsToggled = false
+    @State private var anonymousIsToggled = false
     @State var title: String = ""
     @State var content: String = ""
     
@@ -42,12 +42,12 @@ struct CommunityPostPublishView: View {
         }
     }
     
-    var anonButton: some View {
+    var anonymousButton: some View {
         Button(action: {
-                    anonIsToggled.toggle()
-                    print(anonIsToggled)
+                    anonymousIsToggled.toggle()
+                    print(anonymousIsToggled)
                 }) {
-                    if anonIsToggled {
+                    if anonymousIsToggled {
                         ZStack {
                             RoundedRectangle(cornerRadius: 15.0)
                                 .fill(Color("MainThemeColor"))
@@ -139,7 +139,7 @@ struct CommunityPostPublishView: View {
         NavigationView {
             VStack {
                 HStack {
-                    anonButton
+                    anonymousButton
                     Spacer()
                 }
                 .padding(EdgeInsets(top: 0, leading: 7, bottom: 7, trailing: 0))
