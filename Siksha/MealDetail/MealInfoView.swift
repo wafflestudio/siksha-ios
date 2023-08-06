@@ -12,11 +12,11 @@ private extension MealInfoView {
         VStack(spacing: 0) {
             HStack (alignment: .center) {
                 VStack(alignment: .center, spacing: 10) {
-                    Text("\(String(format: "%.1f", meal.score))")
+                    Text("\(String(format: "%.1f", viewModel.meal.score))")
                         .font(.custom("NanumSquareOTFB", size: 32))
                         .foregroundColor(.black)
                     
-                    RatingStar(.constant(meal.score), size: 17, spacing: 0.8)
+                    RatingStar(.constant(viewModel.meal.score), size: 17, spacing: 0.8)
                 }
                 .padding(.leading, 45)
                             
@@ -25,7 +25,7 @@ private extension MealInfoView {
                         Text("총 ")
                             .font(.custom("NanumSquareOTFB", size: 12))
                             .foregroundColor(lightGrayColor)
-                        Text("\(meal.reviewCnt)개")
+                        Text("\(viewModel.meal.reviewCnt)개")
                             .font(.custom("NanumSquareOTFB", size: 12))
                             .foregroundColor(orangeColor)
                         Text("의 평가가 있어요!")
@@ -44,7 +44,7 @@ private extension MealInfoView {
             
             if showSubmitButton {
                 NavigationLink(
-                    destination: MealReviewView(meal, mealInfoViewModel: viewModel)
+                    destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel)
                         .environment(\.menuViewModel, menuViewModel)
                         .environment(\.favoriteViewModel, favViewModel),
                     label: {
@@ -72,7 +72,7 @@ private extension MealInfoView {
                 }
                 if viewModel.images.indices.contains(2) {
                     NavigationLink(
-                        destination: ReviewListView(meal, true),
+                        destination: ReviewListView(viewModel.meal, true),
                         label: {
                             ZStack {
                                 RemoteImage(url: viewModel.images[2])
@@ -104,7 +104,7 @@ private extension MealInfoView {
                     .background(Color.white)
             }
             if viewModel.hasMorePages {
-                NavigationLink(destination: ReviewListView(meal, false)) {
+                NavigationLink(destination: ReviewListView(viewModel.meal, false)) {
                     HStack(alignment: .center) {
                         Spacer()
                         
@@ -144,16 +144,14 @@ struct MealInfoView: View {
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @StateObject var viewModel = MealInfoViewModel()
+    @StateObject var viewModel: MealInfoViewModel
     @State var showSubmitButton: Bool = true
     @State var showDetailImage: Bool = false
     
-    let meal: Meal
-    
-    init(meal: Meal) {
-        self.meal = meal
-        
+    init(viewModel: MealInfoViewModel) {
         UITableView.appearance().separatorStyle = .none
+        
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     var body: some View {
@@ -163,7 +161,7 @@ struct MealInfoView: View {
                     Button(action: {
                     viewModel.toggleLike()
                     }){
-                        Image(viewModel.isLiked ? "Heart-selected" : "Heart-default")
+                        Image(viewModel.meal.isLiked ? "Heart-selected" : "Heart-default")
                             .frame(width: 21, height: 21)
                     }.padding(.top, 16)
                     
@@ -171,12 +169,12 @@ struct MealInfoView: View {
                         Text("좋아요 ")
                             .font(.custom("NanumSquareOTFB", size: 14))
                             .foregroundColor(.black)
-                        Text(/*"\(meal.numberOfLikes)개"*/"0개")
+                        Text("\(viewModel.meal.likeCnt)개")
                             .font(.custom("NanumSquareOTFB", size: 14))
                             .foregroundColor(.black)
                     }.padding(.top, 5)
                     
-                    Text(meal.nameKr)
+                    Text(viewModel.meal.nameKr)
                         .font(.custom("NanumSquareOTFEB", size: 20))
                         .foregroundColor(.black)
                         .lineLimit(1)
@@ -190,7 +188,7 @@ struct MealInfoView: View {
                         .padding(.top, 16)
                     
                     if viewModel.images.count > 0 {
-                        NavigationLink(destination: ReviewListView(meal, true)) {
+                        NavigationLink(destination: ReviewListView(viewModel.meal, true)) {
                             HStack {
                                 Text("사진 리뷰 모아보기")
                                     .font(.custom("NanumSquareOTFB", size: 16))
@@ -213,7 +211,7 @@ struct MealInfoView: View {
                         NavigationLink(
                             destination: EmptyView(),
                             label: {})
-                        NavigationLink(destination: ReviewListView(meal, false)) {
+                        NavigationLink(destination: ReviewListView(viewModel.meal, false)) {
                             Text("리뷰")
                                 .font(.custom("NanumSquareOTFB", size: 16))
                                 .foregroundColor(darkFontColor)
@@ -242,8 +240,6 @@ struct MealInfoView: View {
         .navigationBarItems(leading: backButton)
         .onAppear {
             self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
-            viewModel.meal = meal
-            viewModel.getIsLiked()
             if !viewModel.loadedReviews {
                 viewModel.mealReviews = []
                 viewModel.loadReviews()
@@ -261,6 +257,6 @@ struct MealInfoView_Previews: PreviewProvider {
         meal.nameKr = "제육보쌈&막국수"
         meal.score = 4.1
         meal.reviewCnt = 40
-        return MealInfoView(meal: meal)
+        return MealInfoView(viewModel: MealInfoViewModel(meal: meal))
     }
 }

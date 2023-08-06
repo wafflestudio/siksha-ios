@@ -9,6 +9,7 @@ import UIKit
 import KakaoSDKCommon
 import GoogleSignIn
 import NMapsMap
+import RealmSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,16 +17,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         #if DEBUG
-            print("debug")
-            let configKey = "debug"
+        let configKey = "debug"
+        Config.shared.baseURL = "https://siksha-api-dev.wafflestudio.com"
         #else
-            let configKey = "release"
+        let configKey = "release"
+        Config.shared.baseURL = "https://siksha-api.wafflestudio.com"
         #endif
         
         let dictPath = Bundle.main.path(forResource: "config", ofType: "plist")
         let configDict = NSDictionary(contentsOfFile: dictPath!)!.object(forKey: configKey) as! NSDictionary
         
-        Config.shared.baseURL = (configDict.object(forKey: "server_url") as! String)
+        
         
         let googleClientId = configDict.object(forKey: "google_client_id") as! String
         let kakaoAppKey = configDict.object(forKey: "kakao_app_key") as! String
@@ -36,6 +38,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GIDSignIn.sharedInstance()?.clientID = googleClientId
         
         KakaoSDKCommon.initSDK(appKey: kakaoAppKey)
+        
+        let config = Realm.Configuration(
+            schemaVersion: 2, // 새로운 스키마 버전 설정
+            migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 2 {
+                    // 1-1. 마이그레이션 수행
+                    migration.enumerateObjects(ofType: Meal.className()) { oldObject, newObject in
+                        newObject!["isLiked"] = false // Provide a default value for 'isLiked'
+                        newObject!["likeCnt"] = 0 // Provide a default value for 'likeCnt'
+                    }
+                }
+            }
+        )
+                
+        // 2. Realm이 새로운 Object를 쓸 수 있도록 설정
+        Realm.Configuration.defaultConfiguration = config
 
         return true
     }
