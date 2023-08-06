@@ -80,6 +80,7 @@
 		4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */; };
 		4E3D4EEB2A74F743005C7AB2 /* TopPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */; };
 		4E3D4EEF2A750078005C7AB2 /* TopPosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */; };
+		4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BDE232A7F75BC00046ADC /* CommunityView.swift */; };
 		4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8D929F8AB24005A1683 /* config.plist */; };
 		4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */; };
 		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
@@ -190,6 +191,7 @@
 		4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSelect.swift; sourceTree = "<group>"; };
 		4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPostCell.swift; sourceTree = "<group>"; };
 		4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPosts.swift; sourceTree = "<group>"; };
+		4E1BDE232A7F75BC00046ADC /* CommunityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
 		4ED0B8D929F8AB24005A1683 /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
 		4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -466,6 +468,7 @@
 				4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */,
 				4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */,
 				4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */,
+				4E1BDE232A7F75BC00046ADC /* CommunityView.swift */,
 			);
 			path = Community;
 			sourceTree = "<group>";
@@ -725,6 +728,7 @@
 				1E3A581B25C98F9A00DBB3F4 /* AppState.swift in Sources */,
 				4E3D4EE72A74E02A005C7AB2 /* BoardNameCell.swift in Sources */,
 				1E3A582A25C9C6E300DBB3F4 /* RestaurantsView.swift in Sources */,
+				4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */,
 				1E3A57FB25C73FDD00DBB3F4 /* DailyMenu.swift in Sources */,
 				231C9C7825F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift in Sources */,
 				1ED44A6325CDB709001D916B /* FavoriteView.swift in Sources */,
