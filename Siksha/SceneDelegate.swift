@@ -73,7 +73,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let contentView = ContentView().environmentObject(appState)
                 window.rootViewController = UIHostingController(rootView: contentView)
             } else {
-                window.rootViewController = UIHostingController(rootView: CommunityPostPublishView())
+                window.rootViewController = UIHostingController(rootView: LoginView())
             }
             self.window = window
             window.makeKeyAndVisible()
