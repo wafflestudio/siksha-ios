@@ -16,11 +16,17 @@ struct CommunityPost: Identifiable, Equatable {
     let replyCount: Int
     let image: Image? = nil
 }
-
 struct CommunityView: View {
     let dividerColor = Color(red: 183/255, green: 183/255, blue: 183/255, opacity: 1)
-    
+    let boards:[String] = ["자유게시판","학식게시판","vs 게시판"]
+    let topPosts:[CommunityPost] = []
     let contents: [CommunityPost] = [
+        CommunityPost(title: "name", content: "how", userLikes: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello", content: "what", userLikes: false, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "world", content: "why", userLikes: false, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
         CommunityPost(title: "name", content: "how", userLikes: true, likeCount: 12, replyCount: 23),
         CommunityPost(title: "hello", content: "what", userLikes: false, likeCount: 12, replyCount: 23),
         CommunityPost(title: "world", content: "why", userLikes: false, likeCount: 12, replyCount: 23),
@@ -28,13 +34,27 @@ struct CommunityView: View {
         CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
         CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23)
     ]
-    
+  
+
     var body: some View {
         NavigationView {
-            ScrollView{
+           
+            VStack(spacing:0){
+                BoardSelect(boardNames: boards)
                 divider
-                postList
+                TopPosts(content: [
+                    CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
+                    CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
+                    CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3)
+                ])
+                
+                ScrollView{
+                    divider
+                    postList
+                }
+                
             }
+                
             .customNavigationBar(title: "icon")
         }
     }

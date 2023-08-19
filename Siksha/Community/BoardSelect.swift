@@ -21,6 +21,6 @@ struct BoardSelect:View{
 }
 struct BoardSelect_Preview:PreviewProvider{
     static var previews:some View{
-        BoardSelect(boardNames: ["자유게시판","학식게시판","외식게시판","VS 게시판","베스트 메뉴 게시판"])
+        BoardSelect(boardNames: ["자유게시판","학식게시판","외식게시판","VS 게시판","베스트 메뉴 게시판","자유게시판","학식게시판","외식게시판","VS 게시판","베스트 메뉴 게시판"])
     }
 }
