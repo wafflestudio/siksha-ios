@@ -23,7 +23,7 @@ struct TopPostCell:View{
             Image("like").padding(EdgeInsets(top: 0, leading: 0, bottom: 2, trailing: 0))
             
             Text("\(like)").foregroundColor(Color.init(red:1,green:149/255,blue:34/255))
-                .font(.custom("NanumSquareOTFRegular",size:8))
+                .font(.custom("Inter-ExtraLight",size:8))
         }.padding(EdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 9.5))
             .background(Color.init(red:1,green:149/255,blue:34/255,opacity: 0.2))
             .cornerRadius(12)
