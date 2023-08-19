@@ -75,6 +75,15 @@
 	<string>사진 리뷰를 남깁니다.</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>Inter-Thin.ttf</string>
+		<string>Inter-SemiBold.ttf</string>
+		<string>Inter-Regular.ttf</string>
+		<string>Inter-Medium.ttf</string>
+		<string>Inter-Light.ttf</string>
+		<string>Inter-ExtraLight.ttf</string>
+		<string>Inter-ExtraBold.ttf</string>
+		<string>Inter-Bold.ttf</string>
+		<string>Inter-Black.tff</string>
 		<string>NanumSquareOTFBold.otf</string>
 		<string>NanumSquareOTFExtraBold.otf</string>
 		<string>NanumSquareOTFLight.otf</string>

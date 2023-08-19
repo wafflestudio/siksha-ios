@@ -76,11 +76,11 @@
 		23DFD2042664110B0049F8D7 /* RemoteImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD2032664110B0049F8D7 /* RemoteImage.swift */; };
 		23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD20E2664C2720049F8D7 /* DetailImageView.swift */; };
 		23DFD2172664CD400049F8D7 /* ThumbnailImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD2162664CD400049F8D7 /* ThumbnailImage.swift */; };
+		4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BDE232A7F75BC00046ADC /* CommunityView.swift */; };
 		4E3D4EE72A74E02A005C7AB2 /* BoardNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE62A74E02A005C7AB2 /* BoardNameCell.swift */; };
 		4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */; };
 		4E3D4EEB2A74F743005C7AB2 /* TopPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */; };
 		4E3D4EEF2A750078005C7AB2 /* TopPosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */; };
-		4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BDE232A7F75BC00046ADC /* CommunityView.swift */; };
 		4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */; };
 		4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8D929F8AB24005A1683 /* config.plist */; };
 		4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */; };
@@ -188,11 +188,20 @@
 		23DFD20E2664C2720049F8D7 /* DetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageView.swift; sourceTree = "<group>"; };
 		23DFD2162664CD400049F8D7 /* ThumbnailImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailImage.swift; sourceTree = "<group>"; };
 		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
+		4E1BDE232A7F75BC00046ADC /* CommunityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
 		4E3D4EE62A74E02A005C7AB2 /* BoardNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardNameCell.swift; sourceTree = "<group>"; };
 		4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSelect.swift; sourceTree = "<group>"; };
 		4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPostCell.swift; sourceTree = "<group>"; };
 		4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPosts.swift; sourceTree = "<group>"; };
-		4E1BDE232A7F75BC00046ADC /* CommunityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
+		4E9E1AA92A91086A00337821 /* Inter-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Thin.ttf"; sourceTree = "<group>"; };
+		4E9E1AAA2A91086A00337821 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
+		4E9E1AAB2A91086A00337821 /* Inter-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Light.ttf"; sourceTree = "<group>"; };
+		4E9E1AAC2A91086B00337821 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
+		4E9E1AAD2A91086B00337821 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
+		4E9E1AAE2A91086B00337821 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
+		4E9E1AAF2A91086B00337821 /* Inter-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-ExtraBold.ttf"; sourceTree = "<group>"; };
+		4E9E1AB02A91086B00337821 /* Inter-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-ExtraLight.ttf"; sourceTree = "<group>"; };
+		4E9E1AB12A91086B00337821 /* Inter-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Black.ttf"; sourceTree = "<group>"; };
 		4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishView.swift; sourceTree = "<group>"; };
 		4ED0B8D929F8AB24005A1683 /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
 		4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
@@ -362,6 +371,15 @@
 			isa = PBXGroup;
 			children = (
 				1E3A578125C7014600DBB3F4 /* NanumSquareOTFBold.otf */,
+				4E9E1AB12A91086B00337821 /* Inter-Black.ttf */,
+				4E9E1AAE2A91086B00337821 /* Inter-Bold.ttf */,
+				4E9E1AAF2A91086B00337821 /* Inter-ExtraBold.ttf */,
+				4E9E1AB02A91086B00337821 /* Inter-ExtraLight.ttf */,
+				4E9E1AAB2A91086A00337821 /* Inter-Light.ttf */,
+				4E9E1AAC2A91086B00337821 /* Inter-Medium.ttf */,
+				4E9E1AAA2A91086A00337821 /* Inter-Regular.ttf */,
+				4E9E1AAD2A91086B00337821 /* Inter-SemiBold.ttf */,
+				4E9E1AA92A91086A00337821 /* Inter-Thin.ttf */,
 				1E3A578225C7014600DBB3F4 /* NanumSquareOTFExtraBold.otf */,
 				1E3A578325C7014600DBB3F4 /* NanumSquareOTFLight.otf */,
 				1E3A578025C7014600DBB3F4 /* NanumSquareOTFRegular.otf */,

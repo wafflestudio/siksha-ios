@@ -17,7 +17,7 @@ struct CommunityPost: Identifiable, Equatable {
     let image: Image? = nil
 }
 struct CommunityView: View {
-    let dividerColor = Color(red: 183/255, green: 183/255, blue: 183/255, opacity: 1)
+    let dividerColor = Color("ReviewLowColor")
     let boards:[String] = ["자유게시판","학식게시판","vs 게시판"]
     let topPosts:[CommunityPost] = []
     let contents: [CommunityPost] = [
@@ -75,10 +75,10 @@ struct CommunityView: View {
 }
 
 struct CommunityPostPreView: View {
-    private let contentColor = Color(red: 57/255, green: 57/255, blue: 57/255, opacity: 1)
+    private let contentColor = Color("ReviewHighColor")
     private let likeColor = Color("MainThemeColor")
-    private let replyColor = Color(red: 121/255, green: 121/255, blue: 121/255, opacity: 1)
-    private let defaultImageColor = Color(red: 217/255, green: 217/255, blue: 217/255, opacity: 1)
+    private let replyColor = Color("ReviewMediumColor")
+    private let defaultImageColor = Color("DefaultImageColor")
     
     
     let content: CommunityPost
@@ -87,11 +87,11 @@ struct CommunityPostPreView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(content.title)
-                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .font(.custom("Inter-Bold", size: 15))
                 Spacer()
                     .frame(width: 10)
                 Text(content.content)
-                    .font(.custom("NanumSquareOTF", size: 12))
+                    .font(.custom("Inter-ExtraLight", size: 12))
                     .foregroundColor(contentColor)
                 Spacer()
                     .frame(width: 10)
@@ -103,7 +103,7 @@ struct CommunityPostPreView: View {
                         Spacer()
                             .frame(width: 4)
                         Text(String(content.likeCount))
-                            .font(.custom("NanumSquareOTF", size: 9))
+                            .font(.custom("Inter-Regular", size: 9))
                             
                             .foregroundColor(likeColor)
                     }
@@ -113,7 +113,9 @@ struct CommunityPostPreView: View {
                         Spacer()
                             .frame(width: 4)
                         Text(String(content.replyCount))
-                            .font(.custom("NanumSquareOTF", size: 9)).frame(height: 11, alignment: .center)
+                            .font(.custom("Inter-Regular", size: 9))
+                            .foregroundColor(Color.init("ReviewMediumColor"))
+                            .frame(height: 11, alignment: .center)
                         
                     }
                 }
