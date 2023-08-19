@@ -7,35 +7,31 @@
 
 import Foundation
 import SwiftUI
-struct Post{
-  var  title:String
-   var content:String
-   var like:Int
-}
+
 struct TopPosts:View{
-    var content:[Post]
+    var content:[CommunityPost]
     var body:some View{
         GeometryReader{proxy in
-            ScrollView(.horizontal,showsIndicators: false){
-                
+          
                 TabView{
                     ForEach(content,id:\.title) { content in
-                        TopPostCell(title: content.title, content: content.content, like: content.like).padding(EdgeInsets(top: 10, leading: 23, bottom: 10, trailing: 22))
+                        TopPostCell(title: content.title, content: content.content, like: content.likeCount).padding(EdgeInsets(top: 10, leading: 23, bottom: 10, trailing: 22))
                         
                     }
-                } .frame(width: proxy.size.width) .tabViewStyle(PageTabViewStyle())
+                } .frame(width: proxy.size.width) .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            
                 
-            }
+            
           
-        }
+        }.frame(height:68)
     }
 }
 struct TopPosts_Preview:PreviewProvider{
     static var previews: some View{
         TopPosts(content: [
-            Post(title: "제목1",content: "내용1",like: 3),
-            Post(title: "제목2",content: "내용2",like: 3),
-            Post(title: "제목3",content: "내용3",like: 3)
+           CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
+           CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
+           CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3)
         ])
     }
 }
