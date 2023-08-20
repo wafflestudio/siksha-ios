@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct CommunityPostPublishView: View {
+    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     @State private var anonymousIsToggled = false
     @State var title: String = ""
     @State var content: String = ""
@@ -18,7 +21,7 @@ struct CommunityPostPublishView: View {
     
     var backButton: some View {
         Button(action: {
-            print("X")
+            self.presentationMode.wrappedValue.dismiss()
         }) {
             Image(systemName: "xmark")
                 .resizable()
@@ -71,8 +74,8 @@ struct CommunityPostPublishView: View {
     
     var customDivider: some View {
         HStack {
-            Color("ReviewLowColor") //색상 나중에 일괄 수정
-                .frame(height: 2)
+            Color("ReviewLowColor") 
+                .frame(height: 1)
                 .frame(maxWidth: .infinity)
         }
     }
@@ -176,7 +179,8 @@ struct CommunityPostPublishView: View {
             .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
             .customNavigationBar(title: "글쓰기")
             .navigationBarItems(leading: backButton, trailing: postButton)
-        }
+            
+        }.navigationBarBackButtonHidden(true)
     }
 }
 
