@@ -17,6 +17,8 @@ struct CommunityPost: Identifiable, Equatable {
     let image: Image? = nil
 }
 struct CommunityView: View {
+    @State
+    var tag:Int? = nil
     let dividerColor = Color("ReviewLowColor")
     let boards:[String] = ["자유게시판","학식게시판","vs 게시판"]
     let topPosts:[CommunityPost] = []
@@ -38,24 +40,38 @@ struct CommunityView: View {
 
     var body: some View {
         NavigationView {
-           
-            VStack(spacing:0){
-                BoardSelect(boardNames: boards)
-                divider
-                TopPosts(content: [
-                    CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
-                    CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
-                    CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3)
-                ])
-                
-                ScrollView{
+            ZStack(alignment:.bottomTrailing){
+                VStack(spacing:0){
+                    BoardSelect(boardNames: boards)
                     divider
-                    postList
+                    TopPosts(content: [
+                        CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
+                        CommunityPost(title: "post2", content: "content2", userLikes: true, likeCount: 2, replyCount: 3),
+                        CommunityPost(title: "post3", content: "content3", userLikes: true, likeCount: 2, replyCount: 3)
+                    ])
+                    
+                    ScrollView{
+                        divider
+                        postList
+                    }
+                    
                 }
                 
-            }
+                .customNavigationBar(title: "icon")
+                Button{
+                    self.tag = 1
+                }label:{
+                    Image("writeButton")
+                        .frame(width:44,height:44)
+                        .background(Color.init("MainThemeColor"))
                 
-            .customNavigationBar(title: "icon")
+                        .clipShape(Circle())
+                }
+                .offset(x:-30,y:-22)
+                NavigationLink(destination:CommunityPostPublishView(),tag:1,selection:self.$tag){
+                    EmptyView()
+                }
+            }
         }
     }
     
@@ -71,6 +87,9 @@ struct CommunityView: View {
                 divider
             }
         }
+    }
+    var writeButton: some View{
+        Image("writeButton")
     }
 }
 
