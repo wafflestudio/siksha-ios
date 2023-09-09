@@ -16,11 +16,19 @@ struct CommunityPost: Identifiable, Equatable {
     let replyCount: Int
     let image: Image? = nil
 }
-
 struct CommunityView: View {
-    let dividerColor = Color(red: 183/255, green: 183/255, blue: 183/255, opacity: 1)
-    
+    @State
+    var tag:Int? = nil
+    let dividerColor = Color("ReviewLowColor")
+    let boards:[String] = ["자유게시판","학식게시판","vs 게시판"]
+    let topPosts:[CommunityPost] = []
     let contents: [CommunityPost] = [
+        CommunityPost(title: "name", content: "how", userLikes: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello", content: "what", userLikes: false, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "world", content: "why", userLikes: false, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
         CommunityPost(title: "name", content: "how", userLikes: true, likeCount: 12, replyCount: 23),
         CommunityPost(title: "hello", content: "what", userLikes: false, likeCount: 12, replyCount: 23),
         CommunityPost(title: "world", content: "why", userLikes: false, likeCount: 12, replyCount: 23),
@@ -28,14 +36,42 @@ struct CommunityView: View {
         CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
         CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23)
     ]
-    
+  
+
     var body: some View {
         NavigationView {
-            ScrollView{
-                divider
-                postList
+            ZStack(alignment:.bottomTrailing){
+                VStack(spacing:0){
+                    BoardSelect(boardNames: boards)
+                    divider
+                    TopPosts(content: [
+                        CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
+                        CommunityPost(title: "post2", content: "content2", userLikes: true, likeCount: 2, replyCount: 3),
+                        CommunityPost(title: "post3", content: "content3", userLikes: true, likeCount: 2, replyCount: 3)
+                    ])
+                    
+                    ScrollView{
+                        divider
+                        postList
+                    }
+                    
+                }
+                
+                .customNavigationBar(title: "icon")
+                Button{
+                    self.tag = 1
+                }label:{
+                    Image("writeButton")
+                        .frame(width:44,height:44)
+                        .background(Color.init("MainThemeColor"))
+                
+                        .clipShape(Circle())
+                }
+                .offset(x:-30,y:-22)
+                NavigationLink(destination:CommunityPostPublishView(),tag:1,selection:self.$tag){
+                    EmptyView()
+                }
             }
-            .customNavigationBar(title: "icon")
         }
     }
     
@@ -52,13 +88,16 @@ struct CommunityView: View {
             }
         }
     }
+    var writeButton: some View{
+        Image("writeButton")
+    }
 }
 
 struct CommunityPostPreView: View {
-    private let contentColor = Color(red: 57/255, green: 57/255, blue: 57/255, opacity: 1)
+    private let contentColor = Color("ReviewHighColor")
     private let likeColor = Color("MainThemeColor")
-    private let replyColor = Color(red: 121/255, green: 121/255, blue: 121/255, opacity: 1)
-    private let defaultImageColor = Color(red: 217/255, green: 217/255, blue: 217/255, opacity: 1)
+    private let replyColor = Color("ReviewMediumColor")
+    private let defaultImageColor = Color("DefaultImageColor")
     
     
     let content: CommunityPost
@@ -67,11 +106,11 @@ struct CommunityPostPreView: View {
         HStack {
             VStack(alignment: .leading) {
                 Text(content.title)
-                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .font(.custom("Inter-Bold", size: 15))
                 Spacer()
                     .frame(width: 10)
                 Text(content.content)
-                    .font(.custom("NanumSquareOTF", size: 12))
+                    .font(.custom("Inter-ExtraLight", size: 12))
                     .foregroundColor(contentColor)
                 Spacer()
                     .frame(width: 10)
@@ -83,7 +122,7 @@ struct CommunityPostPreView: View {
                         Spacer()
                             .frame(width: 4)
                         Text(String(content.likeCount))
-                            .font(.custom("NanumSquareOTF", size: 9))
+                            .font(.custom("Inter-Regular", size: 9))
                             
                             .foregroundColor(likeColor)
                     }
@@ -93,7 +132,9 @@ struct CommunityPostPreView: View {
                         Spacer()
                             .frame(width: 4)
                         Text(String(content.replyCount))
-                            .font(.custom("NanumSquareOTF", size: 9)).frame(height: 11, alignment: .center)
+                            .font(.custom("Inter-Regular", size: 9))
+                            .foregroundColor(Color.init("ReviewMediumColor"))
+                            .frame(height: 11, alignment: .center)
                         
                     }
                 }
