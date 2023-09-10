@@ -7,15 +7,6 @@
 
 import SwiftUI
 
-struct CommunityPost: Identifiable, Equatable {
-    let id: UUID = UUID()
-    let title: String
-    let content: String
-    let userLikes: Bool
-    let likeCount: Int
-    let replyCount: Int
-    let image: Image? = nil
-}
 struct CommunityView: View {
     @State
     var tag:Int? = nil
@@ -23,18 +14,18 @@ struct CommunityView: View {
     let boards:[String] = ["자유게시판","학식게시판","vs 게시판"]
     let topPosts:[CommunityPost] = []
     let contents: [CommunityPost] = [
-        CommunityPost(title: "name", content: "how", userLikes: true, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "hello", content: "what", userLikes: false, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "world", content: "why", userLikes: false, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "name", content: "how", userLikes: true, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "hello", content: "what", userLikes: false, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "world", content: "why", userLikes: false, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23),
-        CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23)
+        CommunityPost(title: "제목", content: "본문 본문 본문 본문 본문", userName: "익명" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello", content: "what", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "world", content: "why", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "name", content: "how", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello", content: "what", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "world", content: "why", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23),
+        CommunityPost(title: "hello bye", content: "who", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23)
     ]
   
 
@@ -45,9 +36,9 @@ struct CommunityView: View {
                     BoardSelect(boardNames: boards)
                     divider
                     TopPosts(content: [
-                        CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
-                        CommunityPost(title: "post2", content: "content2", userLikes: true, likeCount: 2, replyCount: 3),
-                        CommunityPost(title: "post3", content: "content3", userLikes: true, likeCount: 2, replyCount: 3)
+                        CommunityPost(title: "post1", content: "content1", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 2, replyCount: 3),
+                        CommunityPost(title: "post1", content: "content1", userName: "abc", boardName: "자유게시판", isLiked: true, likeCount: 2, replyCount: 3),
+                        CommunityPost(title: "post1", content: "content1", userName: "abc", boardName: "자유게시판", isLiked: true, likeCount: 2, replyCount: 3)
                     ])
                     
                     ScrollView{
@@ -82,8 +73,12 @@ struct CommunityView: View {
     
     var postList: some View {
         LazyVStack(spacing: 0) {
-            ForEach(contents) { content in
-                CommunityPostPreView(content: content)
+            ForEach(contents) { post in
+                NavigationLink(
+                    destination: CommunityPostView(viewModel: CommunityPostViewModel(post: post)),
+                    label: {
+                        CommunityPostPreView(content: post)
+                    })
                 divider
             }
         }
@@ -107,6 +102,7 @@ struct CommunityPostPreView: View {
             VStack(alignment: .leading) {
                 Text(content.title)
                     .font(.custom("Inter-Bold", size: 15))
+                    .foregroundColor(.black)
                 Spacer()
                     .frame(width: 10)
                 Text(content.content)
@@ -116,7 +112,7 @@ struct CommunityPostPreView: View {
                     .frame(width: 10)
                 HStack {
                     HStack(alignment: .center) {
-                        Image(content.userLikes ? "PostLike-liked" : "PostLike-default")
+                        Image(content.isLiked ? "PostLike-liked" : "PostLike-default")
                             .frame(width: 11.5, height: 10)
                             .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
                         Spacer()

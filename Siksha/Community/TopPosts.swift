@@ -29,9 +29,9 @@ struct TopPosts:View{
 struct TopPosts_Preview:PreviewProvider{
     static var previews: some View{
         TopPosts(content: [
-           CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
-           CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
-           CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3)
+           CommunityPost(title: "post1", content: "content1", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 2, replyCount: 3),
+           CommunityPost(title: "post1", content: "content1", userName: "abc", boardName: "자유게시판", isLiked: true, likeCount: 2, replyCount: 3),
+           CommunityPost(title: "post1", content: "content1", userName: "abc", boardName: "자유게시판", isLiked: true, likeCount: 2, replyCount: 3)
         ])
     }
 }

@@ -9,15 +9,8 @@ import SwiftUI
 
 struct CommunityPostView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-
-    @State private var anonIsToggled = false
-    @State var title: String = ""
-    @State var content: String = ""
-    @State var boardName: String = "자유게시판"
     
-    @State private var isShowingPhotoLibrary = false
-    @State private var addedImages = [UIImage]()
-
+    @StateObject var viewModel: CommunityPostViewModel
     
     var backButton: some View {
         Button(action: {
@@ -29,147 +22,109 @@ struct CommunityPostView: View {
         }
     }
     
-    var anonButton: some View {
-        Button(action: {
-                    anonIsToggled.toggle()
-                    print(anonIsToggled)
-                }) {
-                    if anonIsToggled {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 15.0)
-                                .fill(Color("MainThemeColor"))
-                                .frame(width: 34, height: 25)
-                            Text("익명")
-                                .font(.custom("NanumSquareOTFB", size: 12))
-                                .foregroundColor(Color.white)
-                        }
-                    } else {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 15.0)
-                                .stroke(Color("MainThemeColor"))
-                                .frame(width: 34, height: 25)
-                            Text("익명")
-                                .font(.custom("NanumSquareOTFB", size: 12))
-                                .foregroundColor(Color("MainThemeColor"))
-                        }
-                    }
-                }
-    }
-    
-    var customDivider: some View {
-        HStack {
-            Color.gray
-                .opacity(0.2) //색상 나중에 일괄 수정
-                .frame(height: 2)
-                .frame(maxWidth: .infinity)
-        }
-    }
-    
     var imageSection: some View {
-        VStack(spacing: 0) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    Button(action: {
-                        self.isShowingPhotoLibrary = true
-                    }) {
-                        ZStack {
-                            Rectangle()
-                                .foregroundColor(Color.gray.opacity(0.3))
-                                .frame(width: 118, height: 118)
-
-                            Image(systemName: "plus")
-                                .resizable()
-                                .foregroundColor(Color.white)
-                                .frame(width: 40, height: 40)
-                        }
-                    }
-                    .sheet(isPresented: $isShowingPhotoLibrary) {
-                        ImagePickerCoordinatorView(selectedImages: $addedImages)
-                    }
-                    
-                    ForEach(addedImages, id: \.self) { image in
-                        ZStack(alignment: .topTrailing) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .renderingMode(.original)
-                                .scaledToFill()
-                                .frame(width: 119, height: 119)
-                                .clipped()
-                                .padding([.top, .trailing], 5)
-                            
-                            Button(action: {
-                                if self.addedImages.contains(image) {
-                                    self.addedImages.removeAll(where: { $0 == image })
-                                }
-                            }) {
-                                ZStack {
-                                    Circle()
-                                        .foregroundColor(Color("MainThemeColor"))
-                                        .frame(width: 24, height: 24)
-                                    
-                                    Image(systemName: "xmark")
-                                        .resizable()
-                                        .foregroundColor(Color.white)
-                                        .frame(width: 10, height: 10)
-                                }
-                                .padding(EdgeInsets(top: 0, leading: 8, bottom: 8, trailing: 0))
-                            }
-                        }
+        if #available(iOS 15.0, *) {
+            return ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
+                    ForEach(viewModel.post.images, id: \.self) {
+                        imageURLString in
+                        AsyncImage(url: URL(string: imageURLString))
+                            .frame(width: 300, height: 300)
                     }
                 }
             }
-            .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+        } else {
+            return ScrollView(.horizontal, showsIndicators: false) {
+                HStack {
+                    ForEach(viewModel.post.images, id: \.self) {
+                        imageURLString in
+                        ThumbnailImage(imageURLString)
+                    }
+                }
+            }
         }
     }
     
     var body: some View {
-        NavigationView {
+        ScrollView(.vertical, showsIndicators: false) {
             VStack {
-                HStack {
-                    anonButton
-                    Spacer()
-                }
-                .padding(EdgeInsets(top: 0, leading: 7, bottom: 7, trailing: 0))
-                
-                TextField("제목", text: $title)
-                    .font(.custom("NanumSquareOTFB", size: 14))
-                    .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
-                
-                customDivider
-                
-                ZStack {
-                    let placeholder: String = "내용을 입력하세요."
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack {
+                        Text(viewModel.post.userName)
+                            .font(Font.custom("Inter-Regular",size:10))
+                            .foregroundColor(.init("ReviewMediumColor"))
+                        
+                        Spacer()
+                        
+                        Text(viewModel.postCreatedAtString)
+                            .font(Font.custom("Inter-Regular", size: 10))
+                            .frame(alignment: .trailing)
+                            .foregroundColor(.init("ReviewLowColor"))
+                    }
                     
-                    TextEditor(text: $content)
-                        .font(.custom("NanumSquareOTFR", size: 12))
-                        .frame(minHeight: 30)
-                        .fixedSize(horizontal: false, vertical: true)
+                    Text(viewModel.post.title)
+                        .font(.custom("Inter-Black", size: 14))
                     
-                    if content.isEmpty {
-                        Text(placeholder)
-                            .font(.custom("NanumSquareOTFR", size: 12))
-                            .foregroundColor(Color.gray.opacity(0.3))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 4)
+                    Text(viewModel.post.content)
+                        .font(.custom("Inter-Regular", size: 12))
+                    
+                    imageSection
+                    
+                    HStack {
+                        HStack(alignment: .center) {
+                            Image(viewModel.post.isLiked ? "PostLike-liked" : "PostLike-default")
+                                .frame(width: 11.5, height: 10)
+                                .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
+                            Spacer()
+                                .frame(width: 4)
+                            Text(String(viewModel.post.likeCount))
+                                .font(.custom("Inter-Regular", size: 9))
+                                .foregroundColor(Color("MainThemeColor"))
+                        }
+                        
+                        HStack(alignment: .center) {
+                            Image("reply")
+                                .frame(width: 11.5, height: 11)
+                            Spacer()
+                                .frame(width: 4)
+                            Text(String(viewModel.post.replyCount))
+                                .font(.custom("Inter-Regular", size: 9))
+                                .foregroundColor(Color.init("ReviewMediumColor"))
+                                .frame(height: 11, alignment: .center)
+                        }
+                        
+                        Spacer()
+                        
+                        Menu{
+                            Button("취소", action: {})
+                            Button("URL 복사하기", action: {})
+                            Button("신고하기", action: {})
+                        } label:{
+                            Image("etc")
+                                .frame(width:13,height:13)
+                        }
+                        
                     }
                 }
-                .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+                .padding(EdgeInsets(top: 20, leading: 30, bottom: 10, trailing: 30))
                 
-                customDivider
+                Divider()
                 
-                imageSection
+                CommentList(comments: viewModel.post.comments)
                 
                 Spacer()
             }
-            .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-            .customNavigationBar(title: boardName)
+        } .customNavigationBar(title: viewModel.post.boardName)
             .navigationBarItems(leading: backButton)
-        }
+            .onAppear {
+                viewModel.loadImages()
+                viewModel.post.loadComments()
+            }
     }
 }
 
-struct CommunityPostPublishView_Previews: PreviewProvider {
+struct CommunityPostView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityPostView()
+        CommunityPostView(viewModel: CommunityPostViewModel(post: CommunityPost(title: "name", content: "how", userName: "abc" , boardName: "자유게시판", isLiked: true, likeCount: 12, replyCount: 23)))
     }
 }

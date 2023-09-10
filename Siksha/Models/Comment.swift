@@ -7,9 +7,12 @@
 
 import Foundation
 
-class Comment: Object {
-    var id: Int
-    var userId: Int
-    var createdAt: Date
+struct Comment: Identifiable {
+    var id = UUID()
+    
+    var userName: String
     var content: String
+    var createdAt: String
+    var likeCount: Int
+    var isLiked: Bool
 }
