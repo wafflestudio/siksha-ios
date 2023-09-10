@@ -18,92 +18,50 @@ struct LoginView: View {
     var body: some View {
         GeometryReader { geometry in
             ZStack {
-                Image("LaunchBackground")
-                    .resizable()
-                    .frame(width: geometry.size.width, height: geometry.size.height + geometry.safeAreaInsets.bottom + geometry.safeAreaInsets.top)
-                    .padding(.top, -geometry.safeAreaInsets.top)
-                
-                
                 VStack {
                     Spacer()
                     
-                    Image("LaunchLogo")
+                    Image("sikshaSplash")
                         .resizable()
-                        .frame(width: 115, height: 92)
+                        .frame(width: 85.5, height: 49.5)
                     
                     Spacer()
                     
-                    VStack(spacing: 5) {
+                    VStack(spacing: 10) {
                         Button(action : {
                             handleKakaoLogin()
                         }){
-                            HStack {
-                                Image("KakaoLogo")
-                                    .resizable()
-                                    .frame(width: 18, height: 18)
-                                    .padding(.leading, 15)
-                                Text("카카오톡으로 로그인")
-                                    .font(.system(size: 15, weight: .semibold))
-                                    .padding(.leading, 15)
-                                
-                                Spacer()
-                            }
-                            .frame(width: 220, height: 40)
-                            .foregroundColor(.black)
-                            .background(Color.init(red: 254/255, green: 229/255, blue: 0))
-                            .cornerRadius(5.5)
+                            Image("googleButton")
+                                .frame(width: 300, height: 45)
+                                .foregroundColor(.black)
+                                .cornerRadius(5.5)
                         }
                         
                         Button(action : {
                             handleGoogleLogin()
                         }){
-                            HStack {
-                                Image("GoogleLogo")
-                                    .resizable()
-                                    .renderingMode(.original)
-                                    .frame(width: 18, height: 18)
-                                    .padding(.leading, 15)
-                                Text("Google로 로그인")
-                                    .font(.system(size: 15, weight: .semibold))
-                                    .padding(.leading, 15)
-                                
-                                Spacer()
-                            }
-                            .frame(width: 220, height: 40)
-                            .foregroundColor(.black)
-                            .background(Color.white)
-                            .cornerRadius(5.5)
+                            Image("kakaoButton")
+                                .frame(width: 300, height: 45)
+                                .foregroundColor(.black)
+                                .cornerRadius(5.5)
                         }
                         
                         Button(action: {
                             handleAppleLogin()
                         }, label: {
-                            HStack {
-                                Image("AppleLogo")
-                                    .resizable()
-                                    .frame(width: 16.5, height: 17)
-                                    .padding(.leading, 16)
-                                Text("Apple로 로그인")
-                                    .font(.system(size: 15, weight: .semibold))
-                                    .padding(.leading, 16)
-                                
-                                Spacer()
-                            }
-                            .frame(width: 220, height: 40)
-                            .foregroundColor(.black)
-                            .background(Color.white)
-                            .cornerRadius(5.5)
+                            Image("appleButton")
+                                .frame(width: 300, height: 45)
+                                .foregroundColor(.black)
+                                .cornerRadius(5.5)
                         })
                     }
                     
                     Spacer()
-                    
-                    Image("WaffleStudio")
-                        .resizable()
-                        .frame(width: 180, height: 10)
-                        .padding(.bottom, 55 + geometry.safeAreaInsets.bottom)
                 }
             }
+            .frame(width: geometry.size.width, height: geometry.size.height + geometry.safeAreaInsets.bottom + geometry.safeAreaInsets.top)
+            .padding(.top, -geometry.safeAreaInsets.top)
+            .background(Color("main"))
             .alert(isPresented: $viewModel.signInFailed, content: {
                 Alert(title: Text("로그인"), message: Text("로그인을 실패했습니다. 다시 시도해주세요."), dismissButton: .default(Text("확인")))
             })

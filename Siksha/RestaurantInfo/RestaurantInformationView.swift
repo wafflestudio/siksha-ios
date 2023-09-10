@@ -33,7 +33,7 @@ struct RestaurantInformationView: View {
             }
             .padding(EdgeInsets(top: 14, leading: 16, bottom: 10, trailing: 16))
 
-            Color.init("MainThemeColor")
+            Color.init("main")
                 .frame(height: 1)
                 .frame(maxWidth: .infinity)
                 .padding([.leading, .trailing], 16)
@@ -70,7 +70,7 @@ struct RestaurantInformationView: View {
                 }
                 .padding(EdgeInsets(top: 24, leading: 16, bottom: 8, trailing: 16))
                 
-                Color.init("MainThemeColor")
+                Color.init("main")
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
                     .padding([.leading, .trailing], 16)

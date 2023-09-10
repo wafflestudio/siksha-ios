@@ -125,7 +125,7 @@ struct SettingsView: View {
                             }) {
                                 Text("1:1 문의하기")
                                     .font(.custom("NanumSquareOTFR", size: 15))
-                                    .foregroundColor(Color("MainThemeColor"))
+                                    .foregroundColor(Color("main"))
                             }
                             .padding(.bottom, 8)
                             

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct VOCView: View {
     private let fontColor = Color("DefaultFontColor")
-    private let orangeColor = Color.init("MainThemeColor")
+    private let orangeColor = Color.init("main")
     private let lightGrayColor = Color.init("LightGrayColor")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>

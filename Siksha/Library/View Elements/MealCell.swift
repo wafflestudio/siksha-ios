@@ -10,7 +10,7 @@ import SwiftUI
 struct MealCell: View {
     @ObservedObject var viewModel: MealInfoViewModel
     private var vegetarian: Bool = false
-    private let orangeColor = Color.init("MainThemeColor")
+    private let orangeColor = Color.init("main")
     private let grayColor = Color.init("ReviewHighColor")
     private let lightGrayColor = Color.init("ReviewMediumColor")
     private let lighterGrayColor = Color.init("ReviewLowColor")

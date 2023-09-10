@@ -22,14 +22,13 @@ struct NavigationBarModifier: ViewModifier {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     if title == "icon" {
-                        Image("SikshaTitle")
+                        Image("sikshaSplash")
                             .resizable()
-                            .frame(width: 52, height: 42)
-                            .padding(.bottom, -4)
+                            .frame(width: 39, height: 23)
                     } else {
                         Text(title)
                             .foregroundColor(.white)
-                            .font(.custom("NanumSquareOTFEB", size: 18))
+                            .font(.custom("NanumSquareOTFEB", size: 20))
                     }
                 }
             }
