@@ -133,7 +133,7 @@ struct FavoriteView: View {
     @ObservedObject var viewModel = FavoriteViewModel()
     
     private let lightGrayColor = Color.init("LightGrayColor")
-    private let orangeColor = Color.init("MainThemeColor")
+    private let orangeColor = Color.init("main")
     private let fontColor = Color("DefaultFontColor")
     
     var typeInfos: [TypeInfo] = [

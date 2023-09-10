@@ -17,7 +17,7 @@ struct ImagePickerCoordinatorView {
         self.presentationMode.wrappedValue.dismiss()
         
         // Navigation Bar 배경색 세팅
-        UINavigationBar.changeBackgroundColor(color: UIColor(named: "MainThemeColor") ?? .clear)
+        UINavigationBar.changeBackgroundColor(color: UIColor(named: "main") ?? .clear)
     }
 
 }
