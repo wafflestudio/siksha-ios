@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct CommunityPostPublishView: View {
+    
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
     @State private var anonymousIsToggled = false
     @State var title: String = ""
     @State var content: String = ""
@@ -18,7 +21,7 @@ struct CommunityPostPublishView: View {
     
     var backButton: some View {
         Button(action: {
-            print("X")
+            self.presentationMode.wrappedValue.dismiss()
         }) {
             Image(systemName: "xmark")
                 .resizable()
@@ -36,7 +39,7 @@ struct CommunityPostPublishView: View {
                     .fill(Color.white)
                     .frame(width: 45, height: 25)
                 Text("올리기")
-                    .font(.custom("NanumSquareOTFB", size: 12))
+                    .font(.custom("Inter-SemiBold", size: 12))
                     .foregroundColor(Color.init("MainThemeColor"))
             }
         }
@@ -53,7 +56,7 @@ struct CommunityPostPublishView: View {
                                 .fill(Color("MainThemeColor"))
                                 .frame(width: 34, height: 25)
                             Text("익명")
-                                .font(.custom("NanumSquareOTFB", size: 12))
+                                .font(.custom("Inter-SemiBold", size: 12))
                                 .foregroundColor(Color.white)
                         }
                     } else {
@@ -62,7 +65,7 @@ struct CommunityPostPublishView: View {
                                 .stroke(Color("MainThemeColor"))
                                 .frame(width: 34, height: 25)
                             Text("익명")
-                                .font(.custom("NanumSquareOTFB", size: 12))
+                                .font(.custom("Inter-SemiBold", size: 12))
                                 .foregroundColor(Color("MainThemeColor"))
                         }
                     }
@@ -71,9 +74,8 @@ struct CommunityPostPublishView: View {
     
     var customDivider: some View {
         HStack {
-            Color.gray
-                .opacity(0.2) //색상 나중에 일괄 수정
-                .frame(height: 2)
+            Color("ReviewLowColor") 
+                .frame(height: 1)
                 .frame(maxWidth: .infinity)
         }
     }
@@ -87,7 +89,7 @@ struct CommunityPostPublishView: View {
                     }) {
                         ZStack {
                             Rectangle()
-                                .foregroundColor(Color.gray.opacity(0.3))
+                                .foregroundColor(Color("DefaultImageColor"))
                                 .frame(width: 118, height: 118)
 
                             Image(systemName: "plus")
@@ -145,7 +147,7 @@ struct CommunityPostPublishView: View {
                 .padding(EdgeInsets(top: 0, leading: 7, bottom: 7, trailing: 0))
                 
                 TextField("제목", text: $title)
-                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .font(.custom("Inter-Bold", size: 14))
                     .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
                 
                 customDivider
@@ -154,14 +156,14 @@ struct CommunityPostPublishView: View {
                     let placeholder: String = "내용을 입력하세요."
                     
                     TextEditor(text: $content)
-                        .font(.custom("NanumSquareOTFR", size: 12))
+                        .font(.custom("Inter-ExtraLight", size: 12))
                         .frame(minHeight: 30)
                         .fixedSize(horizontal: false, vertical: true)
                     
                     if content.isEmpty {
                         Text(placeholder)
-                            .font(.custom("NanumSquareOTFR", size: 12))
-                            .foregroundColor(Color.gray.opacity(0.3))
+                            .font(.custom("Inter-ExtraLight", size: 12))
+                            .foregroundColor(Color.init("ReviewLowColor"))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(.leading, 4)
                     }
@@ -177,7 +179,8 @@ struct CommunityPostPublishView: View {
             .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
             .customNavigationBar(title: "글쓰기")
             .navigationBarItems(leading: backButton, trailing: postButton)
-        }
+            
+        }.navigationBarBackButtonHidden(true)
     }
 }
 
