@@ -80,7 +80,7 @@
 		4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */; };
 		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
 		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
-		6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */; };
+		B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */; };
 		BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */; };
 /* End PBXBuildFile section */
 
@@ -102,7 +102,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1CD81680B4947C1182765D1D /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
+		002C8A13CB8259A4B22C9CA9 /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
 		1E3A56E725C6FCE600DBB3F4 /* Siksha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Siksha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -186,7 +186,8 @@
 		4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderViewModel.swift; sourceTree = "<group>"; };
-		808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
 		BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -195,7 +196,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FCD8B4A1E679ECE9D51376E /* Pods_Siksha.framework in Frameworks */,
+				B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -224,7 +225,7 @@
 				1E3A570B25C6FCE900DBB3F4 /* SikshaUITests */,
 				1E3A56E825C6FCE600DBB3F4 /* Products */,
 				BB378484FB4B02EA3B0876A2 /* Pods */,
-				5127BCAAB12CF9DDFA269AEB /* Frameworks */,
+				E08A5B1C1215B1C23C52ABF5 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -460,8 +461,8 @@
 		BB378484FB4B02EA3B0876A2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */,
-				1CD81680B4947C1182765D1D /* Pods-Siksha.release.xcconfig */,
+				002C8A13CB8259A4B22C9CA9 /* Pods-Siksha.debug.xcconfig */,
+				9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -474,6 +475,14 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
+		E08A5B1C1215B1C23C52ABF5 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -481,12 +490,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E3A571125C6FCE900DBB3F4 /* Build configuration list for PBXNativeTarget "Siksha" */;
 			buildPhases = (
-				1844B939664D612305CB31B0 /* [CP] Check Pods Manifest.lock */,
+				A13ABBF89EF49BB4D423B2A8 /* [CP] Check Pods Manifest.lock */,
 				1E3A56E325C6FCE600DBB3F4 /* Sources */,
 				1E3A56E425C6FCE600DBB3F4 /* Frameworks */,
 				1E3A56E525C6FCE600DBB3F4 /* Resources */,
-				111E4C7C7AB4A230ACCA1811 /* [CP] Embed Pods Frameworks */,
-				721D0D1C7E771C920A3CC20A /* [CP] Copy Pods Resources */,
+				C4DB641CCDA235DB192889F5 /* [CP] Embed Pods Frameworks */,
+				50E0F36D5D78D717F10AC7D0 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -615,24 +624,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		111E4C7C7AB4A230ACCA1811 /* [CP] Embed Pods Frameworks */ = {
+		50E0F36D5D78D717F10AC7D0 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		1844B939664D612305CB31B0 /* [CP] Check Pods Manifest.lock */ = {
+		A13ABBF89EF49BB4D423B2A8 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -654,21 +663,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		721D0D1C7E771C920A3CC20A /* [CP] Copy Pods Resources */ = {
+		C4DB641CCDA235DB192889F5 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -912,7 +921,7 @@
 		};
 		1E3A571225C6FCE900DBB3F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */;
+			baseConfigurationReference = 002C8A13CB8259A4B22C9CA9 /* Pods-Siksha.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -939,7 +948,7 @@
 		};
 		1E3A571325C6FCE900DBB3F4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 1CD81680B4947C1182765D1D /* Pods-Siksha.release.xcconfig */;
+			baseConfigurationReference = 9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

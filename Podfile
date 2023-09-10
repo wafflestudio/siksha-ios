@@ -5,16 +5,16 @@ target 'Siksha' do
   use_frameworks!
 
   # Pods for Siksha
-  pod 'RealmSwift'
-  pod 'SwiftyJSON'
-  pod 'NMapsMap'
-  pod 'KakaoSDKCommon'
-  pod 'KakaoSDKAuth'
-  pod 'KakaoSDKUser'
-  pod 'GoogleSignIn'
-  pod 'BSImagePicker'
-  pod 'JTAppleCalendar'
-  pod 'SwiftUIPager'
+  pod 'RealmSwift', '10.6.0'
+  pod 'SwiftyJSON', '5.0.0'
+  pod 'NMapsMap', '3.11.0'
+  pod 'KakaoSDKCommon', '2.3.2'
+  pod 'KakaoSDKAuth', '2.3.2'
+  pod 'KakaoSDKUser', '2.3.2'
+  pod 'GoogleSignIn', '5.0.2'
+  pod 'BSImagePicker', '3.3.1'
+  pod 'JTAppleCalendar', '8.0.3'
+  pod 'SwiftUIPager', '2.3.0'
 
 end
 
