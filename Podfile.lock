@@ -36,16 +36,16 @@ PODS:
   - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
-  - BSImagePicker
-  - GoogleSignIn
-  - JTAppleCalendar
-  - KakaoSDKAuth
-  - KakaoSDKCommon
-  - KakaoSDKUser
-  - NMapsMap
-  - RealmSwift
-  - SwiftUIPager
-  - SwiftyJSON
+  - BSImagePicker (= 3.3.1)
+  - GoogleSignIn (= 5.0.2)
+  - JTAppleCalendar (= 8.0.3)
+  - KakaoSDKAuth (= 2.3.2)
+  - KakaoSDKCommon (= 2.3.2)
+  - KakaoSDKUser (= 2.3.2)
+  - NMapsMap (= 3.11.0)
+  - RealmSwift (= 10.6.0)
+  - SwiftUIPager (= 2.3.0)
+  - SwiftyJSON (= 5.0.0)
 
 SPEC REPOS:
   trunk:
@@ -82,6 +82,6 @@ SPEC CHECKSUMS:
   SwiftUIPager: fa9b45ff5133f6aa2b4d82601d9e2662638f5459
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: c390849dd498b6893f4c0c1bb4ab79dc45efa789
+PODFILE CHECKSUM: b58f744531819f828f81918d0239600a84f4a242
 
 COCOAPODS: 1.12.1
