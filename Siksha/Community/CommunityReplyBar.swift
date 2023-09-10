@@ -8,11 +8,37 @@
 import SwiftUI
 
 struct CommunityReplyBar: View {
+    @State var commentText: String = ""
+    let dividerColor = Color(red: 183/255, green: 183/255, blue: 183/255, opacity: 1)
+    let replyColor = Color(red: 248/255, green: 248/255, blue: 248/255, opacity: 1)
+    
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack {
+            Divider()
+                .foregroundColor(dividerColor)
+            RoundedRectangle(cornerRadius: 12)
+                        .fill(replyColor)
+                        .frame(maxWidth: .infinity, maxHeight: 37)
+                        .overlay(
+                            HStack {
+                                Image("Anonymous")
+                                    .padding(EdgeInsets(top: 5, leading: 12, bottom: 5, trailing: 6))
+                                TextField("내용을 입력하세요", text: $commentText)
+                                Button(action: {
+                                    
+                                }){
+                                    Image("Upload")
+                                }
+                                .padding(EdgeInsets(top: 5, leading: 6, bottom: 5, trailing: 12))
+                            }
+                        )
+                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+        }
     }
 }
 
-#Preview {
-    CommunityReplyBar()
+struct CommunityReplyBar_Previews: PreviewProvider {
+    static var previews: some View {
+        CommunityReplyBar()
+    }
 }
