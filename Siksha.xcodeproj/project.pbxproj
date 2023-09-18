@@ -88,6 +88,12 @@
 		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
 		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
 		B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */; };
+		BF97DF502AAEFE270083FC6F /* CommunityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF4F2AAEFE270083FC6F /* CommunityRepository.swift */; };
+		BF97DF532AAEFE380083FC6F /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF522AAEFE380083FC6F /* Domain.swift */; };
+		BF97DF552AAF003D0083FC6F /* RepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF542AAF003D0083FC6F /* RepositoryProtocol.swift */; };
+		BF97DF572AAF00780083FC6F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF562AAF00780083FC6F /* Repository.swift */; };
+		BF97DF592AAF00B30083FC6F /* DomainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF582AAF00B30083FC6F /* DomainManager.swift */; };
+		BF97DF5B2AAF12200083FC6F /* AlamofireNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF5A2AAF12200083FC6F /* AlamofireNetworking.swift */; };
 		BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */; };
 /* End PBXBuildFile section */
 
@@ -211,6 +217,12 @@
 		4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderViewModel.swift; sourceTree = "<group>"; };
 		8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
+		BF97DF4F2AAEFE270083FC6F /* CommunityRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityRepository.swift; sourceTree = "<group>"; };
+		BF97DF522AAEFE380083FC6F /* Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
+		BF97DF542AAF003D0083FC6F /* RepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryProtocol.swift; sourceTree = "<group>"; };
+		BF97DF562AAF00780083FC6F /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
+		BF97DF582AAF00B30083FC6F /* DomainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainManager.swift; sourceTree = "<group>"; };
+		BF97DF5A2AAF12200083FC6F /* AlamofireNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireNetworking.swift; sourceTree = "<group>"; };
 		BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -266,6 +278,7 @@
 			isa = PBXGroup;
 			children = (
 				4EB660B82A74DBC100E52314 /* Community */,
+				BF97DF512AAEFE2E0083FC6F /* Domain */,
 				1E96F95825E255B00074940C /* Siksha.entitlements */,
 				1ECB24FF25F16D1C00875E18 /* Repository */,
 				1E3A574125C6FEC600DBB3F4 /* Models */,
@@ -395,6 +408,7 @@
 				1EB5F43E264467B80012201A /* SikshaAPI.swift */,
 				1EB5F4402644710A0012201A /* Networking.swift */,
 				1E72267A25F916A6008C272E /* Responses.swift */,
+				BF97DF5A2AAF12200083FC6F /* AlamofireNetworking.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -403,6 +417,9 @@
 			isa = PBXGroup;
 			children = (
 				1E96F92E25DEC14F0074940C /* MenuRepository.swift */,
+				BF97DF4F2AAEFE270083FC6F /* CommunityRepository.swift */,
+				BF97DF542AAF003D0083FC6F /* RepositoryProtocol.swift */,
+				BF97DF562AAF00780083FC6F /* Repository.swift */,
 			);
 			path = Repository;
 			sourceTree = "<group>";
@@ -504,6 +521,15 @@
 				9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		BF97DF512AAEFE2E0083FC6F /* Domain */ = {
+			isa = PBXGroup;
+			children = (
+				BF97DF522AAEFE380083FC6F /* Domain.swift */,
+				BF97DF582AAF00B30083FC6F /* DomainManager.swift */,
+			);
+			path = Domain;
 			sourceTree = "<group>";
 		};
 		BFA4759D2950B53500B41AA7 /* Extensions */ = {
@@ -732,11 +758,14 @@
 				4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */,
 				234DB0D9264156150049FE6B /* CalendarView.swift in Sources */,
 				1ECB255225F2999100875E18 /* RatingStar.swift in Sources */,
+				BF97DF552AAF003D0083FC6F /* RepositoryProtocol.swift in Sources */,
 				1EB5F4412644710A0012201A /* Networking.swift in Sources */,
 				1ECB257D25F5412300875E18 /* TextView.swift in Sources */,
 				23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
+				BF97DF502AAEFE270083FC6F /* CommunityRepository.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
+				BF97DF532AAEFE380083FC6F /* Domain.swift in Sources */,
 				231C9D1425F8568C0072C07A /* MapView.swift in Sources */,
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
 				2360CD9A2663778B007E02DB /* ReviewListView.swift in Sources */,
@@ -758,6 +787,7 @@
 				1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */,
 				1EB5F43F264467B80012201A /* SikshaAPI.swift in Sources */,
 				231C9CE525F835B40072C07A /* BackButton.swift in Sources */,
+				BF97DF572AAF00780083FC6F /* Repository.swift in Sources */,
 				BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
 				1E9A6EAA2674BDFD005CAEA1 /* NavigationBarModifier.swift in Sources */,
@@ -770,9 +800,11 @@
 				1E3A575325C6FF1400DBB3F4 /* Review.swift in Sources */,
 				1ED44A3725CC6094001D916B /* MealReviewView.swift in Sources */,
 				1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */,
+				BF97DF5B2AAF12200083FC6F /* AlamofireNetworking.swift in Sources */,
 				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
 				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
+				BF97DF592AAF00B30083FC6F /* DomainManager.swift in Sources */,
 				231DEB3B266BC5C900AA32C0 /* ReviewListViewModel.swift in Sources */,
 				231C9C7025F7FB720072C07A /* RestaurantOrderView.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
