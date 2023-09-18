@@ -497,14 +497,6 @@
 			path = Community;
 			sourceTree = "<group>";
 		};
-		5127BCAAB12CF9DDFA269AEB /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				808FCE4E67E0E2D98B171F33 /* Pods_Siksha.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		BB378484FB4B02EA3B0876A2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
