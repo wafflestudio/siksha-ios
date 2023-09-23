@@ -14,7 +14,6 @@ struct RestaurantCell: View {
     private let titleColor = Color("TitleFontColor")
     private let lightGrayColor = Color("LightGrayColor")
     private let orangeColor = Color.init("main")
-    private let restNameColor = Color.init(red: 225/255, green: 86/255, blue: 24/255, opacity: 1)
     
     var restaurant: Restaurant
     var meals: [Meal]
@@ -35,7 +34,7 @@ struct RestaurantCell: View {
             HStack(alignment: .center) {
                 Text(restaurant.nameKr)
                     .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(restNameColor)
+                    .foregroundColor(orangeColor)
                 
                 Button(action: {
                     self.showRestaurant = true

@@ -31,7 +31,7 @@ struct LoginView: View {
                         Button(action : {
                             handleKakaoLogin()
                         }){
-                            Image("googleButton")
+                            Image("kakaoButton")
                                 .frame(width: 300, height: 45)
                                 .foregroundColor(.black)
                                 .cornerRadius(5.5)
@@ -40,7 +40,7 @@ struct LoginView: View {
                         Button(action : {
                             handleGoogleLogin()
                         }){
-                            Image("kakaoButton")
+                            Image("googleButton")
                                 .frame(width: 300, height: 45)
                                 .foregroundColor(.black)
                                 .cornerRadius(5.5)
