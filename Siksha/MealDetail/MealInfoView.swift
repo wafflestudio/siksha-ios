@@ -25,10 +25,10 @@ private extension MealInfoView {
                         Text("총 ")
                             .font(.custom("NanumSquareOTFB", size: 12))
                             .foregroundColor(lightGrayColor)
-                        Text("\(viewModel.meal.reviewCnt)개")
+                        Text("\(viewModel.meal.reviewCnt)명")
                             .font(.custom("NanumSquareOTFB", size: 12))
                             .foregroundColor(orangeColor)
-                        Text("의 평가가 있어요!")
+                        Text("이 평가했어요!")
                             .font(.custom("NanumSquareOTFB", size: 12))
                             .foregroundColor(lightGrayColor)
                     }
@@ -48,16 +48,10 @@ private extension MealInfoView {
                         .environment(\.menuViewModel, menuViewModel)
                         .environment(\.favoriteViewModel, favViewModel),
                     label: {
-                        ZStack {
-                            Image("RateButton-new")
-                                .resizable()
-                                .renderingMode(.original)
-                                .frame(width: 200, height: 32)
-                            
-                            Text("나의 평가 남기기")
-                                .font(.custom("NanumSquareOTFB", size: 14))
-                                .foregroundColor(.white)
-                        }
+                        Image("RateButton-new")
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 200, height: 32)
                     })
             }
         }
@@ -167,25 +161,26 @@ struct MealInfoView: View {
                     
                     HStack(spacing: 0) {
                         Text("좋아요 ")
-                            .font(.custom("NanumSquareOTFB", size: 14))
+                            .font(.custom("NanumSquareOTF", size: 14))
                             .foregroundColor(.black)
                         Text("\(viewModel.meal.likeCnt)개")
-                            .font(.custom("NanumSquareOTFB", size: 14))
+                            .font(.custom("NanumSquareOTF", size: 14))
                             .foregroundColor(.black)
-                    }.padding(.top, 5)
+                    }.padding(EdgeInsets(top: 5, leading: 0, bottom: 15, trailing: 0))
                     
-                    Text(viewModel.meal.nameKr)
-                        .font(.custom("NanumSquareOTFEB", size: 20))
-                        .foregroundColor(.black)
-                        .lineLimit(1)
-                        .padding(EdgeInsets(top: 20, leading: 16, bottom: 0, trailing: 16))
+                    HStack {
+                        orangeColor
+                            .frame(height: 1)
+                            .frame(maxWidth: .infinity)
+                    }
+                    .padding([.leading, .trailing], 12)
                     
                     scoreSummary
                     
                     Color.init("DarkBackgroundColor")
                         .frame(height: 10)
                         .frame(maxWidth: .infinity)
-                        .padding(.top, 16)
+                        .padding(.top, 10)
                     
                     if viewModel.images.count > 0 {
                         NavigationLink(destination: ReviewListView(viewModel.meal, true)) {
@@ -236,7 +231,7 @@ struct MealInfoView: View {
                 }
             }
         }
-        .customNavigationBar(title: "리뷰")
+        .customNavigationBar(title: viewModel.meal.nameKr)
         .navigationBarItems(leading: backButton)
         .onAppear {
             self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
