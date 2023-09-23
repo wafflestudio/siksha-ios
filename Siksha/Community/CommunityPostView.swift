@@ -75,22 +75,6 @@ struct CommunityPostView: View {
                 }
     }
     
-    var postCommentButton: some View {
-        Button(action: {
-                    commentContent = ""
-                }) {
-                    ZStack {
-                        RoundedRectangle(cornerRadius: 15.0)
-                            .fill(Color("MainThemeColor"))
-                            .frame(width: 34, height: 25)
-                        Text("올리기")
-                            .font(.custom("Inter-SemiBold", size: 12))
-                            .foregroundColor(Color.white)
-                    }
-                }
-    }
-
-    
     var body: some View {
         ZStack(alignment:.bottomTrailing) {
             ScrollView(.vertical, showsIndicators: false) {
@@ -110,7 +94,7 @@ struct CommunityPostView: View {
                         }
                         
                         Text(viewModel.post.title)
-                            .font(.custom("Inter-Black", size: 14))
+                            .font(.custom("Inter-Bold", size: 14))
                         
                         Text(viewModel.post.content)
                             .font(.custom("Inter-Regular", size: 12))
@@ -130,7 +114,7 @@ struct CommunityPostView: View {
                             }
                             
                             HStack(alignment: .center) {
-                                Image("reply")
+                                Image("Reply")
                                     .frame(width: 11.5, height: 11)
                                 Spacer()
                                     .frame(width: 4)
@@ -167,33 +151,7 @@ struct CommunityPostView: View {
                   self.endTextEditing()
             }
             
-            HStack {
-                anonymousButton
-                
-                Spacer()
-                
-                ZStack {
-                    let placeholder: String = "내용을 입력하세요."
-                    
-                    TextEditor(text: $commentContent)
-                        .font(.custom("Inter-ExtraLight", size: 12))
-                        .frame(minHeight: 50)
-                        .fixedSize(horizontal: false, vertical: true)
-                    
-                    if commentContent.isEmpty {
-                        Text(placeholder)
-                            .font(.custom("Inter-ExtraLight", size: 12))
-                            .foregroundColor(Color.init("ReviewLowColor"))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.leading, 4)
-                    }
-                }
-                
-                Spacer()
-                
-                postCommentButton
-            }
-            .padding(.horizontal, 10)
+            CommunityReplyBar()
                 
         }.customNavigationBar(title: viewModel.post.boardName)
             .navigationBarItems(leading: backButton)

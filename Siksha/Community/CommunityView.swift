@@ -123,7 +123,7 @@ struct CommunityPostPreView: View {
                             .foregroundColor(likeColor)
                     }
                     HStack(alignment: .center) {
-                        Image("reply")
+                        Image("Reply")
                             .frame(width: 11.5, height: 11)
                         Spacer()
                             .frame(width: 4)

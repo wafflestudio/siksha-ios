@@ -13,26 +13,28 @@ struct CommunityReplyBar: View {
     let replyColor = Color(red: 248/255, green: 248/255, blue: 248/255, opacity: 1)
     
     var body: some View {
-        VStack {
-            Divider()
-                .foregroundColor(dividerColor)
+        ZStack{
+            Rectangle()
+                .fill(Color.white)
+                .frame(height: 40)
+            
             RoundedRectangle(cornerRadius: 12)
-                        .fill(replyColor)
-                        .frame(maxWidth: .infinity, maxHeight: 37)
-                        .overlay(
-                            HStack {
-                                Image("Anonymous")
-                                    .padding(EdgeInsets(top: 5, leading: 12, bottom: 5, trailing: 6))
-                                TextField("내용을 입력하세요", text: $commentText)
-                                Button(action: {
-                                    
-                                }){
-                                    Image("Upload")
-                                }
-                                .padding(EdgeInsets(top: 5, leading: 6, bottom: 5, trailing: 12))
-                            }
-                        )
-                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .fill(replyColor)
+                .frame(maxWidth: .infinity, maxHeight: 37)
+                .overlay(
+                    HStack {
+                        Image("Anonymous")
+                            .padding(EdgeInsets(top: 5, leading: 12, bottom: 5, trailing: 6))
+                        TextField("내용을 입력하세요", text: $commentText)
+                        Button(action: {
+                            
+                        }){
+                            Image("Upload")
+                        }
+                        .padding(EdgeInsets(top: 5, leading: 6, bottom: 5, trailing: 12))
+                    }
+                )
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 5, trailing: 16))
         }
     }
 }
