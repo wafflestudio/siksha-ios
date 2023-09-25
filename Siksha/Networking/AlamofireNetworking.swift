@@ -9,7 +9,7 @@ import Combine
 import Alamofire
 
 final class AlamofireNetworking: NetworkModuleProtocol {
-    func request<T: Decodable>(endpoint: SikshaAPI, params: [String : String]?) -> AnyPublisher<T, Error> {
+    func request<T: Decodable>(endpoint: SikshaAPI) -> AnyPublisher<T, Error> {
         let request = AF.request(endpoint)
         
         return request

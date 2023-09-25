@@ -19,6 +19,6 @@ final class Domain: DomainProtocol {
     }
     
     var communityRepository: CommunityRepositoryProtocol {
-        return self.communityRepository
+        return self.repository
     }
 }

@@ -88,12 +88,16 @@
 		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
 		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
 		B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */; };
+		BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */; };
+		BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */; };
+		BF60ADE62AC1EABF0015C468 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE52AC1EABF0015C468 /* Errors.swift */; };
 		BF97DF502AAEFE270083FC6F /* CommunityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF4F2AAEFE270083FC6F /* CommunityRepository.swift */; };
 		BF97DF532AAEFE380083FC6F /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF522AAEFE380083FC6F /* Domain.swift */; };
 		BF97DF552AAF003D0083FC6F /* RepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF542AAF003D0083FC6F /* RepositoryProtocol.swift */; };
 		BF97DF572AAF00780083FC6F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF562AAF00780083FC6F /* Repository.swift */; };
 		BF97DF592AAF00B30083FC6F /* DomainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF582AAF00B30083FC6F /* DomainManager.swift */; };
 		BF97DF5B2AAF12200083FC6F /* AlamofireNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF5A2AAF12200083FC6F /* AlamofireNetworking.swift */; };
+		BF97DF5D2AB836910083FC6F /* Community.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF5C2AB836910083FC6F /* Community.swift */; };
 		BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */; };
 /* End PBXBuildFile section */
 
@@ -217,12 +221,16 @@
 		4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderViewModel.swift; sourceTree = "<group>"; };
 		8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
+		BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };
+		BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainUtils.swift; sourceTree = "<group>"; };
+		BF60ADE52AC1EABF0015C468 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
 		BF97DF4F2AAEFE270083FC6F /* CommunityRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityRepository.swift; sourceTree = "<group>"; };
 		BF97DF522AAEFE380083FC6F /* Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
 		BF97DF542AAF003D0083FC6F /* RepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryProtocol.swift; sourceTree = "<group>"; };
 		BF97DF562AAF00780083FC6F /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
 		BF97DF582AAF00B30083FC6F /* DomainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainManager.swift; sourceTree = "<group>"; };
 		BF97DF5A2AAF12200083FC6F /* AlamofireNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireNetworking.swift; sourceTree = "<group>"; };
+		BF97DF5C2AB836910083FC6F /* Community.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Community.swift; sourceTree = "<group>"; };
 		BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+ext.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -378,6 +386,7 @@
 				1E3A57EF25C73EC700DBB3F4 /* Meal.swift */,
 				1E3A574D25C6FF0500DBB3F4 /* Restaurant.swift */,
 				1E3A575225C6FF1400DBB3F4 /* Review.swift */,
+				BF97DF5C2AB836910083FC6F /* Community.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -528,6 +537,8 @@
 			children = (
 				BF97DF522AAEFE380083FC6F /* Domain.swift */,
 				BF97DF582AAF00B30083FC6F /* DomainManager.swift */,
+				BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */,
+				BF60ADE52AC1EABF0015C468 /* Errors.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -768,6 +779,7 @@
 				BF97DF532AAEFE380083FC6F /* Domain.swift in Sources */,
 				231C9D1425F8568C0072C07A /* MapView.swift in Sources */,
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
+				BF60ADE62AC1EABF0015C468 /* Errors.swift in Sources */,
 				2360CD9A2663778B007E02DB /* ReviewListView.swift in Sources */,
 				1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */,
 				1EABA80B25EBE28000B79CB8 /* Utils.swift in Sources */,
@@ -781,6 +793,7 @@
 				4E3D4EEF2A750078005C7AB2 /* TopPosts.swift in Sources */,
 				231C9CF825F83A850072C07A /* RestaurantInformationView.swift in Sources */,
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
+				BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
 				1ED44A4625CC6579001D916B /* MealInfoViewModel.swift in Sources */,
 				1ECB254D25F2975A00875E18 /* MealInfoView.swift in Sources */,
@@ -807,6 +820,7 @@
 				BF97DF592AAF00B30083FC6F /* DomainManager.swift in Sources */,
 				231DEB3B266BC5C900AA32C0 /* ReviewListViewModel.swift in Sources */,
 				231C9C7025F7FB720072C07A /* RestaurantOrderView.swift in Sources */,
+				BF97DF5D2AB836910083FC6F /* Community.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
 				4E3D4EEB2A74F743005C7AB2 /* TopPostCell.swift in Sources */,
 				1EB5F43C263E8EDE0012201A /* OperatingHoursTable.swift in Sources */,
