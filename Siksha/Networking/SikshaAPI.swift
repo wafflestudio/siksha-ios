@@ -60,6 +60,10 @@ enum SikshaAPI: URLRequestConvertible {
     case getUserInfo
     case submitVOC(comment: String, platform: String)
     
+    // Community
+    case getBoards
+    case getPosts(boardId: Int, page: Int, perPage: Int)
+    
     static var baseURL = Config.shared.baseURL!
     
     var needToken: Bool {
@@ -128,7 +132,10 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .submitVOC:
             return .post
-        
+        case .getBoards:
+            return .get
+        case .getPosts:
+            return .get
         }
     }
 
@@ -164,22 +171,17 @@ enum SikshaAPI: URLRequestConvertible {
             return "/auth/me"
         case .submitVOC:
             return "/voc"
-            
+        case .getBoards:
+            return "/community/boards"
+        case .getPosts:
+            return "/community/posts"
         }
     }
     
     var parameters: [String: Any]? {
         switch self {
-        case .getAccessToken:
-            return nil
-        case .refreshAccessToken:
-            return nil
         case let .getMenus(startDate, endDate, noMenuHide):
             return ["start_date": startDate, "end_date": endDate, "except_empty": noMenuHide]
-        case .getMenuFromId:
-            return nil
-        case .getRestaurants:
-            return nil
         case let .getReviews(menuId, page, perPage):
             return ["menu_id": menuId, "page": page, "per_page": perPage]
         case let .getScoreDistribution(menuId):
@@ -188,18 +190,14 @@ enum SikshaAPI: URLRequestConvertible {
             return ["score": score]
         case let .submitReview(menuId, score, comment):
             return ["menu_id": menuId, "score": score, "comment": comment]
-        case .submitReviewImages:
-            return nil
-        case .likeMenu:
-            return nil
-        case .unlikeMenu:
-            return nil
         case let .getReviewImages(menuId, page, perPage, comment, etc):
             return ["menu_id": menuId, "page": page, "per_page": perPage, "comment": comment, "etc": etc]
-        case .getUserInfo:
-            return nil
         case let .submitVOC(comment, platform):
             return ["voc": comment, "platform": platform]
+        case let .getPosts(boardId, page, perPage):
+            return ["board_id": boardId, "page": page, "per_page": perPage]
+        default:
+            return nil
         }
     }
     

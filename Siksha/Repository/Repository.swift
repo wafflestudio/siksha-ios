@@ -6,9 +6,10 @@
 //
 
 import Combine
+import Foundation
 
 protocol NetworkModuleProtocol {
-    func request<T: Decodable>(endpoint: SikshaAPI, params: [String: String]?) -> AnyPublisher<T, Error>
+    func request<T: Decodable>(endpoint: SikshaAPI) -> AnyPublisher<T, Error>
 }
 
 final class Repository: RepositoryProtocol {
@@ -19,8 +20,9 @@ final class Repository: RepositoryProtocol {
 }
 
 extension Repository: CommunityRepositoryProtocol {
-    func loadBoardList() {
-
+    func loadBoardList() -> AnyPublisher<[Board], Error> {
+        let endpoint = SikshaAPI.getBoards
+        return self.networkModule.request(endpoint: endpoint)
     }
 }
 
