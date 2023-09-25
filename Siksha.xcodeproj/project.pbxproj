@@ -198,7 +198,6 @@
 		23DFD2032664110B0049F8D7 /* RemoteImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteImage.swift; sourceTree = "<group>"; };
 		23DFD20E2664C2720049F8D7 /* DetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageView.swift; sourceTree = "<group>"; };
 		23DFD2162664CD400049F8D7 /* ThumbnailImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThumbnailImage.swift; sourceTree = "<group>"; };
-		3CFE17DD166E5B7199BE83CC /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
 		4E1BDE232A7F75BC00046ADC /* CommunityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
 		4E3D4EE62A74E02A005C7AB2 /* BoardNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardNameCell.swift; sourceTree = "<group>"; };
 		4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSelect.swift; sourceTree = "<group>"; };
@@ -519,6 +518,7 @@
 				4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */,
 				4E1BDE232A7F75BC00046ADC /* CommunityView.swift */,
 				4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */,
+				BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */,
 			);
 			path = Community;
 			sourceTree = "<group>";
@@ -827,6 +827,7 @@
 				1ED44A4125CC6135001D916B /* BottomModalView.swift in Sources */,
 				23DFD2172664CD400049F8D7 /* ThumbnailImage.swift in Sources */,
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
+				BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
 				1E9859A926629229003A483A /* VOCView.swift in Sources */,
 				4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */,
