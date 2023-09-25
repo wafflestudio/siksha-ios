@@ -52,7 +52,7 @@ struct ContentView: View {
     let tabItems = [
         TabItem(id: 0, content: AnyView(FavoriteView()), buttonImage: ["Favorite", "Favorite-disabled"]),
         TabItem(id: 1, content: AnyView(MenuView()), buttonImage: ["Main", "Main-disabled"]),
-        TabItem(id: 2, content: AnyView(CommunityView()), buttonImage: ["Community", "Community-disabled"]),
+        TabItem(id: 2, content: AnyView(CommunityView(viewModel: CommunityViewModel(communityRepository: DomainManager.shared.domain.communityRepository))), buttonImage: ["Community", "Community-disabled"]),
         TabItem(id: 3, content: AnyView(SettingsView()), buttonImage: ["Settings", "Settings-disabled"])
     ]
     

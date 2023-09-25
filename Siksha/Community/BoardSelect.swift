@@ -7,20 +7,32 @@
 
 import Foundation
 import SwiftUI
-struct BoardSelect:View{
-    var boardNames:[String]
+import Combine
+
+struct BoardSelect<ViewModel>: View where ViewModel: CommunityViewModelType{
+    @ObservedObject private var viewModel: ViewModel
+    
+    init(viewModel: ViewModel) {
+        self.viewModel = viewModel
+    }
+    
     var body:some View{
-        ScrollView(.horizontal,showsIndicators: false){
-            HStack(alignment:.center,spacing: 10){
-                ForEach(boardNames,id: \.self){name in
-                    BoardNameCell(isSelected: true, boardName: name)
+        ScrollView(.horizontal, showsIndicators: false){
+            HStack(alignment: .center, spacing: 10){
+                ForEach(self.viewModel.boardsListPublisher, id: \.self) { boardInfo in
+                    BoardNameCell(isSelected: boardInfo.isSelected, boardName: boardInfo.name)
+                        .onTapGesture {
+                            self.viewModel.selectBoard(id: boardInfo.id)
+                        }
                 }
             }
-        }.padding(EdgeInsets(top: 23, leading: 28, bottom: 18, trailing: 28))
+        }
+        .padding(EdgeInsets(top: 23, leading: 28, bottom: 18, trailing: 28))
     }
 }
+
 struct BoardSelect_Preview:PreviewProvider{
     static var previews:some View{
-        BoardSelect(boardNames: ["자유게시판","학식게시판","외식게시판","VS 게시판","베스트 메뉴 게시판","자유게시판","학식게시판","외식게시판","VS 게시판","베스트 메뉴 게시판"])
+        BoardSelect(viewModel: StubCommunityViewModel())
     }
 }

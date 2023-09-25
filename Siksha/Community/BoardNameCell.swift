@@ -14,22 +14,16 @@ struct BoardNameCell: View{
     let selectedFontColor = Color.white
     let unSelectedFontColor = Color.init("ReviewLowColor")
 
-    
-   @State var isSelected:Bool
-    var boardName:String
+    var isSelected: Bool
+    var boardName: String
     
     var body: some View{
         Text(boardName)
-             .font(.custom("Inter-Regular", size: 15))
+            .font(.custom("Inter-Regular", size: 15))
             .padding(EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 12))
             .background(isSelected ? selectedBackgroundColor : unSelectedBackgroundColor)
             .foregroundColor(isSelected ? selectedFontColor : unSelectedFontColor)
             .cornerRadius(16)
-            .onTapGesture {
-                
-                isSelected.toggle()
-            }
-          
     }
     
 }

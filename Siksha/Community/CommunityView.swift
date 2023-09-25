@@ -16,7 +16,7 @@ struct CommunityPost: Identifiable, Equatable {
     let replyCount: Int
     let image: Image? = nil
 }
-struct CommunityView: View {
+struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     @State
     var tag:Int? = nil
     let dividerColor = Color("ReviewLowColor")
@@ -37,12 +37,16 @@ struct CommunityView: View {
         CommunityPost(title: "hello bye", content: "who", userLikes: false, likeCount: 12, replyCount: 23)
     ]
   
+    private let viewModel: ViewModel
+    init(viewModel: ViewModel) {
+        self.viewModel = viewModel
+    }
 
     var body: some View {
         NavigationView {
             ZStack(alignment:.bottomTrailing){
                 VStack(spacing:0){
-                    BoardSelect(boardNames: boards)
+                    BoardSelect(viewModel: viewModel)
                     divider
                     TopPosts(content: [
                         CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
@@ -56,11 +60,11 @@ struct CommunityView: View {
                     }
                     
                 }
-                
                 .customNavigationBar(title: "icon")
+                
                 Button{
                     self.tag = 1
-                }label:{
+                } label:{
                     Image("writeButton")
                         .frame(width:44,height:44)
                         .background(Color.init("MainThemeColor"))
@@ -68,10 +72,14 @@ struct CommunityView: View {
                         .clipShape(Circle())
                 }
                 .offset(x:-30,y:-22)
+                
                 NavigationLink(destination:CommunityPostPublishView(),tag:1,selection:self.$tag){
                     EmptyView()
                 }
             }
+        }
+        .onAppear {
+            self.viewModel.loadBasicInfos()
         }
     }
     
@@ -150,6 +158,18 @@ struct CommunityPostPreView: View {
 
 struct ComunityView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityView()
+        CommunityView(viewModel: StubCommunityViewModel())
     }
+}
+
+class StubCommunityViewModel: CommunityViewModelType {
+    var boardsListPublisher: [BoardInfo] = [
+        BoardInfo(id: 1, type: 1, name: "name1", isSelected: true),
+        BoardInfo(id: 2, type: 1, name: "name2", isSelected: false),
+        BoardInfo(id: 3, type: 1, name: "name3", isSelected: false)
+    ]
+    
+    func loadBasicInfos() { }
+    
+    func selectBoard(id: Int) { }
 }
