@@ -99,6 +99,7 @@
 		BF97DF5B2AAF12200083FC6F /* AlamofireNetworking.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF5A2AAF12200083FC6F /* AlamofireNetworking.swift */; };
 		BF97DF5D2AB836910083FC6F /* Community.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF5C2AB836910083FC6F /* Community.swift */; };
 		BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */; };
+		BFE76F652ADD1A5C00A7D124 /* FeatureFlag.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFE76F642ADD1A5C00A7D124 /* FeatureFlag.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -231,6 +232,7 @@
 		BF97DF5A2AAF12200083FC6F /* AlamofireNetworking.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlamofireNetworking.swift; sourceTree = "<group>"; };
 		BF97DF5C2AB836910083FC6F /* Community.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Community.swift; sourceTree = "<group>"; };
 		BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationBar+ext.swift"; sourceTree = "<group>"; };
+		BFE76F642ADD1A5C00A7D124 /* FeatureFlag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureFlag.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -308,6 +310,7 @@
 				1E3A577425C7012F00DBB3F4 /* Font */,
 				1E3A56F825C6FCE800DBB3F4 /* Info.plist */,
 				1E3A56F225C6FCE800DBB3F4 /* Preview Content */,
+				BFE76F642ADD1A5C00A7D124 /* FeatureFlag.swift */,
 			);
 			path = Siksha;
 			sourceTree = "<group>";
@@ -833,6 +836,7 @@
 				4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */,
 				1E7226F825FBDE72008C272E /* MealCell.swift in Sources */,
 				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,
+				BFE76F652ADD1A5C00A7D124 /* FeatureFlag.swift in Sources */,
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				23DFD2042664110B0049F8D7 /* RemoteImage.swift in Sources */,
 				1E3A575825C6FF2900DBB3F4 /* MenuViewModel.swift in Sources */,

@@ -55,6 +55,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // 2. Realm이 새로운 Object를 쓸 수 있도록 설정
         Realm.Configuration.defaultConfiguration = config
 
+        // Feature Flag
+//        FeatureFlag.shared.enable(feature: .community)
+        
         return true
     }
     
