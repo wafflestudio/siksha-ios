@@ -31,6 +31,6 @@ struct Board: Decodable {
         self.name = try container.decode(String.self, forKey: .name)
         self.description = try container.decode(String.self, forKey: .description)
         self.createdAt = try container.decodeDate(key: .createdAt)
-        self.updatedAt = try container.decodeDate(key: .createdAt)
+        self.updatedAt = try container.decodeDate(key: .updatedAt)
     }
 }

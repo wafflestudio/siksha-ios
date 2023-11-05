@@ -10,13 +10,19 @@ import Foundation
 extension KeyedDecodingContainer {
     func decodeDate(key: KeyedDecodingContainer<K>.Key) throws -> Date {
         let dateString = try self.decode(String.self, forKey: key)
+        
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss"
         
-        guard let date = formatter.date(from: dateString) else {
-            throw NetworkError.decodingError
+        if let date = formatter.date(from: dateString) {
+            return date
         }
         
-        return date
+        formatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ssZ"
+        if let date = formatter.date(from: dateString) {
+            return date
+        }
+        
+        throw NetworkError.decodingError
     }
 }
