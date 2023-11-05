@@ -63,7 +63,7 @@ enum SikshaAPI: URLRequestConvertible {
     // Community
     case getBoards
     case getPosts(boardId: Int, page: Int, perPage: Int)
-    
+    case submitPost(boardId:Int,title:String,content:String,images:[Data])
     static var baseURL = Config.shared.baseURL!
     
     var needToken: Bool {
@@ -136,6 +136,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .getPosts:
             return .get
+        case .submitPost:
+            return .post
         }
     }
 
@@ -175,6 +177,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/boards"
         case .getPosts:
             return "/community/posts"
+        case .submitPost:
+            return "/community/posts"
         }
     }
     
@@ -196,6 +200,7 @@ enum SikshaAPI: URLRequestConvertible {
             return ["voc": comment, "platform": platform]
         case let .getPosts(boardId, page, perPage):
             return ["board_id": boardId, "page": page, "per_page": perPage]
+     
         default:
             return nil
         }
@@ -204,6 +209,8 @@ enum SikshaAPI: URLRequestConvertible {
     var multiPartFormDataNeeded: Bool {
         switch self {
         case .submitReviewImages:
+            return true
+        case .submitPost:
             return true
         default:
             return false
@@ -217,6 +224,15 @@ enum SikshaAPI: URLRequestConvertible {
             data.append("\(menuId)".data(using: .utf8)!, withName: "menu_id", mimeType: "text/plain")
             data.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
             data.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain")
+            for (index, image) in images.enumerated() {
+                data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
+            }
+            return data
+        case let .submitPost(boardId, title, content, images):
+            let data = MultipartFormData()
+            data.append("\(boardId)".data(using: .utf8)!, withName: "menu_id", mimeType: "text/plain")
+            data.append("\(title)".data(using: .utf8)!, withName: "title", mimeType: "text/plain")
+            data.append(content.data(using: .utf8)!, withName: "content", mimeType: "text/plain")
             for (index, image) in images.enumerated() {
                 data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }
