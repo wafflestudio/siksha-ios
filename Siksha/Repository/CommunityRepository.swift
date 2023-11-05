@@ -6,8 +6,5 @@
 //
 
 import Foundation
-import Combine
 
-protocol CommunityRepositoryProtocol {
-    func loadBoardList() -> AnyPublisher<[Board], Error>
-}
+

@@ -91,7 +91,6 @@
 		BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */; };
 		BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */; };
 		BF60ADE62AC1EABF0015C468 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE52AC1EABF0015C468 /* Errors.swift */; };
-		BF97DF502AAEFE270083FC6F /* CommunityRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF4F2AAEFE270083FC6F /* CommunityRepository.swift */; };
 		BF97DF532AAEFE380083FC6F /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF522AAEFE380083FC6F /* Domain.swift */; };
 		BF97DF552AAF003D0083FC6F /* RepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF542AAF003D0083FC6F /* RepositoryProtocol.swift */; };
 		BF97DF572AAF00780083FC6F /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF97DF562AAF00780083FC6F /* Repository.swift */; };
@@ -224,7 +223,6 @@
 		BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };
 		BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainUtils.swift; sourceTree = "<group>"; };
 		BF60ADE52AC1EABF0015C468 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
-		BF97DF4F2AAEFE270083FC6F /* CommunityRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityRepository.swift; sourceTree = "<group>"; };
 		BF97DF522AAEFE380083FC6F /* Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
 		BF97DF542AAF003D0083FC6F /* RepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryProtocol.swift; sourceTree = "<group>"; };
 		BF97DF562AAF00780083FC6F /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
@@ -428,7 +426,6 @@
 			isa = PBXGroup;
 			children = (
 				1E96F92E25DEC14F0074940C /* MenuRepository.swift */,
-				BF97DF4F2AAEFE270083FC6F /* CommunityRepository.swift */,
 				BF97DF542AAF003D0083FC6F /* RepositoryProtocol.swift */,
 				BF97DF562AAF00780083FC6F /* Repository.swift */,
 			);
@@ -777,7 +774,6 @@
 				1ECB257D25F5412300875E18 /* TextView.swift in Sources */,
 				23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
-				BF97DF502AAEFE270083FC6F /* CommunityRepository.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
 				BF97DF532AAEFE380083FC6F /* Domain.swift in Sources */,
 				231C9D1425F8568C0072C07A /* MapView.swift in Sources */,
