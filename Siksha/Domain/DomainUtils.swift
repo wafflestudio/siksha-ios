@@ -12,14 +12,16 @@ extension KeyedDecodingContainer {
         let dateString = try self.decode(String.self, forKey: key)
         
         let formatter = DateFormatter()
+        formatter.locale = Locale(identifier: "ko_KR")
+        
         formatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss"
         
         if let date = formatter.date(from: dateString) {
             return date
         }
         
-        formatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ssZ"
-        if let date = formatter.date(from: dateString) {
+        let isoFormatter = ISO8601DateFormatter()
+        if let date = isoFormatter.date(from: dateString) {
             return date
         }
         

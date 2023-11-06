@@ -24,6 +24,11 @@ extension Repository: CommunityRepositoryProtocol {
         let endpoint = SikshaAPI.getBoards
         return self.networkModule.request(endpoint: endpoint)
     }
+    
+    func loadPostsPage(boardId: Int, page: Int, perPage: Int = 20) -> AnyPublisher<PostsPage, Error> {
+        let endpoint = SikshaAPI.getPosts(boardId: boardId, page: page, perPage: perPage)
+        return self.networkModule.request(endpoint: endpoint)
+    }
 }
 
 

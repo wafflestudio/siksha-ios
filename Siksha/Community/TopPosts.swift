@@ -9,29 +9,31 @@ import Foundation
 import SwiftUI
 
 struct TopPosts:View{
-    var content:[CommunityPost]
+    var infos: [PostInfo]
+    
     var body:some View{
-        GeometryReader{proxy in
-          
-                TabView{
-                    ForEach(content,id:\.title) { content in
-                        TopPostCell(title: content.title, content: content.content, like: content.likeCount).padding(EdgeInsets(top: 10, leading: 23, bottom: 10, trailing: 22))
-                        
-                    }
-                } .frame(width: proxy.size.width) .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-            
-                
-            
-          
+        GeometryReader { proxy in
+            TabView {
+                ForEach(infos, id:\.title) { info in
+                    TopPostCell(title: info.title, content: info.content, like: info.likeCount)
+                        .padding(EdgeInsets(top: 10, leading: 23, bottom: 10, trailing: 22))
+                    
+                }
+            }
+            .frame(width: proxy.size.width)
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         }.frame(height:68)
     }
 }
 struct TopPosts_Preview:PreviewProvider{
     static var previews: some View{
-        TopPosts(content: [
-           CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
-           CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3),
-           CommunityPost(title: "post1", content: "content1", userLikes: true, likeCount: 2, replyCount: 3)
-        ])
+        TopPosts(infos: (1..<5).map {
+            return PostInfo(title: "name\($0)",
+                         content: "content\($0)",
+                         isLiked: $0 % 2 == 0,
+                         likeCount: $0,
+                         commentCount: $0,
+                         imageURL: "")
+        })
     }
 }
