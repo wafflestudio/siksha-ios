@@ -34,3 +34,63 @@ struct Board: Decodable {
         self.updatedAt = try container.decodeDate(key: .updatedAt)
     }
 }
+
+struct PostsPage: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case posts = "result"
+        case totalCount = "total_count"
+        case hasNext = "has_next"
+    }
+    
+    let posts: [Post]
+    let totalCount: Int
+    let hasNext: Bool
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.posts = try container.decode([Post].self, forKey: .posts)
+        self.totalCount = try container.decode(Int.self, forKey: .totalCount)
+        self.hasNext = try container.decode(Bool.self, forKey: .hasNext)
+    }
+}
+
+struct Post: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case id
+        case boardId = "board_id"
+        case title
+        case content
+        case available
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case etc
+        case likeCnt = "like_cnt"
+        case commentCnt = "comment_cnt"
+        case isLiked = "is_liked"
+    }
+    
+    let id: Int
+    let boardId: Int
+    let title: String
+    let content: String
+    let available: Bool
+    let createdAt: Date
+    let updatedAt: Date
+    let likeCnt: Int
+    let commentCnt: Int
+    let isLiked: Bool
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(Int.self, forKey: .id)
+        self.boardId = try container.decode(Int.self, forKey: .boardId)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.content = try container.decode(String.self, forKey: .content)
+        self.available = try container.decode(Bool.self, forKey: .available)
+        self.createdAt = try container.decodeDate(key: .createdAt)
+        self.updatedAt = try container.decodeDate(key: .updatedAt)
+        self.likeCnt = try container.decode(Int.self, forKey: .likeCnt)
+        self.commentCnt = try container.decode(Int.self, forKey: .commentCnt)
+        self.isLiked = try container.decode(Bool.self, forKey: .isLiked)
+    }
+}

@@ -8,6 +8,37 @@
 import Foundation
 import Combine
 
+struct PostInfo: Identifiable, Equatable {
+    let id: Int
+    let title: String
+    let content: String
+    let isLiked: Bool
+    let likeCount: Int
+    let commentCount: Int
+    let imageURL: String
+    
+    init(post: Post) {
+        self.id = post.id
+        self.title = post.title
+        self.content = post.content
+        self.isLiked = post.isLiked
+        self.likeCount = post.likeCnt
+        self.commentCount = post.commentCnt
+        self.imageURL = "" // MARK: 임시
+    }
+    
+    init(title: String, content: String, isLiked: Bool, likeCount: Int, commentCount: Int, imageURL: String) {
+        self.title = title
+        self.content = content
+        self.isLiked = isLiked
+        self.likeCount = likeCount
+        self.commentCount = commentCount
+        self.imageURL = imageURL
+        
+        self.id = 0
+    }
+}
+
 struct BoardInfo: Hashable {
     let id: Int
     let type: Int
@@ -35,17 +66,29 @@ struct BoardInfo: Hashable {
 
 protocol CommunityViewModelType: ObservableObject {
     var boardsListPublisher: [BoardInfo] { get }
+    var postsListPublisher: [PostInfo] { get }
+    var hasNextPublisher: Bool { get }
     
     func selectBoard(id: Int)
-    
     func loadBasicInfos()
+    func loadMorePosts()
 }
 
 final class CommunityViewModel: CommunityViewModelType {
+    struct Constants {
+        static let initialPage = 1
+        static let pageCount = 20
+    }
+    
     private let communityRepository: CommunityRepositoryProtocol
     
     @Published private var boardsList: [Board] = []
     @Published private var selectedBoardId: Int = 0
+    
+    @Published private var currPostList: [Post] = []
+    private var currentPage: Int = 0
+    
+    @Published private var hasNext: Bool = false
     
     private var cancellables = Set<AnyCancellable>()
     
@@ -64,11 +107,21 @@ extension CommunityViewModel {
                 return BoardInfo(board: board, isSelected: board.id == selectedId)
             }
     }
+    
+    var postsListPublisher: [PostInfo] {
+        return self.currPostList
+            .map { PostInfo(post: $0 )}
+    }
+    
+    var hasNextPublisher: Bool {
+        return self.hasNext
+    }
 }
 
 extension CommunityViewModel {
     func loadBasicInfos() {
         self.loadBoards()
+        self.loadHotPosts()
     }
     
     private func loadBoards() {
@@ -79,12 +132,50 @@ extension CommunityViewModel {
                 print(error)
             }, receiveValue: { [weak self] boards in
                 self?.boardsList = boards
-                self?.selectedBoardId = boards.first?.id ?? 0
+                self?.selectBoard(id: boards.first?.id ?? 0)
             })
             .store(in: &cancellables)
     }
     
+    private func loadHotPosts() {
+        
+    }
+    
     func selectBoard(id: Int) {
         self.selectedBoardId = id
+        
+        self.loadInitialPosts(boardId: id)
+    }
+    
+    private func loadInitialPosts(boardId: Int) {
+        self.communityRepository
+            .loadPostsPage(boardId: boardId, page: Constants.initialPage, perPage: Constants.pageCount)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { error in
+                print(error)
+            }, receiveValue: { [weak self] postsPage in
+                self?.currPostList = postsPage.posts
+                self?.currentPage = 1
+                self?.hasNext = postsPage.hasNext
+            })
+            .store(in: &cancellables)
+    }
+    
+    func loadMorePosts() {
+        guard self.hasNext == true else {
+            return
+        }
+        
+        self.communityRepository
+            .loadPostsPage(boardId: self.selectedBoardId, page: self.currentPage + 1, perPage: Constants.pageCount)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { error in
+                print(error)
+            }, receiveValue: { [weak self] postsPage in
+                self?.currPostList.append(contentsOf: postsPage.posts)
+                self?.currentPage += 1
+                self?.hasNext = postsPage.hasNext
+            })
+            .store(in: &cancellables)
     }
 }

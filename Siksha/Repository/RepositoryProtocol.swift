@@ -14,4 +14,5 @@ protocol RepositoryProtocol: CommunityRepositoryProtocol {
 
 protocol CommunityRepositoryProtocol {
     func loadBoardList() -> AnyPublisher<[Board], Error>
+    func loadPostsPage(boardId: Int, page: Int, perPage: Int) -> AnyPublisher<PostsPage, Error>
 }
