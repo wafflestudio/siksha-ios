@@ -63,6 +63,16 @@ enum SikshaAPI: URLRequestConvertible {
     // Community
     case getBoards
     case getPosts(boardId: Int, page: Int, perPage: Int)
+    case getPost(postId: Int)
+    case likePost(postId: Int)
+    case unlikePost(postId: Int)
+    case getComments(postId: Int)
+    case submitComment(postId: Int, content: String)
+    case editComment(commentId: Int, content: String)
+    case deleteComment(commentId: Int)
+    case likeComment(commentId: Int)
+    case unlikeComment(commentId: Int)
+    
     case submitPost(boardId:Int,title:String,content:String,images:[Data])
     static var baseURL = Config.shared.baseURL!
     
@@ -136,6 +146,24 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .getPosts:
             return .get
+        case .getPost:
+            return .get
+        case .likePost:
+            return .get
+        case .unlikePost:
+            return .get
+        case .getComments:
+            return .get
+        case .submitComment:
+            return .post
+        case .editComment:
+            return .patch
+        case .deleteComment:
+            return .delete
+        case .likeComment:
+            return .post
+        case .unlikeComment:
+            return .post
         case .submitPost:
             return .post
         }
@@ -179,6 +207,24 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/posts"
         case .submitPost:
             return "/community/posts"
+        case .getPost:
+            return "/community/posts"
+        case .likePost(postId):
+            return "/community/posts/\(postId)/like"
+        case .unlikePost(postId):
+            return "/community/posts/\(postId)/unlike"
+        case .getComments:
+            return "/community/comments"
+        case .submitComment:
+            return "/community/comments"
+        case .editComment(commentId, content)
+            return "/community/comments/\(commentId)"
+        case .deleteComment(commentId)
+            return "/community/comments/\(commentId)"
+        case .likeComment(commentId)
+            return "/community/comments/\(commentId)/like"
+        case .unlikeComment(commentId)
+            return "/community/comments/\(commentId)/unlike"
         }
     }
     
@@ -200,6 +246,14 @@ enum SikshaAPI: URLRequestConvertible {
             return ["voc": comment, "platform": platform]
         case let .getPosts(boardId, page, perPage):
             return ["board_id": boardId, "page": page, "per_page": perPage]
+        case let .getPost(postId):
+            return ["post_id": postId]
+        case let .getComments(postId):
+            return ["post_id": postId]
+        case let .submitComment(postId, content):
+            return ["post_id": postId, "content": content]
+        case let .editComment(commentId, content):
+            return ["content": content]
      
         default:
             return nil
