@@ -87,6 +87,7 @@
 		4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */; };
 		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
 		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
+		4EE5729F2B1B1B2300FECE44 /* CommunitySubmitPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE5729E2B1B1B2300FECE44 /* CommunitySubmitPostViewModel.swift */; };
 		B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */; };
 		BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */; };
 		BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */; };
@@ -218,6 +219,7 @@
 		4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderViewModel.swift; sourceTree = "<group>"; };
+		4EE5729E2B1B1B2300FECE44 /* CommunitySubmitPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunitySubmitPostViewModel.swift; sourceTree = "<group>"; };
 		8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
 		BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };
@@ -519,6 +521,7 @@
 				4E1BDE232A7F75BC00046ADC /* CommunityView.swift */,
 				4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */,
 				BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */,
+				4EE5729E2B1B1B2300FECE44 /* CommunitySubmitPostViewModel.swift */,
 			);
 			path = Community;
 			sourceTree = "<group>";
@@ -771,6 +774,7 @@
 				1ECB255225F2999100875E18 /* RatingStar.swift in Sources */,
 				BF97DF552AAF003D0083FC6F /* RepositoryProtocol.swift in Sources */,
 				1EB5F4412644710A0012201A /* Networking.swift in Sources */,
+				4EE5729F2B1B1B2300FECE44 /* CommunitySubmitPostViewModel.swift in Sources */,
 				1ECB257D25F5412300875E18 /* TextView.swift in Sources */,
 				23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
