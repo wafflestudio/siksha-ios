@@ -107,3 +107,60 @@ struct SubmitPostResponse:Codable{
     var is_liked: Bool
 }
 
+
+struct CommentsPage: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case comments = "result"
+        case totalCount = "total_count"
+        case hasNext = "has_next"
+    }
+    
+    let comments: [Comment]
+    let totalCount: Int
+    let hasNext: Bool
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.posts = try container.decode([Post].self, forKey: .posts)
+        self.totalCount = try container.decode(Int.self, forKey: .totalCount)
+        self.hasNext = try container.decode(Bool.self, forKey: .hasNext)
+    }
+}
+
+
+struct Comment: Decodable {
+    enum CodingKeys: String, CodingKey {
+        case id
+        case postId = "post_id"
+        case content
+        case createdAt = "created_at"
+        case updatedAt = "updated_at"
+        case userId = "user_id"
+        case available
+        case likeCnt = "like_cnt"
+        case isLiked = "is_liked"
+    }
+    
+    let id: Int
+    let postId: Int
+    let content: String
+    let createdAt: Date
+    let updatedAt: Date
+    let userId: Int
+    let available: Bool
+    let likeCnt: Int
+    let isLiked: Bool
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        postId = try container.decode(Int.self, forKey: .postId)
+        content = try container.decode(String.self, forKey: .content)
+        createdAt = try container.decodeDate(key: .createdAt)
+        updatedAt = try container.decodeDate(key: .updatedAt)
+        userId = try container.decode(Int.self, forKey: .userId)
+        available = try container.decode(Bool.self, forKey: .available)
+        likeCnt = try container.decode(Int.self, forKey: .likeCnt)
+        isLiked = try container.decode(Bool.self, forKey: .isLiked)
+    }
+}
