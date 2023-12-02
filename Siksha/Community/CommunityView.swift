@@ -9,6 +9,7 @@ import SwiftUI
 
 struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     @State var tag: Int? = nil
+    @State var needRefresh = false
     let dividerColor = Color("ReviewLowColor")
     
     let topPosts: [PostInfo] = (1..<5).map {
@@ -24,6 +25,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
+        
     }
 
     var body: some View {
@@ -51,16 +53,29 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 }
                 .offset(x: -30, y: -22)
                 
-                NavigationLink(destination: CommunityPostPublishView(),
+                NavigationLink(destination: CommunityPostPublishView( needRefresh: $needRefresh, viewModel: CommunitySubmitPostViewModel(boardId:selectedBoardId ?? 0,communityRepository: DomainManager.shared.domain.communityRepository)),
                                tag: 1,
                                selection: self.$tag){
                     EmptyView()
                 }
             }
+            
         }
         .onAppear {
+            print("onappear")
             self.viewModel.loadBasicInfos()
         }
+        .onChange(of: needRefresh, perform: { refresh in
+            if refresh{
+                self.viewModel.loadBasicInfos()
+                needRefresh = false
+            }
+        })
+       
+        
+        
+        
+      
     }
     
     var divider: some View {
@@ -91,6 +106,16 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     
     var writeButton: some View {
         Image("writeButton")
+    }
+    var selectedBoardId:Int?{
+        get{
+         
+                let boards = viewModel.boardsListPublisher.filter{board in board.isSelected}
+            return boards.isEmpty ? nil : boards[0].id
+            
+           
+            
+            }
     }
 }
 

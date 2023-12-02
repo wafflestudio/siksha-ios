@@ -6,18 +6,25 @@
 //
 
 import SwiftUI
+import Combine
 
-struct CommunityPostPublishView: View {
+struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunitySubmitPostViewModelType {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @State private var anonymousIsToggled = false
-    @State var title: String = ""
-    @State var content: String = ""
-    
+  //  @State private var anonymousIsToggled = false
+   // @State var title: String = ""
+   // @State var content: String = ""
+    @Binding var needRefresh:Bool
     @State private var isShowingPhotoLibrary = false
-    @State private var addedImages = [UIImage]()
-
+ //   @State private var addedImages = [UIImage]()
+    @ObservedObject  var viewModel:ViewModel
+    private var cancellables = Set<AnyCancellable>()
+    init( needRefresh: Binding<Bool> , viewModel: ViewModel) {
+        self._needRefresh = needRefresh
+        self.viewModel = viewModel
+    }
+ 
     
     var backButton: some View {
         Button(action: {
@@ -32,7 +39,7 @@ struct CommunityPostPublishView: View {
     
     var postButton: some View {
         Button(action: {
-            print("Post")
+            viewModel.submitPost()
         }) {
             ZStack {
                 RoundedRectangle(cornerRadius: 15.0)
@@ -47,10 +54,9 @@ struct CommunityPostPublishView: View {
     
     var anonymousButton: some View {
         Button(action: {
-                    anonymousIsToggled.toggle()
-                    print(anonymousIsToggled)
+            viewModel.isAnonymous.toggle()
                 }) {
-                    if anonymousIsToggled {
+                    if viewModel.isAnonymous {
                         ZStack {
                             RoundedRectangle(cornerRadius: 15.0)
                                 .fill(Color("MainThemeColor"))
@@ -99,10 +105,10 @@ struct CommunityPostPublishView: View {
                         }
                     }
                     .sheet(isPresented: $isShowingPhotoLibrary) {
-                        ImagePickerCoordinatorView(selectedImages: $addedImages)
+                        ImagePickerCoordinatorView(selectedImages: $viewModel.images)
                     }
                     
-                    ForEach(addedImages, id: \.self) { image in
+                    ForEach(viewModel.images, id: \.self) { image in
                         ZStack(alignment: .topTrailing) {
                             Image(uiImage: image)
                                 .resizable()
@@ -113,8 +119,8 @@ struct CommunityPostPublishView: View {
                                 .padding([.top, .trailing], 5)
                             
                             Button(action: {
-                                if self.addedImages.contains(image) {
-                                    self.addedImages.removeAll(where: { $0 == image })
+                                if viewModel.images.contains(image) {
+                                    viewModel.images.removeAll(where: { $0 == image })
                                 }
                             }) {
                                 ZStack {
@@ -146,7 +152,7 @@ struct CommunityPostPublishView: View {
                 }
                 .padding(EdgeInsets(top: 0, leading: 7, bottom: 7, trailing: 0))
                 
-                TextField("제목", text: $title)
+                TextField("제목", text: $viewModel.title)
                     .font(.custom("Inter-Bold", size: 14))
                     .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
                 
@@ -155,12 +161,12 @@ struct CommunityPostPublishView: View {
                 ZStack {
                     let placeholder: String = "내용을 입력하세요."
                     
-                    TextEditor(text: $content)
+                    TextEditor(text: $viewModel.content)
                         .font(.custom("Inter-ExtraLight", size: 12))
                         .frame(minHeight: 30)
                         .fixedSize(horizontal: false, vertical: true)
                     
-                    if content.isEmpty {
+                    if viewModel.content.isEmpty {
                         Text(placeholder)
                             .font(.custom("Inter-ExtraLight", size: 12))
                             .foregroundColor(Color.init("ReviewLowColor"))
@@ -181,11 +187,33 @@ struct CommunityPostPublishView: View {
             .navigationBarItems(leading: backButton, trailing: postButton)
             
         }.navigationBarBackButtonHidden(true)
+        .alert(isPresented: $viewModel.isSubmitted, content: {
+            Alert(title: Text("upload post"), message: Text(""), dismissButton: alertButton)
+        })
     }
+    
+    var alertButton: Alert.Button {
+            var action: (() -> Void)? = nil
+            if viewModel.isSubmitted {
+                action = {
+                    needRefresh = true
+                    presentationMode.wrappedValue.dismiss()
+                }
+            } else {
+                action = {
+                    
+                }
+            
+            }
+            return Alert.Button.default(Text("확인"), action: action)
+        }
+    
+    
 }
 
-struct CommunityPostPublishView_Previews: PreviewProvider {
+/*struct CommunityPostPublishView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityPostPublishView()
+        CommunityPostPublishView(viewModel: CommunitySubmitPostViewModel(boardId : 1,communityRepository: DomainManager.shared.domain.communityRepository))
     }
 }
+*/
