@@ -14,10 +14,10 @@ struct TopPostCell:View{
     var body:some View{
         HStack(alignment: .center){
             Text(title)
-                .font(.custom("NanumSquareOTFBold", size: 12))
+                .font(.custom("NanumSquareOTFB", size: 12))
             Spacer().frame(width:15)
             Text(content)
-                .font(.custom("NanumSquareOTFRegular",size:12))
+                .font(.custom("NanumSquareOTFR",size:12))
             Spacer()
             
             Image("like").padding(EdgeInsets(top: 0, leading: 0, bottom: 2, trailing: 0))
