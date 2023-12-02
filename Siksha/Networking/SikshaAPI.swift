@@ -230,7 +230,7 @@ enum SikshaAPI: URLRequestConvertible {
             return data
         case let .submitPost(boardId, title, content, images):
             let data = MultipartFormData()
-            data.append("\(boardId)".data(using: .utf8)!, withName: "menu_id", mimeType: "text/plain")
+            data.append("\(boardId)".data(using: .utf8)!, withName: "board_id", mimeType: "text/plain")
             data.append("\(title)".data(using: .utf8)!, withName: "title", mimeType: "text/plain")
             data.append(content.data(using: .utf8)!, withName: "content", mimeType: "text/plain")
             for (index, image) in images.enumerated() {
