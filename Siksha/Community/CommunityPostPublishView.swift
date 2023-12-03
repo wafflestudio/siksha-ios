@@ -190,6 +190,9 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunitySubmit
         .alert(isPresented: $viewModel.isSubmitted, content: {
             Alert(title: Text("게시물 남기기"), message: Text("게시물이 등록되었습니다."), dismissButton: alertButton)
         })
+        .alert(isPresented: $viewModel.isErrorAlert, content: {
+            Alert(title: Text("게시물 남기기"), message: Text("게시물을 등록하지 못했습니다."), dismissButton: alertButton)
+        })
     }
     
     var alertButton: Alert.Button {

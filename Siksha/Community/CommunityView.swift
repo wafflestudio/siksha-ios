@@ -52,12 +52,16 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                         .clipShape(Circle())
                 }
                 .offset(x: -30, y: -22)
-                
+                .disabled(selectedBoardId == nil
+                )
                 NavigationLink(destination: CommunityPostPublishView( needRefresh: $needRefresh, viewModel: CommunitySubmitPostViewModel(boardId:selectedBoardId ?? 0,communityRepository: DomainManager.shared.domain.communityRepository)),
                                tag: 1,
                                selection: self.$tag){
                     EmptyView()
                 }
+                               .disabled(selectedBoardId == nil
+                               )
+
             }
             
         }
