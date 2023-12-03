@@ -81,13 +81,28 @@
 		4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */; };
 		4E3D4EEB2A74F743005C7AB2 /* TopPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */; };
 		4E3D4EEF2A750078005C7AB2 /* TopPosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */; };
+		4E4E22DE2ABEC4C500A81E47 /* CommunityReplyBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4E22DD2ABEC4C500A81E47 /* CommunityReplyBar.swift */; };
+		4E4E22E82ABEC96300A81E47 /* Inter-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22DF2ABEC96300A81E47 /* Inter-ExtraLight.ttf */; };
+		4E4E22E92ABEC96300A81E47 /* Inter-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E02ABEC96300A81E47 /* Inter-Thin.ttf */; };
+		4E4E22EA2ABEC96300A81E47 /* Inter-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E12ABEC96300A81E47 /* Inter-SemiBold.ttf */; };
+		4E4E22EB2ABEC96300A81E47 /* Inter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E22ABEC96300A81E47 /* Inter-Bold.ttf */; };
+		4E4E22EC2ABEC96300A81E47 /* Inter-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E32ABEC96300A81E47 /* Inter-Light.ttf */; };
+		4E4E22ED2ABEC96300A81E47 /* Inter-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E42ABEC96300A81E47 /* Inter-Black.ttf */; };
+		4E4E22EE2ABEC96300A81E47 /* Inter-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E52ABEC96300A81E47 /* Inter-ExtraBold.ttf */; };
+		4E4E22EF2ABEC96300A81E47 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E62ABEC96300A81E47 /* Inter-Regular.ttf */; };
+		4E4E22F02ABEC96300A81E47 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E72ABEC96300A81E47 /* Inter-Medium.ttf */; };
 		4E74167D2A9B63A10010769F /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74167C2A9B63A00010769F /* CommentCell.swift */; };
 		4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */; };
 		4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8D929F8AB24005A1683 /* config.plist */; };
 		4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */; };
 		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
+		4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED628352B11D51900ECE221 /* CommunityPostView.swift */; };
 		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
+<<<<<<< HEAD
 		4EE5729F2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */; };
+=======
+		4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */; };
+>>>>>>> 5ae1ddc (CommunityPostView 추가)
 		B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */; };
 		BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */; };
 		BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */; };
@@ -204,22 +219,28 @@
 		4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSelect.swift; sourceTree = "<group>"; };
 		4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPostCell.swift; sourceTree = "<group>"; };
 		4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPosts.swift; sourceTree = "<group>"; };
+		4E4E22DD2ABEC4C500A81E47 /* CommunityReplyBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityReplyBar.swift; sourceTree = "<group>"; };
+		4E4E22DF2ABEC96300A81E47 /* Inter-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-ExtraLight.ttf"; sourceTree = "<group>"; };
+		4E4E22E02ABEC96300A81E47 /* Inter-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Thin.ttf"; sourceTree = "<group>"; };
+		4E4E22E12ABEC96300A81E47 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
+		4E4E22E22ABEC96300A81E47 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
+		4E4E22E32ABEC96300A81E47 /* Inter-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Light.ttf"; sourceTree = "<group>"; };
+		4E4E22E42ABEC96300A81E47 /* Inter-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Black.ttf"; sourceTree = "<group>"; };
+		4E4E22E52ABEC96300A81E47 /* Inter-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-ExtraBold.ttf"; sourceTree = "<group>"; };
+		4E4E22E62ABEC96300A81E47 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
+		4E4E22E72ABEC96300A81E47 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
 		4E74167C2A9B63A00010769F /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
-		4E9E1AA92A91086A00337821 /* Inter-Thin.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Thin.ttf"; sourceTree = "<group>"; };
-		4E9E1AAA2A91086A00337821 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
-		4E9E1AAB2A91086A00337821 /* Inter-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Light.ttf"; sourceTree = "<group>"; };
-		4E9E1AAC2A91086B00337821 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
-		4E9E1AAD2A91086B00337821 /* Inter-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-SemiBold.ttf"; sourceTree = "<group>"; };
-		4E9E1AAE2A91086B00337821 /* Inter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Bold.ttf"; sourceTree = "<group>"; };
-		4E9E1AAF2A91086B00337821 /* Inter-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-ExtraBold.ttf"; sourceTree = "<group>"; };
-		4E9E1AB02A91086B00337821 /* Inter-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-ExtraLight.ttf"; sourceTree = "<group>"; };
-		4E9E1AB12A91086B00337821 /* Inter-Black.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Black.ttf"; sourceTree = "<group>"; };
 		4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishView.swift; sourceTree = "<group>"; };
 		4ED0B8D929F8AB24005A1683 /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
 		4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4ED628352B11D51900ECE221 /* CommunityPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityPostView.swift; sourceTree = "<group>"; };
 		4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderViewModel.swift; sourceTree = "<group>"; };
+<<<<<<< HEAD
 		4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishViewModel.swift; sourceTree = "<group>"; };
+=======
+		4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostViewModel.swift; sourceTree = "<group>"; };
+>>>>>>> 5ae1ddc (CommunityPostView 추가)
 		8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
 		BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };
@@ -396,16 +417,16 @@
 		1E3A577425C7012F00DBB3F4 /* Font */ = {
 			isa = PBXGroup;
 			children = (
+				4E4E22E42ABEC96300A81E47 /* Inter-Black.ttf */,
+				4E4E22E22ABEC96300A81E47 /* Inter-Bold.ttf */,
+				4E4E22E52ABEC96300A81E47 /* Inter-ExtraBold.ttf */,
+				4E4E22DF2ABEC96300A81E47 /* Inter-ExtraLight.ttf */,
+				4E4E22E32ABEC96300A81E47 /* Inter-Light.ttf */,
+				4E4E22E72ABEC96300A81E47 /* Inter-Medium.ttf */,
+				4E4E22E62ABEC96300A81E47 /* Inter-Regular.ttf */,
+				4E4E22E12ABEC96300A81E47 /* Inter-SemiBold.ttf */,
+				4E4E22E02ABEC96300A81E47 /* Inter-Thin.ttf */,
 				1E3A578125C7014600DBB3F4 /* NanumSquareOTFBold.otf */,
-				4E9E1AB12A91086B00337821 /* Inter-Black.ttf */,
-				4E9E1AAE2A91086B00337821 /* Inter-Bold.ttf */,
-				4E9E1AAF2A91086B00337821 /* Inter-ExtraBold.ttf */,
-				4E9E1AB02A91086B00337821 /* Inter-ExtraLight.ttf */,
-				4E9E1AAB2A91086A00337821 /* Inter-Light.ttf */,
-				4E9E1AAC2A91086B00337821 /* Inter-Medium.ttf */,
-				4E9E1AAA2A91086A00337821 /* Inter-Regular.ttf */,
-				4E9E1AAD2A91086B00337821 /* Inter-SemiBold.ttf */,
-				4E9E1AA92A91086A00337821 /* Inter-Thin.ttf */,
 				1E3A578225C7014600DBB3F4 /* NanumSquareOTFExtraBold.otf */,
 				1E3A578325C7014600DBB3F4 /* NanumSquareOTFLight.otf */,
 				1E3A578025C7014600DBB3F4 /* NanumSquareOTFRegular.otf */,
@@ -513,12 +534,15 @@
 		4EB660B82A74DBC100E52314 /* Community */ = {
 			isa = PBXGroup;
 			children = (
+				4E4E22DD2ABEC4C500A81E47 /* CommunityReplyBar.swift */,
 				4E3D4EE62A74E02A005C7AB2 /* BoardNameCell.swift */,
 				4E74167C2A9B63A00010769F /* CommentCell.swift */,
 				4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */,
 				4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */,
 				4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */,
 				4E1BDE232A7F75BC00046ADC /* CommunityView.swift */,
+				4ED628352B11D51900ECE221 /* CommunityPostView.swift */,
+				4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */,
 				4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */,
 				BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */,
 				4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */,
@@ -669,17 +693,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E4E22EA2ABEC96300A81E47 /* Inter-SemiBold.ttf in Resources */,
 				231C9CCA25F8350F0072C07A /* Preview Assets.xcassets in Resources */,
+				4E4E22E82ABEC96300A81E47 /* Inter-ExtraLight.ttf in Resources */,
 				231C9CB625F834D40072C07A /* Assets.xcassets in Resources */,
+				4E4E22EC2ABEC96300A81E47 /* Inter-Light.ttf in Resources */,
 				2360CD8E266353F1007E02DB /* Localizable.strings in Resources */,
 				2300D48C25FBD07F0037765D /* config.plist in Resources */,
+				4E4E22ED2ABEC96300A81E47 /* Inter-Black.ttf in Resources */,
+				4E4E22EF2ABEC96300A81E47 /* Inter-Regular.ttf in Resources */,
 				1E3A56F725C6FCE800DBB3F4 /* LaunchScreen.storyboard in Resources */,
 				1E3A57CF25C71F2400DBB3F4 /* NanumSquareOTFLight.otf in Resources */,
 				4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */,
 				231C9C4325F7FA800072C07A /* GoogleService-Info.plist in Resources */,
 				1E3A57CE25C71F2200DBB3F4 /* NanumSquareOTFExtraBold.otf in Resources */,
 				4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */,
+				4E4E22F02ABEC96300A81E47 /* Inter-Medium.ttf in Resources */,
+				4E4E22EB2ABEC96300A81E47 /* Inter-Bold.ttf in Resources */,
 				1E3A57D325C71F2600DBB3F4 /* NanumSquareOTFRegular.otf in Resources */,
+				4E4E22E92ABEC96300A81E47 /* Inter-Thin.ttf in Resources */,
+				4E4E22EE2ABEC96300A81E47 /* Inter-ExtraBold.ttf in Resources */,
 				1E3A57CA25C71F2000DBB3F4 /* NanumSquareOTFBold.otf in Resources */,
 				231C9C3E25F7FA7C0072C07A /* GoogleService-Info-dev.plist in Resources */,
 				4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */,
@@ -780,6 +813,7 @@
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
 				BF97DF532AAEFE380083FC6F /* Domain.swift in Sources */,
+				4E4E22DE2ABEC4C500A81E47 /* CommunityReplyBar.swift in Sources */,
 				231C9D1425F8568C0072C07A /* MapView.swift in Sources */,
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
 				BF60ADE62AC1EABF0015C468 /* Errors.swift in Sources */,
@@ -806,6 +840,7 @@
 				BF97DF572AAF00780083FC6F /* Repository.swift in Sources */,
 				BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
+				4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */,
 				1E9A6EAA2674BDFD005CAEA1 /* NavigationBarModifier.swift in Sources */,
 				4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */,
 				23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */,
@@ -833,6 +868,7 @@
 				BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
 				1E9859A926629229003A483A /* VOCView.swift in Sources */,
+				4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */,
 				4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */,
 				1E7226F825FBDE72008C272E /* MealCell.swift in Sources */,
 				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,

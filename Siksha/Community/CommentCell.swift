@@ -7,27 +7,19 @@
 
 import Foundation
 import SwiftUI
-struct Comment:Identifiable{
-    var id = UUID()
-    
-    var userName:String
-    var content:String
-    var date:String
-    var likeCount:Int
-    var isLiked:Bool
-}
+
 struct CommentCell:View{
     var comment:Comment
     var body:some View{
         VStack(alignment:.leading,spacing:0){
             HStack(spacing:0) {
-                Text(comment.userName)
+                Text(comment.userId)
                     .font(.custom("Inter-Regular",size:10))
                     .foregroundColor(.init("ReviewMediumColor"))
                 
                 Spacer()
                 
-                Text(comment.date)
+                Text(comment.createdAt)
                     .font(.custom("Inter-Regular", size: 8))
                     .frame(width:50, alignment: .trailing)
                     .foregroundColor(.init("ReviewLowColor"))
