@@ -1,0 +1,241 @@
+//
+//  CommunityPostViewModel.swift
+//  Siksha
+//
+//  Created by Chaehyun Park on 2023/11/29.
+//
+
+import Foundation
+import Combine
+
+struct CommentInfo: Identifiable, Equatable {
+    let id: Int
+    let postId: Int
+    let content: String
+    let createdAt: Date
+    let updatedAt: Date
+    let userId: Int
+    let available: Bool
+    let likeCnt: Int
+    let isLiked: Bool
+    
+    init(comment: Comment) {
+        self.id = comment.id
+        self.postId = comment.postId
+        self.content = comment.content
+        self.createdAt = comment.createdAt
+        self.updatedAt = comment.updatedAt
+        self.userId = comment.userId
+        self.available = comment.available
+        self.likeCnt = comment.likeCnt
+        self.isLiked = comment.isLiked
+    }
+}
+
+protocol CommunityPostViewModelType: ObservableObject {
+    var postInfo: PostInfo { get }
+    var commentsListPublisher: [CommentInfo] { get }
+    var hasNextPublisher: Bool { get }
+    
+    func editPost()
+    func deletePost(completion: @escaping (Bool) -> Void)
+    func togglePostLike()
+    func loadBasicInfos()
+    func loadMoreComments()
+    func editComment(id: Int, content: String)
+    func deleteComment(id: Int)
+    func toggleCommentLike(id: Int)
+}
+
+final class CommunityPostViewModel: CommunityPostViewModelType {
+    struct Constants {
+        static let initialPage = 1
+        static let pageCount = 10
+    }
+    
+    private let postId: Int
+    
+    private let communityRepository: CommunityRepositoryProtocol
+    
+    @Published private var post: Post
+    @Published private var commentsList: [Comment] = []
+    
+    @Published private var hasNext: Bool = false
+    
+    private var currentPage: Int = 0
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    init(communityRepository: CommunityRepositoryProtocol, postId: Int) {
+        self.communityRepository = communityRepository
+        self.postId = postId
+    }
+}
+
+extension CommunityPostViewModel {
+    var commentsListPublisher: [CommentInfo] {
+        return self.commentsList
+            .map { CommentInfo(comment: $0 )}
+    }
+    
+    var postInfo: PostInfo {
+        return PostInfo(post: self.post)
+    }
+    
+    var hasNextPublisher: Bool {
+        return self.hasNext
+    }
+}
+
+extension CommunityPostViewModel {
+    func loadBasicInfos() {
+        self.loadPost()
+        self.loadInitialComments()
+    }
+    
+    func editPost() {
+        
+    }
+    
+    func deletePost(completion: @escaping (Bool) -> Void) {
+        self.communityRepository.deletePost(postId: self.postId)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { [weak self] completionStatus in
+                switch completionStatus {
+                case .finished:
+                    completion(true)
+                case .failure(let error):
+                    print(error)
+                    completion(false)
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    func togglePostLike() {
+        if self.post.isLiked {
+            self.communityRepository.unlikePost(postId: self.postId)
+                .receive(on: RunLoop.main)
+                .sink(receiveCompletion: { error in
+                    print(error)
+                }, receiveValue: { [weak self] post in
+                    self?.post = post
+                })
+                .store(in: &cancellables)
+        } else {
+            self.communityRepository.likePost(postId: self.postId)
+                .receive(on: RunLoop.main)
+                .sink(receiveCompletion: { error in
+                    print(error)
+                }, receiveValue: { [weak self] post in
+                    self?.post = post
+                })
+                .store(in: &cancellables)
+        }
+    }
+    
+    private func loadPost() {
+        self.communityRepository
+            .loadPost(postId: self.postId)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { error in
+                print(error)
+            }, receiveValue: { [weak self] post in
+                self?.post = post
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func loadInitialComments() {
+        self.communityRepository
+            .loadComments(postId: self.postId, page: Constants.initialPage, perPage: Constants.pageCount)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { error in
+                print(error)
+            }, receiveValue: { [weak self] commentsPage in
+                self?.commentsList = commentsPage.comments
+                self?.currentPage = 1
+                self?.hasNext = commentsPage.hasNext
+            })
+            .store(in: &cancellables)
+    }
+    
+    func loadMoreComments() {
+        guard self.hasNext == true else {
+            return
+        }
+        
+        self.communityRepository
+            .loadComments(postId: self.postId, page: self.currentPage + 1, perPage: Constants.pageCount)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { error in
+                print(error)
+            }, receiveValue: { [weak self] commentsPage in
+                self?.commentsList.append(contentsOf: commentsPage.comments)
+                self?.currentPage += 1
+                self?.hasNext = commentsPage.hasNext
+            })
+            .store(in: &cancellables)
+    }
+    
+    func editComment(id: Int, content: String) {
+        self.communityRepository.editComment(commentId: commentId, content: content)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { error in
+                print(error)
+            }, receiveValue: { [weak self] updatedComment in
+                if let index = self?.commentsList.firstIndex(where: { $0.id == commentId }) {
+                    self?.commentsList[index] = updatedComment
+                }
+            })
+            .store(in: &cancellables)
+    }
+
+    func deleteComment(id: Int) {
+        self.communityRepository
+            .loadPost(postId: self.postId)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                        switch completion {
+                        case .finished:
+                            self?.commentsList.removeAll(where: { $0.id == id })
+                        case .failure(let error):
+                            print(error)
+                        }
+                    }
+                  )
+    }
+    
+    func toggleCommentLike(id: Int) {
+        guard let index = self.commentsList.firstIndex(where: { $0.id == id }) else {
+            return
+        }
+
+        let comment = self.commentsList[index]
+
+        if comment.isLiked {
+            self.communityRepository.unlikeComment(commentId: id)
+                .receive(on: RunLoop.main)
+                .sink(receiveCompletion: { completion in
+                    if case .failure(let error) = completion {
+                        print("Error occurred while unliking the comment: \(error)")
+                    }
+                }, receiveValue: { [weak self] updatedComment in
+                    self?.commentsList[index] = updatedComment
+                })
+                .store(in: &cancellables)
+        } else {
+            self.communityRepository.likeComment(commentId: id)
+                .receive(on: RunLoop.main)
+                .sink(receiveCompletion: { completion in
+                    if case .failure(let error) = completion {
+                        print("Error occurred while liking the comment: \(error)")
+                    }
+                }, receiveValue: { [weak self] updatedComment in
+                    self?.commentsList[index] = updatedComment
+                })
+                .store(in: &cancellables)
+        }
+    }
+
+}
