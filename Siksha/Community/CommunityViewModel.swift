@@ -72,6 +72,7 @@ protocol CommunityViewModelType: ObservableObject {
     func selectBoard(id: Int)
     func loadBasicInfos()
     func loadMorePosts()
+    func loadSelectedBoardPosts()
 }
 
 final class CommunityViewModel: CommunityViewModelType {
@@ -177,5 +178,8 @@ extension CommunityViewModel {
                 self?.hasNext = postsPage.hasNext
             })
             .store(in: &cancellables)
+    }
+    func loadSelectedBoardPosts() {
+        loadInitialPosts(boardId: selectedBoardId)
     }
 }

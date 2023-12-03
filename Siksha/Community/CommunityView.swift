@@ -67,7 +67,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
         }
         .onChange(of: needRefresh, perform: { refresh in
             if refresh{
-                self.viewModel.loadBasicInfos()
+                self.viewModel.loadSelectedBoardPosts()
                 needRefresh = false
             }
         })
@@ -202,5 +202,6 @@ class StubCommunityViewModel: CommunityViewModelType {
     
     func loadBasicInfos() { }
     func loadMorePosts() { }
+    func loadSelectedBoardPosts() { }
     func selectBoard(id: Int) { }
 }
