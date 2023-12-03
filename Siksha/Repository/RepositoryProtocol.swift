@@ -17,9 +17,10 @@ protocol CommunityRepositoryProtocol {
     func submitPost(boardId:Int,title:String,content:String,images:[Data]) ->AnyPublisher<SubmitPostResponse,Error>
     func loadPostsPage(boardId: Int, page: Int, perPage: Int) -> AnyPublisher<PostsPage, Error>
     func loadPost(postId: Int) -> AnyPublisher<Post, Error>
+    func deletePost(postId: Int) -> AnyPublisher<Void, Error>
     func likePost(postId: Int) -> AnyPublisher<Post, Error>
     func unlikePost(postId: Int) -> AnyPublisher<Post, Error>
-    func loadComments(postId: Int) -> AnyPublisher<Post, Error>
+    func loadCommentsPage(postId: Int, page: Int, perPage: Int) -> AnyPublisher<CommentsPage, Error>
     func postComment(postId: Int, content: String) -> AnyPublisher<Comment, Error>
     func editComment(commentId: Int, content: String) -> AnyPublisher<Comment, Error>
     func deleteComment(commentId: Int) -> AnyPublisher<Void, Error>
