@@ -188,7 +188,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunitySubmit
             
         }.navigationBarBackButtonHidden(true)
         .alert(isPresented: $viewModel.isSubmitted, content: {
-            Alert(title: Text("upload post"), message: Text(""), dismissButton: alertButton)
+            Alert(title: Text("게시물 남기기"), message: Text("게시물이 등록되었습니다."), dismissButton: alertButton)
         })
     }
     
