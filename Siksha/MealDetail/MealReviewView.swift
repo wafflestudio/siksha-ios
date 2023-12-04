@@ -76,7 +76,7 @@ private extension MealReviewView {
                     .font(.system(size: 14))
                     .foregroundColor(viewModel.commentRecommended ? Color.gray : Color.black)
                     .frame(height: 148)
-                    .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                    .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
                     .background(
                         Color.init("AppBackgroundColor")
                             .cornerRadius(10)
@@ -110,6 +110,7 @@ private extension MealReviewView {
                                 .renderingMode(.original)
                                 .scaledToFill()
                                 .frame(width: 80, height: 80)
+                                .cornerRadius(8)
                                 .clipped()
                                 .padding([.top, .trailing], 5)
                             
@@ -119,15 +120,10 @@ private extension MealReviewView {
                                 }
                             }) {
                                 ZStack {
-                                    Image("Circle")
+                                    Image("imageXButton")
                                         .resizable()
                                         .renderingMode(.original)
                                         .frame(width: 16, height: 16)
-                                    
-                                    Image("X")
-                                        .resizable()
-                                        .renderingMode(.original)
-                                        .frame(width: 11, height: 11)
                                 }
                                 .padding(EdgeInsets(top: 0, leading: 8, bottom: 8, trailing: 0))
                             }
