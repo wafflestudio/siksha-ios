@@ -100,27 +100,9 @@ private extension MealReviewView {
     }
     
     var imageSection: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 8) {
             ScrollView (.horizontal) {
                 HStack {
-                    Button(action: {
-                        self.isShowingPhotoLibrary = true
-                    }) {
-                        ZStack {
-                            Rectangle()
-                                .frame(width: 80, height: 80)
-
-                            Image(systemName: "plus")
-                                .resizable()
-                                .renderingMode(.original)
-                                .foregroundColor(Color.white)
-                                .frame(width: 40, height: 40)
-                        }
-                    }
-                    .sheet(isPresented: $isShowingPhotoLibrary) {
-                        ImagePickerCoordinatorView(selectedImages: $addedImages)
-                    }
-                    
                     ForEach(addedImages, id: \.self) { image in
                         ZStack(alignment: .topTrailing) {
                             Image(uiImage: image)
@@ -154,6 +136,23 @@ private extension MealReviewView {
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 28, bottom: 0, trailing: 28))
+            
+            HStack {
+                Spacer()
+                    .frame(width: 28)
+                
+                Button(action: {
+                    self.isShowingPhotoLibrary = true
+                }) {
+                    Image("reviewSummit")
+                        .frame(width: 134, height: 32)
+                }
+                .sheet(isPresented: $isShowingPhotoLibrary) {
+                    ImagePickerCoordinatorView(selectedImages: $addedImages)
+                }
+                
+                Spacer()
+            }
         }
     }
     
