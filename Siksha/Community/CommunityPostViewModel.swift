@@ -30,6 +30,19 @@ struct CommentInfo: Identifiable, Equatable {
         self.likeCnt = comment.likeCnt
         self.isLiked = comment.isLiked
     }
+
+    init(content: String, likeCnt: Int, isLiked: Bool) {
+        self.id = 1
+        self.postId = 1
+        self.content = content
+        self.createdAt = Date()
+        self.updatedAt = Date()
+        self.userId = 1
+        self.available = true
+        self.likeCnt = likeCnt
+        self.isLiked = isLiked
+    }
+    
 }
 
 protocol CommunityPostViewModelType: ObservableObject {
@@ -42,7 +55,8 @@ protocol CommunityPostViewModelType: ObservableObject {
     func togglePostLike()
     func loadBasicInfos()
     func loadMoreComments()
-    func editComment(id: Int, content: String)
+    func submitComment(postId: Int, content: String)
+    func editComment(commentId: Int, content: String)
     func deleteComment(id: Int)
     func toggleCommentLike(id: Int)
 }
@@ -69,6 +83,7 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
     init(communityRepository: CommunityRepositoryProtocol, postId: Int) {
         self.communityRepository = communityRepository
         self.postId = postId
+        self.post = Post()
     }
 }
 
@@ -108,6 +123,8 @@ extension CommunityPostViewModel {
                     print(error)
                     completion(false)
                 }
+            }, receiveValue: { value in
+                
             })
             .store(in: &cancellables)
     }
@@ -148,7 +165,7 @@ extension CommunityPostViewModel {
     
     private func loadInitialComments() {
         self.communityRepository
-            .loadComments(postId: self.postId, page: Constants.initialPage, perPage: Constants.pageCount)
+            .loadCommentsPage(postId: self.postId, page: Constants.initialPage, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { error in
                 print(error)
@@ -166,7 +183,7 @@ extension CommunityPostViewModel {
         }
         
         self.communityRepository
-            .loadComments(postId: self.postId, page: self.currentPage + 1, perPage: Constants.pageCount)
+            .loadCommentsPage(postId: self.postId, page: self.currentPage + 1, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { error in
                 print(error)
@@ -178,13 +195,24 @@ extension CommunityPostViewModel {
             .store(in: &cancellables)
     }
     
-    func editComment(id: Int, content: String) {
+    
+    func submitComment(postId: Int, content: String) {
+        communityRepository.postComment(postId: postId, content: content)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { error in
+                    print(error)
+                }, receiveValue: { [weak self] newComment in
+                self?.commentsList.append(newComment)
+            })
+            .store(in: &cancellables)
+    }
+    func editComment(commentId: Int, content: String) {
         self.communityRepository.editComment(commentId: commentId, content: content)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { error in
                 print(error)
             }, receiveValue: { [weak self] updatedComment in
-                if let index = self?.commentsList.firstIndex(where: { $0.id == commentId }) {
+                if let index = self?.commentsList.firstIndex(where: { $0.id == updatedComment.id }) {
                     self?.commentsList[index] = updatedComment
                 }
             })
@@ -196,14 +224,16 @@ extension CommunityPostViewModel {
             .loadPost(postId: self.postId)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { [weak self] completion in
-                        switch completion {
-                        case .finished:
-                            self?.commentsList.removeAll(where: { $0.id == id })
-                        case .failure(let error):
-                            print(error)
-                        }
+                    switch completion {
+                    case .finished:
+                        self?.commentsList.removeAll(where: { $0.id == id })
+                    case .failure(let error):
+                        print(error)
                     }
-                  )
+            }, receiveValue: { value in
+                
+            })
+            .store(in: &cancellables)
     }
     
     func toggleCommentLike(id: Int) {
