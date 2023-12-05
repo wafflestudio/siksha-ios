@@ -10,6 +10,7 @@ import Foundation
 
 protocol NetworkModuleProtocol {
     func request<T: Decodable>(endpoint: SikshaAPI) -> AnyPublisher<T, Error>
+    func requestWithNoContent(endpoint: SikshaAPI) -> AnyPublisher<Void, Error>
 }
 
 final class Repository: RepositoryProtocol {
@@ -41,7 +42,7 @@ extension Repository: CommunityRepositoryProtocol {
     
     func deletePost(postId: Int) -> AnyPublisher<Void, Error> {
         let endpoint = SikshaAPI.deletePost(postId: postId)
-        return self.networkModule.request(endpoint: endpoint)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
     }
     
     func likePost(postId: Int) -> AnyPublisher<Post, Error> {
@@ -71,7 +72,7 @@ extension Repository: CommunityRepositoryProtocol {
     
     func deleteComment(commentId: Int) -> AnyPublisher<Void, Error> {
         let endpoint = SikshaAPI.deleteComment(commentId: commentId)
-        return self.networkModule.request(endpoint: endpoint)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
     }
     
     func likeComment(commentId: Int) -> AnyPublisher<Comment, Error> {

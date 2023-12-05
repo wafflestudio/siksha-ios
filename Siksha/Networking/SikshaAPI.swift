@@ -155,12 +155,12 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .getPost:
             return .get
-        case .deletePost
+        case .deletePost:
             return .delete
         case .likePost:
-            return .get
+            return .post
         case .unlikePost:
-            return .get
+            return .post
         case .getComments:
             return .get
         case .submitComment:
@@ -219,27 +219,30 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/boards"
         case .getPosts:
             return "/community/posts"
+        case let .getPost(postId):
         case .submitPost:
             return "/community/posts"
         case .getPost:
             return "/community/posts"
         case .deletePost:
             return "/community/posts/\(postId)"
-        case .likePost(postId):
+        case let .deletePost(postId):
+            return "/community/posts/\(postId)"
+        case let .likePost(postId):
             return "/community/posts/\(postId)/like"
-        case .unlikePost(postId):
+        case let .unlikePost(postId):
             return "/community/posts/\(postId)/unlike"
         case .getComments:
             return "/community/comments"
         case .submitComment:
             return "/community/comments"
-        case .editComment(commentId, content):
+        case let .editComment(commentId, _):
             return "/community/comments/\(commentId)"
-        case .deleteComment(commentId):
+        case let .deleteComment(commentId):
             return "/community/comments/\(commentId)"
-        case .likeComment(commentId):
+        case let .likeComment(commentId):
             return "/community/comments/\(commentId)/like"
-        case .unlikeComment(commentId):
+        case let .unlikeComment(commentId):
             return "/community/comments/\(commentId)/unlike"
         case .loadUserInfo:
             return "/auth/me"
@@ -266,13 +269,22 @@ enum SikshaAPI: URLRequestConvertible {
             return ["board_id": boardId, "page": page, "per_page": perPage]
         case let .getPost(postId):
             return ["post_id": postId]
+        case let .likePost(postId):
+            return ["post_id": postId]
+        case let .unlikePost(postId):
+            return ["post_id": postId]
         case let .getComments(postId, page, perPage):
             return ["post_id": postId, "page": page, "per_page": perPage]
         case let .submitComment(postId, content):
             return ["post_id": postId, "content": content]
-        case let .editComment(commentId, content):
+        case let .editComment(_, content):
             return ["content": content]
      
+        case let .likeComment(commentId):
+            return ["comment_id": commentId]
+        case let .unlikeComment(commentId):
+            return ["comment_id": commentId]
+
         default:
             return nil
         }
