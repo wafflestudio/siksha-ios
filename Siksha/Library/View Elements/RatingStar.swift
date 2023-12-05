@@ -22,15 +22,20 @@ struct RatingStar: View {
         let intScore = Int(score * 2)
 
         var image: String
+        var starWidth = starSize
+        
         if index*2<intScore-1 {
             image = "RatingFilled"
         } else if index*2<intScore {
             image = "RatingHalf"
+            starWidth = starWidth / 2
         } else {
-            image = "RatingEmpty"
+            image = ""
         }
         
-        return Image(image).resizable().frame(width: starSize+1, height: starSize)
+        return Image(image)
+            .resizable()
+            .frame(width: starWidth, height: starSize)
     }
     
     var body: some View {
