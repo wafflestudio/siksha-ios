@@ -81,6 +81,7 @@ protocol CommunityViewModelType: ObservableObject {
     func selectBoard(id: Int)
     func loadBasicInfos()
     func loadMorePosts()
+    func getSelectedBoardName() -> String
     func loadSelectedBoardPosts()
 }
 
@@ -155,6 +156,10 @@ extension CommunityViewModel {
         self.selectedBoardId = id
         
         self.loadInitialPosts(boardId: id)
+    }
+    
+    func getSelectedBoardName() -> String {
+        boardsListPublisher.first { $0.isSelected }?.name ?? "Unknown"
     }
     
     private func loadInitialPosts(boardId: Int) {

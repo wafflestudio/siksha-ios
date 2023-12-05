@@ -90,7 +90,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     var postList: some View {
         LazyVStack(spacing: 0) {
             ForEach(self.viewModel.postsListPublisher) { postInfo in
-                CommunityPostPreView(info: postInfo)
+                CommunityPostPreView(info: postInfo, boardName: viewModel.getSelectedBoardName())
                 divider
             }
             
@@ -130,50 +130,53 @@ struct CommunityPostPreView: View {
     private let defaultImageColor = Color("DefaultImageColor")
     
     let info: PostInfo
+    let boardName: String
     
     var body: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Text(info.title)
-                    .font(.custom("Inter-Bold", size: 15))
-                Spacer()
-                    .frame(width: 10)
-                Text(info.content)
-                    .font(.custom("Inter-ExtraLight", size: 12))
-                    .foregroundColor(contentColor)
-                Spacer()
-                    .frame(width: 10)
-                HStack {
-                    HStack(alignment: .center) {
-                        Image(info.isLiked ? "PostLike-liked" : "PostLike-default")
-                            .frame(width: 11.5, height: 10)
-                            .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
-                        Spacer()
-                            .frame(width: 4)
-                        Text(String(info.likeCount))
-                            .font(.custom("Inter-Regular", size: 9))
+        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: info.id), boardName: boardName)) {
+            HStack {
+                VStack(alignment: .leading) {
+                    Text(info.title)
+                        .font(.custom("Inter-Bold", size: 15))
+                    Spacer()
+                        .frame(width: 10)
+                    Text(info.content)
+                        .font(.custom("Inter-ExtraLight", size: 12))
+                        .foregroundColor(contentColor)
+                    Spacer()
+                        .frame(width: 10)
+                    HStack {
+                        HStack(alignment: .center) {
+                            Image(info.isLiked ? "PostLike-liked" : "PostLike-default")
+                                .frame(width: 11.5, height: 10)
+                                .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
+                            Spacer()
+                                .frame(width: 4)
+                            Text(String(info.likeCount))
+                                .font(.custom("Inter-Regular", size: 9))
                             
-                            .foregroundColor(likeColor)
-                    }
-                    HStack(alignment: .center) {
-                        Image("reply")
-                            .frame(width: 11.5, height: 11)
-                        Spacer()
-                            .frame(width: 4)
-                        Text(String(info.commentCount))
-                            .font(.custom("Inter-Regular", size: 9))
-                            .foregroundColor(Color.init("ReviewMediumColor"))
-                            .frame(height: 11, alignment: .center)
-                        
+                                .foregroundColor(likeColor)
+                        }
+                        HStack(alignment: .center) {
+                            Image("Reply")
+                                .frame(width: 11.5, height: 11)
+                            Spacer()
+                                .frame(width: 4)
+                            Text(String(info.commentCount))
+                                .font(.custom("Inter-Regular", size: 9))
+                                .foregroundColor(Color.init("ReviewMediumColor"))
+                                .frame(height: 11, alignment: .center)
+                            
+                        }
                     }
                 }
+                Spacer()
+                Rectangle()
+                    .frame(width: 61, height: 61)
+                    .foregroundColor(defaultImageColor)
             }
-            Spacer()
-            Rectangle()
-                .frame(width: 61, height: 61)
-                .foregroundColor(defaultImageColor)
+            .padding(EdgeInsets(top: 15, leading: 35, bottom: 15, trailing: 21))
         }
-        .padding(EdgeInsets(top: 15, leading: 35, bottom: 15, trailing: 21))
     }
 }
 
@@ -208,4 +211,7 @@ class StubCommunityViewModel: CommunityViewModelType {
     func loadMorePosts() { }
     func loadSelectedBoardPosts() { }
     func selectBoard(id: Int) { }
+    func getSelectedBoardName() -> String {
+        return "board1"
+    }
 }

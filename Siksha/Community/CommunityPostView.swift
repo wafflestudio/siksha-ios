@@ -15,6 +15,8 @@ struct CommunityPostView: View {
     @State private var anonymousIsToggled = false
     @State private var commentContent: String = ""
     
+    let boardName: String
+    
     var backButton: some View {
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
@@ -168,7 +170,7 @@ struct CommunityPostView: View {
             
             CommunityReplyBar()
                 
-        }.customNavigationBar(title: viewModel.post.boardId)
+        }.customNavigationBar(title: boardName)
             .navigationBarItems(leading: backButton)
             .onAppear {
                 viewModel.loadBasicInfos()
@@ -186,7 +188,7 @@ extension View {
 
 struct CommunityPostView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityPostView(viewModel: StubCommunityViewModel())
+        CommunityPostView(viewModel: StubCommunityPostViewModel(), boardName: StubCommunityViewModel().getSelectedBoardName())
     }
 }
 
