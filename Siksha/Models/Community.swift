@@ -58,6 +58,7 @@ struct Post: Decodable {
     enum CodingKeys: String, CodingKey {
         case id
         case boardId = "board_id"
+        case userId = "user_id"
         case title
         case content
         case available
@@ -71,6 +72,7 @@ struct Post: Decodable {
     
     let id: Int
     let boardId: Int
+    let userId: Int
     let title: String
     let content: String
     let available: Bool
@@ -84,6 +86,7 @@ struct Post: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.boardId = try container.decode(Int.self, forKey: .boardId)
+        self.userId = try container.decode(Int.self, forKey: .userId)
         self.title = try container.decode(String.self, forKey: .title)
         self.content = try container.decode(String.self, forKey: .content)
         self.available = try container.decode(Bool.self, forKey: .available)
@@ -92,6 +95,20 @@ struct Post: Decodable {
         self.likeCnt = try container.decode(Int.self, forKey: .likeCnt)
         self.commentCnt = try container.decode(Int.self, forKey: .commentCnt)
         self.isLiked = try container.decode(Bool.self, forKey: .isLiked)
+    }
+    
+    init() {
+            self.id = 0
+            self.boardId = 0
+            self.userId = 0
+            self.title = ""
+            self.content = ""
+            self.available = false
+            self.createdAt = Date()
+            self.updatedAt = Date()
+            self.likeCnt = 0
+            self.commentCnt = 0
+            self.isLiked = false
     }
 }
 struct SubmitPostResponse:Codable{
@@ -121,7 +138,7 @@ struct CommentsPage: Decodable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.posts = try container.decode([Post].self, forKey: .posts)
+        self.comments = try container.decode([Comment].self, forKey: .comments)
         self.totalCount = try container.decode(Int.self, forKey: .totalCount)
         self.hasNext = try container.decode(Bool.self, forKey: .hasNext)
     }

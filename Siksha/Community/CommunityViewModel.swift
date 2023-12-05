@@ -9,18 +9,24 @@ import Foundation
 import Combine
 
 struct PostInfo: Identifiable, Equatable {
+    let boardId: Int
+    let userId: Int
     let id: Int
     let title: String
     let content: String
+    let createdAt: Date
     let isLiked: Bool
     let likeCount: Int
     let commentCount: Int
     let imageURL: String?
     
     init(post: Post) {
+        self.boardId = post.boardId
+        self.userId = post.userId
         self.id = post.id
         self.title = post.title
         self.content = post.content
+        self.createdAt = post.createdAt
         self.isLiked = post.isLiked
         self.likeCount = post.likeCnt
         self.commentCount = post.commentCnt
@@ -35,6 +41,9 @@ struct PostInfo: Identifiable, Equatable {
         self.commentCount = commentCount
         self.imageURL = imageURL
         
+        self.boardId = 0
+        self.userId = 0
+        self.createdAt = Date()
         self.id = 0
     }
 }
