@@ -74,7 +74,13 @@ enum SikshaAPI: URLRequestConvertible {
     case likeComment(commentId: Int)
     case unlikeComment(commentId: Int)
     
+
     case submitPost(boardId:Int,title:String,content:String,images:[Data])
+
+    // User
+    case loadUserInfo
+    
+
     static var baseURL = Config.shared.baseURL!
     
     var needToken: Bool {
@@ -167,8 +173,13 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .unlikeComment:
             return .post
+
         case .submitPost:
             return .post
+
+        case .loadUserInfo:
+            return .get
+
         }
     }
 
@@ -230,6 +241,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/comments/\(commentId)/like"
         case .unlikeComment(commentId):
             return "/community/comments/\(commentId)/unlike"
+        case .loadUserInfo:
+            return "/auth/me"
         }
     }
     

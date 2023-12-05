@@ -91,6 +91,8 @@
 		4E4E22EE2ABEC96300A81E47 /* Inter-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E52ABEC96300A81E47 /* Inter-ExtraBold.ttf */; };
 		4E4E22EF2ABEC96300A81E47 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E62ABEC96300A81E47 /* Inter-Regular.ttf */; };
 		4E4E22F02ABEC96300A81E47 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E72ABEC96300A81E47 /* Inter-Medium.ttf */; };
+		4E6465102B1D8DB200A4ABAD /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E64650F2B1D8DB200A4ABAD /* UserManager.swift */; };
+		4E6465122B1D8EEB00A4ABAD /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6465112B1D8EEB00A4ABAD /* User.swift */; };
 		4E74167D2A9B63A10010769F /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74167C2A9B63A00010769F /* CommentCell.swift */; };
 		4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */; };
 		4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8D929F8AB24005A1683 /* config.plist */; };
@@ -229,6 +231,8 @@
 		4E4E22E52ABEC96300A81E47 /* Inter-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-ExtraBold.ttf"; sourceTree = "<group>"; };
 		4E4E22E62ABEC96300A81E47 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
 		4E4E22E72ABEC96300A81E47 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
+		4E64650F2B1D8DB200A4ABAD /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
+		4E6465112B1D8EEB00A4ABAD /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4E74167C2A9B63A00010769F /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishView.swift; sourceTree = "<group>"; };
 		4ED0B8D929F8AB24005A1683 /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
@@ -410,6 +414,7 @@
 				1E3A574D25C6FF0500DBB3F4 /* Restaurant.swift */,
 				1E3A575225C6FF1400DBB3F4 /* Review.swift */,
 				BF97DF5C2AB836910083FC6F /* Community.swift */,
+				4E6465112B1D8EEB00A4ABAD /* User.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -566,6 +571,7 @@
 				BF97DF582AAF00B30083FC6F /* DomainManager.swift */,
 				BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */,
 				BF60ADE52AC1EABF0015C468 /* Errors.swift */,
+				4E64650F2B1D8DB200A4ABAD /* UserManager.swift */,
 			);
 			path = Domain;
 			sourceTree = "<group>";
@@ -811,6 +817,7 @@
 				1ECB257D25F5412300875E18 /* TextView.swift in Sources */,
 				23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
+				4E6465102B1D8DB200A4ABAD /* UserManager.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
 				BF97DF532AAEFE380083FC6F /* Domain.swift in Sources */,
 				4E4E22DE2ABEC4C500A81E47 /* CommunityReplyBar.swift in Sources */,
@@ -867,6 +874,7 @@
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
 				BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
+				4E6465122B1D8EEB00A4ABAD /* User.swift in Sources */,
 				1E9859A926629229003A483A /* VOCView.swift in Sources */,
 				4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */,
 				4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */,

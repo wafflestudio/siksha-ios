@@ -86,3 +86,9 @@ extension Repository: CommunityRepositoryProtocol {
 }
 
 
+extension Repository: UserRepositoryProtocol {
+    func loadUserInfo() -> AnyPublisher<User, Error> {
+        let endpoint = SikshaAPI.loadUserInfo
+        return self.networkModule.request(endpoint: endpoint)
+    }
+}

@@ -42,10 +42,19 @@ struct CommentCell:View{
                     .font(.custom("Inter-Regular", size: 8))
                     .foregroundColor(.init("MainThemeColor"))
                 Spacer()
+                
                 Menu{
+                    if (UserManager.shared.userId == comment.userId) {
+                        Button("수정", action: {
+                        })
+                        Button("삭제", action: {
+                        })
+                    }
+                    Button("신고하기", action: {})
                     Button("취소", action: {})
-                                  Button("신고하기", action: {})
                 }
+                
+                
             label:{
                     Image("etc")
                         .frame(width:13,height:1.86)

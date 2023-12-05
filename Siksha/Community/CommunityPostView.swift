@@ -133,9 +133,18 @@ struct CommunityPostView: View {
                             Spacer()
                             
                             Menu{
+                                if (UserManager.shared.userId == viewModel.postInfo.userId) {
+                                    Button("수정", action: {
+                                        
+                                    })
+                                    Button("삭제", action: {
+                                    })
+                                }
                                 Button("취소", action: {})
                                 Button("URL 복사하기", action: {})
-                                Button("신고하기", action: {})
+                                if (UserManager.shared.userId != viewModel.postInfo.userId) {
+                                    Button("신고하기", action: {})
+                                }
                             } label:{
                                 Image("etc")
                                     .frame(width:13,height:13)

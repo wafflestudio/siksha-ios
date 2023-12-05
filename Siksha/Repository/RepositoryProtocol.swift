@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-protocol RepositoryProtocol: CommunityRepositoryProtocol {
+protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol {
 
 }
 
@@ -26,4 +26,8 @@ protocol CommunityRepositoryProtocol {
     func deleteComment(commentId: Int) -> AnyPublisher<Void, Error>
     func likeComment(commentId: Int) -> AnyPublisher<Comment, Error>
     func unlikeComment(commentId: Int) -> AnyPublisher<Comment, Error>
+}
+
+protocol UserRepositoryProtocol {
+    func loadUserInfo() -> AnyPublisher<User, Error>
 }

@@ -9,6 +9,7 @@ import Foundation
 
 protocol DomainProtocol {
     var communityRepository: CommunityRepositoryProtocol { get }
+    var userRepository: UserRepositoryProtocol { get }
 }
 
 final class Domain: DomainProtocol {
@@ -19,6 +20,10 @@ final class Domain: DomainProtocol {
     }
     
     var communityRepository: CommunityRepositoryProtocol {
+        return self.repository
+    }
+    
+    var userRepository: UserRepositoryProtocol {
         return self.repository
     }
 }

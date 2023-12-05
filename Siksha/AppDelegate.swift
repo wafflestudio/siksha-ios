@@ -58,6 +58,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Feature Flag
 //        FeatureFlag.shared.enable(feature: .community)
         
+        UserManager.shared.loadUserInfo()
+        
         return true
     }
     
