@@ -187,13 +187,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunitySubmit
             .navigationBarItems(leading: backButton, trailing: postButton)
             
         }.navigationBarBackButtonHidden(true)
-        .alert(isPresented: $viewModel.isSubmitted, content: {
-            Alert(title: Text("게시물 남기기"), message: Text("게시물이 등록되었습니다."), dismissButton: alertButton)
-        })
         .alert(isPresented: $viewModel.isErrorAlert, content: {
-            Alert(title: Text("게시물 남기기"), message: Text("게시물을 등록하지 못했습니다."), dismissButton: alertButton)
+            Alert(title: Text("게시물 남기기"), message:  Text(alertMessage), dismissButton: alertButton)
         })
+      
     }
+    
     
     var alertButton: Alert.Button {
             var action: (() -> Void)? = nil
@@ -210,6 +209,9 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunitySubmit
             }
             return Alert.Button.default(Text("확인"), action: action)
         }
+    var alertMessage:String{
+        viewModel.isSubmitted ? "게시물이 등록되었습니다." : "게시물을 등록하지 못했습니다. 다시 시도해주세요."
+    }
     
     
 }
