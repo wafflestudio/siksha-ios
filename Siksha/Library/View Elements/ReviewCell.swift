@@ -30,7 +30,7 @@ struct ReviewCell: View {
                     Text("ID \(String(review.userId))")
                         .font(.custom("NanumSquareOTFB", size: 12))
                         .foregroundColor(.black)
-                    RatingStar(.constant(review.score), size: 11, spacing: 0.75)
+                    RatingStar(.constant(review.score), size: 11, spacing: 1.5)
                         .padding(.top, -6)
                 }
                 .padding(.leading, 7)

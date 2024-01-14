@@ -34,11 +34,11 @@ private extension MealReviewView {
                     .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
                     .padding(.top, 26)
                 
-                RatingStar($viewModel.scoreToSubmit, size: 35)
+                RatingStar($viewModel.scoreToSubmit, size: 35, spacing: 5.5)
                     .gesture(
                         DragGesture(minimumDistance: 0, coordinateSpace: .local)
                             .updating($score) { (value, state, transcation) in
-                                state = Int(value.location.x/50.0)+1
+                                state = Int(value.location.x / 50.0)+1
                                 viewModel.scoreToSubmit = min(Double(state), 5)
                             }
                     )

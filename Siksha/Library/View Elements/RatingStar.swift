@@ -22,20 +22,18 @@ struct RatingStar: View {
         let intScore = Int(score * 2)
 
         var image: String
-        var starWidth = starSize
         
-        if index*2<intScore-1 {
+        if index * 2 < intScore - 1 {
             image = "RatingFilled"
-        } else if index*2<intScore {
+        } else if index * 2 < intScore {
             image = "RatingHalf"
-            starWidth = starWidth / 2
         } else {
-            image = ""
+            image = "RatingEmpty"
         }
         
         return Image(image)
             .resizable()
-            .frame(width: starWidth, height: starSize)
+            .frame(width: starSize * 13/12, height: starSize)
     }
     
     var body: some View {
@@ -49,6 +47,6 @@ struct RatingStar: View {
 
 struct RatingStar_Preview: PreviewProvider {
     static var previews: some View {
-        RatingStar(.constant(3.5), size: 32)
+        RatingStar(.constant(3.5), size: 32, spacing: 5)
     }
 }

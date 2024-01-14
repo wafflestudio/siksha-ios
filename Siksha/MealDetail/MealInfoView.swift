@@ -16,7 +16,7 @@ private extension MealInfoView {
                         .font(.custom("NanumSquareOTFB", size: 32))
                         .foregroundColor(.black)
                     
-                    RatingStar(.constant(viewModel.meal.score), size: 17, spacing: 0.8)
+                    RatingStar(.constant(viewModel.meal.score), size: 17, spacing: 2)
                 }
                 .padding(.leading, 45)
                             
