@@ -95,17 +95,15 @@ struct Post: Decodable {
     }
 }
 struct SubmitPostResponse:Codable{
-   var board_id: Int
-    var  title : String
-    var  content: String
-   var    created_at: String
-    var  updated_at: String
-    var  id: Int
-    var  user_id:Int
-      var available: Bool
-    
-      var like_cnt: Int
-      var comment_cnt: Int
-var is_liked: Bool
+    var board_id: Int
+    var title : String
+    var content: String
+    var created_at: String
+    var updated_at: String
+    var id: Int
+    var available: Bool
+    var like_cnt: Int
+    var comment_cnt: Int
+    var is_liked: Bool
 }
 
