@@ -10,7 +10,7 @@ import Combine
 
 class UserManager: ObservableObject {
     static let shared = UserManager()
-    @Published var userId: Int?
+    @Published var nickname: String?
     private var cancellables = Set<AnyCancellable>()
 
     func loadUserInfo() {
@@ -19,7 +19,8 @@ class UserManager: ObservableObject {
             .sink(receiveCompletion: { error in
                 print(error)
             }, receiveValue: { [weak self] user in
-                self?.userId = user.id
+                self?.nickname = user.nickname
+                print(user.nickname)
             })
             .store(in: &cancellables)
     }

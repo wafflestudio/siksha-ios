@@ -32,7 +32,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
     var body:some View{
         VStack(alignment:.leading,spacing:0){
             HStack(spacing:0) {
-                Text("\(comment.userId)")
+                Text("\(comment.nickname)")
                     .font(.custom("Inter-Regular",size:10))
                     .foregroundColor(.init("ReviewMediumColor"))
                 
@@ -67,7 +67,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                 Spacer()
                 
                 Menu{
-                    if (UserManager.shared.userId == comment.userId) {
+                    if (UserManager.shared.nickname == comment.nickname) {
                         Button("수정", action: {
                             self.showingEditView = true
                         })

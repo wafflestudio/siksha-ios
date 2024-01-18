@@ -111,7 +111,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 VStack {
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
-                            Text("\(viewModel.postInfo.userId)")
+                            Text("\(viewModel.postInfo.nickname)")
                                 .font(Font.custom("Inter-Regular",size:10))
                                 .foregroundColor(.init("ReviewMediumColor"))
                             
@@ -161,7 +161,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                             Spacer()
                             
                             Menu{
-                                if (UserManager.shared.userId == viewModel.postInfo.userId) {
+                                if (UserManager.shared.nickname == viewModel.postInfo.nickname) {
                                     Button("수정", action: {
                                         
                                     })
@@ -176,7 +176,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                     })
                                 }
                                 Button("URL 복사하기", action: {})
-                                if (UserManager.shared.userId != viewModel.postInfo.userId) {
+                                if (UserManager.shared.nickname != viewModel.postInfo.nickname) {
                                     Button("신고하기", action: {})
                                 }
                                 Button("취소", action: {})

@@ -58,7 +58,7 @@ struct Post: Decodable {
     enum CodingKeys: String, CodingKey {
         case id
         case boardId = "board_id"
-        case userId = "user_id"
+        case nickname = "nickname"
         case title
         case content
         case available
@@ -72,7 +72,7 @@ struct Post: Decodable {
     
     let id: Int
     let boardId: Int
-    let userId: Int
+    let nickname: String
     let title: String
     let content: String
     let available: Bool
@@ -86,7 +86,7 @@ struct Post: Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.boardId = try container.decode(Int.self, forKey: .boardId)
-        self.userId = try container.decode(Int.self, forKey: .userId)
+        self.nickname = try container.decode(String.self, forKey: .nickname)
         self.title = try container.decode(String.self, forKey: .title)
         self.content = try container.decode(String.self, forKey: .content)
         self.available = try container.decode(Bool.self, forKey: .available)
@@ -100,7 +100,7 @@ struct Post: Decodable {
     init() {
             self.id = 0
             self.boardId = 0
-            self.userId = 0
+            self.nickname = ""
             self.title = ""
             self.content = ""
             self.available = false
@@ -152,7 +152,7 @@ struct Comment: Decodable {
         case content
         case createdAt = "created_at"
         case updatedAt = "updated_at"
-        case userId = "user_id"
+        case nickname = "nickname"
         case available
         case likeCnt = "like_cnt"
         case isLiked = "is_liked"
@@ -163,7 +163,7 @@ struct Comment: Decodable {
     let content: String
     let createdAt: Date
     let updatedAt: Date
-    let userId: Int
+    let nickname: String
     let available: Bool
     let likeCnt: Int
     let isLiked: Bool
@@ -175,7 +175,7 @@ struct Comment: Decodable {
         content = try container.decode(String.self, forKey: .content)
         createdAt = try container.decodeDate(key: .createdAt)
         updatedAt = try container.decodeDate(key: .updatedAt)
-        userId = try container.decode(Int.self, forKey: .userId)
+        nickname = try container.decode(String.self, forKey: .nickname)
         available = try container.decode(Bool.self, forKey: .available)
         likeCnt = try container.decode(Int.self, forKey: .likeCnt)
         isLiked = try container.decode(Bool.self, forKey: .isLiked)

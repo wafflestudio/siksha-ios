@@ -10,7 +10,7 @@ import Combine
 
 struct PostInfo: Identifiable, Equatable {
     let boardId: Int
-    let userId: Int
+    let nickname: String
     let id: Int
     let title: String
     let content: String
@@ -22,7 +22,7 @@ struct PostInfo: Identifiable, Equatable {
     
     init(post: Post) {
         self.boardId = post.boardId
-        self.userId = post.userId
+        self.nickname = post.nickname
         self.id = post.id
         self.title = post.title
         self.content = post.content
@@ -42,7 +42,7 @@ struct PostInfo: Identifiable, Equatable {
         self.imageURL = imageURL
         
         self.boardId = 0
-        self.userId = 0
+        self.nickname = ""
         self.createdAt = Date()
         self.id = 0
     }
