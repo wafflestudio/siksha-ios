@@ -100,11 +100,8 @@
 		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
 		4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED628352B11D51900ECE221 /* CommunityPostView.swift */; };
 		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
-<<<<<<< HEAD
 		4EE5729F2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */; };
-=======
 		4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */; };
->>>>>>> 5ae1ddc (CommunityPostView 추가)
 		B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */; };
 		BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */; };
 		BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */; };
@@ -240,11 +237,8 @@
 		4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4ED628352B11D51900ECE221 /* CommunityPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityPostView.swift; sourceTree = "<group>"; };
 		4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderViewModel.swift; sourceTree = "<group>"; };
-<<<<<<< HEAD
 		4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishViewModel.swift; sourceTree = "<group>"; };
-=======
 		4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostViewModel.swift; sourceTree = "<group>"; };
->>>>>>> 5ae1ddc (CommunityPostView 추가)
 		8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
 		BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };

@@ -219,13 +219,10 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/boards"
         case .getPosts:
             return "/community/posts"
-        case let .getPost(postId):
         case .submitPost:
             return "/community/posts"
-        case .getPost:
+        case let .getPost(postId):
             return "/community/posts"
-        case .deletePost:
-            return "/community/posts/\(postId)"
         case let .deletePost(postId):
             return "/community/posts/\(postId)"
         case let .likePost(postId):
