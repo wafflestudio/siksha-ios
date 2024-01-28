@@ -222,7 +222,7 @@ enum SikshaAPI: URLRequestConvertible {
         case .submitPost:
             return "/community/posts"
         case let .getPost(postId):
-            return "/community/posts"
+            return "/community/posts/\(postId)"
         case let .deletePost(postId):
             return "/community/posts/\(postId)"
         case let .likePost(postId):
