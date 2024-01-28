@@ -9,7 +9,7 @@ import Foundation
 import Combine
 import UIKit
 
-protocol CommunitySubmitPostViewModelType:ObservableObject{
+protocol CommunityPostPublishViewType:ObservableObject{
     var content:String{get set}
     var title:String{get set}
     var isAnonymous:Bool{get set}
@@ -19,7 +19,7 @@ protocol CommunitySubmitPostViewModelType:ObservableObject{
     func submitPost()
     
 }
-class CommunitySubmitPostViewModel:CommunitySubmitPostViewModelType{
+class CommunityPostPublishViewModel:CommunityPostPublishViewType{
     private let communityRepository: CommunityRepositoryProtocol
     private var cancellables = Set<AnyCancellable>()
     private var boardId:Int

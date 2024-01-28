@@ -8,7 +8,7 @@
 import SwiftUI
 import Combine
 
-struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunitySubmitPostViewModelType {
+struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPublishViewModel {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
