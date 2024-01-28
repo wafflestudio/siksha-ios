@@ -54,7 +54,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 .offset(x: -30, y: -22)
                 .disabled(selectedBoardId == nil
                 )
-                NavigationLink(destination: CommunityPostPublishView( needRefresh: $needRefresh, viewModel: CommunitySubmitPostViewModel(boardId:selectedBoardId ?? 0,communityRepository: DomainManager.shared.domain.communityRepository)),
+                NavigationLink(destination: CommunityPostPublishView( needRefresh: $needRefresh, viewModel: CommunityPostPublishViewModel(boardId:selectedBoardId ?? 0,communityRepository: DomainManager.shared.domain.communityRepository)),
                                tag: 1,
                                selection: self.$tag){
                     EmptyView()
