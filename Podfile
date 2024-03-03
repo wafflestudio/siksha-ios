@@ -13,7 +13,7 @@ target 'Siksha' do
   pod 'KakaoSDKUser', '2.3.2'
   pod 'GoogleSignIn', '5.0.2'
   pod 'BSImagePicker', '3.3.1'
-  pod 'JTAppleCalendar', '8.0.3'
+  pod 'JTAppleCalendar', '8.0.5'
   pod 'SwiftUIPager', '2.3.0'
 
 end

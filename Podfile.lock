@@ -18,7 +18,7 @@ PODS:
   - GTMSessionFetcher/Core (1.5.0)
   - GTMSessionFetcher/Full (1.5.0):
     - GTMSessionFetcher/Core (= 1.5.0)
-  - JTAppleCalendar (8.0.3)
+  - JTAppleCalendar (8.0.5)
   - KakaoSDKAuth (2.3.2):
     - KakaoSDKCommon (= 2.3.2)
   - KakaoSDKCommon (2.3.2):
@@ -38,7 +38,7 @@ PODS:
 DEPENDENCIES:
   - BSImagePicker (= 3.3.1)
   - GoogleSignIn (= 5.0.2)
-  - JTAppleCalendar (= 8.0.3)
+  - JTAppleCalendar (= 8.0.5)
   - KakaoSDKAuth (= 2.3.2)
   - KakaoSDKCommon (= 2.3.2)
   - KakaoSDKUser (= 2.3.2)
@@ -72,7 +72,7 @@ SPEC CHECKSUMS:
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
   GTMAppAuth: 197a8dabfea5d665224aa00d17f164fc2248dab9
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
-  JTAppleCalendar: 932cadea40b1051beab10f67843451d48ba16c99
+  JTAppleCalendar: 16c6501b22cb27520372c28b0a2e0b12c8d0cd73
   KakaoSDKAuth: 8db7c7a0561b137477bb984bbdab2eeda7745d23
   KakaoSDKCommon: 4bb3981337921686948b7be094590f2edec5df87
   KakaoSDKUser: e6c0017a41e87a94bdcd873d0178ad75be8126d4
@@ -82,6 +82,6 @@ SPEC CHECKSUMS:
   SwiftUIPager: fa9b45ff5133f6aa2b4d82601d9e2662638f5459
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: b58f744531819f828f81918d0239600a84f4a242
+PODFILE CHECKSUM: fb8e89f84deab4b1c8fe3fc8a546ba3fade68582
 
 COCOAPODS: 1.12.1
