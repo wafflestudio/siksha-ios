@@ -68,11 +68,13 @@ struct Post: Decodable {
         case likeCnt = "like_cnt"
         case commentCnt = "comment_cnt"
         case isLiked = "is_liked"
+        case anonymous
+        case isMine = "is_mine"
     }
     
     let id: Int
     let boardId: Int
-    let nickname: String
+    let nickname: String?
     let title: String
     let content: String
     let available: Bool
@@ -81,12 +83,14 @@ struct Post: Decodable {
     let likeCnt: Int
     let commentCnt: Int
     let isLiked: Bool
+    let anonymous: Bool
+    let isMine: Bool
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
         self.boardId = try container.decode(Int.self, forKey: .boardId)
-        self.nickname = try container.decode(String.self, forKey: .nickname)
+        self.nickname = try container.decode(String?.self, forKey: .nickname)
         self.title = try container.decode(String.self, forKey: .title)
         self.content = try container.decode(String.self, forKey: .content)
         self.available = try container.decode(Bool.self, forKey: .available)
@@ -95,6 +99,8 @@ struct Post: Decodable {
         self.likeCnt = try container.decode(Int.self, forKey: .likeCnt)
         self.commentCnt = try container.decode(Int.self, forKey: .commentCnt)
         self.isLiked = try container.decode(Bool.self, forKey: .isLiked)
+        self.anonymous = try container.decode(Bool.self, forKey: .anonymous)
+        self.isMine = try container.decode(Bool.self, forKey: .isMine)
     }
     
     init() {
@@ -109,6 +115,8 @@ struct Post: Decodable {
             self.likeCnt = 0
             self.commentCnt = 0
             self.isLiked = false
+            self.anonymous = false
+            self.isMine = false
     }
 }
 struct SubmitPostResponse:Codable{
@@ -122,6 +130,8 @@ struct SubmitPostResponse:Codable{
     var like_cnt: Int
     var comment_cnt: Int
     var is_liked: Bool
+    var anonymous: Bool
+    var is_mine: Bool
 }
 
 

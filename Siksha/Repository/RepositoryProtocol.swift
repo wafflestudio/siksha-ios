@@ -14,7 +14,7 @@ protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol
 
 protocol CommunityRepositoryProtocol {
     func loadBoardList() -> AnyPublisher<[Board], Error>
-    func submitPost(boardId:Int,title:String,content:String,images:[Data]) ->AnyPublisher<SubmitPostResponse,Error>
+    func submitPost(boardId:Int,title:String,content:String,images:[Data],anonymous:Bool) ->AnyPublisher<SubmitPostResponse,Error>
     func loadPostsPage(boardId: Int, page: Int, perPage: Int) -> AnyPublisher<PostsPage, Error>
     func loadPost(postId: Int) -> AnyPublisher<Post, Error>
     func deletePost(postId: Int) -> AnyPublisher<Void, Error>

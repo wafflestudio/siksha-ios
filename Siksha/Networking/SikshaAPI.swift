@@ -75,7 +75,7 @@ enum SikshaAPI: URLRequestConvertible {
     case unlikeComment(commentId: Int)
     
 
-    case submitPost(boardId:Int,title:String,content:String,images:[Data])
+    case submitPost(boardId:Int,title:String,content:String,images:[Data],anonymous:Bool)
 
     // User
     case loadUserInfo
@@ -309,11 +309,12 @@ enum SikshaAPI: URLRequestConvertible {
                 data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }
             return data
-        case let .submitPost(boardId, title, content, images):
+        case let .submitPost(boardId, title, content, images,anonymous):
             let data = MultipartFormData()
             data.append("\(boardId)".data(using: .utf8)!, withName: "board_id", mimeType: "text/plain")
             data.append("\(title)".data(using: .utf8)!, withName: "title", mimeType: "text/plain")
             data.append(content.data(using: .utf8)!, withName: "content", mimeType: "text/plain")
+            data.append("\(anonymous)".data(using: .utf8)!,withName: "anonymous",mimeType: "text/plain")
             for (index, image) in images.enumerated() {
                 data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }
