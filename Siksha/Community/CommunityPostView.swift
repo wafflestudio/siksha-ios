@@ -111,7 +111,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 VStack {
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
-                            Text("\(viewModel.postInfo.nickname)")
+                            Text(viewModel.postInfo.isAnonymous ? "익명" : "\(viewModel.postInfo.nickname!)")
                                 .font(Font.custom("Inter-Regular",size:10))
                                 .foregroundColor(.init("ReviewMediumColor"))
                             
@@ -161,7 +161,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                             Spacer()
                             
                             Menu{
-                                if (UserManager.shared.nickname == viewModel.postInfo.nickname) {
+                                if (viewModel.postInfo.isMine) {
                                     Button("수정", action: {
                                         
                                     })
@@ -247,7 +247,9 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
                     isLiked: false,
                     likeCount: 1,
                     commentCount: 2,
-                    imageURL: "")
+                    imageURL: "",
+                    isAnonymous: false,
+                    isMine: false)
     }
 
     func editPost() {

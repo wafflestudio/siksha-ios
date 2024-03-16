@@ -10,7 +10,7 @@ import Combine
 
 struct PostInfo: Identifiable, Equatable {
     let boardId: Int
-    let nickname: String
+    let nickname: String?
     let id: Int
     let title: String
     let content: String
@@ -19,6 +19,8 @@ struct PostInfo: Identifiable, Equatable {
     let likeCount: Int
     let commentCount: Int
     let imageURL: String?
+    let isAnonymous: Bool
+    let isMine: Bool
     
     init(post: Post) {
         self.boardId = post.boardId
@@ -31,9 +33,11 @@ struct PostInfo: Identifiable, Equatable {
         self.likeCount = post.likeCnt
         self.commentCount = post.commentCnt
         self.imageURL = nil // MARK: 임시
+        self.isAnonymous = post.anonymous
+        self.isMine = post.isMine
     }
     
-    init(title: String, content: String, isLiked: Bool, likeCount: Int, commentCount: Int, imageURL: String?) {
+    init(title: String, content: String, isLiked: Bool, likeCount: Int, commentCount: Int, imageURL: String?,isAnonymous:Bool,isMine:Bool) {
         self.title = title
         self.content = content
         self.isLiked = isLiked
@@ -45,6 +49,10 @@ struct PostInfo: Identifiable, Equatable {
         self.nickname = ""
         self.createdAt = Date()
         self.id = 0
+        
+        self.isAnonymous = isAnonymous
+        self.isMine = isMine
+        
     }
 }
 

@@ -36,7 +36,7 @@ class CommunityPostPublishViewModel:CommunityPostPublishViewType{
     }
     
     func submitPost(){
-        communityRepository.submitPost(boardId: boardId, title: title, content: content, images: images.map{image in image.pngData()!}).sink(receiveCompletion: {[weak self]error in print(error)
+        communityRepository.submitPost(boardId: boardId, title: title, content: content, images: images.map{image in image.pngData()!}, anonymous: isAnonymous).sink(receiveCompletion: {[weak self]error in print(error)
             self?.isErrorAlert = true
         }, receiveValue: { [weak self] response in
             self?.isSubmitted = true

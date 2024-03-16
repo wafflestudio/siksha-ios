@@ -18,7 +18,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                      isLiked: $0 % 2 == 0,
                      likeCount: $0,
                      commentCount: $0,
-                     imageURL: "")
+                     imageURL: "",isAnonymous: false,isMine: false)
     }
     
     @ObservedObject private var viewModel: ViewModel
@@ -197,7 +197,9 @@ class StubCommunityViewModel: CommunityViewModelType {
                      isLiked: $0 % 2 == 0,
                      likeCount: $0,
                      commentCount: $0,
-                     imageURL: "")
+                     imageURL: "",
+                     isAnonymous: false,
+                     isMine: false)
     }
     
     
