@@ -67,7 +67,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                 Spacer()
                 
                 Menu{
-                    if (UserManager.shared.nickname == comment.nickname) {
+                    if (comment.isMine) {
                         Button("수정", action: {
                             self.showingEditView = true
                         })

@@ -111,7 +111,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 VStack {
                     VStack(alignment: .leading, spacing: 10) {
                         HStack {
-                            Text(viewModel.postInfo.isAnonymous ? "익명" : "\(viewModel.postInfo.nickname!)")
+                            Text(viewModel.postInfo.isAnonymous ? "익명" : "\(viewModel.postInfo.nickname ?? "")")
                                 .font(Font.custom("Inter-Regular",size:10))
                                 .foregroundColor(.init("ReviewMediumColor"))
                             
@@ -202,8 +202,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                   self.endTextEditing()
             }
             
-            CommunityReplyBar(onCommentSubmit: { commentText in
-                viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText)
+            CommunityReplyBar(onCommentSubmit: { commentText,isAnonymous in
+                viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText,isAnonymous: isAnonymous)
             })
                 
         }.customNavigationBar(title: boardName)
@@ -272,7 +272,7 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
 
     }
     
-    func submitComment(postId: Int, content: String) {
+    func submitComment(postId: Int, content: String, isAnonymous:Bool) {
         
     }
 

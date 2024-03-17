@@ -18,6 +18,8 @@ struct CommentInfo: Identifiable, Equatable {
     let available: Bool
     let likeCnt: Int
     let isLiked: Bool
+    let isAnonymous: Bool
+    let isMine: Bool
     
     init(comment: Comment) {
         self.id = comment.id
@@ -25,10 +27,12 @@ struct CommentInfo: Identifiable, Equatable {
         self.content = comment.content
         self.createdAt = comment.createdAt
         self.updatedAt = comment.updatedAt
-        self.nickname = comment.nickname
+        self.nickname = comment.nickname ?? "익명"
         self.available = comment.available
         self.likeCnt = comment.likeCnt
         self.isLiked = comment.isLiked
+        self.isAnonymous = comment.anonymous
+        self.isMine = comment.isMine
     }
 
     init(content: String, likeCnt: Int, isLiked: Bool) {
@@ -41,6 +45,8 @@ struct CommentInfo: Identifiable, Equatable {
         self.available = true
         self.likeCnt = likeCnt
         self.isLiked = isLiked
+        self.isAnonymous = false
+        self.isMine = false
     }
     
 }
@@ -55,7 +61,7 @@ protocol CommunityPostViewModelType: ObservableObject {
     func togglePostLike()
     func loadBasicInfos()
     func loadMoreComments()
-    func submitComment(postId: Int, content: String)
+    func submitComment(postId: Int, content: String, isAnonymous: Bool)
     func editComment(commentId: Int, content: String)
     func deleteComment(id: Int)
     func toggleCommentLike(id: Int)
@@ -196,8 +202,8 @@ extension CommunityPostViewModel {
     }
     
     
-    func submitComment(postId: Int, content: String) {
-        communityRepository.postComment(postId: postId, content: content)
+    func submitComment(postId: Int, content: String,isAnonymous:Bool) {
+        communityRepository.postComment(postId: postId, content: content,anonymous: isAnonymous)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { error in
                     print(error)
