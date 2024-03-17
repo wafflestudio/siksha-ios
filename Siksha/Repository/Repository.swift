@@ -60,8 +60,8 @@ extension Repository: CommunityRepositoryProtocol {
         return self.networkModule.request(endpoint: endpoint)
     }
     
-    func postComment(postId: Int, content: String) -> AnyPublisher<Comment, Error> {
-        let endpoint = SikshaAPI.submitComment(postId: postId, content: content)
+    func postComment(postId: Int, content: String,anonymous:Bool) -> AnyPublisher<Comment, Error> {
+        let endpoint = SikshaAPI.submitComment(postId: postId, content: content,anonymous: anonymous)
         return self.networkModule.request(endpoint: endpoint)
     }
     

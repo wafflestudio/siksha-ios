@@ -21,7 +21,7 @@ protocol CommunityRepositoryProtocol {
     func likePost(postId: Int) -> AnyPublisher<Post, Error>
     func unlikePost(postId: Int) -> AnyPublisher<Post, Error>
     func loadCommentsPage(postId: Int, page: Int, perPage: Int) -> AnyPublisher<CommentsPage, Error>
-    func postComment(postId: Int, content: String) -> AnyPublisher<Comment, Error>
+    func postComment(postId: Int, content: String,anonymous:Bool) -> AnyPublisher<Comment, Error>
     func editComment(commentId: Int, content: String) -> AnyPublisher<Comment, Error>
     func deleteComment(commentId: Int) -> AnyPublisher<Void, Error>
     func likeComment(commentId: Int) -> AnyPublisher<Comment, Error>

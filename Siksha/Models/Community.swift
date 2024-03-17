@@ -166,6 +166,8 @@ struct Comment: Decodable {
         case available
         case likeCnt = "like_cnt"
         case isLiked = "is_liked"
+        case anonymous
+        case isMine = "is_mine"
     }
     
     let id: Int
@@ -173,11 +175,12 @@ struct Comment: Decodable {
     let content: String
     let createdAt: Date
     let updatedAt: Date
-    let nickname: String
+    let nickname: String?
     let available: Bool
     let likeCnt: Int
     let isLiked: Bool
-
+    let anonymous: Bool
+    let isMine: Bool
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
@@ -185,9 +188,11 @@ struct Comment: Decodable {
         content = try container.decode(String.self, forKey: .content)
         createdAt = try container.decodeDate(key: .createdAt)
         updatedAt = try container.decodeDate(key: .updatedAt)
-        nickname = try container.decode(String.self, forKey: .nickname)
+        nickname = try container.decode(String?.self, forKey: .nickname)
         available = try container.decode(Bool.self, forKey: .available)
         likeCnt = try container.decode(Int.self, forKey: .likeCnt)
         isLiked = try container.decode(Bool.self, forKey: .isLiked)
+        anonymous = try container.decode(Bool.self, forKey: .anonymous)
+        isMine = try container.decode(Bool.self, forKey: .isMine)
     }
 }

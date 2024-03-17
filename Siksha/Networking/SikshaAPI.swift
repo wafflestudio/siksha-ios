@@ -68,7 +68,7 @@ enum SikshaAPI: URLRequestConvertible {
     case likePost(postId: Int)
     case unlikePost(postId: Int)
     case getComments(postId: Int, page: Int, perPage: Int)
-    case submitComment(postId: Int, content: String)
+    case submitComment(postId: Int, content: String,anonymous: Bool)
     case editComment(commentId: Int, content: String)
     case deleteComment(commentId: Int)
     case likeComment(commentId: Int)
@@ -272,8 +272,8 @@ enum SikshaAPI: URLRequestConvertible {
             return ["post_id": postId]
         case let .getComments(postId, page, perPage):
             return ["post_id": postId, "page": page, "per_page": perPage]
-        case let .submitComment(postId, content):
-            return ["post_id": postId, "content": content]
+        case let .submitComment(postId, content, anonymous):
+            return ["post_id": postId, "content": content, "anonymous": anonymous]
         case let .editComment(_, content):
             return ["content": content]
      
@@ -281,7 +281,7 @@ enum SikshaAPI: URLRequestConvertible {
             return ["comment_id": commentId]
         case let .unlikeComment(commentId):
             return ["comment_id": commentId]
-
+        
         default:
             return nil
         }
