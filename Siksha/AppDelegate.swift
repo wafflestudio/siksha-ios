@@ -10,6 +10,7 @@ import KakaoSDKCommon
 import GoogleSignIn
 import NMapsMap
 import RealmSwift
+import FirebaseCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -36,6 +37,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         NMFAuthManager.shared().clientId = naverMapClientId
         
         GIDSignIn.sharedInstance()?.clientID = googleClientId
+        FirebaseApp.configure()
         
         KakaoSDKCommon.initSDK(appKey: kakaoAppKey)
         
