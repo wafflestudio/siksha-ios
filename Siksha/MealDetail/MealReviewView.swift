@@ -34,11 +34,11 @@ private extension MealReviewView {
                     .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
                     .padding(.top, 26)
                 
-                RatingStar($viewModel.scoreToSubmit, size: 35)
+                RatingStar($viewModel.scoreToSubmit, size: 35, spacing: 5.5)
                     .gesture(
                         DragGesture(minimumDistance: 0, coordinateSpace: .local)
                             .updating($score) { (value, state, transcation) in
-                                state = Int(value.location.x/50.0)+1
+                                state = Int(value.location.x / 50.0)+1
                                 viewModel.scoreToSubmit = min(Double(state), 5)
                             }
                     )
@@ -76,7 +76,7 @@ private extension MealReviewView {
                     .font(.system(size: 14))
                     .foregroundColor(viewModel.commentRecommended ? Color.gray : Color.black)
                     .frame(height: 148)
-                    .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                    .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
                     .background(
                         Color.init("AppBackgroundColor")
                             .cornerRadius(10)
@@ -100,27 +100,9 @@ private extension MealReviewView {
     }
     
     var imageSection: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 8) {
             ScrollView (.horizontal) {
                 HStack {
-                    Button(action: {
-                        self.isShowingPhotoLibrary = true
-                    }) {
-                        ZStack {
-                            Rectangle()
-                                .frame(width: 80, height: 80)
-
-                            Image(systemName: "plus")
-                                .resizable()
-                                .renderingMode(.original)
-                                .foregroundColor(Color.white)
-                                .frame(width: 40, height: 40)
-                        }
-                    }
-                    .sheet(isPresented: $isShowingPhotoLibrary) {
-                        ImagePickerCoordinatorView(selectedImages: $addedImages)
-                    }
-                    
                     ForEach(addedImages, id: \.self) { image in
                         ZStack(alignment: .topTrailing) {
                             Image(uiImage: image)
@@ -128,6 +110,7 @@ private extension MealReviewView {
                                 .renderingMode(.original)
                                 .scaledToFill()
                                 .frame(width: 80, height: 80)
+                                .cornerRadius(8)
                                 .clipped()
                                 .padding([.top, .trailing], 5)
                             
@@ -137,15 +120,10 @@ private extension MealReviewView {
                                 }
                             }) {
                                 ZStack {
-                                    Image("Circle")
+                                    Image("imageXButton")
                                         .resizable()
                                         .renderingMode(.original)
                                         .frame(width: 16, height: 16)
-                                    
-                                    Image("X")
-                                        .resizable()
-                                        .renderingMode(.original)
-                                        .frame(width: 11, height: 11)
                                 }
                                 .padding(EdgeInsets(top: 0, leading: 8, bottom: 8, trailing: 0))
                             }
@@ -154,6 +132,23 @@ private extension MealReviewView {
                 }
             }
             .padding(EdgeInsets(top: 0, leading: 28, bottom: 0, trailing: 28))
+            
+            HStack {
+                Spacer()
+                    .frame(width: 28)
+                
+                Button(action: {
+                    self.isShowingPhotoLibrary = true
+                }) {
+                    Image("reviewSummit")
+                        .frame(width: 134, height: 32)
+                }
+                .sheet(isPresented: $isShowingPhotoLibrary) {
+                    ImagePickerCoordinatorView(selectedImages: $addedImages)
+                }
+                
+                Spacer()
+            }
         }
     }
     
