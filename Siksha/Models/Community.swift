@@ -85,6 +85,7 @@ struct Post: Decodable {
     let isLiked: Bool
     let anonymous: Bool
     let isMine: Bool
+    var images: [String]?
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
@@ -101,22 +102,25 @@ struct Post: Decodable {
         self.isLiked = try container.decode(Bool.self, forKey: .isLiked)
         self.anonymous = try container.decode(Bool.self, forKey: .anonymous)
         self.isMine = try container.decode(Bool.self, forKey: .isMine)
+
+        let etc = try container.decodeIfPresent([String: [String]].self, forKey: .etc)
+        images = etc?["images"] ?? nil
     }
     
     init() {
-            self.id = 0
-            self.boardId = 0
-            self.nickname = ""
-            self.title = ""
-            self.content = ""
-            self.available = false
-            self.createdAt = Date()
-            self.updatedAt = Date()
-            self.likeCnt = 0
-            self.commentCnt = 0
-            self.isLiked = false
-            self.anonymous = false
-            self.isMine = false
+        self.id = 0
+        self.boardId = 0
+        self.nickname = ""
+        self.title = ""
+        self.content = ""
+        self.available = false
+        self.createdAt = Date()
+        self.updatedAt = Date()
+        self.likeCnt = 0
+        self.commentCnt = 0
+        self.isLiked = false
+        self.anonymous = false
+        self.isMine = false
     }
 }
 struct SubmitPostResponse:Codable{
@@ -181,6 +185,7 @@ struct Comment: Decodable {
     let isLiked: Bool
     let anonymous: Bool
     let isMine: Bool
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
