@@ -31,27 +31,31 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     }
     
     var imageSection: some View {
-        return EmptyView()
-        /*if #available(iOS 15.0, *) {
-            return ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 10) {
-                    ForEach(viewModel.postInfo.imageURL, id: \.self) {
-                        imageURLString in
-                        AsyncImage(url: URL(string: imageURLString))
-                            .frame(width: 300, height: 300)
+        Group {
+            if let imageURLs = viewModel.postInfo.imageURLs {
+                if #available(iOS 15.0, *) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 10) {
+                            ForEach(imageURLs, id: \.self) {
+                                imageURLString in
+                                AsyncImage(url: URL(string: imageURLString))
+                            }
+                        }
+                    }
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack {
+                            ForEach(imageURLs, id: \.self) {
+                                imageURLString in
+                                ThumbnailImage(imageURLString)
+                            }
+                        }
                     }
                 }
+            } else {
+                EmptyView()
             }
-        } else {
-            return ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
-                    ForEach(viewModel.postInfo.imageURL, id: \.self) {
-                        imageURLString in
-                        ThumbnailImage(imageURLString)
-                    }
-                }
-            }
-        }*/
+        }
     }
     
     var anonymousButton: some View {
@@ -288,7 +292,7 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
                     isLiked: false,
                     likeCount: 1,
                     commentCount: 2,
-                    imageURL: "",
+                        imageURLs: nil,
                     isAnonymous: false,
                     isMine: false)
     }
