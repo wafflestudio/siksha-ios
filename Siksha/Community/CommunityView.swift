@@ -18,7 +18,9 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                      isLiked: $0 % 2 == 0,
                      likeCount: $0,
                      commentCount: $0,
-                     imageURL: "",isAnonymous: false,isMine: false)
+                     imageURLs: nil,
+                     isAnonymous: false,
+                     isMine: false)
     }
     
     @ObservedObject private var viewModel: ViewModel
@@ -171,9 +173,24 @@ struct CommunityPostPreView: View {
                     }
                 }
                 Spacer()
-                Rectangle()
-                    .frame(width: 61, height: 61)
-                    .foregroundColor(defaultImageColor)
+                
+                if let firstImageURL = info.imageURLs?.first, let url = URL(string: firstImageURL) {
+                                    if #available(iOS 15.0, *) {
+                                        AsyncImage(url: url) { image in
+                                            image
+                                                .resizable()
+                                                .scaledToFill()
+                                        } placeholder: {
+                                            ProgressView()
+                                        }
+                                        .frame(width: 61, height: 61)
+                                        .clipped()
+                                    } else {
+                                        ThumbnailImage(firstImageURL)
+                                            .frame(width: 61, height: 61)
+                                    }
+                                }
+
             }
             .padding(EdgeInsets(top: 15, leading: 35, bottom: 15, trailing: 21))
         }
@@ -197,7 +214,7 @@ class StubCommunityViewModel: CommunityViewModelType {
                      isLiked: $0 % 2 == 0,
                      likeCount: $0,
                      commentCount: $0,
-                     imageURL: "",
+                     imageURLs: nil,
                      isAnonymous: false,
                      isMine: false)
     }
