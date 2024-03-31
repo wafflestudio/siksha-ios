@@ -33,7 +33,7 @@ struct TopPosts_Preview:PreviewProvider{
                          isLiked: $0 % 2 == 0,
                          likeCount: $0,
                          commentCount: $0,
-                         imageURL: "",
+                         imageURLs: nil,
                          isAnonymous: false,
                          isMine: false)
         })

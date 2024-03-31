@@ -18,7 +18,7 @@ struct PostInfo: Identifiable, Equatable {
     let isLiked: Bool
     let likeCount: Int
     let commentCount: Int
-    let imageURL: String?
+    let imageURLs: [String]?
     let isAnonymous: Bool
     let isMine: Bool
     
@@ -32,18 +32,18 @@ struct PostInfo: Identifiable, Equatable {
         self.isLiked = post.isLiked
         self.likeCount = post.likeCnt
         self.commentCount = post.commentCnt
-        self.imageURL = nil // MARK: 임시
+        self.imageURLs = post.images
         self.isAnonymous = post.anonymous
         self.isMine = post.isMine
     }
     
-    init(title: String, content: String, isLiked: Bool, likeCount: Int, commentCount: Int, imageURL: String?,isAnonymous:Bool,isMine:Bool) {
+    init(title: String, content: String, isLiked: Bool, likeCount: Int, commentCount: Int, imageURLs: [String]?,isAnonymous:Bool,isMine:Bool) {
         self.title = title
         self.content = content
         self.isLiked = isLiked
         self.likeCount = likeCount
         self.commentCount = commentCount
-        self.imageURL = imageURL
+        self.imageURLs = imageURLs
         
         self.boardId = 0
         self.nickname = ""
