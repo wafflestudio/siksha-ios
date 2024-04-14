@@ -89,6 +89,16 @@ extension Repository: CommunityRepositoryProtocol {
         let endpoint = SikshaAPI.unlikeComment(commentId: commentId)
         return self.networkModule.request(endpoint: endpoint)
     }
+    func reportPost(postId: Int, reason: String) -> AnyPublisher<PostReportResponse, Error> {
+        let endpoint = SikshaAPI.reportPost(postId: postId, reason: reason)
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    
+    func reportComment(commentId: Int, reason: String) -> AnyPublisher<CommentReportResponse, Error> {
+        let endpoint = SikshaAPI.reportComment(commentId: commentId, reason: reason)
+        return self.networkModule.request(endpoint: endpoint)
+
+    }
 }
 
 
