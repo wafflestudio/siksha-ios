@@ -34,14 +34,20 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         Group {
             if let imageURLs = viewModel.postInfo.imageURLs {
                 if #available(iOS 15.0, *) {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 10) {
-                            ForEach(imageURLs, id: \.self) {
-                                imageURLString in
-                                AsyncImage(url: URL(string: imageURLString))
+                    TabView {
+                        ForEach(imageURLs, id: \.self) { imageURLString in
+                            AsyncImage(url: URL(string: imageURLString)) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fit)
+                            } placeholder: {
+                                Color.gray
                             }
+                            .frame(width: UIScreen.main.bounds.width * 0.9)
                         }
                     }
+                    .tabViewStyle(PageTabViewStyle())
+                    .frame(width: UIScreen.main.bounds.width * 0.9, height: 300)
                 } else {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
@@ -197,7 +203,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                             
                         }
                     }
-                    .padding(EdgeInsets(top: 20, leading: 30, bottom: 10, trailing: 30))
+                    .padding(EdgeInsets(top: 20, leading: 20, bottom: 10, trailing: 20))
                     
                     Divider()
                                      
