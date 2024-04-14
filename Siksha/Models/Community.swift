@@ -196,3 +196,13 @@ struct Comment: Decodable {
         isMine = try container.decode(Bool.self, forKey: .isMine)
     }
 }
+struct PostReportResponse: Codable{
+    var id: Int
+    var reason: String
+    var post_id: Int
+}
+struct CommentReportResponse: Codable{
+    var id: Int
+    var reason: String
+    var comment_id: Int
+}
