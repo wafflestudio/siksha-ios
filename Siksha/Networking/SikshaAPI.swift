@@ -73,10 +73,9 @@ enum SikshaAPI: URLRequestConvertible {
     case deleteComment(commentId: Int)
     case likeComment(commentId: Int)
     case unlikeComment(commentId: Int)
-    
-
     case submitPost(boardId:Int,title:String,content:String,images:[Data],anonymous:Bool)
-
+    case reportPost(postId:Int,reason:String)
+    case reportComment(commentId:Int,reason:String)
     // User
     case loadUserInfo
     case updateUserProfile(nickname: String?, image: Data?)
@@ -177,7 +176,10 @@ enum SikshaAPI: URLRequestConvertible {
 
         case .submitPost:
             return .post
-
+        case .reportPost:
+            return .post
+        case .reportComment:
+            return .post
         case .loadUserInfo:
             return .get
         case .updateUserProfile:
@@ -243,6 +245,10 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/comments/\(commentId)/like"
         case let .unlikeComment(commentId):
             return "/community/comments/\(commentId)/unlike"
+        case let .reportPost(postId, _):
+            return "/community/posts/\(postId)/report"
+        case let .reportComment(commentId, _):
+            return "/community/comments/\(commentId)/report"
         case .loadUserInfo:
             return "/auth/me"
         case .updateUserProfile:
@@ -286,6 +292,10 @@ enum SikshaAPI: URLRequestConvertible {
         case let .unlikeComment(commentId):
             return ["comment_id": commentId]
         
+        case let .reportPost(postId, reason):
+            return ["post_id": postId,"reason":reason]
+        case let .reportComment(commentId, reason):
+            return ["comment_id" : commentId,"reason":reason]
         default:
             return nil
         }

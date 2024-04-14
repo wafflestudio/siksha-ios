@@ -26,6 +26,9 @@ protocol CommunityRepositoryProtocol {
     func deleteComment(commentId: Int) -> AnyPublisher<Void, Error>
     func likeComment(commentId: Int) -> AnyPublisher<Comment, Error>
     func unlikeComment(commentId: Int) -> AnyPublisher<Comment, Error>
+    func reportPost(postId:Int,reason:String)->AnyPublisher<PostReportResponse,Error>
+    func reportComment(commentId:Int,reason:String)->AnyPublisher<CommentReportResponse,Error>
+    
 }
 
 protocol UserRepositoryProtocol {
