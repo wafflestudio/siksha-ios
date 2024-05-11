@@ -119,9 +119,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                 .padding([.top, .trailing], 5)
                             
                             Button(action: {
-                                if viewModel.images.contains(image) {
-                                    viewModel.images.removeAll(where: { $0 == image })
-                                }
+                                viewModel.removeImage(image)
                             }) {
                                 ZStack {
                                     Circle()
@@ -210,7 +208,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             return Alert.Button.default(Text("확인"), action: action)
         }
     var alertMessage:String{
-        viewModel.isSubmitted ? "게시물이 등록되었습니다." : "게시물을 등록하지 못했습니다. 다시 시도해주세요."
+        if let _ = viewModel.postInfo {
+            viewModel.isSubmitted ? "게시물이 수정되었습니다." : "게시물을 수정하지 못했습니다. 다시 시도해주세요."
+        } else {
+            viewModel.isSubmitted ? "게시물이 등록되었습니다." : "게시물을 등록하지 못했습니다. 다시 시도해주세요."
+        }
     }
     
     
