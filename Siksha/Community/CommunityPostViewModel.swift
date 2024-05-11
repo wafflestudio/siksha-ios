@@ -65,6 +65,8 @@ protocol CommunityPostViewModelType: ObservableObject {
     func editComment(commentId: Int, content: String)
     func deleteComment(id: Int)
     func toggleCommentLike(id: Int)
+    func reportPost(reason:String)
+    func reportComment(commentId:Int,reason:String)
 }
 
 final class CommunityPostViewModel: CommunityPostViewModelType {
@@ -81,7 +83,9 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
     @Published private var commentsList: [Comment] = []
     
     @Published private var hasNext: Bool = false
-    
+    @Published var reportAlert:Bool = false
+    @Published var reportErrorAlert:Bool = false
+
     private var currentPage: Int = 0
     
     private var cancellables = Set<AnyCancellable>()
@@ -272,6 +276,34 @@ extension CommunityPostViewModel {
                 })
                 .store(in: &cancellables)
         }
+    }
+    func reportPost(reason: String) {
+        self.communityRepository.reportPost(postId: postId, reason: reason).receive(on: RunLoop.main)
+            .sink(receiveCompletion: {error in
+                if(!self.reportAlert){
+                    self.reportErrorAlert = true
+                    self.reportAlert = true
+                }
+        }, receiveValue: {_ in
+            self.reportErrorAlert = false
+            self.reportAlert = true
+            })
+            .store(in: &cancellables)
+    }
+    
+    func reportComment(commentId: Int, reason: String) {
+        self.communityRepository.reportComment(commentId: commentId, reason: reason).receive(on: RunLoop.main)
+            .sink(receiveCompletion: {error in
+                print(error)
+                if(!self.reportAlert){
+                    self.reportErrorAlert = true
+                    self.reportAlert = true
+                }
+        }, receiveValue: {_ in
+                self.reportErrorAlert = false
+                self.reportAlert = true
+            })
+            .store(in: &cancellables)
     }
 
 }

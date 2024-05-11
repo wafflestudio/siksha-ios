@@ -8,12 +8,12 @@
 import Foundation
 import SwiftUI
 
-struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType {
+struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModel {
     var comment:CommentInfo
     var viewModel: ViewModel
     
     @State private var showingDeleteAlert = false
-
+    @State private var reportAlertIsShown = false
     private var relativeDate: String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
@@ -75,7 +75,11 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                             self.showingDeleteAlert = true
                         })
                     }
-                    Button("신고하기", action: {})
+                    if(!comment.isMine){
+                        Button("신고하기", action: {
+                            reportAlertIsShown = true
+                        })
+                    }
                     Button("취소", action: {})
                 }
                 
@@ -106,6 +110,11 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                         secondaryButton: .cancel()
                     )
                 }
+        .textFieldAlert(isPresented: $reportAlertIsShown, title: "신고 사유", action: {reason in
+            viewModel.reportComment(commentId: comment.id, reason: reason ?? "")
+        
+        })
+   
     }
     
 }
@@ -153,10 +162,10 @@ struct EditCommentView: View {
     }
 }
 
-struct CommentCell_preview:PreviewProvider{
+/*struct CommentCell_preview:PreviewProvider{
     static var previews: some View{
         CommentCell(comment: CommentInfo(content: "test1", likeCnt: 1, isLiked: true),
                     viewModel: StubCommunityPostViewModel())
     }
-}
+}*/
 
