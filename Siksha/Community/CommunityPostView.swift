@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
+struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewModel {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @ObservedObject var viewModel: ViewModel
     
     @State private var anonymousIsToggled = false
     @State private var commentContent: String = ""
-    
+    @State private var reportAlertIsShown = false
     let boardName: String
     
     var backButton: some View {
@@ -170,14 +170,16 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                             if success {
                                                 self.presentationMode.wrappedValue.dismiss()
                                             } else {
-                                            
+                                        
                                             }
                                         }
                                     })
                                 }
                                 Button("URL 복사하기", action: {})
                                 if (UserManager.shared.nickname != viewModel.postInfo.nickname) {
-                                    Button("신고하기", action: {})
+                                    Button("신고하기", action: {
+                                        reportAlertIsShown = true
+                                    })
                                 }
                                 Button("취소", action: {})
                             } label:{
@@ -198,20 +200,30 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 }
             }
             .onTapGesture {
-
-                  self.endTextEditing()
+                
+                //  self.endTextEditing()
             }
             
             CommunityReplyBar(onCommentSubmit: { commentText,isAnonymous in
                 viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText,isAnonymous: isAnonymous)
             })
-                
+            
         }.customNavigationBar(title: boardName)
             .navigationBarItems(leading: backButton)
             .onAppear {
                 viewModel.loadBasicInfos()
             }
+            .alert(isPresented: $viewModel.reportAlert, content: {
+                Alert(title: Text("신고"),message: Text(viewModel.reportErrorAlert ? "신고에 실패했습니다. 이미 신고했을 수 있습니다.": "신고되었습니다."))
+            })
+           
+            .textFieldAlert(isPresented:$reportAlertIsShown, title: "신고 사유", action: {reason in
+                viewModel.reportPost(reason: reason ?? "")
+            })
+         
+          
     }
+    
 }
 
 extension View {
@@ -222,13 +234,29 @@ extension View {
 }
 
 
-struct CommunityPostView_Previews: PreviewProvider {
+/*struct CommunityPostView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityPostView(viewModel: StubCommunityPostViewModel(), boardName: StubCommunityViewModel().getSelectedBoardName())
+        CommunityPostView(viewModel: StubCommunityPostViewModel() as! ViewModel, boardName: StubCommunityViewModel().getSelectedBoardName())
     }
-}
-
+}*/
+/*
 class StubCommunityPostViewModel: CommunityPostViewModelType {
+    var reportAlertPublished: Published<Bool>
+    
+    var reportAlert: Bool
+    
+        var reportAlertPublisher: Published<Bool>.Publisher
+        
+        var reportErrorAlertPublisher: Published<Bool>.Publisher
+        
+    func reportPost(reason: String) {
+        
+    }
+    
+    func reportComment(commentId: Int, reason: String) {
+        
+    }
+    
     
     @Published var commentsListPublisher: [CommentInfo]
     @Published var hasNextPublisher: Bool
@@ -288,3 +316,4 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
 
     }
 }
+*/
