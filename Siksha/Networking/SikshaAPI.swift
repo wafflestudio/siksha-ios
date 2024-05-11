@@ -13,6 +13,9 @@ enum SikshaAPI: URLRequestConvertible {
     func asURLRequest() throws -> URLRequest {
         var request = URLRequest(url: URL(string: Self.baseURL + path)!)
         
+        print("token:")
+        print(UserDefaults.standard.string(forKey: "accessToken"))
+        
         if self.needToken, let token = UserDefaults.standard.string(forKey: "accessToken") {
             request.setToken(token: token)
         }
@@ -75,6 +78,8 @@ enum SikshaAPI: URLRequestConvertible {
     case likeComment(commentId: Int)
     case unlikeComment(commentId: Int)
     case submitPost(boardId:Int,title:String,content:String,images:[Data],anonymous:Bool)
+    case editPost(postId: Int, boardId:Int,title:String,content:String,images:[Data],anonymous:Bool)
+
     case reportPost(postId:Int,reason:String)
     case reportComment(commentId:Int,reason:String)
     // User
@@ -159,6 +164,10 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .getPost:
             return .get
+        case .submitPost:
+            return .post
+        case .editPost:
+            return .patch
         case .deletePost:
             return .delete
         case .likePost:
@@ -234,6 +243,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/posts/me"
         case .submitPost:
             return "/community/posts"
+        case .editPost(postId: let postId, boardId: _, title: _, content: _, images: _, anonymous: _):
+            return "/community/posts/\(postId)"
         case let .getPost(postId):
             return "/community/posts/\(postId)"
         case let .deletePost(postId):
@@ -297,6 +308,8 @@ enum SikshaAPI: URLRequestConvertible {
             return ["post_id": postId, "page": page, "per_page": perPage]
         case let .submitComment(postId, content, anonymous):
             return ["post_id": postId, "content": content, "anonymous": anonymous]
+        case let .editPost(postId, boardId, title, content, images, anonymous):
+            return ["post_id": postId]
         case let .editComment(_, content):
             return ["content": content]
      
@@ -321,6 +334,8 @@ enum SikshaAPI: URLRequestConvertible {
         case .submitPost:
             return true
         case .updateUserProfile:
+            return true
+        case .editPost:
             return true
         default:
             return false
@@ -357,6 +372,17 @@ enum SikshaAPI: URLRequestConvertible {
                 data.append(image, withName: "image", fileName: "profileImage.jpeg", mimeType: "image/jpeg")
             }
             return data            
+        case let .editPost(_, boardId, title, content, images,anonymous):
+            let data = MultipartFormData()
+            data.append("\(boardId)".data(using: .utf8)!, withName: "board_id", mimeType: "text/plain")
+            data.append("\(title)".data(using: .utf8)!, withName: "title", mimeType: "text/plain")
+            data.append(content.data(using: .utf8)!, withName: "content", mimeType: "text/plain")
+            data.append("\(anonymous)".data(using: .utf8)!,withName: "anonymous",mimeType: "text/plain")
+            for (index, image) in images.enumerated() {
+                data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
+            }
+            return data
+
         default:
             return nil
         }
