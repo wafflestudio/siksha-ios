@@ -14,6 +14,9 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     
     @State private var anonymousIsToggled = false
     @State private var commentContent: String = ""
+    @State private var isEditingPost = false
+    @State private var needRefresh = false
+    
     @State private var reportAlertIsShown = false
     @State private var reportCompleteAlertIsShown = false
     @State private var alertTitle: String = ""
@@ -120,6 +123,19 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     }
     
     var body: some View {
+        NavigationLink(
+            destination: CommunityPostPublishView(
+                needRefresh: self.$needRefresh, viewModel: CommunityPostPublishViewModel(
+                    boardId: viewModel.postInfo.boardId,
+                    communityRepository:DomainManager.shared.domain.communityRepository,
+                    postInfo: viewModel.postInfo
+                )
+            ),
+            isActive: $isEditingPost
+        ) {
+            EmptyView()
+        }
+
         ZStack(alignment:.bottomTrailing) {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack {
@@ -177,7 +193,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                             Menu{
                                 if (viewModel.postInfo.isMine) {
                                     Button("수정", action: {
-                                        
+                                        isEditingPost = true
                                     })
                                     Button("삭제", action: {
                                         viewModel.deletePost { success in
