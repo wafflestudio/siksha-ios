@@ -8,12 +8,15 @@
 import Foundation
 import SwiftUI
 
-struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModel {
+struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType {
     var comment:CommentInfo
     var viewModel: ViewModel
     
     @State private var showingDeleteAlert = false
     @State private var reportAlertIsShown = false
+    @Binding var reportCompleteAlertIsShown: Bool
+    @Binding var alertTitle: String
+    @Binding var alertMessage: String
     private var relativeDate: String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
@@ -23,9 +26,12 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModel {
     @State private var showingEditView = false
     @State private var editedContent: String
     
-    init(comment: CommentInfo, viewModel: ViewModel) {
+    init(comment: CommentInfo, viewModel: ViewModel,reportCompleteAlertIsShown: Binding<Bool>, alertTitle: Binding<String>, alertMessage: Binding<String>) {
         self.comment = comment
         self.viewModel = viewModel
+        self._reportCompleteAlertIsShown = reportCompleteAlertIsShown
+        self._alertTitle = alertTitle
+        self._alertMessage = alertMessage
         _editedContent = State(initialValue: comment.content)
     }
     
@@ -111,7 +117,19 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModel {
                     )
                 }
         .textFieldAlert(isPresented: $reportAlertIsShown, title: "신고 사유", action: {reason in
-            viewModel.reportComment(commentId: comment.id, reason: reason ?? "")
+            viewModel.reportComment(commentId: comment.id, reason: reason ?? "") {
+                success, errorMessage in
+                    if success {
+                        alertTitle = "신고"
+                        alertMessage = "신고되었습니다."
+                    } else {
+                        alertTitle = "신고"
+                        alertMessage = errorMessage ?? "신고에 실패했습니다."
+                    }
+
+                reportAlertIsShown = false
+                reportCompleteAlertIsShown = true
+            }
         
         })
    
