@@ -65,8 +65,8 @@ protocol CommunityPostViewModelType: ObservableObject {
     func editComment(commentId: Int, content: String)
     func deleteComment(id: Int)
     func toggleCommentLike(id: Int)
-    func reportPost(reason:String)
-    func reportComment(commentId:Int,reason:String)
+    func reportPost(reason: String, completion: @escaping (Bool, String?) -> Void)
+    func reportComment(commentId:Int,reason:String, completion: @escaping (Bool, String?) -> Void)
 }
 
 final class CommunityPostViewModel: CommunityPostViewModelType {
@@ -277,31 +277,33 @@ extension CommunityPostViewModel {
                 .store(in: &cancellables)
         }
     }
-    func reportPost(reason: String) {
+    
+    func reportPost(reason: String, completion: @escaping (Bool, String?) -> Void) {
         self.communityRepository.reportPost(postId: postId, reason: reason).receive(on: RunLoop.main)
-            .sink(receiveCompletion: {error in
-                if(!self.reportAlert){
-                    self.reportErrorAlert = true
-                    self.reportAlert = true
+            .sink(receiveCompletion: { completionStatus in
+                switch completionStatus {
+                case .finished:
+                    break
+                case .failure(let error):
+                    completion(false, error.localizedDescription)
                 }
-        }, receiveValue: {_ in
-            self.reportErrorAlert = false
-            self.reportAlert = true
+            }, receiveValue: { _ in
+                completion(true, nil)
             })
             .store(in: &cancellables)
     }
     
-    func reportComment(commentId: Int, reason: String) {
+    func reportComment(commentId: Int, reason: String, completion: @escaping (Bool, String?) -> Void) {
         self.communityRepository.reportComment(commentId: commentId, reason: reason).receive(on: RunLoop.main)
-            .sink(receiveCompletion: {error in
-                print(error)
-                if(!self.reportAlert){
-                    self.reportErrorAlert = true
-                    self.reportAlert = true
+            .sink(receiveCompletion: { completionStatus in
+                switch completionStatus {
+                case .finished:
+                    break
+                case .failure(let error):
+                    completion(false, error.localizedDescription)
                 }
-        }, receiveValue: {_ in
-                self.reportErrorAlert = false
-                self.reportAlert = true
+            }, receiveValue: { _ in
+                completion(true, nil)
             })
             .store(in: &cancellables)
     }
