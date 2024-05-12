@@ -103,6 +103,8 @@
 		4EE5729F2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */; };
 		4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */; };
 		B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */; };
+		A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */; };
+		A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */; };
 		BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */; };
 		BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */; };
 		BF60ADE62AC1EABF0015C468 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE52AC1EABF0015C468 /* Errors.swift */; };
@@ -241,6 +243,8 @@
 		4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostViewModel.swift; sourceTree = "<group>"; };
 		8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
+		A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewModel.swift; sourceTree = "<group>"; };
+		A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 		BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };
 		BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainUtils.swift; sourceTree = "<group>"; };
 		BF60ADE52AC1EABF0015C468 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
@@ -380,6 +384,8 @@
 				231C9C6725F7FAFB0072C07A /* InformationView.swift */,
 				231C9C6F25F7FB720072C07A /* RestaurantOrderView.swift */,
 				4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */,
+				A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */,
+				A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -839,6 +845,7 @@
 				BF97DF532AAEFE380083FC6F /* Domain.swift in Sources */,
 				4E4E22DE2ABEC4C500A81E47 /* CommunityReplyBar.swift in Sources */,
 				231C9D1425F8568C0072C07A /* MapView.swift in Sources */,
+				A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */,
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
 				BF60ADE62AC1EABF0015C468 /* Errors.swift in Sources */,
 				2360CD9A2663778B007E02DB /* ReviewListView.swift in Sources */,
@@ -876,6 +883,7 @@
 				1ED44A3725CC6094001D916B /* MealReviewView.swift in Sources */,
 				1E3A573125C6FE0900DBB3F4 /* SettingsView.swift in Sources */,
 				BF97DF5B2AAF12200083FC6F /* AlamofireNetworking.swift in Sources */,
+				A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */,
 				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
 				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
