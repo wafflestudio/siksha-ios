@@ -16,6 +16,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var commentContent: String = ""
     @State private var isEditingPost = false
     @State private var needRefresh = false
+    @Binding var needPostViewRefresh:Bool
     
     @State private var reportAlertIsShown = false
     @State private var reportCompleteAlertIsShown = false
@@ -25,6 +26,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     
     var backButton: some View {
         Button(action: {
+        needPostViewRefresh = true
             self.presentationMode.wrappedValue.dismiss()
         }) {
             Image("NavigationBack")
@@ -275,10 +277,10 @@ extension View {
 
 /*struct CommunityPostView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityPostView(viewModel: StubCommunityPostViewModel() as! ViewModel, boardName: StubCommunityViewModel().getSelectedBoardName())
+        CommunityPostView(viewModel: StubCommunityPostViewModel(), boardName: StubCommunityViewModel().getSelectedBoardName(), needPostViewRefresh: <#Bool#>)
     }
 }*/
-/*
+
 class StubCommunityPostViewModel: CommunityPostViewModelType {
     var reportAlertPublished: Published<Bool>
     
