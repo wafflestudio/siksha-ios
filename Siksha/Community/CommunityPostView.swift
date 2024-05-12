@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewModel {
+struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @ObservedObject var viewModel: ViewModel
@@ -15,6 +15,9 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var anonymousIsToggled = false
     @State private var commentContent: String = ""
     @State private var reportAlertIsShown = false
+    @State private var reportCompleteAlertIsShown = false
+    @State private var alertTitle: String = ""
+    @State private var alertMessage: String = ""
     let boardName: String
     
     var backButton: some View {
@@ -83,11 +86,12 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             formatter.unitsStyle = .full
             return formatter.localizedString(for: viewModel.postInfo.createdAt, relativeTo: Date())
     }
+
     
     var commentList: some View {
         LazyVStack(spacing:0){
             ForEach(viewModel.commentsListPublisher) { comment in
-                CommentCell(comment: comment, viewModel: viewModel)
+                CommentCell(comment: comment, viewModel: viewModel, reportCompleteAlertIsShown: $reportCompleteAlertIsShown, alertTitle: $alertTitle, alertMessage: $alertMessage)
                 Divider()
             }
             
@@ -213,14 +217,23 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             .onAppear {
                 viewModel.loadBasicInfos()
             }
-            .alert(isPresented: $viewModel.reportAlert, content: {
-                Alert(title: Text("신고"),message: Text(viewModel.reportErrorAlert ? "신고에 실패했습니다. 이미 신고했을 수 있습니다.": "신고되었습니다."))
+            .textFieldAlert(isPresented: $reportAlertIsShown, title: "신고 사유", action: { reason in
+                viewModel.reportPost(reason: reason ?? "") { success, errorMessage in
+                    if success {
+                        alertTitle = "신고"
+                        alertMessage = "신고되었습니다."
+                    } else {
+                        alertTitle = "신고"
+                        alertMessage = errorMessage ?? "신고에 실패했습니다."
+                    }
+                    reportAlertIsShown = false
+                    reportCompleteAlertIsShown = true
+                }
             })
-           
-            .textFieldAlert(isPresented:$reportAlertIsShown, title: "신고 사유", action: {reason in
-                viewModel.reportPost(reason: reason ?? "")
+            .alert(isPresented: $reportCompleteAlertIsShown, content: {
+                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             })
-         
+
           
     }
     
