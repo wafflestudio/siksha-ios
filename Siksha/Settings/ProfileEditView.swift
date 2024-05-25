@@ -60,10 +60,19 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         Button(action: {
             self.isShowingPhotoLibrary = true
         }) {
-            Image("")
-                .clipShape(Circle())
-                .frame(width: 171, height: 171)
-                .background(Circle().foregroundColor(Color("DefaultImageColor")))
+            if let selectedImage = addedImages.first {
+                Image(uiImage: selectedImage)
+                    .resizable()
+                    .clipShape(Circle())
+                    .frame(width: 171, height: 171)
+                    .background(Circle().foregroundColor(Color("DefaultImageColor")))
+            } else {
+                Image(systemName: "person.fill")
+                    .resizable()
+                    .clipShape(Circle())
+                    .frame(width: 171, height: 171)
+                    .background(Circle().foregroundColor(Color("DefaultImageColor")))
+            }
         }
         .sheet(isPresented: $isShowingPhotoLibrary) {
             ImagePickerCoordinatorView(selectedImages: $addedImages, maxSelection: 1)
