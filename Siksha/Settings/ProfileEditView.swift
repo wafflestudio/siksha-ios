@@ -10,7 +10,9 @@ import SwiftUI
 struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @StateObject var viewModel: ViewModel
+    @ObservedObject  var viewModel:ViewModel
+    @State private var isShowingPhotoLibrary = false
+    @State private var addedImages = [UIImage]()
     
     var body: some View {
         GeometryReader { _ in
@@ -54,6 +56,18 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 ClearableTextField("닉네임", text: $viewModel.nickname)
                     .padding(.horizontal, 18)
             )
+    var profileImage: some View {
+        Button(action: {
+            self.isShowingPhotoLibrary = true
+        }) {
+            Image("")
+                .clipShape(Circle())
+                .frame(width: 171, height: 171)
+                .background(Circle().foregroundColor(Color("DefaultImageColor")))
+        }
+        .sheet(isPresented: $isShowingPhotoLibrary) {
+            ImagePickerCoordinatorView(selectedImages: $addedImages, maxSelection: 1)
+        }
     }
     
     var buttons: some View {
