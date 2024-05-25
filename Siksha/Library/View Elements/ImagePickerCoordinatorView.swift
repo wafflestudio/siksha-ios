@@ -12,7 +12,8 @@ import BSImagePicker
 struct ImagePickerCoordinatorView {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var selectedImages: [UIImage]
-        
+    var maxSelection: Int
+    
     private func dismiss() {
         self.presentationMode.wrappedValue.dismiss()
         
@@ -31,7 +32,7 @@ extension ImagePickerCoordinatorView: UIViewControllerRepresentable {
         picker.doneButtonTitle = "완료"
         picker.cancelButton.title = "취소"
         picker.imagePickerDelegate = context.coordinator
-        picker.settings.selection.max = 5
+        picker.settings.selection.max = maxSelection
         
         UINavigationBar.changeBackgroundColor(color: .clear)
         

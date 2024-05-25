@@ -67,6 +67,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
+            window.rootViewController = UIHostingController(rootView: ProfileEditView(viewModel: ProfileEditViewModel()))
+            /*
             if accessToken != nil {
                 print(accessToken!)
                 let appState = AppState()
@@ -74,7 +76,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 window.rootViewController = UIHostingController(rootView: contentView)
             } else {
                 window.rootViewController = UIHostingController(rootView: LoginView())
-            }
+            }*/
             self.window = window
             window.makeKeyAndVisible()
         }

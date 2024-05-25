@@ -144,7 +144,7 @@ private extension MealReviewView {
                         .frame(width: 134, height: 32)
                 }
                 .sheet(isPresented: $isShowingPhotoLibrary) {
-                    ImagePickerCoordinatorView(selectedImages: $addedImages)
+                    ImagePickerCoordinatorView(selectedImages: $addedImages, maxSelection: 5)
                 }
                 
                 Spacer()
