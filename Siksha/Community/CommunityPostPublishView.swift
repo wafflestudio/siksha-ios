@@ -105,7 +105,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                         }
                     }
                     .sheet(isPresented: $isShowingPhotoLibrary) {
-                        ImagePickerCoordinatorView(selectedImages: $viewModel.images)
+                        ImagePickerCoordinatorView(selectedImages: $viewModel.images, maxSelection: 5)
                     }
                     
                     ForEach(viewModel.images, id: \.self) { image in
