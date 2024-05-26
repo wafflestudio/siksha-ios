@@ -153,47 +153,6 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     }
 }
 
-struct ProfileImageView: View {
-    let selectedImage: UIImage?
-    let imageURL: String?
-
-    var body: some View {
-        Group {
-            if let selectedImage = selectedImage {
-                Image(uiImage: selectedImage)
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(width: 171, height: 171)
-                    .clipShape(Circle())
-            } else if let urlString = imageURL, let imageUrl = URL(string: urlString) {
-                if #available(iOS 15.0, *) {
-                    AsyncImage(url: imageUrl) { phase in
-                        if let image = phase.image {
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        } else if phase.error != nil {
-                            Color("DefaultImageColor")
-                        } else {
-                            ProgressView()
-                        }
-                    }
-                    .frame(width: 171, height: 171)
-                    .clipShape(Circle())
-                } else {
-                    ThumbnailImage(urlString)
-                        .frame(width: 171, height: 171)
-                        .clipShape(Circle())
-                }
-            } else {
-                Color("DefaultImageColor")
-                    .frame(width: 171, height: 171)
-                    .clipShape(Circle())
-            }
-        }
-    }
-}
-
 struct ClearableTextField: View {
     var title: String
     @Binding var text: String
