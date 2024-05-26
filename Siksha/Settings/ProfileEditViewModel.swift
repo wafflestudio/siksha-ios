@@ -11,7 +11,7 @@ import Combine
 protocol ProfileEditViewModelType: ObservableObject {
     var nickname: String { get set }
     var imageURL: String? { get }
-    var selectedImage: UIImage? { get set }
+    var addedImages: [UIImage] { get set }
     var enableDoneButton: Bool { get }
     var versionInfo: String { get }
     
@@ -23,15 +23,15 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     private var cancellables = Set<AnyCancellable>()
     
     @Published var nickname: String = ""
-    @Published var selectedImage: UIImage?
+    @Published var addedImages: [UIImage] = []
     @Published private(set) var imageURL: String?
     @Published private(set) var enableDoneButton: Bool = false
     @Published private(set) var versionInfo: String = ""
     
     private var doneButtonEnabledPublisher: AnyPublisher<Bool, Never> {
-        return Publishers.CombineLatest($nickname, $selectedImage)
-            .map { nickname, selectedImage in
-                return !nickname.isEmpty && (nickname != UserManager.shared.nickname || selectedImage != nil)
+        return Publishers.CombineLatest($nickname, $addedImages)
+            .map { nickname, addedImages in
+                return !nickname.isEmpty && (nickname != UserManager.shared.nickname || !addedImages.isEmpty )
             }
             .eraseToAnyPublisher()
     }
@@ -46,7 +46,7 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     }
     
     func updateUserProfile() {
-        let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
+        let imageData = addedImages.first?.jpegData(compressionQuality: 0.8)
         UserManager.shared.updateUserProfile(nickname: nickname, image: imageData) { success in
             if success {
                 print("업데이트 성공")
