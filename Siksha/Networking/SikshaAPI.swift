@@ -80,6 +80,7 @@ enum SikshaAPI: URLRequestConvertible {
 
     // User
     case loadUserInfo
+    case updateUserProfile(nickname: String?, image: Data?)
     case deleteUser
     
 
@@ -183,6 +184,8 @@ enum SikshaAPI: URLRequestConvertible {
 
         case .loadUserInfo:
             return .get
+        case .updateUserProfile:
+            return .patch
         case .deleteUser:
             return .delete
 
@@ -251,6 +254,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/comments/\(commentId)/unlike"
         case .loadUserInfo:
             return "/auth/me"
+        case .updateUserProfile:
+            return "/auth/me/profile"
         case .deleteUser:
             return "/auth"
         }
@@ -305,6 +310,8 @@ enum SikshaAPI: URLRequestConvertible {
             return true
         case .submitPost:
             return true
+        case .updateUserProfile:
+            return true
         default:
             return false
         }
@@ -331,6 +338,15 @@ enum SikshaAPI: URLRequestConvertible {
                 data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }
             return data
+        case let .updateUserProfile(nickname, image):
+            let data = MultipartFormData()
+            if let nickname {
+                data.append("\(nickname)".data(using: .utf8)!, withName: "nickname", mimeType: "text/plain")
+            }
+            if let image {
+                data.append(image, withName: "image", fileName: "profileImage.jpeg", mimeType: "image/jpeg")
+            }
+            return data            
         default:
             return nil
         }

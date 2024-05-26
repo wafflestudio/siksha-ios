@@ -70,6 +70,7 @@ struct ContentView: View {
                     
                     tabBar(geometry)
                 }
+                .ignoresSafeArea(.keyboard, edges: .bottom)
             }
             .navigationViewStyle(StackNavigationViewStyle())
         }

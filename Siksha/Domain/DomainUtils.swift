@@ -13,8 +13,7 @@ extension KeyedDecodingContainer {
         
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
-        
-        formatter.dateFormat = "yyyy-MM-dd'T'hh:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
         
         if let date = formatter.date(from: dateString) {
             return date
