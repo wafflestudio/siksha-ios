@@ -285,7 +285,7 @@ extension CommunityPostViewModel {
                 case .finished:
                     break
                 case .failure(let error):
-                    completion(false, error.localizedDescription)
+                    completion(false, "신고에 실패했습니다. 이미 신고한 게시물일 수 있습니다.")
                 }
             }, receiveValue: { _ in
                 completion(true, nil)
@@ -300,7 +300,7 @@ extension CommunityPostViewModel {
                 case .finished:
                     break
                 case .failure(let error):
-                    completion(false, error.localizedDescription)
+                    completion(false, "신고에 실패했습니다. 이미 신고한 게시물일 수 있습니다.")
                 }
             }, receiveValue: { _ in
                 completion(true, nil)
