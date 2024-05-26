@@ -10,18 +10,14 @@ import SwiftUI
 struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @ObservedObject  var viewModel:ViewModel
+    @StateObject  var viewModel:ViewModel
     @State private var isShowingPhotoLibrary = false
-    @State private var addedImages = [UIImage]()
     
     var body: some View {
         GeometryReader { _ in
             VStack {
-                ProfileImageView(selectedImage: viewModel.selectedImage, imageURL: viewModel.imageURL)
+                profileImage
                     .padding(.top, 65.0)
-                    .onTapGesture {
-                        print("image tapped")
-                    }
                 nicknameTextField
                     .padding(.top, 15.0)
                 buttons
@@ -56,26 +52,48 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 ClearableTextField("닉네임", text: $viewModel.nickname)
                     .padding(.horizontal, 18)
             )
+    }
+    
     var profileImage: some View {
         Button(action: {
             self.isShowingPhotoLibrary = true
         }) {
-            if let selectedImage = addedImages.first {
+            if let selectedImage = viewModel.addedImages.first {
                 Image(uiImage: selectedImage)
                     .resizable()
                     .clipShape(Circle())
                     .frame(width: 171, height: 171)
                     .background(Circle().foregroundColor(Color("DefaultImageColor")))
             } else {
-                Image(systemName: "person.fill")
-                    .resizable()
-                    .clipShape(Circle())
-                    .frame(width: 171, height: 171)
-                    .background(Circle().foregroundColor(Color("DefaultImageColor")))
+                if let urlString = viewModel.imageURL, let imageUrl = URL(string: urlString) {
+                    if #available(iOS 15.0, *) {
+                        AsyncImage(url: imageUrl) { phase in
+                            if let image = phase.image {
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                            } else if phase.error != nil {
+                                Color("DefaultImageColor")
+                            } else {
+                                ProgressView()
+                            }
+                        }
+                        .frame(width: 171, height: 171)
+                        .clipShape(Circle())
+                    } else {
+                        ThumbnailImage(urlString)
+                            .frame(width: 171, height: 171)
+                            .clipShape(Circle())
+                    }
+                } else {
+                    Color("DefaultImageColor")
+                        .frame(width: 171, height: 171)
+                        .clipShape(Circle())
+                }
             }
         }
         .sheet(isPresented: $isShowingPhotoLibrary) {
-            ImagePickerCoordinatorView(selectedImages: $addedImages, maxSelection: 1)
+            ImagePickerCoordinatorView(selectedImages: $viewModel.addedImages, maxSelection: 1)
         }
     }
     
