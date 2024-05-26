@@ -7,38 +7,45 @@
 
 import SwiftUI
 
-struct ProfileEditView<ViewModel>: View where ViewModel:ProfileEditViewModel {
+struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-    @ObservedObject  var viewModel:ViewModel
+    @StateObject var viewModel: ViewModel
     
     var body: some View {
-        VStack {
-            profileImage.padding(.top, 65.0)
-                .onTapGesture {
-                    print("Image tapped")
-                }
-            nickname.padding(.top, 15.0)
-            buttons.padding(.top, 18.0)
-            Spacer()
-            versionInfo.padding(.bottom, 41.0)
+        GeometryReader { _ in
+            VStack {
+                ProfileImageView(selectedImage: viewModel.selectedImage, imageURL: viewModel.imageURL)
+                    .padding(.top, 65.0)
+                    .onTapGesture {
+                        print("image tapped")
+                    }
+                nicknameTextField
+                    .padding(.top, 15.0)
+                buttons
+                    .padding(.top, 18.0)
+                
+                Spacer()
+                
+                versionInfo
+                    .padding(.bottom, 41.0)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .contentShape(Rectangle())
+            .customNavigationBar(title: "프로필 관리")
+            .navigationBarItems(leading: backButton)
+            .ignoresSafeArea(.keyboard)
+            .onTapGesture {
+                UIApplication.shared.endEditing()
+            }
+            .onAppear {
+                viewModel.loadInfo()
+            }
+            
         }
-        .contentShape(Rectangle())
-        .onTapGesture {
-            UIApplication.shared.endEditing()
-        }
-        .customNavigationBar(title: "프로필 관리")
-        .navigationBarItems(leading: backButton)
     }
     
-    var profileImage: some View {
-        Image("")
-            .clipShape(Circle())
-            .frame(width: 171, height: 171)
-            .background(Circle().foregroundColor(Color("DefaultImageColor")))
-    }
-    
-    var nickname: some View {
+    var nicknameTextField: some View {
         RoundedRectangle(cornerRadius: 11)
             .strokeBorder(lineWidth: 1)
             .frame(width: 336, height: 49)
@@ -51,51 +58,97 @@ struct ProfileEditView<ViewModel>: View where ViewModel:ProfileEditViewModel {
     
     var buttons: some View {
         HStack {
-            Button(action: {
-                print("cancel button tapped")
-            }) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 8.0)
-                        .fill(Color("LightGrayColor"))
-                        .frame(width: 164, height: 44)
+            Button(action: cancel) {
                     Text("취소")
                         .font(.custom("NanumSquareOTFB", size: 14))
-                        .foregroundColor(Color.white)
-                }
             }
-            Button(action: {
-                print("done button tapped")
-            }) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 8.0)
-                        .fill(Color("MainThemeColor"))
-                        .frame(width: 164, height: 44)
+            .frame(width: 164, height: 44)
+            .foregroundColor(Color.white)
+            .background(
+                RoundedRectangle(cornerRadius: 8.0)
+                    .fill(Color("LightGrayColor"))
+            )
+            
+            Button(action: done) {
                     Text("완료")
                         .font(.custom("NanumSquareOTFB", size: 14))
-                        .foregroundColor(Color.white)
-                }
             }
+            .disabled(!viewModel.enableDoneButton)
+            .frame(width: 164, height: 44)
+            .foregroundColor(Color.white)
+            .background(
+                RoundedRectangle(cornerRadius: 8.0)
+                    .fill(viewModel.enableDoneButton ? Color("MainThemeColor") : Color("LightGrayColor"))
+            )
         }
+    }
+    
+    private func cancel() {
+        presentationMode.wrappedValue.dismiss()
+    }
+    
+    private func done() {
+        viewModel.updateUserProfile()
+        presentationMode.wrappedValue.dismiss()
     }
     
     var versionInfo: some View {
         VStack(alignment: .center) {
-            Text("siksha-2.0.0")
+            Text(viewModel.versionInfo)
                 .font(.custom("NanumSquareOTFR", size: 12))
                 .foregroundColor(Color("VersionInfoColor"))
-            Text("최신버전을 이용중입니다.")
-                .font(.custom("NanumSquareOTFR", size: 12))
-                .foregroundColor(Color("VersionInfoColor"))
+                .multilineTextAlignment(.center)
         }
     }
     
     var backButton: some View {
         Button(action: {
-            self.presentationMode.wrappedValue.dismiss()
+            presentationMode.wrappedValue.dismiss()
         }) {
             Image("NavigationBack")
                 .resizable()
                 .frame(width: 7, height: 15)
+        }
+    }
+}
+
+struct ProfileImageView: View {
+    let selectedImage: UIImage?
+    let imageURL: String?
+
+    var body: some View {
+        Group {
+            if let selectedImage = selectedImage {
+                Image(uiImage: selectedImage)
+                    .resizable()
+                    .aspectRatio(contentMode: .fill)
+                    .frame(width: 171, height: 171)
+                    .clipShape(Circle())
+            } else if let urlString = imageURL, let imageUrl = URL(string: urlString) {
+                if #available(iOS 15.0, *) {
+                    AsyncImage(url: imageUrl) { phase in
+                        if let image = phase.image {
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                        } else if phase.error != nil {
+                            Color("DefaultImageColor")
+                        } else {
+                            ProgressView()
+                        }
+                    }
+                    .frame(width: 171, height: 171)
+                    .clipShape(Circle())
+                } else {
+                    ThumbnailImage(urlString)
+                        .frame(width: 171, height: 171)
+                        .clipShape(Circle())
+                }
+            } else {
+                Color("DefaultImageColor")
+                    .frame(width: 171, height: 171)
+                    .clipShape(Circle())
+            }
         }
     }
 }
@@ -122,23 +175,6 @@ struct ClearableTextField: View {
                     text = ""
                 }
         }
-    }
-}
-
-extension UIApplication {
-    func addTapGestureRecognizer() {
-        guard let window = windows.first else { return }
-        let tapGesture = UITapGestureRecognizer(target: window, action: #selector(UIView.endEditing))
-        tapGesture.requiresExclusiveTouchType = false
-        tapGesture.cancelsTouchesInView = false
-        tapGesture.delegate = self
-        window.addGestureRecognizer(tapGesture)
-    }
-}
-
-extension UIApplication: UIGestureRecognizerDelegate {
-    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
     }
 }
 

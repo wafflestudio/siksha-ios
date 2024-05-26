@@ -37,8 +37,11 @@ struct User: Decodable {
         self.identity = try container.decode(String.self, forKey: .identity)
         self.nickname = try container.decodeIfPresent(String.self, forKey: .nickname)
         
-        let etcContainer = try container.nestedContainer(keyedBy: EtcKeys.self, forKey: .etc)
-        self.image = try etcContainer.decodeIfPresent(String.self, forKey: .image)
+        if let etcContainer = try? container.nestedContainer(keyedBy: EtcKeys.self, forKey: .etc) {
+            self.image = try etcContainer.decodeIfPresent(String.self, forKey: .image)
+        } else {
+            self.image = nil
+        }
         
         self.createdAt = try container.decodeDate(key: .createdAt)
         self.updatedAt = try container.decodeDate(key: .updatedAt)

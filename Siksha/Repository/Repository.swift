@@ -92,4 +92,9 @@ extension Repository: UserRepositoryProtocol {
         let endpoint = SikshaAPI.loadUserInfo
         return self.networkModule.request(endpoint: endpoint)
     }
+    
+    func updateUserProfile(nickname: String?, image: Data?) -> AnyPublisher<User, any Error> {
+        let endpoint = SikshaAPI.updateUserProfile(nickname: nickname, image: image)
+        return self.networkModule.request(endpoint: endpoint)
+    }
 }

@@ -244,6 +244,7 @@
 		8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
 		A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewModel.swift; sourceTree = "<group>"; };
+		A67D614A2C029A35006C96C7 /* VersionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionManager.swift; sourceTree = "<group>"; };
 		A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
 		BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };
 		BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainUtils.swift; sourceTree = "<group>"; };
@@ -402,6 +403,7 @@
 				1E3A581F25C9C28000DBB3F4 /* Enums.swift */,
 				2360CD90266353F1007E02DB /* Localizable.strings */,
 				1ECB251C25F1739D00875E18 /* Config.swift */,
+				A67D614A2C029A35006C96C7 /* VersionManager.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -889,6 +891,7 @@
 				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
 				BF97DF592AAF00B30083FC6F /* DomainManager.swift in Sources */,
 				231DEB3B266BC5C900AA32C0 /* ReviewListViewModel.swift in Sources */,
+				A67D614B2C029A35006C96C7 /* VersionManager.swift in Sources */,
 				231C9C7025F7FB720072C07A /* RestaurantOrderView.swift in Sources */,
 				BF97DF5D2AB836910083FC6F /* Community.swift in Sources */,
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,

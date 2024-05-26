@@ -5,12 +5,85 @@
 //  Created by 이지현 on 5/12/24.
 //
 
-import Foundation
+import SwiftUI
+import Combine
 
 protocol ProfileEditViewModelType: ObservableObject {
     var nickname: String { get set }
+    var imageURL: String? { get }
+    var selectedImage: UIImage? { get set }
+    var enableDoneButton: Bool { get }
+    var versionInfo: String { get }
+    
+    func loadInfo()
+    func updateUserProfile()
 }
 
 final class ProfileEditViewModel: ProfileEditViewModelType {
-    @Published var nickname = "닉네임"
+    private var cancellables = Set<AnyCancellable>()
+    
+    @Published var nickname: String = ""
+    @Published var selectedImage: UIImage?
+    @Published private(set) var imageURL: String?
+    @Published private(set) var enableDoneButton: Bool = false
+    @Published private(set) var versionInfo: String = ""
+    
+    private var doneButtonEnabledPublisher: AnyPublisher<Bool, Never> {
+        return Publishers.CombineLatest($nickname, $selectedImage)
+            .map { nickname, selectedImage in
+                return !nickname.isEmpty && (nickname != UserManager.shared.nickname || selectedImage != nil)
+            }
+            .eraseToAnyPublisher()
+    }
+    
+    init() {
+        setupBindings()
+    }
+    
+    func loadInfo() {
+        UserManager.shared.loadUserInfo()
+        versionCheck()
+    }
+    
+    func updateUserProfile() {
+        let imageData = selectedImage?.jpegData(compressionQuality: 0.8)
+        UserManager.shared.updateUserProfile(nickname: nickname, image: imageData) { success in
+            if success {
+                print("업데이트 성공")
+            } else {
+                print("업데이트 실패")
+            }
+            
+        }
+    }
+    
+    private func setupBindings() {
+        doneButtonEnabledPublisher
+            .receive(on: RunLoop.main)
+            .assign(to: \.enableDoneButton, on: self)
+            .store(in: &cancellables)
+        
+        UserManager.shared.$nickname
+            .receive(on: RunLoop.main)
+            .sink { [weak self] nickname in
+                self?.nickname = nickname ?? ""
+            }
+            .store(in: &cancellables)
+        
+        UserManager.shared.$image
+            .receive(on: RunLoop.main)
+            .sink { [weak self] image in
+                self?.imageURL = image
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func versionCheck() {
+        VersionManager.shared.checkAppVersion { [weak self] updateAvailable, currentVersion, _ in
+            guard let self else { return }
+            var versionInfo = "siksha-\(currentVersion)\n"
+            versionInfo.append(updateAvailable ? "업데이트가 가능합니다." : "최신 버전을 이용중입니다.")
+            self.versionInfo = versionInfo
+        }
+    }
 }

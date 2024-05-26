@@ -30,4 +30,5 @@ protocol CommunityRepositoryProtocol {
 
 protocol UserRepositoryProtocol {
     func loadUserInfo() -> AnyPublisher<User, Error>
+    func updateUserProfile(nickname: String?, image: Data?) -> AnyPublisher<User, Error>
 }
