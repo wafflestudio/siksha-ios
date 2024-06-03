@@ -20,13 +20,11 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                     .padding(.top, 65.0)
                 nicknameTextField
                     .padding(.top, 15.0)
-                buttons
-                    .padding(.top, 18.0)
                 
                 Spacer()
                 
-                versionInfo
-                    .padding(.bottom, 41.0)
+                doneButton
+                    .padding(.bottom, 20)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .contentShape(Rectangle())
@@ -97,49 +95,23 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         }
     }
     
-    var buttons: some View {
-        HStack {
-            Button(action: cancel) {
-                    Text("취소")
-                        .font(.custom("NanumSquareOTFB", size: 14))
-            }
-            .frame(width: 164, height: 44)
-            .foregroundColor(Color.white)
-            .background(
-                RoundedRectangle(cornerRadius: 8.0)
-                    .fill(Color("LightGrayColor"))
-            )
-            
-            Button(action: done) {
-                    Text("완료")
-                        .font(.custom("NanumSquareOTFB", size: 14))
-            }
-            .disabled(!viewModel.enableDoneButton)
-            .frame(width: 164, height: 44)
-            .foregroundColor(Color.white)
-            .background(
-                RoundedRectangle(cornerRadius: 8.0)
-                    .fill(viewModel.enableDoneButton ? Color("MainThemeColor") : Color("LightGrayColor"))
-            )
+    var doneButton: some View {
+        Button(action: done) {
+                Text("완료")
+                    .font(.custom("NanumSquareOTFB", size: 17))
         }
-    }
-    
-    private func cancel() {
-        presentationMode.wrappedValue.dismiss()
+        .disabled(!viewModel.enableDoneButton)
+        .frame(width: 343, height: 56)
+        .foregroundColor(Color.white)
+        .background(
+            RoundedRectangle(cornerRadius: 8.0)
+                .fill(viewModel.enableDoneButton ? Color("MainThemeColor") : Color("LightGrayColor"))
+        )
     }
     
     private func done() {
         viewModel.updateUserProfile()
         presentationMode.wrappedValue.dismiss()
-    }
-    
-    var versionInfo: some View {
-        VStack(alignment: .center) {
-            Text(viewModel.versionInfo)
-                .font(.custom("NanumSquareOTFR", size: 12))
-                .foregroundColor(Color("VersionInfoColor"))
-                .multilineTextAlignment(.center)
-        }
     }
     
     var backButton: some View {

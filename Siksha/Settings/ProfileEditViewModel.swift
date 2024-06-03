@@ -13,7 +13,6 @@ protocol ProfileEditViewModelType: ObservableObject {
     var imageURL: String? { get }
     var addedImages: [UIImage] { get set }
     var enableDoneButton: Bool { get }
-    var versionInfo: String { get }
     
     func loadInfo()
     func updateUserProfile()
@@ -26,7 +25,6 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     @Published var addedImages: [UIImage] = []
     @Published private(set) var imageURL: String?
     @Published private(set) var enableDoneButton: Bool = false
-    @Published private(set) var versionInfo: String = ""
     
     private var doneButtonEnabledPublisher: AnyPublisher<Bool, Never> {
         return Publishers.CombineLatest($nickname, $addedImages)
@@ -42,7 +40,6 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     
     func loadInfo() {
         UserManager.shared.loadUserInfo()
-        versionCheck()
     }
     
     func updateUserProfile() {
@@ -76,14 +73,5 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
                 self?.imageURL = image
             }
             .store(in: &cancellables)
-    }
-    
-    private func versionCheck() {
-        VersionManager.shared.checkAppVersion { [weak self] updateAvailable, currentVersion, _ in
-            guard let self else { return }
-            var versionInfo = "siksha-\(currentVersion)\n"
-            versionInfo.append(updateAvailable ? "업데이트가 가능합니다." : "최신 버전을 이용중입니다.")
-            self.versionInfo = versionInfo
-        }
     }
 }
