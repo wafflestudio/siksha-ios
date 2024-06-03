@@ -67,10 +67,10 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
             }
             .store(in: &cancellables)
         
-        UserManager.shared.$image
+        UserManager.shared.$imageURL
             .receive(on: RunLoop.main)
-            .sink { [weak self] image in
-                self?.imageURL = image
+            .sink { [weak self] imageURL in
+                self?.imageURL = imageURL
             }
             .store(in: &cancellables)
     }

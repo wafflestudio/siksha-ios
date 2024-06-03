@@ -12,7 +12,7 @@ class UserManager: ObservableObject {
     static let shared = UserManager()
     
     @Published var nickname: String?
-    @Published var image: String?
+    @Published var imageURL: String?
     
     private var cancellables = Set<AnyCancellable>()
     private let userRepository: UserRepositoryProtocol
@@ -30,7 +30,7 @@ class UserManager: ObservableObject {
                 }
             }, receiveValue: { [weak self] user in
                 self?.nickname = user.nickname
-                self?.image = user.image
+                self?.imageURL = user.image
             })
             .store(in: &cancellables)
     }
@@ -48,7 +48,7 @@ class UserManager: ObservableObject {
                 }
             } receiveValue: { [weak self] user in
                 self?.nickname = user.nickname
-                self?.image = user.image
+                self?.imageURL = user.image
             }
             .store(in: &cancellables)
         
