@@ -12,10 +12,14 @@ import SwiftyJSON
 class RenewalSettingsViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
+    private let repository: UserRepositoryProtocol = DomainManager.shared.domain.userRepository
+    
     @Published var noMenuHide = false
   
     @Published var networkStatus: NetworkStatus = .idle
     @Published var showSignOutAlert: Bool = false
+    @Published var showRemoveAccountAlert: Bool = false
+    @Published var removeAccountFailed: Bool = false
     
     @Published var version: String = ""
     @Published var appStoreVersion: String = ""
@@ -58,11 +62,7 @@ class RenewalSettingsViewModel: ObservableObject {
     init() {
         noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide")
         
-     
-        
         getUserId()
-        
-      
         
         getVersion()
         getAppStoreVersion()
@@ -72,10 +72,6 @@ class RenewalSettingsViewModel: ObservableObject {
                 UserDefaults.standard.set(!hide, forKey: "notNoMenuHide")
             }
             .store(in: &cancellables)
-        
-      
-                
-              
          
         $postVOCStatus
             .dropFirst()
@@ -89,31 +85,58 @@ class RenewalSettingsViewModel: ObservableObject {
     }
     
     
-     
-    
     func getUserId() {
-        Networking.shared.getUserInfo()
+        repository.loadUserInfo()
             .receive(on: RunLoop.main)
-            .map(\.value?.id)
-            .replaceNil(with: 0)
-            .assign(to: \.userId, on: self)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    print("Error172: \(error)")
+                }
+            }, receiveValue: { [weak self] user in
+                self?.userId = user.id
+            })
             .store(in: &cancellables)
     }
     
     func sendVOC() {
-        Networking.shared.submitVOC(comment: vocComment, platform: "iOS")
+        repository.submitVOC(comment: vocComment, platform: "iOS")
             .receive(on: RunLoop.main)
-            .sink { [weak self] result in
-                guard let self = self else { return }
-                
-                guard let response = result.response,
-                      200..<300 ~= response.statusCode else {
-                    self.postVOCStatus = .failed
-                    return
+            .sink(receiveCompletion: { [weak self] completionStatus in
+                switch completionStatus {
+                case .finished:
+                    self?.postVOCStatus = .succeeded
+                case .failure(let error):
+                    print(error)
                 }
+            }, receiveValue: { value in
                 
-                self.postVOCStatus = .succeeded
-            }
+            })
+            .store(in: &cancellables)
+    }
+    
+    func logOutAccount() {
+        UserDefaults.standard.set(nil, forKey: "accessToken")
+    }
+    
+    func removeAccount(completion: @escaping (Bool) -> Void) {
+        guard let accessToken = UserDefaults.standard.string(forKey: "accessToken") else {
+            removeAccountFailed = true
+            return
+        }
+        repository.deleteUser()
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { [weak self] completionStatus in
+                switch completionStatus {
+                case .finished:
+                    UserDefaults.standard.set(nil, forKey: "accessToken")
+                    completion(true)
+                case .failure(let error):
+                    print(error)
+                    completion(false)
+                }
+            }, receiveValue: { value in
+                
+            })
             .store(in: &cancellables)
     }
 }

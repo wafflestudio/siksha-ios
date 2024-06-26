@@ -35,6 +35,11 @@ extension Repository: CommunityRepositoryProtocol {
         return self.networkModule.request(endpoint: endpoint)
     }
     
+    func loadMyPostsPage(page: Int, perPage: Int) -> AnyPublisher<PostsPage, Error> {
+        let endpoint = SikshaAPI.getMyposts(page: page, perPage: perPage)
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    
     func loadPost(postId: Int) -> AnyPublisher<Post, Error> {
         let endpoint = SikshaAPI.getPost(postId: postId)
         return self.networkModule.request(endpoint: endpoint)
@@ -91,5 +96,13 @@ extension Repository: UserRepositoryProtocol {
     func loadUserInfo() -> AnyPublisher<User, Error> {
         let endpoint = SikshaAPI.loadUserInfo
         return self.networkModule.request(endpoint: endpoint)
+    }
+    func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, any Error> {
+        let endpoint = SikshaAPI.submitVOC(comment: comment, platform: platform)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+    }
+    func deleteUser() -> AnyPublisher<Void, any Error> {
+        let endpoint = SikshaAPI.deleteUser
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
     }
 }

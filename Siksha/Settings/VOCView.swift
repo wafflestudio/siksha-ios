@@ -60,7 +60,7 @@ struct VOCView: View {
                     }
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 8))
                 }
-                .padding(EdgeInsets(top: 0, leading: 28, bottom: 0, trailing: 28))
+                .padding([.leading, .trailing], 28)
                 
                 Spacer()
                 

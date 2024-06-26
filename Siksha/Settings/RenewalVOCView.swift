@@ -45,7 +45,8 @@ struct RenewalVOCView: View {
                     
                     Spacer()
                 }
-                .padding(EdgeInsets(top: 0, leading: 28, bottom: 8, trailing: 28))
+                .padding([.leading, .trailing], 20)
+                .padding(.bottom, 8)
                 
                 ZStack(alignment: .bottom) {
                     TextView(text: $viewModel.vocComment, placeHolder: .constant(""))

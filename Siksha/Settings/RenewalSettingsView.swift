@@ -10,38 +10,41 @@ import UIKit
 
 struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
+    @EnvironmentObject var appState: AppState
+    
     @ObservedObject var viewModel: RenewalSettingsViewModel
     @ObservedObject var orderViewModel = RestaurantOrderViewModel()
-    @EnvironmentObject var appState: AppState
+    
     
     init(viewModel: RenewalSettingsViewModel) {
         self.viewModel = viewModel
     }
     
     private let fontColor = Color.init(white: 185/255)
+    private let borderColor = Color.init(white: 232/255)
     
     var body: some View {
         NavigationView {
             VStack(alignment: .center, spacing: 0) {
                 profileState
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
+                    .padding(.bottom, 20)
                 
                 myWritings
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0))
+                    .padding(.bottom, 20)
                 
                 additionalSettings
+                    .padding(.bottom, 20)
                 
                 contact
-                .padding(16)
                 
                 Spacer()
                 
                 versionInfo
-                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 15, trailing: 0))
+                    .padding(.bottom, 15)
                 
             }
             .padding(.top, 24)
-            .padding([.leading, .trailing], 8)
+            .padding([.leading, .trailing], 20)
             .customNavigationBar(title: "icon")
         }
         .navigationBarHidden(true)
@@ -59,25 +62,16 @@ struct RenewalSettingsView: View {
                     .padding(EdgeInsets(top: 13, leading: 12, bottom: 13, trailing: 6))
                 
                 
-                Text("닉네임")
+                Text(UserManager.shared.nickname ?? "무명의 미식가")
                     .font(.custom("NanumSquareOTFB", size: 16))
                     .foregroundColor(.black)
                 
                 Spacer()
                 
-                Text("변경하러 가기")
-                    .font(.custom("NanumSquareOTFR", size: 10))
-                    .foregroundColor(Color.init(white: 185/255))
-                    .padding(.trailing, 1.25)
                 arrow
             }.background(
                 RoundedRectangle(cornerRadius: 8)
-                    .foregroundColor(Color.init(white: 249/255))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .strokeBorder(Color.init(white: 238/255), lineWidth: 1)
-                    )
-                    .padding(1)
+                    .strokeBorder(borderColor, lineWidth: 1)
             )
         }
     }
@@ -91,12 +85,13 @@ struct RenewalSettingsView: View {
     }
     
     var myWritings: some View {
-        NavigationLink(destination: Dummy()) {
+        NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository))) {
             HStack(alignment: .center) {
                 Text("내가 쓴 글")
-                    .font(.custom("NanumSquareOTFB", size: 16))
+                    .font(.custom("NanumSquareOTF", size: 16))
                     .foregroundColor(.black)
-                    .padding(EdgeInsets(top: 19, leading: 16, bottom: 19, trailing: 0))
+                    .padding([.top, .bottom], 19)
+                    .padding(.leading, 16)
                 
                 Spacer()
                 
@@ -105,13 +100,12 @@ struct RenewalSettingsView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.init(white: 232/255), lineWidth: 1)
-                .padding(1)
+                .stroke(borderColor, lineWidth: 1)
         )
     }
     
     var partitionBar: some View {
-        Color.init(white: 232/255)
+        borderColor
             .frame(height: 1)
             .padding([.leading, .trailing], 8)
     }
@@ -123,7 +117,8 @@ struct RenewalSettingsView: View {
                     Text("식당 순서 변경")
                         .font(.custom("NanumSquareOTFR", size: 15))
                         .foregroundColor(.black)
-                        .padding(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 0))
+                        .padding([.top, .bottom], 12)
+                        .padding(.leading, 16)
                     
                     Spacer()
                     
@@ -138,7 +133,8 @@ struct RenewalSettingsView: View {
                     Text("즐겨찾기 식당 순서 변경")
                         .font(.custom("NanumSquareOTFR", size: 15))
                         .foregroundColor(.black)
-                        .padding(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 0))
+                        .padding([.top, .bottom], 12)
+                        .padding(.leading, 16)
                     
                     Spacer()
                     
@@ -156,7 +152,8 @@ struct RenewalSettingsView: View {
                     Text("메뉴 없는 식당 숨기기")
                         .font(.custom("NanumSquareOTFR", size: 15))
                         .foregroundColor(.black)
-                        .padding(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 0))
+                        .padding([.top, .bottom], 12)
+                        .padding(.leading, 16)
                     
                     Spacer()
                     
@@ -170,42 +167,47 @@ struct RenewalSettingsView: View {
             
             partitionBar
             
-            Button(action: {
-                // change button
-                viewModel.noMenuHide.toggle()
-            }) {
+            NavigationLink(destination: AccountManageView(viewModel: viewModel)) {
                 HStack(alignment: .center) {
                     Text("계정 관리")
                         .font(.custom("NanumSquareOTFR", size: 15))
                         .foregroundColor(.black)
-                        .padding(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 0))
+                        .padding([.top, .bottom], 12)
+                        .padding(.leading, 16)
                     
                     Spacer()
+                    
+                    arrow
                 }
             }
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.init(white: 232/255), lineWidth: 1)
-                .padding(1)
+                .stroke(borderColor, lineWidth: 1)
         )
     }
     
     var contact: some View {
-        HStack {
-            VStack(alignment: .leading) {
-                Button(action: {
-                    viewModel.showVOC = true
-                }) {
-                    Text("1:1 문의하기")
-                        .font(.custom("NanumSquareOTFR", size: 15))
-                        .foregroundColor(Color("main"))
-                }
-                .padding(.bottom, 8)
+        
+        Button(action: {
+            viewModel.showVOC = true
+        }) {
+            HStack(alignment: .center) {
+                Text("1:1 문의하기")
+                    .font(.custom("NanumSquareOTFR", size: 15))
+                    .foregroundColor(Color("main"))
+                    .padding([.top, .bottom], 15)
+                    .padding(.leading, 16)
+                
+                Spacer()
+                
+                arrow
             }
-            
-            Spacer()
         }
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(borderColor, lineWidth: 1)
+        )
     }
     
     var versionInfo: some View {
