@@ -282,47 +282,53 @@ extension View {
 }*/
 
 class StubCommunityPostViewModel: CommunityPostViewModelType {
-    var reportAlertPublished: Published<Bool>
-    
-    var reportAlert: Bool
-    
-        var reportAlertPublisher: Published<Bool>.Publisher
-        
-        var reportErrorAlertPublisher: Published<Bool>.Publisher
-        
-    func reportPost(reason: String) {
-        
-    }
-    
-    func reportComment(commentId: Int, reason: String) {
-        
-    }
-    
-    
+    @Published var reportAlert: Bool = false
+    @Published var reportErrorAlert: Bool = false
+
+    var reportAlertPublished: Published<Bool> { _reportAlert }
+    var reportAlertPublisher: Published<Bool>.Publisher { $reportAlert }
+
+    var reportErrorAlertPublished: Published<Bool> { _reportErrorAlert }
+    var reportErrorAlertPublisher: Published<Bool>.Publisher { $reportErrorAlert }
+
     @Published var commentsListPublisher: [CommentInfo]
     @Published var hasNextPublisher: Bool
-    
+
     init() {
         self.commentsListPublisher = [
             CommentInfo(content: "test1", likeCnt: 1, isLiked: true),
             CommentInfo(content: "test2", likeCnt: 0, isLiked: false)
         ]
         self.hasNextPublisher = false
+        self.reportAlert = false
+        self.reportErrorAlert = false
     }
-    
+
     var postInfo: PostInfo {
-        return PostInfo(title: "name",
-                    content: "content",
-                    isLiked: false,
-                    likeCount: 1,
-                    commentCount: 2,
-                        imageURLs: nil,
-                    isAnonymous: false,
-                    isMine: false)
+        return PostInfo(
+            title: "name",
+            content: "content",
+            isLiked: false,
+            likeCount: 1,
+            commentCount: 2,
+            imageURLs: nil,
+            isAnonymous: false,
+            isMine: false
+        )
+    }
+
+    func reportPost(reason: String, completion: @escaping (Bool, String?) -> Void) {
+        self.reportAlert = true
+        completion(true, nil)
+    }
+
+    func reportComment(commentId: Int, reason: String, completion: @escaping (Bool, String?) -> Void) {
+        self.reportAlert = true
+        completion(true, nil)
     }
 
     func editPost() {
-        // Implement with no-op or dummy functionality
+
     }
 
     func deletePost(completion: @escaping (Bool) -> Void) {
@@ -330,7 +336,7 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
     }
 
     func togglePostLike() {
-        
+
     }
 
     func loadBasicInfos() {
@@ -340,9 +346,9 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
     func loadMoreComments() {
 
     }
-    
-    func submitComment(postId: Int, content: String, isAnonymous:Bool) {
-        
+
+    func submitComment(postId: Int, content: String, isAnonymous: Bool) {
+
     }
 
     func editComment(commentId id: Int, content: String) {
@@ -357,4 +363,3 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
 
     }
 }
-*/
