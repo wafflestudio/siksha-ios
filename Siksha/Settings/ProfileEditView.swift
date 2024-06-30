@@ -122,12 +122,14 @@ struct ClearableTextField: View {
                 .multilineTextAlignment(.center)
                 .font(.custom("NanumSquareOTFB", size: 15))
                 .padding(.horizontal, 20)
-            Image(systemName: "xmark.circle.fill")
-                .frame(width: 18, height: 18)
-                .foregroundColor(Color("LightGrayColor"))
-                .onTapGesture {
-                    text = ""
-                }
+            if (text != "") {
+                Image(systemName: "xmark.circle.fill")
+                    .frame(width: 18, height: 18)
+                    .foregroundColor(Color("LightGrayColor"))
+                    .onTapGesture {
+                        text = ""
+                    }
+            }
         }
     }
 }
