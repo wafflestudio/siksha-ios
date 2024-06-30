@@ -53,45 +53,27 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     }
     
     var profileImage: some View {
-        Button(action: {
-            self.isShowingPhotoLibrary = true
-        }) {
-            if let selectedImage = viewModel.addedImages.first {
-                Image(uiImage: selectedImage)
-                    .resizable()
-                    .clipShape(Circle())
-                    .frame(width: 171, height: 171)
-                    .background(Circle().foregroundColor(Color("DefaultImageColor")))
-            } else {
-                if let urlString = viewModel.imageURL, let imageUrl = URL(string: urlString) {
-                    if #available(iOS 15.0, *) {
-                        AsyncImage(url: imageUrl) { phase in
-                            if let image = phase.image {
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fill)
-                            } else if phase.error != nil {
-                                Color("DefaultImageColor")
-                            } else {
-                                ProgressView()
-                            }
-                        }
-                        .frame(width: 171, height: 171)
+        VStack {
+            Button(action: {
+                isShowingPhotoLibrary = true
+            }) {
+                if let profileImage = viewModel.profileImage {
+                    Image(uiImage: profileImage)
+                        .resizable()
                         .clipShape(Circle())
-                    } else {
-                        ThumbnailImage(urlString)
-                            .frame(width: 171, height: 171)
-                            .clipShape(Circle())
-                    }
+                        .frame(width: 171, height: 171)
                 } else {
                     Color("DefaultImageColor")
                         .frame(width: 171, height: 171)
                         .clipShape(Circle())
                 }
             }
+            .sheet(isPresented: $isShowingPhotoLibrary) {
+                ImagePickerCoordinatorView(selectedImages: $viewModel.addedImages, maxSelection: 1)
+            }
         }
-        .sheet(isPresented: $isShowingPhotoLibrary) {
-            ImagePickerCoordinatorView(selectedImages: $viewModel.addedImages, maxSelection: 1)
+        .onAppear {
+            viewModel.loadInfo()
         }
     }
     
