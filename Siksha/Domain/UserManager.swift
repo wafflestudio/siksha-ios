@@ -7,6 +7,8 @@
 
 import Foundation
 import Combine
+import Alamofire
+import UIKit
 
 class UserManager: ObservableObject {
     static let shared = UserManager()
@@ -52,6 +54,19 @@ class UserManager: ObservableObject {
             }
             .store(in: &cancellables)
         
+    }
+    
+    func fetchImage(from urlString: String) -> AnyPublisher<UIImage?, Never> {
+        return Future<UIImage?, Never> { promise in
+            AF.request(urlString).responseData { response in
+                if let data = response.data, let image = UIImage(data: data) {
+                    promise(.success(image))
+                } else {
+                    promise(.success(nil))
+                }
+            }
+        }
+        .eraseToAnyPublisher()
     }
 
 }
