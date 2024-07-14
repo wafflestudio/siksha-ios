@@ -163,7 +163,6 @@ PODS:
   - Realm/Headers (10.6.0)
   - RealmSwift (10.6.0):
     - Realm (= 10.6.0)
-  - SwiftUIPager (2.3.0)
   - SwiftyJSON (5.0.0)
 
 DEPENDENCIES:
@@ -178,7 +177,6 @@ DEPENDENCIES:
   - KakaoSDKUser (= 2.3.2)
   - NMapsMap (= 3.11.0)
   - RealmSwift (= 10.6.0)
-  - SwiftUIPager (= 2.3.0)
   - SwiftyJSON (= 5.0.0)
 
 SPEC REPOS:
@@ -211,7 +209,6 @@ SPEC REPOS:
     - PromisesSwift
     - Realm
     - RealmSwift
-    - SwiftUIPager
     - SwiftyJSON
 
 SPEC CHECKSUMS:
@@ -243,9 +240,8 @@ SPEC CHECKSUMS:
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
   Realm: 1ef421d4581513400ad4f8bd39c8157f3266c62e
   RealmSwift: f80216fb8334b01ccf526e4f2dd5ff0da61863a2
-  SwiftUIPager: fa9b45ff5133f6aa2b4d82601d9e2662638f5459
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 06ed7aa0a2279b6007a8d115b1aecdb3839830db
+PODFILE CHECKSUM: 07395fae559ffe71afac027a98bdf29aeb04153f
 
 COCOAPODS: 1.15.2

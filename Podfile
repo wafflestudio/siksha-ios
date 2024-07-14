@@ -14,7 +14,6 @@ target 'Siksha' do
   pod 'GoogleSignIn', '5.0.2'
   pod 'BSImagePicker', '3.3.1'
   pod 'JTAppleCalendar', '8.0.5'
-  pod 'SwiftUIPager', '2.3.0'
   pod 'Firebase'
   pod 'Firebase/AnalyticsWithoutAdIdSupport'
   pod 'Firebase/Crashlytics'
