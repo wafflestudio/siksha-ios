@@ -126,12 +126,4 @@ extension Repository: UserRepositoryProtocol {
         let endpoint = SikshaAPI.updateUserProfile(nickname: nickname, image: image)
         return self.networkModule.request(endpoint: endpoint)
     }
-    func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, any Error> {
-        let endpoint = SikshaAPI.submitVOC(comment: comment, platform: platform)
-        return self.networkModule.requestWithNoContent(endpoint: endpoint)
-    }
-    func deleteUser() -> AnyPublisher<Void, any Error> {
-        let endpoint = SikshaAPI.deleteUser
-        return self.networkModule.requestWithNoContent(endpoint: endpoint)
-    }
 }

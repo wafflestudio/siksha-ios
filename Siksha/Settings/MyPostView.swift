@@ -15,9 +15,10 @@ struct MyPostPreView: View {
     
     let info: PostInfo
     let boardName: String
+    let needRefresh:Binding<Bool>
     
     var body: some View {
-        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: info.id), boardName: boardName)) {
+        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: info.id), needPostViewRefresh:needRefresh, boardName: boardName)) {
             HStack {
                 VStack(alignment: .leading) {
                     Text(info.title)
@@ -139,7 +140,7 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     var postList: some View {
         LazyVStack(spacing: 0) {
             ForEach(self.viewModel.postsListPublisher) { postInfo in
-                CommunityPostPreView(info: postInfo, boardName: "MyPost") // TODO
+                CommunityPostPreView(info: postInfo, boardName: "MyPost", needRefresh: $needRefresh) // TODO
                 divider
             }
             

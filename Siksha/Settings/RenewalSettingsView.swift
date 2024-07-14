@@ -12,6 +12,7 @@ struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @EnvironmentObject var appState: AppState
     
+    @ObservedObject var userModel = UserManager.shared
     @ObservedObject var viewModel: RenewalSettingsViewModel
     @ObservedObject var orderViewModel = RestaurantOrderViewModel()
     
@@ -54,15 +55,23 @@ struct RenewalSettingsView: View {
     }
     
     var profileState: some View {
-        NavigationLink(destination: Dummy()) {
+        NavigationLink(destination: ProfileEditView(viewModel: ProfileEditViewModel())) {
             HStack {
-                Image("LogoEllipse")
-                    .resizable()
-                    .frame(width: 48, height: 48)
-                    .padding(EdgeInsets(top: 13, leading: 12, bottom: 13, trailing: 6))
+                if (userModel.imageURL != nil){
+                    ThumbnailImage(userModel.imageURL!)
+                        .frame(width: 48, height: 48)
+                        .clipShape(Circle())
+                        .padding(EdgeInsets(top: 13, leading: 12, bottom: 13, trailing: 6))
+                } else{
+                    Image("LogoEllipse")
+                        .resizable()
+                        .frame(width: 48, height: 48)
+                        .padding(EdgeInsets(top: 13, leading: 12, bottom: 13, trailing: 6))
+                }
                 
                 
-                Text(UserManager.shared.nickname ?? "무명의 미식가")
+                
+                Text(userModel.nickname ?? "무명의 미식가")
                     .font(.custom("NanumSquareOTFB", size: 16))
                     .foregroundColor(.black)
                 
