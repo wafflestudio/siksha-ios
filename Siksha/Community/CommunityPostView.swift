@@ -200,6 +200,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                     Button("삭제", action: {
                                         viewModel.deletePost { success in
                                             if success {
+                                                self.needPostViewRefresh = true
                                                 self.presentationMode.wrappedValue.dismiss()
                                             } else {
                                         
