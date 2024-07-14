@@ -71,15 +71,6 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     @State var needRefresh = false
     let dividerColor = Color("ReviewLowColor")
     
-    let topPosts: [PostInfo] = (1..<5).map {
-        return PostInfo(title: "name\($0)",
-                     content: "content\($0)",
-                     isLiked: $0 % 2 == 0,
-                     likeCount: $0,
-                     commentCount: $0,
-                     imageURL: "",isAnonymous: false,isMine: false)
-    }
-    
     @ObservedObject private var viewModel: ViewModel
     
     init(viewModel: ViewModel) {
@@ -185,7 +176,7 @@ class StubMyPostViewModel: MyPostViewModelType {
                      isLiked: $0 % 2 == 0,
                      likeCount: $0,
                      commentCount: $0,
-                     imageURL: "",
+                     imageURLs: [""],
                      isAnonymous: false,
                      isMine: false)
     }

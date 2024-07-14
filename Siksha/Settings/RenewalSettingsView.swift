@@ -69,7 +69,8 @@ struct RenewalSettingsView: View {
                 Spacer()
                 
                 arrow
-            }.background(
+            }
+            .background(
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(borderColor, lineWidth: 1)
             )

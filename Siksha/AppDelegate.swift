@@ -58,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Realm.Configuration.defaultConfiguration = config
 
         // Feature Flag
-     //   FeatureFlag.shared.enable(feature: .community)
+        FeatureFlag.shared.enable(feature: .community)
         
         UserManager.shared.loadUserInfo()
         
