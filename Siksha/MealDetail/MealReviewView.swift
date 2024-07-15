@@ -38,7 +38,8 @@ private extension MealReviewView {
                     .gesture(
                         DragGesture(minimumDistance: 0, coordinateSpace: .local)
                             .updating($score) { (value, state, transcation) in
-                                state = Int(value.location.x / 50.0)+1
+                                let xvalue = max(0, value.location.x)
+                                state = Int(xvalue / 50.0)+1
                                 viewModel.scoreToSubmit = min(Double(state), 5)
                             }
                     )

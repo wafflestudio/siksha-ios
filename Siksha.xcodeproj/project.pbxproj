@@ -106,6 +106,8 @@
 		A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */; };
 		A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */; };
 		B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */; };
+		A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */; };
+		A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */; };
 		BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */; };
 		BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */; };
 		BF60ADE62AC1EABF0015C468 /* Errors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF60ADE52AC1EABF0015C468 /* Errors.swift */; };
@@ -1129,7 +1131,7 @@
 				CURRENT_PROJECT_VERSION = 1.1.1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
-				DEVELOPMENT_TEAM = 9AFU52MJH5;
+				DEVELOPMENT_TEAM = QHUVU5KV94;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Siksha/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;

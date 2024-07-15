@@ -86,7 +86,6 @@ enum SikshaAPI: URLRequestConvertible {
     case loadUserInfo
     case updateUserProfile(nickname: String?, image: Data?)
     case deleteUser
-    
 
     static var baseURL = Config.shared.baseURL!
     
@@ -199,7 +198,6 @@ enum SikshaAPI: URLRequestConvertible {
             return .patch
         case .deleteUser:
             return .delete
-
         }
     }
 
