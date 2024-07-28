@@ -1,22 +1,21 @@
 //
-//  VOCView.swift
+//  RenewalVOCView.swift
 //  Siksha
 //
-//  Created by 박종석 on 2021/05/30.
+//  Created by 김령교 on 4/14/24.
 //
 
 import SwiftUI
 
-
-struct VOCView: View {
+struct RenewalVOCView: View {
     private let fontColor = Color("DefaultFontColor")
     private let orangeColor = Color.init("main")
     private let lightGrayColor = Color.init("LightGrayColor")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @ObservedObject var viewModel: SettingsViewModel
+    @ObservedObject var viewModel: RenewalSettingsViewModel
     
-    init(_ viewModel: SettingsViewModel) {
+    init(_ viewModel: RenewalSettingsViewModel) {
         self.viewModel = viewModel
     }
     
@@ -46,7 +45,8 @@ struct VOCView: View {
                     
                     Spacer()
                 }
-                .padding(EdgeInsets(top: 0, leading: 28, bottom: 8, trailing: 28))
+                .padding([.leading, .trailing], 20)
+                .padding(.bottom, 8)
                 
                 ZStack(alignment: .bottom) {
                     TextView(text: $viewModel.vocComment, placeHolder: .constant(""))
@@ -60,7 +60,7 @@ struct VOCView: View {
                     }
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 8))
                 }
-                .padding([.leading, .trailing], 28)
+                .padding(EdgeInsets(top: 0, leading: 28, bottom: 0, trailing: 28))
                 
                 Spacer()
                 
@@ -100,5 +100,3 @@ struct VOCView: View {
         .ignoresSafeArea(.keyboard)
     }
 }
-
-   

@@ -17,6 +17,7 @@ protocol CommunityRepositoryProtocol {
     func submitPost(boardId:Int,title:String,content:String,images:[Data],anonymous:Bool) ->AnyPublisher<SubmitPostResponse,Error>
     func editPost(postId:Int, boardId:Int,title:String,content:String,images:[Data],anonymous:Bool) ->AnyPublisher<SubmitPostResponse,Error>
     func loadPostsPage(boardId: Int, page: Int, perPage: Int) -> AnyPublisher<PostsPage, Error>
+    func loadMyPostsPage(page: Int, perPage: Int) -> AnyPublisher<PostsPage, Error>
     func loadPost(postId: Int) -> AnyPublisher<Post, Error>
     func deletePost(postId: Int) -> AnyPublisher<Void, Error>
     func likePost(postId: Int) -> AnyPublisher<Post, Error>
@@ -35,4 +36,6 @@ protocol CommunityRepositoryProtocol {
 protocol UserRepositoryProtocol {
     func loadUserInfo() -> AnyPublisher<User, Error>
     func updateUserProfile(nickname: String?, image: Data?) -> AnyPublisher<User, Error>
+    func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, any Error> 
+    func deleteUser() -> AnyPublisher<Void, Error>
 }

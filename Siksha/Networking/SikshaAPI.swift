@@ -66,6 +66,7 @@ enum SikshaAPI: URLRequestConvertible {
     // Community
     case getBoards
     case getPosts(boardId: Int, page: Int, perPage: Int)
+    case getMyposts(page: Int, perPage: Int)
     case getPost(postId: Int)
     case deletePost(postId: Int)
     case likePost(postId: Int)
@@ -84,7 +85,7 @@ enum SikshaAPI: URLRequestConvertible {
     // User
     case loadUserInfo
     case updateUserProfile(nickname: String?, image: Data?)
-    
+    case deleteUser
 
     static var baseURL = Config.shared.baseURL!
     
@@ -158,6 +159,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .getPosts:
             return .get
+        case .getMyposts:
+            return .get
         case .getPost:
             return .get
         case .submitPost:
@@ -193,6 +196,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .updateUserProfile:
             return .patch
+        case .deleteUser:
+            return .delete
         }
     }
 
@@ -232,6 +237,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/boards"
         case .getPosts:
             return "/community/posts"
+        case .getMyposts:
+            return "/community/posts/me"
         case .submitPost:
             return "/community/posts"
         case .editPost(postId: let postId, boardId: _, title: _, content: _, images: _, anonymous: _):
@@ -264,6 +271,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/auth/me"
         case .updateUserProfile:
             return "/auth/me/profile"
+        case .deleteUser:
+            return "/auth"
         }
     }
     
@@ -285,6 +294,8 @@ enum SikshaAPI: URLRequestConvertible {
             return ["voc": comment, "platform": platform]
         case let .getPosts(boardId, page, perPage):
             return ["board_id": boardId, "page": page, "per_page": perPage]
+        case let .getMyposts(page, perPage):
+            return ["page":page, "per_page":perPage]
         case let .getPost(postId):
             return ["post_id": postId]
         case let .likePost(postId):
