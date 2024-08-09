@@ -10,19 +10,51 @@ import SwiftUI
 
 struct TopPosts:View{
     var infos: [PostInfo]
-    
+    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    @State private var counter = 0
+    @State private var select = 0
     var body:some View{
+        let appendedInfos = infos + [infos[0]]
+        let flippingAngle = Angle(degrees: 0)
         GeometryReader { proxy in
-            TabView {
-                ForEach(infos, id:\.title) { info in
+            TabView(selection: $select) {
+                ForEach(Array(zip(appendedInfos.indices, appendedInfos)), id: \.0) { index,info in
                     TopPostCell(title: info.title, content: info.content, like: info.likeCount)
-                        .padding(EdgeInsets(top: 10, leading: 23, bottom: 10, trailing: 22))
+    
+                        .frame(width: proxy.size.width, height: proxy.size.height)
+                        .rotationEffect(.degrees(-90))
+                        .rotation3DEffect(flippingAngle, axis: (x: 1, y: 0, z: 0))
+
                     
                 }
+
             }
-            .frame(width: proxy.size.width)
+
+                .background(Color.init(red:1,green:149/255,blue:34/255,opacity: 0.2))
+                .cornerRadius(12)
+            .frame(width: proxy.size.height, height: proxy.size.width)
+            .rotation3DEffect(flippingAngle, axis: (x: 1, y: 0, z: 0))
+            .rotationEffect(.degrees(90), anchor: .topLeading)
+            .offset(x: proxy.size.width)
+
             .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        }.frame(height:68)
+        }  
+        .frame(height:35)
+        .onReceive(timer){ _ in
+            if(select == appendedInfos.count - 1){
+                select = 0
+                withAnimation{
+                    select = 1
+                }
+            }
+            else{
+                withAnimation{
+                    select += 1
+                }
+            }
+        }
+        
+
     }
 }
 struct TopPosts_Preview:PreviewProvider{

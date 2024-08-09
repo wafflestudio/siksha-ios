@@ -36,7 +36,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 VStack(spacing:0){
                     BoardSelect(viewModel: viewModel)
                     divider
-                    TopPosts(infos: topPosts)
+                    TopPosts(infos: topPosts).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
                     
                     ScrollView{
                         divider

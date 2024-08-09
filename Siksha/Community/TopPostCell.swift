@@ -24,10 +24,9 @@ struct TopPostCell:View{
             
             Text("\(like)").foregroundColor(Color.init(red:1,green:149/255,blue:34/255))
                 .font(.custom("Inter-ExtraLight",size:8))
-        }.padding(EdgeInsets(top: 10, leading: 12, bottom: 10, trailing: 9.5))
-            .background(Color.init(red:1,green:149/255,blue:34/255,opacity: 0.2))
-            .cornerRadius(12)
-         //   .padding(EdgeInsets(top: 10, leading: 23, bottom: 10, trailing: 22))
+        }
+
+            .padding(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15))
             
     }
 }
