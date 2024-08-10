@@ -7,7 +7,7 @@ target 'Siksha' do
   # Pods for Siksha
   pod 'RealmSwift', '10.6.0'
   pod 'SwiftyJSON', '5.0.0'
-  pod 'NMapsMap', '3.11.0'
+  pod 'NMapsMap', '3.18.1'
   pod 'KakaoSDKCommon', '2.3.2'
   pod 'KakaoSDKAuth', '2.3.2'
   pod 'KakaoSDKUser', '2.3.2'
