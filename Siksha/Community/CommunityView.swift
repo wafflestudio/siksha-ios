@@ -140,11 +140,12 @@ struct CommunityPostPreView: View {
             HStack {
                 VStack(alignment: .leading) {
                     Text(info.title)
-                        .font(.custom("Inter-Bold", size: 15))
+                        .font(.custom("NanumSquareOTFExtraBold", size: 15))
+                        .foregroundColor(.black)
                     Spacer()
                         .frame(width: 10)
                     Text(info.content)
-                        .font(.custom("Inter-ExtraLight", size: 12))
+                        .font(.custom("NanumSquareOTFRegular", size: 12))
                         .foregroundColor(contentColor)
                     Spacer()
                         .frame(width: 10)
@@ -156,7 +157,7 @@ struct CommunityPostPreView: View {
                             Spacer()
                                 .frame(width: 4)
                             Text(String(info.likeCount))
-                                .font(.custom("Inter-Regular", size: 9))
+                                .font(.custom("NanumSquareOTFRegular", size: 9))
                             
                                 .foregroundColor(likeColor)
                         }
@@ -166,7 +167,7 @@ struct CommunityPostPreView: View {
                             Spacer()
                                 .frame(width: 4)
                             Text(String(info.commentCount))
-                                .font(.custom("Inter-Regular", size: 9))
+                                .font(.custom("NanumSquareOTFRegular", size: 9))
                                 .foregroundColor(Color.init("ReviewMediumColor"))
                                 .frame(height: 11, alignment: .center)
                             
