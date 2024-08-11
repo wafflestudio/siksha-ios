@@ -22,7 +22,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var reportCompleteAlertIsShown = false
     @State private var alertTitle: String = ""
     @State private var alertMessage: String = ""
-    let boardName: String
     
     var backButton: some View {
         Button(action: {
@@ -241,7 +240,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText,isAnonymous: isAnonymous)
             })
             
-        }.customNavigationBar(title: boardName)
+        }.customNavigationBar(title: viewModel.boardNamePublisher)
             .navigationBarItems(leading: backButton)
             .onAppear {
                 viewModel.loadBasicInfos()
@@ -278,7 +277,7 @@ extension View {
 
 /*struct CommunityPostView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityPostView(viewModel: StubCommunityPostViewModel(), boardName: StubCommunityViewModel().getSelectedBoardName(), needPostViewRefresh: <#Bool#>)
+        CommunityPostView(viewModel: StubCommunityPostViewModel(), boardName: StubCommunityViewModel().getSelectedBoardName(), needPostViewRefresh:)
     }
 }*/
 
