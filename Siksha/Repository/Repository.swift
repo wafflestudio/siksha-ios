@@ -21,6 +21,7 @@ final class Repository: RepositoryProtocol {
 }
 
 extension Repository: CommunityRepositoryProtocol {
+    
     func loadBoardList() -> AnyPublisher<[Board], Error> {
         let endpoint = SikshaAPI.getBoards
         return self.networkModule.request(endpoint: endpoint)
@@ -38,6 +39,11 @@ extension Repository: CommunityRepositoryProtocol {
     
     func loadPostsPage(boardId: Int, page: Int, perPage: Int = 20) -> AnyPublisher<PostsPage, Error> {
         let endpoint = SikshaAPI.getPosts(boardId: boardId, page: page, perPage: perPage)
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    
+    func loadTrendingPostsPage(likes: Int, created_before: Int, page: Int, per_page: Int) -> AnyPublisher<PostsPage, Error> {
+        let endpoint = SikshaAPI.getTrendingPosts(likes: likes, created_before: created_before, page: page, per_page: per_page)
         return self.networkModule.request(endpoint: endpoint)
     }
     
