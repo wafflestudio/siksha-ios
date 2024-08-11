@@ -84,6 +84,7 @@ struct BoardInfo: Hashable {
 protocol CommunityViewModelType: ObservableObject {
     var boardsListPublisher: [BoardInfo] { get }
     var postsListPublisher: [PostInfo] { get }
+    var trendingPostsListPublisher: [PostInfo] { get }
     var hasNextPublisher: Bool { get }
     
     func selectBoard(id: Int)
@@ -97,6 +98,8 @@ final class CommunityViewModel: CommunityViewModelType {
     struct Constants {
         static let initialPage = 1
         static let pageCount = 20
+        static let trendingPageCount = 1
+        static let trendingPostsCount = 5
     }
     
     private let communityRepository: CommunityRepositoryProtocol
@@ -105,6 +108,7 @@ final class CommunityViewModel: CommunityViewModelType {
     @Published private var selectedBoardId: Int = 0
     
     @Published private var currPostList: [Post] = []
+    @Published private var trendingPostList: [Post] = []
     private var currentPage: Int = 0
     
     @Published private var hasNext: Bool = false
@@ -135,12 +139,15 @@ extension CommunityViewModel {
     var hasNextPublisher: Bool {
         return self.hasNext
     }
+    var trendingPostsListPublisher: [PostInfo]{
+        return self.trendingPostList.map{PostInfo(post: $0 )}
+    }
 }
 
 extension CommunityViewModel {
     func loadBasicInfos() {
         self.loadBoards()
-        self.loadHotPosts()
+        self.loadTrendingPosts()
     }
     
     private func loadBoards() {
@@ -156,8 +163,16 @@ extension CommunityViewModel {
             .store(in: &cancellables)
     }
     
-    private func loadHotPosts() {
-        
+    private func loadTrendingPosts() {
+        self.communityRepository.loadTrendingPostsPage(likes: 1, created_before: 50, page: Constants.trendingPageCount, per_page: Constants.trendingPostsCount)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { error in
+                print(error)
+            }, receiveValue: {[weak self] postsPage in
+                self?.trendingPostList = postsPage.posts
+                
+            })
+            .store(in: &cancellables)
     }
     
     func selectBoard(id: Int) {
