@@ -66,6 +66,7 @@ enum SikshaAPI: URLRequestConvertible {
     // Community
     case getBoards
     case getPosts(boardId: Int, page: Int, perPage: Int)
+    case getTrendingPosts(likes:Int,created_before:Int,page:Int,per_page:Int)
     case getMyposts(page: Int, perPage: Int)
     case getPost(postId: Int)
     case deletePost(postId: Int)
@@ -159,6 +160,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .getPosts:
             return .get
+        case .getTrendingPosts:
+            return .get
         case .getMyposts:
             return .get
         case .getPost:
@@ -237,6 +240,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/boards"
         case .getPosts:
             return "/community/posts"
+        case .getTrendingPosts:
+            return "/community/posts/popular/trending"
         case .getMyposts:
             return "/community/posts/me"
         case .submitPost:
@@ -294,6 +299,8 @@ enum SikshaAPI: URLRequestConvertible {
             return ["voc": comment, "platform": platform]
         case let .getPosts(boardId, page, perPage):
             return ["board_id": boardId, "page": page, "per_page": perPage]
+        case let .getTrendingPosts(likes, created_before, page, per_page):
+            return ["likes":likes,"created_before":created_before,"page":page,"per_page":per_page]
         case let .getMyposts(page, perPage):
             return ["page":page, "per_page":perPage]
         case let .getPost(postId):
