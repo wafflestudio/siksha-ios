@@ -24,6 +24,8 @@ struct TopPosts:View{
                         .frame(width: proxy.size.width, height: proxy.size.height)
                         .rotationEffect(.degrees(-90))
                         .rotation3DEffect(flippingAngle, axis: (x: 1, y: 0, z: 0))
+                        .gesture(DragGesture())
+
 
                     
                 }
