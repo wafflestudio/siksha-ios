@@ -11,15 +11,16 @@ import SwiftUI
 struct TopPosts:View{
     var infos: [PostInfo]
     let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    let needRefresh:Binding<Bool>
     @State private var counter = 0
     @State private var select = 0
     var body:some View{
-        let appendedInfos = infos + [infos[0]]
+        let appendedInfos = infos.count > 0 ? infos + [infos[0]] : []
         let flippingAngle = Angle(degrees: 0)
         GeometryReader { proxy in
             TabView(selection: $select) {
                 ForEach(Array(zip(appendedInfos.indices, appendedInfos)), id: \.0) { index,info in
-                    TopPostCell(title: info.title, content: info.content, like: info.likeCount)
+                    TopPostCell(post: info, needRefresh:needRefresh )
     
                         .frame(width: proxy.size.width, height: proxy.size.height)
                         .rotationEffect(.degrees(-90))
@@ -59,7 +60,7 @@ struct TopPosts:View{
 
     }
 }
-struct TopPosts_Preview:PreviewProvider{
+/*struct TopPosts_Preview:PreviewProvider{
     static var previews: some View{
         TopPosts(infos: (1..<5).map {
             return PostInfo(title: "name\($0)",
@@ -72,4 +73,4 @@ struct TopPosts_Preview:PreviewProvider{
                          isMine: false)
         })
     }
-}
+}*/

@@ -36,7 +36,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 VStack(spacing:0){
                     BoardSelect(viewModel: viewModel)
                     divider
-                    TopPosts(infos: topPosts).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
+                    TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
                     
                     ScrollView{
                         divider
@@ -74,6 +74,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
         .onChange(of: needRefresh, perform: { refresh in
             if refresh{
                 self.viewModel.loadSelectedBoardPosts()
+                self.viewModel.loadBasicInfos()
                 needRefresh = false
             }
         })
@@ -135,7 +136,7 @@ struct CommunityPostPreView: View {
     let boardName: String
     let needRefresh:Binding<Bool>
     var body: some View {
-        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: info.id), needPostViewRefresh:needRefresh, boardName: boardName)) {
+        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: info.id), needPostViewRefresh:needRefresh)) {
             HStack {
                 VStack(alignment: .leading) {
                     Text(info.title)
@@ -204,6 +205,8 @@ struct ComunityView_Previews: PreviewProvider {
 }
 
 class StubCommunityViewModel: CommunityViewModelType {
+    var trendingPostsListPublisher: [PostInfo] = []
+    
     var hasNextPublisher: Bool {
         return true
     }

@@ -8,30 +8,31 @@
 import Foundation
 import SwiftUI
 struct TopPostCell:View{
-    var title:String
-    var content:String
-    var like:Int
+    var post:PostInfo
+    let needRefresh:Binding<Bool>
     var body:some View{
-        HStack(alignment: .center){
-            Text(title)
-                .font(.custom("NanumSquareOTFB", size: 12))
-            Spacer().frame(width:15)
-            Text(content)
-                .font(.custom("NanumSquareOTFR",size:12))
-            Spacer()
+        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: post.id), needPostViewRefresh:needRefresh)) {
+            HStack(alignment: .center){
+                Text(post.title)
+                    .font(.custom("NanumSquareOTFB", size: 12))
+                Spacer().frame(width:15)
+                Text(post.content)
+                    .font(.custom("NanumSquareOTFR",size:12))
+                Spacer()
+                
+                Image("like").padding(EdgeInsets(top: 0, leading: 0, bottom: 2, trailing: 0))
+                
+                Text("\(post.likeCount)").foregroundColor(Color.init(red:1,green:149/255,blue:34/255))
+                    .font(.custom("Inter-ExtraLight",size:8))
+            }
             
-            Image("like").padding(EdgeInsets(top: 0, leading: 0, bottom: 2, trailing: 0))
-            
-            Text("\(like)").foregroundColor(Color.init(red:1,green:149/255,blue:34/255))
-                .font(.custom("Inter-ExtraLight",size:8))
-        }
-
             .padding(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15))
             
+        }
     }
 }
-struct TopPostCell_Preview:PreviewProvider{
+/*struct TopPostCell_Preview:PreviewProvider{
     static var previews:some View{
-        TopPostCell(title: "제목", content: "본문 본문 본문", like: 3)
+        TopPostCell(post: <#PostInfo#>, title: "제목", content: "본문 본문 본문", like: 3)
     }
-}
+}*/

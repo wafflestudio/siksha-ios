@@ -18,7 +18,7 @@ struct MyPostPreView: View {
     let needRefresh:Binding<Bool>
     
     var body: some View {
-        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: info.id), needPostViewRefresh:needRefresh, boardName: boardName)) {
+        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: info.id), needPostViewRefresh:needRefresh)) {
             HStack {
                 VStack(alignment: .leading) {
                     Text(info.title)
