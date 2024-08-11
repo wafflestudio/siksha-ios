@@ -42,8 +42,8 @@ extension Repository: CommunityRepositoryProtocol {
         return self.networkModule.request(endpoint: endpoint)
     }
     
-    func loadTrendingPostsPage(likes: Int, created_before: Int, page: Int, per_page: Int) -> AnyPublisher<PostsPage, Error> {
-        let endpoint = SikshaAPI.getTrendingPosts(likes: likes, created_before: created_before, page: page, per_page: per_page)
+    func loadTrendingPosts(likes: Int, created_before: Int) -> AnyPublisher<TrendingPostsResponse, Error> {
+        let endpoint = SikshaAPI.getTrendingPosts(likes: likes, created_before: created_before)
         return self.networkModule.request(endpoint: endpoint)
     }
     
