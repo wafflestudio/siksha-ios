@@ -19,7 +19,7 @@ struct BoardNameCell: View{
     
     var body: some View{
         Text(boardName)
-            .font(.custom("Inter-Regular", size: 15))
+            .font(.custom("NanumSquareOTFBold", size: 15))
             .padding(EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 12))
             .background(isSelected ? selectedBackgroundColor : unSelectedBackgroundColor)
             .foregroundColor(isSelected ? selectedFontColor : unSelectedFontColor)
