@@ -211,3 +211,6 @@ struct CommentReportResponse: Codable{
     var reason: String
     var comment_id: Int
 }
+struct TrendingPostsResponse:Decodable {
+    var result:[Post]
+}

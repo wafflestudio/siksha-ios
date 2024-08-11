@@ -98,8 +98,8 @@ final class CommunityViewModel: CommunityViewModelType {
     struct Constants {
         static let initialPage = 1
         static let pageCount = 20
-        static let trendingPageCount = 1
-        static let trendingPostsCount = 5
+        static let trendingLikes = 1
+        static let trendingCreatedBefore = 50
     }
     
     private let communityRepository: CommunityRepositoryProtocol
@@ -164,12 +164,12 @@ extension CommunityViewModel {
     }
     
     private func loadTrendingPosts() {
-        self.communityRepository.loadTrendingPostsPage(likes: 1, created_before: 50, page: Constants.trendingPageCount, per_page: Constants.trendingPostsCount)
+        self.communityRepository.loadTrendingPosts(likes:Constants.trendingLikes, created_before: Constants.trendingCreatedBefore)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { error in
                 print(error)
-            }, receiveValue: {[weak self] postsPage in
-                self?.trendingPostList = postsPage.posts
+            }, receiveValue: {[weak self] response in
+                self?.trendingPostList = response.result
                 
             })
             .store(in: &cancellables)
