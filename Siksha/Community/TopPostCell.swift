@@ -17,22 +17,31 @@ struct TopPostCell:View{
                     .font(.custom("NanumSquareOTFBold", size: 12))
                     .foregroundColor(.black)
                     .lineLimit(1)
+                    .highPriorityGesture(DragGesture())
                 Spacer().frame(width:15)
+                    .highPriorityGesture(DragGesture())
+
                 Text(post.content)
                     .font(.custom("NanumSquareOTFRegular",size:12))
                     .foregroundColor(Color("ReviewHighColor"))
                     .lineLimit(1)
+                    .highPriorityGesture(DragGesture())
                 Spacer()
+                .highPriorityGesture(DragGesture())
                 
                 Image("like").padding(EdgeInsets(top: 0, leading: 0, bottom: 2, trailing: 0))
+                    .highPriorityGesture(DragGesture())
                 
                 Text("\(post.likeCount)").foregroundColor(Color.init(red:1,green:149/255,blue:34/255))
                     .font(.custom("NanumSquareOTFRegular",size:8))
+                    .highPriorityGesture(DragGesture())
             }
             
             .padding(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15))
-            
+            .highPriorityGesture(DragGesture())
         }
+        .highPriorityGesture(DragGesture())
+
     }
 }
 /*struct TopPostCell_Preview:PreviewProvider{
