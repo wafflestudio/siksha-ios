@@ -55,6 +55,7 @@ protocol CommunityPostViewModelType: ObservableObject {
     var postInfo: PostInfo { get }
     var commentsListPublisher: [CommentInfo] { get }
     var hasNextPublisher: Bool { get }
+    var boardNamePublisher: String { get }
     
     func editPost()
     func deletePost(completion: @escaping (Bool) -> Void)
@@ -81,7 +82,8 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
     
     @Published private var post: Post
     @Published private var commentsList: [Comment] = []
-    
+
+    @Published private var boardsList: [Board] = []
     @Published private var hasNext: Bool = false
     @Published var reportAlert:Bool = false
     @Published var reportErrorAlert:Bool = false
@@ -110,12 +112,21 @@ extension CommunityPostViewModel {
     var hasNextPublisher: Bool {
         return self.hasNext
     }
+    var boardNamePublisher: String {
+        for board in boardsList{
+            if board.id == postInfo.boardId{
+                return board.name
+            }
+        }
+        return ""
+    }
 }
 
 extension CommunityPostViewModel {
     func loadBasicInfos() {
         self.loadPost()
         self.loadInitialComments()
+        self.loadBoardInfo()
     }
     
     func editPost() {
@@ -169,6 +180,18 @@ extension CommunityPostViewModel {
                 print(error)
             }, receiveValue: { [weak self] post in
                 self?.post = post
+            })
+            .store(in: &cancellables)
+    }
+    
+    private func loadBoardInfo(){
+        self.communityRepository.loadBoardList()
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion:{
+                error in
+                print(error)
+            },receiveValue: {[weak self] boards in
+                self?.boardsList = boards
             })
             .store(in: &cancellables)
     }

@@ -283,6 +283,8 @@ extension View {
 }*/
 
 class StubCommunityPostViewModel: CommunityPostViewModelType {
+    var boardNamePublisher: String
+    
     @Published var reportAlert: Bool = false
     @Published var reportErrorAlert: Bool = false
 
@@ -303,6 +305,7 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
         self.hasNextPublisher = false
         self.reportAlert = false
         self.reportErrorAlert = false
+        self.boardNamePublisher = "board"
     }
 
     var postInfo: PostInfo {
