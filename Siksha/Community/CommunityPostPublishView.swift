@@ -18,6 +18,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     @Binding var needRefresh:Bool
     @State private var isShowingPhotoLibrary = false
  //   @State private var addedImages = [UIImage]()
+    @State private var isExpanded = false
     private var cornerRadius = 7.0
     @ObservedObject  var viewModel:ViewModel
     private var cancellables = Set<AnyCancellable>()
@@ -159,89 +160,157 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             }
         }
     }
-    
-    var body: some View {
-        NavigationView {
-            VStack {
-                ZStack(alignment: .leading) {
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(Color(hex: 0xF8F8F8))
-                        .frame(height: 35)
-                    TextField("제목", text: $viewModel.title)
-                        .font(.custom("Inter-Bold", size: 14))
-                        .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+
+    var boardPicker: some View {
+        ZStack(alignment: .top) {
+                Button(action: {
+                    withAnimation {
+                        isExpanded.toggle()
+                    }
+                }) {
+                    HStack {
+                        Spacer()
+                        Text(viewModel.boardsList.first { $0.id == viewModel.boardId }?.name ?? "게시판 선택")
+                            .foregroundColor(Color(hex: 0x575757))
+                        Image("DownArrow")
+                            .foregroundColor(Color(hex: 0x919191))
+                        Spacer()
+                    }
+                    .padding()
+                    .frame(height: 35)
+                    .background(
+                        RoundedRectangle(cornerRadius: cornerRadius)
+                            .stroke(Color(hex: 0xDFDFDF))
+                    )
                 }
-                .frame(maxWidth:.infinity)
-                                
-                ZStack(alignment: .topLeading) {
-                    let placeholder: String = "내용을 입력하세요."
-                    
-                    TextEditor(text: $viewModel.content)
-                        .font(.custom("Inter-ExtraLight", size: 12))
-                        .frame(minHeight: 120)
-                        .fixedSize(horizontal: false, vertical: true)
-                    
-                    if viewModel.content.isEmpty {
-                        Text(placeholder)
-                            .font(.custom("Inter-ExtraLight", size: 12))
-                            .foregroundColor(Color.init("ReviewLowColor"))
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(EdgeInsets(top: 8, leading: 6, bottom: 0, trailing: 0))
+
+            if isExpanded {
+                VStack(spacing: 0) {
+                    ForEach(viewModel.boardsList, id: \.id) { board in
+                        VStack(spacing: 0) {
+                            Button(action: {
+                                viewModel.boardId = board.id
+                                withAnimation {
+                                    isExpanded.toggle()
+                                }
+                            }) {
+                                HStack {
+                                    Spacer()
+                                    if viewModel.boardId == board.id {
+                                        Text(board.name)
+                                            .foregroundColor(Color("MainThemeColor"))
+                                        Image("CheckMark")
+                                            .foregroundColor(Color("MainThemeColor"))
+                                    } else {
+                                        Text(board.name)
+                                            .foregroundColor(Color(hex: 0x575757))
+                                        Image("CheckMark")
+                                            .renderingMode(.template)
+                                            .foregroundColor(Color.clear) // Placeholder to align text
+                                    }
+                                    Spacer()
+                                }
+                                .padding()
+                            }
+                            .frame(height: 35)
+                            
+                            if board.id != viewModel.boardsList.last?.id {
+                                Divider()
+                                    .background(Color(hex: 0xEEEEEE))
+                            }
+                        }
                     }
                 }
-                .padding(EdgeInsets(top: 8, leading: 0, bottom: 8, trailing: 0))
-                
-                HStack {
-                    anonymousButton
-                    Spacer()
-                }
-                
-                customDivider
-                
-                imageSection
-                
-                Spacer()
-
-                postButton
-                    .padding(.bottom, 5)
-                
+                .background(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .stroke(Color(hex: 0xDFDFDF))
+                        .background(
+                            RoundedRectangle(cornerRadius: cornerRadius)
+                                .fill(Color.white)
+                        )
+                )
+                .offset(y: 40)
             }
-            .padding(EdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20))
-            .customNavigationBar(title: "글쓰기")
-            .navigationBarItems(leading: backButton)
+
+        }
+        .zIndex(1)
+    }
+
+    
+    var body: some View {
+        GeometryReader { geometry in
             
-        }.navigationBarBackButtonHidden(true)
-        .alert(isPresented: $viewModel.isErrorAlert, content: {
-            Alert(title: Text("게시물 남기기"), message:  Text(alertMessage), dismissButton: alertButton)
-        })
-      
+            ZStack(alignment: .top) {
+                boardPicker
+                    .padding(EdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20))
+                
+                VStack {
+                    ZStack(alignment: .leading) {
+                        RoundedRectangle(cornerRadius: cornerRadius)
+                            .fill(Color(hex: 0xF8F8F8))
+                            .frame(height: 35)
+                        TextField("제목", text: $viewModel.title)
+                            .font(.custom("Inter-Bold", size: 14))
+                            .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                    }
+                    .frame(maxWidth: .infinity)
+                    
+                    ExpandingTextViewWrapper(text: $viewModel.content, initialHeight: 120, maxHeight: 400)
+                        .frame(minHeight: 120) // Minimum height as starting point
+
+                    HStack {
+                        anonymousButton
+                        Spacer()
+                    }
+                    
+                    customDivider
+                    
+                    imageSection
+                    
+                    Spacer()
+                    
+                    postButton
+                        .padding(.bottom, 5)
+                }
+                .padding(EdgeInsets(top: 60, leading: 20, bottom: 20, trailing: 20))
+                .customNavigationBar(title: "글쓰기")
+                .navigationBarItems(leading: backButton)
+                .alert(isPresented: $viewModel.isErrorAlert, content: {
+                    Alert(title: Text("게시물 남기기"), message: Text(alertMessage), dismissButton: alertButton)
+                })
+            }
+        }
+        .navigationBarBackButtonHidden(true)
     }
     
-    
     var alertButton: Alert.Button {
-            var action: (() -> Void)? = nil
-            if viewModel.isSubmitted {
-                action = {
-                    needRefresh = true
-                    presentationMode.wrappedValue.dismiss()
-                }
-            } else {
-                action = {
-                    
-                }
-            
+        var action: (() -> Void)? = nil
+        if viewModel.isSubmitted {
+            action = {
+                needRefresh = true
+                presentationMode.wrappedValue.dismiss()
             }
-            return Alert.Button.default(Text("확인"), action: action)
+        } else {
+            action = {}
         }
-    var alertMessage:String{
+        return Alert.Button.default(Text("확인"), action: action)
+    }
+
+    var alertMessage: String {
         if let _ = viewModel.postInfo {
             viewModel.isSubmitted ? "게시물이 수정되었습니다." : "게시물을 수정하지 못했습니다. 다시 시도해주세요."
         } else {
             viewModel.isSubmitted ? "게시물이 등록되었습니다." : "게시물을 등록하지 못했습니다. 다시 시도해주세요."
         }
     }
-    
-    
+}
+
+extension String {
+    func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
+        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
+        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
+        return ceil(boundingBox.height)
+    }
 }
 
 /*struct CommunityPostPublishView_Previews: PreviewProvider {

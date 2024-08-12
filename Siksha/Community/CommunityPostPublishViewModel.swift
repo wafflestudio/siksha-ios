@@ -16,6 +16,7 @@ protocol CommunityPostPublishViewType:ObservableObject{
     var images:[UIImage]{get set}
     var isSubmitted:Bool{get set}
     var isErrorAlert:Bool{get set}
+    var boardId: Int { get }
     var postInfo: PostInfo? {get set}
     func submitPost()
     
@@ -24,7 +25,8 @@ class CommunityPostPublishViewModel:CommunityPostPublishViewType{
     var postInfo: PostInfo?
     private let communityRepository: CommunityRepositoryProtocol
     private var cancellables = Set<AnyCancellable>()
-    private var boardId:Int
+    @Published var boardId:Int
+    @Published var boardsList: [Board] = []
     @Published var content = ""
     @Published var title = ""
     @Published var isAnonymous = false
@@ -34,6 +36,8 @@ class CommunityPostPublishViewModel:CommunityPostPublishViewType{
     init(boardId:Int,communityRepository: CommunityRepositoryProtocol, postInfo: PostInfo? = nil) {
         self.boardId = boardId
         self.communityRepository = communityRepository
+        
+        loadBoardInfo()
         
         if let info = postInfo {
             self.postInfo = info
@@ -69,6 +73,19 @@ class CommunityPostPublishViewModel:CommunityPostPublishViewType{
             }).store(in: &cancellables)
         }
     }
+    
+    private func loadBoardInfo(){
+        self.communityRepository.loadBoardList()
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion:{
+                error in
+                print(error)
+            },receiveValue: {[weak self] boards in
+                self?.boardsList = boards
+            })
+            .store(in: &cancellables)
+    }
+
 
     
     func downloadImages(from urls: [String], completion: @escaping ([UIImage]) -> Void) {
