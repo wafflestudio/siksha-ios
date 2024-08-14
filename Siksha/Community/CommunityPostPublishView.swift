@@ -12,12 +12,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
-  //  @State private var anonymousIsToggled = false
-   // @State var title: String = ""
-   // @State var content: String = ""
     @Binding var needRefresh:Bool
     @State private var isShowingPhotoLibrary = false
- //   @State private var addedImages = [UIImage]()
     @State private var isExpanded = false
     private var cornerRadius = 7.0
     @ObservedObject  var viewModel:ViewModel
@@ -257,12 +253,23 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     .frame(maxWidth: .infinity)
                     
                     
-                    TextEditor(text: $viewModel.content)
-                        .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
-                        .frame(minHeight: 120, maxHeight: availableHeight - 350)
-                        .font(.custom("Inter-Regular", size: 12))
-                        .foregroundColor(.primary)
-                        .fixedSize(horizontal: false, vertical: true)
+                    ZStack(alignment: .topLeading) {
+                        let placeholder: String = "내용을 입력하세요."
+                        
+                        TextEditor(text: $viewModel.content)
+                            .frame(minHeight: 120, maxHeight: max(120, availableHeight - 350))
+                            .font(.custom("Inter-ExtraLight", size: 12))
+                            .foregroundColor(.primary)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        if viewModel.content.isEmpty {
+                            Text(placeholder)
+                                .font(.custom("Inter-ExtraLight", size: 12))
+                                .foregroundColor(Color.init("ReviewLowColor"))
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                                .padding(EdgeInsets(top: 8, leading: 6, bottom: 0, trailing: 0))
+                        }
+                    }
 
 
                     HStack {
@@ -287,6 +294,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 })
             }
         }
+        .ignoresSafeArea(.keyboard)
         .navigationBarBackButtonHidden(true)
     }
     
@@ -319,6 +327,27 @@ extension String {
         return ceil(boundingBox.height)
     }
 }
+
+//struct DismissKeyboardToolbar: ViewModifier {
+//    func body(content: Content) -> some View {
+//        content
+//            .toolbar {
+//                ToolbarItemGroup(placement: .keyboard) {
+//                    Spacer() // Push the button to the right
+//                    Button("완료") {
+//                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+//                    }
+//                }
+//            }
+//    }
+//}
+//
+//extension View {
+//    func dismissKeyboardToolbar() -> some View {
+//        self.modifier(DismissKeyboardToolbar())
+//    }
+//}
+
 
 /*struct CommunityPostPublishView_Previews: PreviewProvider {
     static var previews: some View {
