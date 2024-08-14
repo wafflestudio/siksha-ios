@@ -17,6 +17,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     @State private var isExpanded = false
     private var cornerRadius = 7.0
     @ObservedObject  var viewModel:ViewModel
+    @StateObject private var keyboardResponder = KeyboardResponder()
     private var cancellables = Set<AnyCancellable>()
     init( needRefresh: Binding<Bool> , viewModel: ViewModel) {
         self._needRefresh = needRefresh
@@ -233,13 +234,32 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     }
 
     
+    var KeyboardToolbar: some View {
+        HStack {
+            anonymousButton
+                .padding(.leading, 20)
+            Spacer()
+            Button(action: {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            }) {
+                Text("OK")
+                    .font(.custom("Inter-SemiBold", size: 16))
+                    .foregroundColor(Color("MainThemeColor"))
+                    .padding(.trailing, 20)
+            }
+        }
+        .frame(height: 44)
+        .background(Color.white)
+    }
+
+
     var body: some View {
         GeometryReader { geometry in
             let availableHeight = geometry.size.height
             
             ZStack(alignment: .top) {
                 boardPicker
-                    .padding(EdgeInsets(top: 20, leading: 20, bottom: 0, trailing: 20))
+                    .padding(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
                 
                 VStack {
                     ZStack(alignment: .leading) {
@@ -271,10 +291,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                         }
                     }
 
-
-                    HStack {
-                        anonymousButton
-                        Spacer()
+                    if keyboardResponder.currentHeight == 0 {
+                        HStack {
+                            anonymousButton
+                            Spacer()
+                        }
                     }
                     
                     customDivider
@@ -286,12 +307,20 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     postButton
                         .padding(.bottom, 5)
                 }
-                .padding(EdgeInsets(top: 60, leading: 20, bottom: 20, trailing: 20))
+                .padding(EdgeInsets(top: 60, leading: 20, bottom: 0, trailing: 20))
                 .customNavigationBar(title: "글쓰기")
                 .navigationBarItems(leading: backButton)
                 .alert(isPresented: $viewModel.isErrorAlert, content: {
                     Alert(title: Text("게시물 남기기"), message: Text(alertMessage), dismissButton: alertButton)
                 })
+                    VStack {
+                        Spacer()
+                        KeyboardToolbar
+                            .frame(height: 44)
+                            .offset(y: keyboardResponder.currentHeight == 0 ? 50 : -keyboardResponder.currentHeight)
+                            .animation(.easeOut(duration: 0.25))
+                    }
+                    .edgesIgnoringSafeArea(.bottom)
             }
         }
         .ignoresSafeArea(.keyboard)
@@ -320,33 +349,31 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     }
 }
 
-extension String {
-    func heightWithConstrainedWidth(width: CGFloat, font: UIFont) -> CGFloat {
-        let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
-        let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
-        return ceil(boundingBox.height)
+class KeyboardResponder: ObservableObject {
+    @Published var currentHeight: CGFloat = 0
+    private var cancellable: AnyCancellable?
+
+    init() {
+        self.cancellable = NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
+            .merge(with: NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification))
+            .sink { [weak self] notification in
+                self?.keyboardNotification(notification: notification)
+            }
+    }
+
+    private func keyboardNotification(notification: Notification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            let isKeyboardShowing = notification.name == UIResponder.keyboardWillShowNotification
+            withAnimation(.easeOut(duration: 0.25)) {
+                self.currentHeight = isKeyboardShowing ? keyboardFrame.height : 0
+            }
+        }
+    }
+    
+    deinit {
+        self.cancellable?.cancel()
     }
 }
-
-//struct DismissKeyboardToolbar: ViewModifier {
-//    func body(content: Content) -> some View {
-//        content
-//            .toolbar {
-//                ToolbarItemGroup(placement: .keyboard) {
-//                    Spacer() // Push the button to the right
-//                    Button("완료") {
-//                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//                    }
-//                }
-//            }
-//    }
-//}
-//
-//extension View {
-//    func dismissKeyboardToolbar() -> some View {
-//        self.modifier(DismissKeyboardToolbar())
-//    }
-//}
 
 
 /*struct CommunityPostPublishView_Previews: PreviewProvider {
