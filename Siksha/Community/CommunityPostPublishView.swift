@@ -36,6 +36,40 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         }
     }
     
+    var postAndEditButton: some View {
+        HStack {
+            Button(action: {
+                self.presentationMode.wrappedValue.dismiss()
+            }) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color(hex: 0xADADAD))
+                        .frame(height: 60)
+                    Text("취소")
+                        .font(.custom("Inter-SemiBold", size: 14))
+                        .foregroundColor(Color.white)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .disabled(viewModel.title.isEmpty || viewModel.content.isEmpty)
+            
+            Button(action: {
+                viewModel.submitPost()
+            }) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("MainThemeColor"))
+                        .frame(height: 60)
+                    Text("완료")
+                        .font(.custom("Inter-SemiBold", size: 14))
+                        .foregroundColor(Color.white)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .disabled(viewModel.title.isEmpty || viewModel.content.isEmpty)
+        }
+    }
+    
     var postButton: some View {
         Button(action: {
             viewModel.submitPost()
@@ -304,8 +338,14 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     
                     Spacer()
                     
-                    postButton
-                        .padding(.bottom, 5)
+                    if let _ = viewModel.postInfo {
+                        postAndEditButton
+                            .padding(.bottom, 20)
+                    } else {
+                        postButton
+                            .padding(.bottom, 20)
+                    }
+
                 }
                 .padding(EdgeInsets(top: 60, leading: 20, bottom: 0, trailing: 20))
                 .customNavigationBar(title: "글쓰기")
