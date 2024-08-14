@@ -76,6 +76,7 @@
 		23DFD2042664110B0049F8D7 /* RemoteImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD2032664110B0049F8D7 /* RemoteImage.swift */; };
 		23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD20E2664C2720049F8D7 /* DetailImageView.swift */; };
 		23DFD2172664CD400049F8D7 /* ThumbnailImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23DFD2162664CD400049F8D7 /* ThumbnailImage.swift */; };
+		45EF4169BF5F3B9E1C55FE7E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */; };
 		4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BDE232A7F75BC00046ADC /* CommunityView.swift */; };
 		4E3D4EE72A74E02A005C7AB2 /* BoardNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE62A74E02A005C7AB2 /* BoardNameCell.swift */; };
 		4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */; };
@@ -96,16 +97,11 @@
 		4E74167D2A9B63A10010769F /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74167C2A9B63A00010769F /* CommentCell.swift */; };
 		4EAB93E22BCBD2AF007341D7 /* TextFieldAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAB93E12BCBD2AF007341D7 /* TextFieldAlert.swift */; };
 		4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */; };
-		4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8D929F8AB24005A1683 /* config.plist */; };
-		4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */; };
-		4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */; };
+		4EC08B512C67ABF600AB2001 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC08B502C67ABF600AB2001 /* HexColor.swift */; };
 		4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED628352B11D51900ECE221 /* CommunityPostView.swift */; };
 		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
 		4EE5729F2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */; };
 		4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */; };
-		A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */; };
-		A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */; };
-		B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */; };
 		A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */; };
 		A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */; };
 		BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */; };
@@ -146,7 +142,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		002C8A13CB8259A4B22C9CA9 /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
 		1E3A56E725C6FCE600DBB3F4 /* Siksha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Siksha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -245,17 +240,16 @@
 		4E74167C2A9B63A00010769F /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		4EAB93E12BCBD2AF007341D7 /* TextFieldAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlert.swift; sourceTree = "<group>"; };
 		4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishView.swift; sourceTree = "<group>"; };
-		4ED0B8D929F8AB24005A1683 /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
-		4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
-		4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4EC08B502C67ABF600AB2001 /* HexColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
 		4ED628352B11D51900ECE221 /* CommunityPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityPostView.swift; sourceTree = "<group>"; };
 		4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderViewModel.swift; sourceTree = "<group>"; };
 		4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishViewModel.swift; sourceTree = "<group>"; };
 		4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostViewModel.swift; sourceTree = "<group>"; };
-		8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
+		55CDCFB8585C558508960F06 /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
+		A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewModel.swift; sourceTree = "<group>"; };
 		A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditView.swift; sourceTree = "<group>"; };
+		AFC91B43839C2E495B90E169 /* Pods-Siksha.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.release.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.release.xcconfig"; sourceTree = "<group>"; };
 		BF4E1AAC2AB8498D002E40D6 /* CommunityViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityViewModel.swift; sourceTree = "<group>"; };
 		BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainUtils.swift; sourceTree = "<group>"; };
 		BF60ADE52AC1EABF0015C468 /* Errors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Errors.swift; sourceTree = "<group>"; };
@@ -281,7 +275,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B5440F76BAF2C8A592A38A11 /* Pods_Siksha.framework in Frameworks */,
+				45EF4169BF5F3B9E1C55FE7E /* Pods_Siksha.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -310,7 +304,7 @@
 				1E3A570B25C6FCE900DBB3F4 /* SikshaUITests */,
 				1E3A56E825C6FCE600DBB3F4 /* Products */,
 				BB378484FB4B02EA3B0876A2 /* Pods */,
-				E08A5B1C1215B1C23C52ABF5 /* Frameworks */,
+				F13574AFDA3E6DA3A2951FE3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -522,10 +516,7 @@
 			isa = PBXGroup;
 			children = (
 				231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */,
-				4ED0B8DB29F8AB2D005A1683 /* GoogleService-Info-dev.plist */,
 				2300D48B25FBD07F0037765D /* config.plist */,
-				4ED0B8DD29F8AB35005A1683 /* GoogleService-Info.plist */,
-				4ED0B8D929F8AB24005A1683 /* config.plist */,
 				231C9C4225F7FA800072C07A /* GoogleService-Info.plist */,
 			);
 			path = "Supporting Files";
@@ -584,8 +575,8 @@
 		BB378484FB4B02EA3B0876A2 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				002C8A13CB8259A4B22C9CA9 /* Pods-Siksha.debug.xcconfig */,
-				9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */,
+				55CDCFB8585C558508960F06 /* Pods-Siksha.debug.xcconfig */,
+				AFC91B43839C2E495B90E169 /* Pods-Siksha.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -606,14 +597,15 @@
 			isa = PBXGroup;
 			children = (
 				BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */,
+				4EC08B502C67ABF600AB2001 /* HexColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		E08A5B1C1215B1C23C52ABF5 /* Frameworks */ = {
+		F13574AFDA3E6DA3A2951FE3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8F5E60392BFBF8D258B20F4B /* Pods_Siksha.framework */,
+				A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -625,13 +617,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E3A571125C6FCE900DBB3F4 /* Build configuration list for PBXNativeTarget "Siksha" */;
 			buildPhases = (
-				A13ABBF89EF49BB4D423B2A8 /* [CP] Check Pods Manifest.lock */,
+				661D7D55C901ED3D5F53EC5E /* [CP] Check Pods Manifest.lock */,
 				1E3A56E325C6FCE600DBB3F4 /* Sources */,
 				1E3A56E425C6FCE600DBB3F4 /* Frameworks */,
 				1E3A56E525C6FCE600DBB3F4 /* Resources */,
-				C4DB641CCDA235DB192889F5 /* [CP] Embed Pods Frameworks */,
-				50E0F36D5D78D717F10AC7D0 /* [CP] Copy Pods Resources */,
 				BF624A132BB5543F0061602B /* ShellScript */,
+				0EC3576B0B2259A1938F259B /* [CP] Embed Pods Frameworks */,
+				B2772880FE00AB5531FFAD74 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -737,10 +729,8 @@
 				4E4E22EF2ABEC96300A81E47 /* Inter-Regular.ttf in Resources */,
 				1E3A56F725C6FCE800DBB3F4 /* LaunchScreen.storyboard in Resources */,
 				1E3A57CF25C71F2400DBB3F4 /* NanumSquareOTFLight.otf in Resources */,
-				4ED0B8DC29F8AB2D005A1683 /* GoogleService-Info-dev.plist in Resources */,
 				231C9C4325F7FA800072C07A /* GoogleService-Info.plist in Resources */,
 				1E3A57CE25C71F2200DBB3F4 /* NanumSquareOTFExtraBold.otf in Resources */,
-				4ED0B8DA29F8AB24005A1683 /* config.plist in Resources */,
 				4E4E22F02ABEC96300A81E47 /* Inter-Medium.ttf in Resources */,
 				4E4E22EB2ABEC96300A81E47 /* Inter-Bold.ttf in Resources */,
 				1E3A57D325C71F2600DBB3F4 /* NanumSquareOTFRegular.otf in Resources */,
@@ -748,7 +738,6 @@
 				4E4E22EE2ABEC96300A81E47 /* Inter-ExtraBold.ttf in Resources */,
 				1E3A57CA25C71F2000DBB3F4 /* NanumSquareOTFBold.otf in Resources */,
 				231C9C3E25F7FA7C0072C07A /* GoogleService-Info-dev.plist in Resources */,
-				4ED0B8DE29F8AB35005A1683 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -769,24 +758,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		50E0F36D5D78D717F10AC7D0 /* [CP] Copy Pods Resources */ = {
+		0EC3576B0B2259A1938F259B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			name = "[CP] Copy Pods Resources";
+			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A13ABBF89EF49BB4D423B2A8 /* [CP] Check Pods Manifest.lock */ = {
+		661D7D55C901ED3D5F53EC5E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -806,6 +795,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B2772880FE00AB5531FFAD74 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BF624A132BB5543F0061602B /* ShellScript */ = {
@@ -830,23 +836,6 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
-		C4DB641CCDA235DB192889F5 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -859,6 +848,7 @@
 				1ED44A6B25CDB77A001D916B /* FavoriteViewModel.swift in Sources */,
 				4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */,
 				234DB0D9264156150049FE6B /* CalendarView.swift in Sources */,
+				4EC08B512C67ABF600AB2001 /* HexColor.swift in Sources */,
 				1ECB255225F2999100875E18 /* RatingStar.swift in Sources */,
 				BF97DF552AAF003D0083FC6F /* RepositoryProtocol.swift in Sources */,
 				1EB5F4412644710A0012201A /* Networking.swift in Sources */,
@@ -1039,6 +1029,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				"EXCLUDED_ARCHS[sdk=*]" = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1121,7 +1112,7 @@
 		};
 		1E3A571225C6FCE900DBB3F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 002C8A13CB8259A4B22C9CA9 /* Pods-Siksha.debug.xcconfig */;
+			baseConfigurationReference = 55CDCFB8585C558508960F06 /* Pods-Siksha.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1131,7 +1122,7 @@
 				CURRENT_PROJECT_VERSION = 1.1.1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
-				DEVELOPMENT_TEAM = QHUVU5KV94;
+				DEVELOPMENT_TEAM = M2CWB9A2WN;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Siksha/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
@@ -1149,7 +1140,7 @@
 		};
 		1E3A571325C6FCE900DBB3F4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9206586248E5AFFD0681673F /* Pods-Siksha.release.xcconfig */;
+			baseConfigurationReference = AFC91B43839C2E495B90E169 /* Pods-Siksha.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1159,7 +1150,7 @@
 				CURRENT_PROJECT_VERSION = 1.1.1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
-				DEVELOPMENT_TEAM = 9AFU52MJH5;
+				DEVELOPMENT_TEAM = M2CWB9A2WN;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Siksha/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
