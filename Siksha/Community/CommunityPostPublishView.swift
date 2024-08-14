@@ -239,6 +239,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     
     var body: some View {
         GeometryReader { geometry in
+            let availableHeight = geometry.size.height
             
             ZStack(alignment: .top) {
                 boardPicker
@@ -255,8 +256,14 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }
                     .frame(maxWidth: .infinity)
                     
-                    ExpandingTextViewWrapper(text: $viewModel.content, initialHeight: 120, maxHeight: 400)
-                        .frame(minHeight: 120) // Minimum height as starting point
+                    
+                    TextEditor(text: $viewModel.content)
+                        .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                        .frame(minHeight: 120, maxHeight: availableHeight - 350)
+                        .font(.custom("Inter-Regular", size: 12))
+                        .foregroundColor(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+
 
                     HStack {
                         anonymousButton
