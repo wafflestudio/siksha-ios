@@ -194,27 +194,39 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
 
     var boardPicker: some View {
         ZStack(alignment: .top) {
-                Button(action: {
-                    withAnimation {
-                        isExpanded.toggle()
+            // Background to dismiss the picker when tapped outside
+            if isExpanded {
+                Color.clear
+                    .contentShape(Rectangle()) // This makes the clear color tappable
+                    .edgesIgnoringSafeArea(.all)
+                    .onTapGesture {
+                        withAnimation {
+                            isExpanded = false
+                        }
                     }
-                }) {
-                    HStack {
-                        Spacer()
-                        Text(viewModel.boardsList.first { $0.id == viewModel.boardId }?.name ?? "게시판 선택")
-                            .foregroundColor(Color(hex: 0x575757))
-                        Image("DownArrow")
-                            .foregroundColor(Color(hex: 0x919191))
-                        Spacer()
-                    }
-                    .padding()
-                    .frame(height: 35)
-                    .background(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(Color(hex: 0xDFDFDF))
-                    )
+            }
+            
+            Button(action: {
+                withAnimation {
+                    isExpanded.toggle()
                 }
-
+            }) {
+                HStack {
+                    Spacer()
+                    Text(viewModel.boardsList.first { $0.id == viewModel.boardId }?.name ?? "게시판 선택")
+                        .foregroundColor(Color(hex: 0x575757))
+                    Image("DownArrow")
+                        .foregroundColor(Color(hex: 0x919191))
+                    Spacer()
+                }
+                .padding()
+                .frame(height: 35)
+                .background(
+                    RoundedRectangle(cornerRadius: cornerRadius)
+                        .stroke(Color(hex: 0xDFDFDF))
+                )
+            }
+            
             if isExpanded {
                 VStack(spacing: 0) {
                     ForEach(viewModel.boardsList, id: \.id) { board in
@@ -222,7 +234,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                             Button(action: {
                                 viewModel.boardId = board.id
                                 withAnimation {
-                                    isExpanded.toggle()
+                                    isExpanded = false
                                 }
                             }) {
                                 HStack {
@@ -262,7 +274,6 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 )
                 .offset(y: 40)
             }
-
         }
         .zIndex(1)
     }
