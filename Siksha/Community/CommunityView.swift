@@ -142,11 +142,13 @@ struct CommunityPostPreView: View {
                     Text(info.title)
                         .font(.custom("NanumSquareOTFExtraBold", size: 15))
                         .foregroundColor(.black)
+                        .lineLimit(1)
                     Spacer()
                         .frame(width: 10)
                     Text(info.content)
                         .font(.custom("NanumSquareOTFRegular", size: 12))
                         .foregroundColor(contentColor)
+                        .lineLimit(1)
                     Spacer()
                         .frame(width: 10)
                     HStack {
