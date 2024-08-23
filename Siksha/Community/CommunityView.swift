@@ -10,7 +10,7 @@ import SwiftUI
 struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     @State var tag: Int? = nil
     @State var needRefresh = false
-    let dividerColor = Color("ReviewLowColor")
+    let dividerColor = Color("DividerColor")
     
     let topPosts: [PostInfo] = (1..<5).map {
         return PostInfo(title: "name\($0)",
@@ -88,6 +88,8 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     var divider: some View {
         Divider()
             .foregroundColor(dividerColor)
+            .frame(height:1)
+            .padding(EdgeInsets(top: 0, leading: 7.5, bottom: 0, trailing: 7.5))
     }
     
     var postList: some View {
@@ -196,7 +198,7 @@ struct CommunityPostPreView: View {
                                 }
 
             }
-            .padding(EdgeInsets(top: 15, leading: 35, bottom: 15, trailing: 21))
+            .padding(EdgeInsets(top: 15, leading: 20, bottom: 14, trailing: 20))
         }
     }
 }
