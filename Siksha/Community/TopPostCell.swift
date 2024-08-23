@@ -14,18 +14,11 @@ struct TopPostCell:View{
         NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: post.id), needPostViewRefresh:needRefresh)) {
             HStack(alignment: .center){
                 Text(post.title)
-                    .font(.custom("NanumSquareOTFBold", size: 12))
+                    .font(.custom("NanumSquareOTFRegular", size: 12))
                     .foregroundColor(.black)
                     .lineLimit(1)
                     .highPriorityGesture(DragGesture())
-                Spacer().frame(width:15)
-                    .highPriorityGesture(DragGesture())
-
-                Text(post.content)
-                    .font(.custom("NanumSquareOTFRegular",size:12))
-                    .foregroundColor(Color("ReviewHighColor"))
-                    .lineLimit(1)
-                    .highPriorityGesture(DragGesture())
+              
                 Spacer()
                 .highPriorityGesture(DragGesture())
                 
