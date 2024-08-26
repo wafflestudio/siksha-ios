@@ -16,6 +16,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var commentContent: String = ""
     @State private var isEditingPost = false
     @State private var needRefresh = false
+    @State private var imageIndex = 0
     @Binding var needPostViewRefresh:Bool
     
     @State private var reportAlertIsShown = false
@@ -37,27 +38,40 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     var imageSection: some View {
         Group {
             if let imageURLs = viewModel.postInfo.imageURLs {
-                if #available(iOS 15.0, *) {
-                    TabView {
-                        ForEach(imageURLs, id: \.self) { imageURLString in
-                            AsyncImage(url: URL(string: imageURLString)) { image in
-                                image
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            } placeholder: {
-                                Color.gray
+                ZStack(alignment:.topTrailing){
+                    Text("\(imageIndex + 1)/\(imageURLs.count)")
+                        .frame(width:28,height: 17)
+                        .background(Color("LightFontColor"))
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                        .font(.custom("NanumSquareOTFRegular", size: 10))
+                        .offset(x: -15,y: 15)
+                        .zIndex(1)
+                        
+
+                    if #available(iOS 15.0, *) {
+                        TabView(selection:$imageIndex) {
+                            ForEach(Array(imageURLs.enumerated()), id: \.0) { index,imageURLString in
+                                AsyncImage(url: URL(string: imageURLString)) { image in
+                                    image
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                } placeholder: {
+                                    Color.gray
+                                }
+                                .frame(width: UIScreen.main.bounds.width * 0.9)
+                                .tag(index)
                             }
-                            .frame(width: UIScreen.main.bounds.width * 0.9)
                         }
-                    }
-                    .tabViewStyle(PageTabViewStyle())
-                    .frame(width: UIScreen.main.bounds.width * 0.9, height: 300)
-                } else {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(imageURLs, id: \.self) {
-                                imageURLString in
-                                ThumbnailImage(imageURLString)
+                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                        .frame(width: UIScreen.main.bounds.width * 0.9, height: 300)
+                    } else {
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack {
+                                ForEach(imageURLs, id: \.self) {
+                                    imageURLString in
+                                    ThumbnailImage(imageURLString)
+                                }
                             }
                         }
                     }
@@ -101,7 +115,67 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             return formatter.localizedString(for: viewModel.postInfo.createdAt, relativeTo: Date())
     }
 
-    
+    var postHeader:some View{
+        HStack{
+            Image("LogoEllipse")
+                .resizable()
+                .frame(width: 33,height:33)
+                .clipShape(Circle())
+            VStack(alignment: .leading){
+                Text(viewModel.postInfo.isAnonymous ? "익명" : "\(viewModel.postInfo.nickname ?? "")")
+                    .font(Font.custom("NanumSquareOTFBold", size: 11))
+                Text(relativeDate)
+                    .font(Font.custom("NanumSquareOTFRegular", size: 10))
+                    .foregroundColor(Color("ReviewLowColor"))
+            }
+            Spacer()
+            Menu{
+                if (viewModel.postInfo.isMine) {
+                    Button("수정", action: {
+                        isEditingPost = true
+                    })
+                    Button("삭제", action: {
+                        viewModel.deletePost { success in
+                            if success {
+                                self.needPostViewRefresh = true
+                                self.presentationMode.wrappedValue.dismiss()
+                            } else {
+                        
+                            }
+                        }
+                    })
+                }
+                Button("URL 복사하기", action: {})
+                if (UserManager.shared.nickname != viewModel.postInfo.nickname) {
+                    Button("신고하기", action: {
+                        reportAlertIsShown = true
+                    })
+                }
+                Button("취소", action: {})
+            } label:{
+                Image("etc")
+                    .frame(width:13,height:13)
+            }
+        }.padding(EdgeInsets(top: 16, leading: 21, bottom: 0, trailing: 19))
+    }
+    var likeButton: some View{
+        Button(action: {
+            viewModel.togglePostLike()
+        }) {
+            HStack{
+                Image(viewModel.postInfo.isLiked ? "PostLike-liked" : "PostLike-default")
+                    .frame(width:11.5,height: 11)
+                Spacer()
+                    .frame(width: 5)
+                Text("공감")
+                    .font(.custom("NanumSquareOTFBold", size: 10))
+                    .foregroundColor(Color("MainThemeColor"))
+            }
+            .padding(EdgeInsets(top: 6.5, leading: 8.25, bottom: 6.5, trailing: 8.25))
+            .cornerRadius(6)
+            .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color("MainThemeColor"),lineWidth: 1))
+        }
+    }
     var commentList: some View {
         LazyVStack(spacing:0){
             ForEach(viewModel.commentsListPublisher) { comment in
@@ -139,38 +213,29 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
 
         ZStack(alignment:.bottomTrailing) {
             ScrollView(.vertical, showsIndicators: false) {
-                VStack {
-                    VStack(alignment: .leading, spacing: 10) {
-                        HStack {
-                            Text(viewModel.postInfo.isAnonymous ? "익명" : "\(viewModel.postInfo.nickname ?? "")")
-                                .font(Font.custom("Inter-Regular",size:10))
-                                .foregroundColor(.init("ReviewMediumColor"))
-                            
-                            Spacer()
-                            
-                            Text(relativeDate)
-                                .font(Font.custom("Inter-Regular", size: 10))
-                                .frame(alignment: .trailing)
-                                .foregroundColor(Color("ReviewLowColor"))
-                        }
+                VStack(spacing:0) {
+                    postHeader
+                    VStack(alignment: .leading) {
                         
                         Text(viewModel.postInfo.title)
-                            .font(.custom("Inter-Bold", size: 14))
-                        
+                            .font(.custom("NanumSquareOTFExtraBold", size: 16))
+                        Spacer()
+                            .frame(height:12)
                         Text(viewModel.postInfo.content)
-                            .font(.custom("Inter-Regular", size: 12))
-                        
+                            .font(.custom("NanumSquareOTFRegular", size: 12))
+                        Spacer()
+                            .frame(height:19)
                         imageSection
                         
+                        Spacer()
+                            .frame(height: viewModel.postInfo.imageURLs?.isEmpty ?? true ? 1 : 12.5)
                         HStack {
                             HStack(alignment: .center) {
-                                Button(action: {
-                                    viewModel.togglePostLike()
-                                }) {
-                                    Image(viewModel.postInfo.isLiked ? "PostLike-liked" : "PostLike-default")
-                                        .frame(width: 11.5, height: 10)
-                                        .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
-                                }
+                                
+                                Image(viewModel.postInfo.isLiked ? "PostLike-liked" : "PostLike-default")
+                                    .frame(width: 11.5, height: 10)
+                                    .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
+                                
                                 Spacer()
                                     .frame(width: 4)
                                 Text(String(viewModel.postInfo.likeCount))
@@ -191,39 +256,19 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                             
                             Spacer()
                             
-                            Menu{
-                                if (viewModel.postInfo.isMine) {
-                                    Button("수정", action: {
-                                        isEditingPost = true
-                                    })
-                                    Button("삭제", action: {
-                                        viewModel.deletePost { success in
-                                            if success {
-                                                self.needPostViewRefresh = true
-                                                self.presentationMode.wrappedValue.dismiss()
-                                            } else {
-                                        
-                                            }
-                                        }
-                                    })
-                                }
-                                Button("URL 복사하기", action: {})
-                                if (UserManager.shared.nickname != viewModel.postInfo.nickname) {
-                                    Button("신고하기", action: {
-                                        reportAlertIsShown = true
-                                    })
-                                }
-                                Button("취소", action: {})
-                            } label:{
-                                Image("etc")
-                                    .frame(width:13,height:13)
-                            }
+                       
                             
                         }
+                    Spacer()
+                            .frame(height:14)
+                    likeButton
+                       
                     }
-                    .padding(EdgeInsets(top: 20, leading: 20, bottom: 10, trailing: 20))
-                    
+                    .padding(EdgeInsets(top: 15, leading: 22, bottom: 12.5, trailing: 19))
+                   
                     Divider()
+                        .foregroundColor(Color("Low"))
+                        .padding(.zero)
                                      
                     commentList
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 0))
