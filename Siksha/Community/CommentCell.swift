@@ -36,42 +36,30 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
     }
     
     var body:some View{
-        VStack(alignment:.leading,spacing:0){
-            HStack(spacing:0) {
-                Text("\(comment.nickname)")
-                    .font(.custom("Inter-Regular",size:10))
-                    .foregroundColor(.init("ReviewMediumColor"))
-                
-                Spacer()
-                                
-                Text(relativeDate)
-                    .font(.custom("Inter-Regular", size: 8))
-                    .frame(width:50, alignment: .trailing)
-                    .foregroundColor(.init("ReviewLowColor"))
-            }
-            Spacer()
-                .frame(height:8)
-            Text(comment.content)
-                .font(.custom("Inter-Regular", size: 12))
-                .foregroundColor(.init("ReviewHighColor"))
-                
-            Spacer()
-                .frame(height:12)
-            HStack(spacing:0){
-                Button(action: {
-                    viewModel.toggleCommentLike(id: comment.id)
-                }) {
-                    Image(comment.isLiked ? "PostLike-liked" : "PostLike-default")
-                        .frame(width: 11.5, height: 11)
-                        .padding(.init(top: 0, leading: 0, bottom: 4, trailing: 0))
+        HStack{
+            VStack(alignment:.leading,spacing:0){
+                HStack{
+                    Image("LogoEllipse")
+                        .resizable()
+                        .frame(width: 16,height:16)
+                        .clipShape(Circle())
+                    Spacer()
+                        .frame(width:5.5)
+                    Text("\(comment.nickname)")
+                        .font(.custom("NanumSquareOTFBold",size:11))
+                        .foregroundColor(.black)
+                    Spacer()
+                        .frame(width:8.2)
+                    Text(relativeDate)
+                        .font(.custom("NanumSquareOTFRegular", size: 10))
+                        .foregroundColor(.init("ReviewLowColor"))
+                    
                 }
                 Spacer()
-                    .frame(width:4)
-                Text("\(comment.likeCnt)")
-                    .font(.custom("Inter-Regular", size: 8))
-                    .foregroundColor(.init("MainThemeColor"))
-                Spacer()
-                
+                    .frame(height:9.37)
+                Text(comment.content)
+                    .font(.custom("NanumSquareOTFRegular", size: 12))
+                    .foregroundColor(.init("ReviewHighColor"))
                 Menu{
                     if (comment.isMine) {
                         Button("수정", action: {
@@ -91,50 +79,79 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                 
                 
             label:{
-                    Image("etc")
-                        .frame(width:13,height:1.86)
-                      
-                }
+                Image("etc")
+                    .frame(width:16,height:2.29)
+                    .padding(EdgeInsets(top: 10.36, leading: 2.25, bottom: 10.36, trailing: 0))
+                
             }
+                
+                
+            }
+            Spacer()
+            VStack(spacing:0){
+                Spacer()
+                    .frame(height:10)
+                VStack(spacing:8){
+                    Button(action: {
+                        viewModel.toggleCommentLike(id: comment.id)
+                    }) {
+                        Image(comment.isLiked ? "PostLike-liked" : "PostLike-default")
+                            .frame(width: 11.5, height: 11)
+                            .padding(.init(top: 0, leading: 0, bottom: 4, trailing: 0))
+                    }
+                    Text("\(comment.likeCnt)")
+                        .font(.custom("Inter-Regular", size: 8))
+                        .foregroundColor(.init("MainThemeColor"))
+                }
+                .padding(EdgeInsets(top: 12.5, leading: 11, bottom: 12.5, trailing: 11))
+                .background(Color("CommentLikeBackgroundColor"))
+                .cornerRadius(6)
+                Spacer()
+                    .frame(height:10)
+            }
+           
+
         }
-        .padding(EdgeInsets(top: 12, leading: 35, bottom: 12, trailing: 35))
+        
+    
+        .padding(EdgeInsets(top: 9.95, leading: 10, bottom: 0, trailing: 18.67))
         .fullScreenCover(isPresented: $showingEditView) {
             EditCommentView(isPresented: $showingEditView, editedContent: comment.content, onSave: { newContent in
-                            viewModel.editComment(commentId: comment.id, content: newContent)
-                            showingEditView = false
-                        }, onCancel: {
-                            showingEditView = false
-                        })
+                viewModel.editComment(commentId: comment.id, content: newContent)
+                showingEditView = false
+            }, onCancel: {
+                showingEditView = false
+            })
         }
         .alert(isPresented: $showingDeleteAlert) {
-                    Alert(
-                        title: Text(""),
-                        message: Text("이 댓글을 삭제하시겠습니까?"),
-                        primaryButton: .default(Text("확인")) {
-                            viewModel.deleteComment(id: comment.id)
-                        },
-                        secondaryButton: .cancel()
-                    )
-                }
+            Alert(
+                title: Text(""),
+                message: Text("이 댓글을 삭제하시겠습니까?"),
+                primaryButton: .default(Text("확인")) {
+                    viewModel.deleteComment(id: comment.id)
+                },
+                secondaryButton: .cancel()
+            )
+        }
         .textFieldAlert(isPresented: $reportAlertIsShown, title: "신고 사유", action: {reason in
             viewModel.reportComment(commentId: comment.id, reason: reason ?? "") {
                 success, errorMessage in
-                    if success {
-                        alertTitle = "신고"
-                        alertMessage = "신고되었습니다."
-                    } else {
-                        alertTitle = "신고"
-                        alertMessage = errorMessage ?? "신고에 실패했습니다."
-                    }
-
+                if success {
+                    alertTitle = "신고"
+                    alertMessage = "신고되었습니다."
+                } else {
+                    alertTitle = "신고"
+                    alertMessage = errorMessage ?? "신고에 실패했습니다."
+                }
+                
                 reportAlertIsShown = false
                 reportCompleteAlertIsShown = true
             }
-        
+            
         })
-   
-    }
     
+}
+
 }
 
 struct EditCommentView: View {
@@ -142,26 +159,26 @@ struct EditCommentView: View {
     @State var editedContent: String
     let onSave: (String) -> Void
     let onCancel: () -> Void
-
+    
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
                 Color("MainThemeColor")
                     .edgesIgnoringSafeArea(.top)
-
+                
                 HStack {
                     Button("취소", action: onCancel)
                         .foregroundColor(.white)
                         .font(.custom("NanumSquareOTFR", size: 15))
-
+                    
                     Spacer()
-
+                    
                     Text("댓글 수정")
                         .foregroundColor(.white)
                         .font(.custom("NanumSquareOTFEB", size: 20))
-
+                    
                     Spacer()
-
+                    
                     Button("확인", action: { onSave(editedContent) })
                         .foregroundColor(.white)
                         .font(.custom("NanumSquareOTFR", size: 15))
@@ -170,7 +187,7 @@ struct EditCommentView: View {
                 .background(Color("MainThemeColor").opacity(0))
             }
             .frame(height: 40)
-
+            
             TextField("수정할 내용", text: $editedContent)
                 .textFieldStyle(PlainTextFieldStyle())
                 .padding()
@@ -181,9 +198,9 @@ struct EditCommentView: View {
 }
 
 /*struct CommentCell_preview:PreviewProvider{
-    static var previews: some View{
-        CommentCell(comment: CommentInfo(content: "test1", likeCnt: 1, isLiked: true),
-                    viewModel: StubCommunityPostViewModel())
-    }
-}*/
+ static var previews: some View{
+ CommentCell(comment: CommentInfo(content: "test1", likeCnt: 1, isLiked: true),
+ viewModel: StubCommunityPostViewModel())
+ }
+ }*/
 
