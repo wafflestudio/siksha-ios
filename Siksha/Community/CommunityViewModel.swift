@@ -11,6 +11,7 @@ import Combine
 struct PostInfo: Identifiable, Equatable {
     let boardId: Int
     let nickname: String?
+    let profileUrl: String?
     let id: Int
     let title: String
     let content: String
@@ -25,6 +26,7 @@ struct PostInfo: Identifiable, Equatable {
     init(post: Post) {
         self.boardId = post.boardId
         self.nickname = post.nickname
+        self.profileUrl = post.profileUrl
         self.id = post.id
         self.title = post.title
         self.content = post.content
@@ -49,7 +51,7 @@ struct PostInfo: Identifiable, Equatable {
         self.nickname = ""
         self.createdAt = Date()
         self.id = 0
-        
+        self.profileUrl = nil
         self.isAnonymous = isAnonymous
         self.isMine = isMine
         

@@ -59,6 +59,7 @@ struct Post: Decodable {
         case id
         case boardId = "board_id"
         case nickname = "nickname"
+        case profileUrl = "profile_url"
         case title
         case content
         case available
@@ -75,6 +76,7 @@ struct Post: Decodable {
     let id: Int
     let boardId: Int
     let nickname: String?
+    let profileUrl: String?
     let title: String
     let content: String
     let available: Bool
@@ -102,7 +104,7 @@ struct Post: Decodable {
         self.isLiked = try container.decode(Bool.self, forKey: .isLiked)
         self.anonymous = try container.decode(Bool.self, forKey: .anonymous)
         self.isMine = try container.decode(Bool.self, forKey: .isMine)
-
+        self.profileUrl = try container.decode(String?.self, forKey: .profileUrl)
         let etc = try container.decodeIfPresent([String: [String]].self, forKey: .etc)
         images = etc?["images"] ?? nil
     }
@@ -121,6 +123,7 @@ struct Post: Decodable {
         self.isLiked = false
         self.anonymous = false
         self.isMine = false
+        self.profileUrl = nil
     }
 }
 struct SubmitPostResponse:Codable{
@@ -167,6 +170,7 @@ struct Comment: Decodable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case nickname = "nickname"
+        case profileUrl = "profile_url"
         case available
         case likeCnt = "like_cnt"
         case isLiked = "is_liked"
@@ -180,6 +184,7 @@ struct Comment: Decodable {
     let createdAt: Date
     let updatedAt: Date
     let nickname: String?
+    let profileUrl: String?
     let available: Bool
     let likeCnt: Int
     let isLiked: Bool
@@ -194,6 +199,7 @@ struct Comment: Decodable {
         createdAt = try container.decodeDate(key: .createdAt)
         updatedAt = try container.decodeDate(key: .updatedAt)
         nickname = try container.decode(String?.self, forKey: .nickname)
+        profileUrl = try container.decode(String?.self, forKey: .profileUrl)
         available = try container.decode(Bool.self, forKey: .available)
         likeCnt = try container.decode(Int.self, forKey: .likeCnt)
         isLiked = try container.decode(Bool.self, forKey: .isLiked)

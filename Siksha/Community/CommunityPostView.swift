@@ -117,10 +117,18 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
 
     var postHeader:some View{
         HStack{
-            Image("LogoEllipse")
-                .resizable()
-                .frame(width: 33,height:33)
-                .clipShape(Circle())
+            if let profileUrl = viewModel.postInfo.profileUrl {
+                RemoteImage(url: profileUrl)
+                    .frame(width: 33,height:33)
+                    .clipShape(Circle())
+            }
+            else{
+                Image("LogoEllipse")
+                    .resizable()
+                    .frame(width: 33,height:33)
+                    .clipShape(Circle())
+            }
+                
             VStack(alignment: .leading){
                 Text(viewModel.postInfo.isAnonymous ? "익명" : "\(viewModel.postInfo.nickname ?? "")")
                     .font(Font.custom("NanumSquareOTFBold", size: 11))

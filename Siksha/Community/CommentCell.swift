@@ -39,10 +39,17 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
         HStack{
             VStack(alignment:.leading,spacing:0){
                 HStack{
-                    Image("LogoEllipse")
-                        .resizable()
-                        .frame(width: 16,height:16)
-                        .clipShape(Circle())
+                    if let profileUrl = comment.profileUrl {
+                        RemoteImage(url: profileUrl)
+                            .frame(width: 16,height:16)
+                            .clipShape(Circle())
+                    }
+                    else{
+                        Image("LogoEllipse")
+                            .resizable()
+                            .frame(width: 16,height:16)
+                            .clipShape(Circle())
+                    }
                     Spacer()
                         .frame(width:5.5)
                     Text("\(comment.nickname)")
