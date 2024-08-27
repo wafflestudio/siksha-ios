@@ -31,6 +31,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     }
 
     var body: some View {
+        
         NavigationView {
             ZStack(alignment: .bottomTrailing) {
                 VStack(spacing:0){

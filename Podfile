@@ -17,7 +17,8 @@ target 'Siksha' do
   pod 'Firebase'
   pod 'Firebase/AnalyticsWithoutAdIdSupport'
   pod 'Firebase/Crashlytics'
-  
+  pod 'Kingfisher', '~> 7.0'
+
 end
 
 post_install do |installer|
