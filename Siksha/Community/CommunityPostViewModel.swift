@@ -15,6 +15,7 @@ struct CommentInfo: Identifiable, Equatable {
     let createdAt: Date
     let updatedAt: Date
     let nickname: String
+    let profileUrl: String?
     let available: Bool
     let likeCnt: Int
     let isLiked: Bool
@@ -28,6 +29,7 @@ struct CommentInfo: Identifiable, Equatable {
         self.createdAt = comment.createdAt
         self.updatedAt = comment.updatedAt
         self.nickname = comment.nickname ?? "익명"
+        self.profileUrl = comment.profileUrl
         self.available = comment.available
         self.likeCnt = comment.likeCnt
         self.isLiked = comment.isLiked
@@ -42,6 +44,7 @@ struct CommentInfo: Identifiable, Equatable {
         self.createdAt = Date()
         self.updatedAt = Date()
         self.nickname = ""
+        self.profileUrl = nil
         self.available = true
         self.likeCnt = likeCnt
         self.isLiked = isLiked
