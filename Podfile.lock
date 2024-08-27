@@ -146,6 +146,7 @@ PODS:
   - KakaoSDKUser (2.3.2):
     - KakaoSDKAuth (= 2.3.2)
     - KakaoSDKCommon (= 2.3.2)
+  - Kingfisher (7.11.0)
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
     - nanopb/encode (= 2.30910.0)
@@ -174,6 +175,7 @@ DEPENDENCIES:
   - KakaoSDKAuth (= 2.3.2)
   - KakaoSDKCommon (= 2.3.2)
   - KakaoSDKUser (= 2.3.2)
+  - Kingfisher (~> 7.0)
   - NMapsMap (= 3.18.1)
   - RealmSwift (= 10.6.0)
   - SwiftyJSON (= 5.0.0)
@@ -202,6 +204,7 @@ SPEC REPOS:
     - KakaoSDKAuth
     - KakaoSDKCommon
     - KakaoSDKUser
+    - Kingfisher
     - nanopb
     - NMapsGeometry
     - NMapsMap
@@ -234,6 +237,7 @@ SPEC CHECKSUMS:
   KakaoSDKAuth: 8db7c7a0561b137477bb984bbdab2eeda7745d23
   KakaoSDKCommon: 4bb3981337921686948b7be094590f2edec5df87
   KakaoSDKUser: e6c0017a41e87a94bdcd873d0178ad75be8126d4
+  Kingfisher: b9c985d864d43515f404f1ef4a8ce7d802ace3ac
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   NMapsGeometry: 4e02554fa9880ef02ed96b075dc84355d6352479
   NMapsMap: e879088eeee2d1e3b97f0a609076e1824dce2cad
@@ -243,6 +247,6 @@ SPEC CHECKSUMS:
   RealmSwift: f80216fb8334b01ccf526e4f2dd5ff0da61863a2
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 27254bb82749e41c90add13bedfaafc061d42a8c
+PODFILE CHECKSUM: 06ed7aa0a2279b6007a8d115b1aecdb3839830db
 
 COCOAPODS: 1.15.2
