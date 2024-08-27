@@ -17,6 +17,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var isEditingPost = false
     @State private var needRefresh = false
     @State private var imageIndex = 0
+    @State private var showImages = false
     @Binding var needPostViewRefresh:Bool
     
     @State private var reportAlertIsShown = false
@@ -61,6 +62,9 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                 }
                                 .frame(width: UIScreen.main.bounds.width * 0.9)
                                 .tag(index)
+                                .onTapGesture {
+                                    showImages = true
+                                }
                             }
                         }
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -314,6 +318,10 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             .alert(isPresented: $reportCompleteAlertIsShown, content: {
                 Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             })
+            .fullScreenCover(isPresented: $showImages){
+                    ImageView(viewModel: viewModel, imageIndex: imageIndex)
+                
+            }
 
           
     }

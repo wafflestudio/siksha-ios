@@ -149,6 +149,7 @@ PODS:
   - KakaoSDKUser (2.3.2):
     - KakaoSDKAuth (= 2.3.2)
     - KakaoSDKCommon (= 2.3.2)
+  - Kingfisher (7.11.0)
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
     - nanopb/encode (= 2.30910.0)
@@ -176,6 +177,7 @@ DEPENDENCIES:
   - KakaoSDKAuth (= 2.3.2)
   - KakaoSDKCommon (= 2.3.2)
   - KakaoSDKUser (= 2.3.2)
+  - Kingfisher (~> 7.0)
   - NMapsMap (= 3.11.0)
   - RealmSwift (= 10.6.0)
   - SwiftUIPager (= 2.3.0)
@@ -205,6 +207,7 @@ SPEC REPOS:
     - KakaoSDKAuth
     - KakaoSDKCommon
     - KakaoSDKUser
+    - Kingfisher
     - nanopb
     - NMapsMap
     - PromisesObjC
@@ -237,6 +240,7 @@ SPEC CHECKSUMS:
   KakaoSDKAuth: 8db7c7a0561b137477bb984bbdab2eeda7745d23
   KakaoSDKCommon: 4bb3981337921686948b7be094590f2edec5df87
   KakaoSDKUser: e6c0017a41e87a94bdcd873d0178ad75be8126d4
+  Kingfisher: b9c985d864d43515f404f1ef4a8ce7d802ace3ac
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   NMapsMap: e6dbea85c2c195c7532deb637a5e90fd70f94fed
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
@@ -246,6 +250,6 @@ SPEC CHECKSUMS:
   SwiftUIPager: fa9b45ff5133f6aa2b4d82601d9e2662638f5459
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 06ed7aa0a2279b6007a8d115b1aecdb3839830db
+PODFILE CHECKSUM: 3e3ed8e238617f2fb0e7fe7257e2f84b212d6a09
 
 COCOAPODS: 1.15.2
