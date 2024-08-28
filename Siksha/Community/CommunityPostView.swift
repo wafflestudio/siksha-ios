@@ -18,6 +18,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var needRefresh = false
     @State private var imageIndex = 0
     @State private var showImages = false
+    @State private var showPostMenu = false
     @Binding var needPostViewRefresh:Bool
     
     @State private var reportAlertIsShown = false
@@ -141,7 +142,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     .foregroundColor(Color("ReviewLowColor"))
             }
             Spacer()
-            Menu{
+            /*Menu{
                 if (viewModel.postInfo.isMine) {
                     Button("수정", action: {
                         isEditingPost = true
@@ -167,7 +168,12 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             } label:{
                 Image("etc")
                     .frame(width:13,height:13)
-            }
+            }*/
+            Image("etc")
+                .frame(width:13,height:13)
+                .onTapGesture {
+                    showPostMenu = true
+                }
         }.padding(EdgeInsets(top: 16, leading: 21, bottom: 0, trailing: 19))
     }
     var likeButton: some View{
@@ -208,7 +214,85 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             }
         }
     }
-    
+    var postMenu: some View{
+        VStack{
+            VStack(spacing:0){
+                Spacer()
+                    .frame(height:12.4)
+                Text("게시글 메뉴")
+                    .font(.custom("Inter-Medium", size: 10))
+                    .foregroundColor(Color("Grey5"))
+                Spacer()
+                    .frame(height:16.9)
+                if(viewModel.postInfo.isMine){
+                    Divider()
+                        .foregroundColor(Color("CommunityPostMenuColor"))
+                    Spacer()
+                        .frame(height:15)
+                    Text("수정하기")
+                        .font(.custom("Inter-Medium", size: 16))
+                        .foregroundColor(Color("CommunityPostMenuTextColor"))
+                    Spacer()
+                        .frame(height:15)
+
+                    Divider()
+                        .foregroundColor(Color("CommunityPostMenuColor"))
+                    Spacer()
+                        .frame(height:15)
+
+                    Text("삭제하기")
+                        .font(.custom("Inter-Medium", size: 16))
+                        .foregroundColor(Color("CommunityPostMenuTextColor"))
+                    Spacer()
+                        .frame(height:15)
+
+                }
+                else{
+                    Divider()
+                        .foregroundColor(Color("CommunityPostMenuColor"))
+                    Spacer()
+                        .frame(height:15)
+
+                    Text("신고하기")
+                        .font(.custom("Inter-Medium", size: 16))
+                        .foregroundColor(Color("CommunityPostMenuTextColor"))
+                    Spacer()
+                        .frame(height:15)
+
+                }
+                // color really change
+            }
+            .background(Color("DividerColor") ) // NO NAME
+            .cornerRadius(10)
+            Color.clear
+                .frame(height: 8)
+            VStack{
+                Spacer()
+                    .frame(height:15)
+                
+                Text("취소")
+                    .font(.custom("Inter-SemiBold", size: 16))
+                    .foregroundColor(Color("CommunityPostMenuTextColor"))
+
+                   
+                Spacer()
+                    .frame(height:15)
+            }
+            .frame(maxWidth: .infinity)
+            .background(Color.white)
+            .cornerRadius(10)
+
+            .onTapGesture {
+                showPostMenu = false
+            }
+
+            
+           
+        }
+        .frame(height: 298.83) // Adjust height as needed
+        .padding(EdgeInsets(top: 0, leading: 15.5, bottom: 0, trailing: 16.5))
+
+    }
     var body: some View {
         NavigationLink(
             destination: CommunityPostPublishView(
@@ -296,7 +380,11 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             CommunityReplyBar(onCommentSubmit: { commentText,isAnonymous in
                 viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText,isAnonymous: isAnonymous)
             })
-            
+            if(showPostMenu){
+                Color.black.opacity(0.4)
+                postMenu
+            }
+                
         }.customNavigationBar(title: viewModel.boardNamePublisher)
             .navigationBarItems(leading: backButton)
             .onAppear {
