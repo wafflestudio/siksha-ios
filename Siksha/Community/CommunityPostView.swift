@@ -28,7 +28,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     
     var backButton: some View {
         Button(action: {
-        needPostViewRefresh = true
+            needPostViewRefresh = true
             self.presentationMode.wrappedValue.dismiss()
         }) {
             Image("NavigationBack")
@@ -49,8 +49,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         .font(.custom("NanumSquareOTFRegular", size: 10))
                         .offset(x: -15,y: 15)
                         .zIndex(1)
-                        
-
+                    
+                    
                     if #available(iOS 15.0, *) {
                         TabView(selection:$imageIndex) {
                             ForEach(Array(imageURLs.enumerated()), id: \.0) { index,imageURLString in
@@ -89,37 +89,37 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     
     var anonymousButton: some View {
         Button(action: {
-                    anonymousIsToggled.toggle()
-                    print(anonymousIsToggled)
-                }) {
-                    if anonymousIsToggled {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 15.0)
-                                .fill(Color("MainThemeColor"))
-                                .frame(width: 34, height: 25)
-                            Text("익명")
-                                .font(.custom("Inter-SemiBold", size: 12))
-                                .foregroundColor(Color.white)
-                        }
-                    } else {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 15.0)
-                                .stroke(Color("MainThemeColor"))
-                                .frame(width: 34, height: 25)
-                            Text("익명")
-                                .font(.custom("Inter-SemiBold", size: 12))
-                                .foregroundColor(Color("MainThemeColor"))
-                        }
-                    }
+            anonymousIsToggled.toggle()
+            print(anonymousIsToggled)
+        }) {
+            if anonymousIsToggled {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 15.0)
+                        .fill(Color("MainThemeColor"))
+                        .frame(width: 34, height: 25)
+                    Text("익명")
+                        .font(.custom("Inter-SemiBold", size: 12))
+                        .foregroundColor(Color.white)
                 }
+            } else {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 15.0)
+                        .stroke(Color("MainThemeColor"))
+                        .frame(width: 34, height: 25)
+                    Text("익명")
+                        .font(.custom("Inter-SemiBold", size: 12))
+                        .foregroundColor(Color("MainThemeColor"))
+                }
+            }
+        }
     }
     
     var relativeDate: String {
-            let formatter = RelativeDateTimeFormatter()
-            formatter.unitsStyle = .full
-            return formatter.localizedString(for: viewModel.postInfo.createdAt, relativeTo: Date())
+        let formatter = RelativeDateTimeFormatter()
+        formatter.unitsStyle = .full
+        return formatter.localizedString(for: viewModel.postInfo.createdAt, relativeTo: Date())
     }
-
+    
     var postHeader:some View{
         HStack{
             if let profileUrl = viewModel.postInfo.profileUrl {
@@ -133,7 +133,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     .frame(width: 33,height:33)
                     .clipShape(Circle())
             }
-                
+            
             VStack(alignment: .leading){
                 Text(viewModel.postInfo.isAnonymous ? "익명" : "\(viewModel.postInfo.nickname ?? "")")
                     .font(Font.custom("NanumSquareOTFBold", size: 11))
@@ -143,32 +143,32 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             }
             Spacer()
             /*Menu{
-                if (viewModel.postInfo.isMine) {
-                    Button("수정", action: {
-                        isEditingPost = true
-                    })
-                    Button("삭제", action: {
-                        viewModel.deletePost { success in
-                            if success {
-                                self.needPostViewRefresh = true
-                                self.presentationMode.wrappedValue.dismiss()
-                            } else {
-                        
-                            }
-                        }
-                    })
-                }
-                Button("URL 복사하기", action: {})
-                if (UserManager.shared.nickname != viewModel.postInfo.nickname) {
-                    Button("신고하기", action: {
-                        reportAlertIsShown = true
-                    })
-                }
-                Button("취소", action: {})
-            } label:{
-                Image("etc")
-                    .frame(width:13,height:13)
-            }*/
+             if (viewModel.postInfo.isMine) {
+             Button("수정", action: {
+             isEditingPost = true
+             })
+             Button("삭제", action: {
+             viewModel.deletePost { success in
+             if success {
+             self.needPostViewRefresh = true
+             self.presentationMode.wrappedValue.dismiss()
+             } else {
+             
+             }
+             }
+             })
+             }
+             Button("URL 복사하기", action: {})
+             if (UserManager.shared.nickname != viewModel.postInfo.nickname) {
+             Button("신고하기", action: {
+             reportAlertIsShown = true
+             })
+             }
+             Button("취소", action: {})
+             } label:{
+             Image("etc")
+             .frame(width:13,height:13)
+             }*/
             Image("etc")
                 .frame(width:13,height:13)
                 .onTapGesture {
@@ -229,36 +229,43 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         .foregroundColor(Color("CommunityPostMenuColor"))
                     Spacer()
                         .frame(height:15)
-                    Text("수정하기")
-                        .font(.custom("Inter-Medium", size: 16))
-                        .foregroundColor(Color("CommunityPostMenuTextColor"))
+                    Button(action:{     print("edit post click")
+                    },label: {Text("수정하기")
+                            .frame(maxWidth:.infinity)
+                            .font(.custom("Inter-Medium", size: 16))
+                        .foregroundColor(Color("CommunityPostMenuTextColor"))}
+                    )
                     Spacer()
                         .frame(height:15)
-
+                    
                     Divider()
                         .foregroundColor(Color("CommunityPostMenuColor"))
                     Spacer()
                         .frame(height:15)
-
-                    Text("삭제하기")
-                        .font(.custom("Inter-Medium", size: 16))
-                        .foregroundColor(Color("CommunityPostMenuTextColor"))
+                    
+                    Button(action:{     print("delete post click")
+                    },label: {Text("삭제하기")
+                            .frame(maxWidth:.infinity)
+                            .font(.custom("Inter-Medium", size: 16))
+                        .foregroundColor(Color("CommunityPostMenuTextColor"))})
                     Spacer()
                         .frame(height:15)
-
+                    
                 }
                 else{
                     Divider()
                         .foregroundColor(Color("CommunityPostMenuColor"))
                     Spacer()
                         .frame(height:15)
-
-                    Text("신고하기")
-                        .font(.custom("Inter-Medium", size: 16))
-                        .foregroundColor(Color("CommunityPostMenuTextColor"))
+                    
+                    Button(action:{     print("report post click")
+                    },label: {Text("신고하기")
+                            .frame(maxWidth:.infinity)
+                            .font(.custom("Inter-Medium", size: 16))
+                        .foregroundColor(Color("CommunityPostMenuTextColor"))})
                     Spacer()
                         .frame(height:15)
-
+                    
                 }
                 // color really change
             }
@@ -270,28 +277,29 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 Spacer()
                     .frame(height:15)
                 
-                Text("취소")
-                    .font(.custom("Inter-SemiBold", size: 16))
-                    .foregroundColor(Color("CommunityPostMenuTextColor"))
-
-                   
+                Button(action:{
+                    showPostMenu =  false
+                },label: {Text("취소")
+                        .frame(maxWidth:.infinity)
+                        .font(.custom("Inter-SemiBold", size: 16))
+                    .foregroundColor(Color("CommunityPostMenuTextColor"))})
+                
+                
                 Spacer()
                     .frame(height:15)
             }
             .frame(maxWidth: .infinity)
             .background(Color.white)
             .cornerRadius(10)
-
-            .onTapGesture {
-                showPostMenu = false
-            }
-
             
-           
+            
+            
+            
+            
         }
         .frame(height: 298.83) // Adjust height as needed
         .padding(EdgeInsets(top: 0, leading: 15.5, bottom: 0, trailing: 16.5))
-
+        
     }
     var body: some View {
         NavigationLink(
@@ -306,7 +314,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         ) {
             EmptyView()
         }
-
+        
         ZStack(alignment:.bottomTrailing) {
             ScrollView(.vertical, showsIndicators: false) {
                 VStack(spacing:0) {
@@ -352,20 +360,20 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                             
                             Spacer()
                             
-                       
+                            
                             
                         }
-                    Spacer()
+                        Spacer()
                             .frame(height:14)
-                    likeButton
-                       
+                        likeButton
+                        
                     }
                     .padding(EdgeInsets(top: 15, leading: 22, bottom: 12.5, trailing: 19))
-                   
+                    
                     Divider()
                         .foregroundColor(Color("Low"))
                         .padding(.zero)
-                                     
+                    
                     commentList
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 0))
                     
@@ -384,7 +392,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 Color.black.opacity(0.4)
                 postMenu
             }
-                
+            
         }.customNavigationBar(title: viewModel.boardNamePublisher)
             .navigationBarItems(leading: backButton)
             .onAppear {
@@ -407,44 +415,44 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
             })
             .fullScreenCover(isPresented: $showImages){
-                    ImageView(viewModel: viewModel, imageIndex: imageIndex)
+                ImageView(viewModel: viewModel, imageIndex: imageIndex)
                 
             }
-
-          
+        
+        
     }
     
 }
 
 extension View {
-  func endTextEditing() {
-    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
-                                    to: nil, from: nil, for: nil)
-  }
+    func endTextEditing() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder),
+                                        to: nil, from: nil, for: nil)
+    }
 }
 
 
 /*struct CommunityPostView_Previews: PreviewProvider {
-    static var previews: some View {
-        CommunityPostView(viewModel: StubCommunityPostViewModel(), boardName: StubCommunityViewModel().getSelectedBoardName(), needPostViewRefresh:)
-    }
-}*/
+ static var previews: some View {
+ CommunityPostView(viewModel: StubCommunityPostViewModel(), boardName: StubCommunityViewModel().getSelectedBoardName(), needPostViewRefresh:)
+ }
+ }*/
 
 class StubCommunityPostViewModel: CommunityPostViewModelType {
     var boardNamePublisher: String
     
     @Published var reportAlert: Bool = false
     @Published var reportErrorAlert: Bool = false
-
+    
     var reportAlertPublished: Published<Bool> { _reportAlert }
     var reportAlertPublisher: Published<Bool>.Publisher { $reportAlert }
-
+    
     var reportErrorAlertPublished: Published<Bool> { _reportErrorAlert }
     var reportErrorAlertPublisher: Published<Bool>.Publisher { $reportErrorAlert }
-
+    
     @Published var commentsListPublisher: [CommentInfo]
     @Published var hasNextPublisher: Bool
-
+    
     init() {
         self.commentsListPublisher = [
             CommentInfo(content: "test1", likeCnt: 1, isLiked: true),
@@ -455,7 +463,7 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
         self.reportErrorAlert = false
         self.boardNamePublisher = "board"
     }
-
+    
     var postInfo: PostInfo {
         return PostInfo(
             title: "name",
@@ -468,50 +476,50 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
             isMine: false
         )
     }
-
+    
     func reportPost(reason: String, completion: @escaping (Bool, String?) -> Void) {
         self.reportAlert = true
         completion(true, nil)
     }
-
+    
     func reportComment(commentId: Int, reason: String, completion: @escaping (Bool, String?) -> Void) {
         self.reportAlert = true
         completion(true, nil)
     }
-
+    
     func editPost() {
-
+        
     }
-
+    
     func deletePost(completion: @escaping (Bool) -> Void) {
         completion(true)
     }
-
+    
     func togglePostLike() {
-
+        
     }
-
+    
     func loadBasicInfos() {
-
+        
     }
-
+    
     func loadMoreComments() {
-
+        
     }
-
+    
     func submitComment(postId: Int, content: String, isAnonymous: Bool) {
-
+        
     }
-
+    
     func editComment(commentId id: Int, content: String) {
-
+        
     }
-
+    
     func deleteComment(id: Int) {
-
+        
     }
-
+    
     func toggleCommentLike(id: Int) {
-
+        
     }
 }
