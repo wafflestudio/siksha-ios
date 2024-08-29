@@ -19,6 +19,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var imageIndex = 0
     @State private var showImages = false
     @State private var showPostMenu = false
+    @State private var showPostDeleteAlert = false
     @Binding var needPostViewRefresh:Bool
     
     @State private var reportAlertIsShown = false
@@ -229,7 +230,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         .foregroundColor(Color("CommunityPostMenuColor"))
                     Spacer()
                         .frame(height:15)
-                    Button(action:{     print("edit post click")
+                    Button(action:{     isEditingPost = true
+                        showPostMenu = false
                     },label: {Text("수정하기")
                             .frame(maxWidth:.infinity)
                             .font(.custom("Inter-Medium", size: 16))
@@ -243,7 +245,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     Spacer()
                         .frame(height:15)
                     
-                    Button(action:{     print("delete post click")
+                    Button(action:{ showPostMenu = false
+                        showPostDeleteAlert = true
                     },label: {Text("삭제하기")
                             .frame(maxWidth:.infinity)
                             .font(.custom("Inter-Medium", size: 16))
@@ -300,6 +303,45 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         .frame(height: 298.83) // Adjust height as needed
         .padding(EdgeInsets(top: 0, leading: 15.5, bottom: 0, trailing: 16.5))
         
+    }
+    var postDeleteAlert: some View{
+        VStack(spacing:0){
+            Spacer()
+                .frame(height:18.34)
+            Text("게시글 삭제")
+                .font(.custom("Inter-SemiBold", size: 16))
+            Spacer()
+                .frame(height:10.23)
+            Text("게시글을 정말 삭제하시겠습니까?")
+                .font(.custom("Inter-Regular", size: 12))
+            Spacer()
+                .frame(height:16.84)
+            Divider()
+            HStack(spacing:0){
+                Button(action:{showPostDeleteAlert = false},label:{Text("취소")
+                        .font(.custom("Inter-Bold", size: 16))
+                    .frame(maxWidth:.infinity)})
+                .foregroundColor(Color("MainThemeColor"))
+                .frame(maxWidth: .infinity,alignment: .center)
+                Divider()
+                Button(action:{
+                    viewModel.deletePost { success in
+                    if success {
+                    self.needPostViewRefresh = true
+                    self.presentationMode.wrappedValue.dismiss()
+                    } else {
+                    
+                    }
+                    }
+                },label:{Text("삭제")    .font(.custom("Inter-Regular", size: 16))
+                    .frame(maxWidth:.infinity)})
+                    .frame(maxWidth: .infinity,alignment: .center)
+
+
+
+            }
+        }.frame(height:130.27,alignment: .center)
+            
     }
     var body: some View {
         NavigationLink(
@@ -391,6 +433,16 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             if(showPostMenu){
                 Color.black.opacity(0.4)
                 postMenu
+            }
+            if(showPostDeleteAlert){
+                Color.black.opacity(0.4)
+                ZStack(alignment: .center){
+                    postDeleteAlert
+                        .background(Color.white)
+                        .cornerRadius(26)
+                    
+                }.frame(maxWidth:.infinity,maxHeight: .infinity)
+                    .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
             }
             
         }.customNavigationBar(title: viewModel.boardNamePublisher)
