@@ -12,8 +12,9 @@ import RealmSwift
 import Combine
 
 public class AppState: ObservableObject {
+    @Published var showTabbar = true
     private var cancellables = Set<AnyCancellable>()
-
+    
     init(){
         let token = UserDefaults.standard.string(forKey: "accessToken")
         let exp = UserDefaults.standard.double(forKey: "tokenExpDate")

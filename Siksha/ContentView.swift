@@ -59,21 +59,28 @@ struct ContentView: View {
         TabItem(id: 1, content: AnyView(MenuView()), buttonImage: ["Main", "Main-disabled"]),
         TabItem(id: 2, content: AnyView(SettingsView()), buttonImage: ["Settings", "Settings-disabled"])
     ]
-    
+  
     var body: some View {
-        GeometryReader { geometry in
-            NavigationView {
-                VStack {
-                    tabItems[selectedTab].content
+            GeometryReader { geometry in
+                NavigationView {
+                    VStack {
+                            
+                            tabItems[selectedTab].content
+                        if(appState.showTabbar){
+                            
+                            Spacer()
+                            tabBar(geometry)
+                            
+                        }
+                    }
+                      .ignoresSafeArea(.keyboard, edges: .bottom)
                     
-                    Spacer()
-                    
-                    tabBar(geometry)
+                   
                 }
-                .ignoresSafeArea(.keyboard, edges: .bottom)
+                .navigationViewStyle(StackNavigationViewStyle())
             }
-            .navigationViewStyle(StackNavigationViewStyle())
-        }
+        
+        
     }
 }
 
@@ -82,5 +89,15 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+    }
+}
+extension View{
+    @ViewBuilder
+    func If<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {
+        if condition {
+            transform(self)
+        } else {
+            self
+        }
     }
 }

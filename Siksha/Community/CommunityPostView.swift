@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
+    @EnvironmentObject var appState: AppState
     @ObservedObject var viewModel: ViewModel
     
     @State private var anonymousIsToggled = false
@@ -432,10 +432,14 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             })
             if(showPostMenu){
                 Color.black.opacity(0.4)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
+
                 postMenu
             }
             if(showPostDeleteAlert){
                 Color.black.opacity(0.4)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
+
                 ZStack(alignment: .center){
                     postDeleteAlert
                         .background(Color.white)
@@ -469,6 +473,13 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             .fullScreenCover(isPresented: $showImages){
                 ImageView(viewModel: viewModel, imageIndex: imageIndex)
                 
+            }
+            
+            .onAppear{
+                appState.showTabbar = false
+            }
+            .onDisappear{
+                appState.showTabbar = true
             }
         
         
