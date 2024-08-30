@@ -11,20 +11,14 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @StateObject  var viewModel:ViewModel
+    @StateObject private var keyboardResponder = KeyboardResponder()
     @State private var isShowingPhotoLibrary = false
     
     var body: some View {
         GeometryReader { _ in
-            VStack {
-                profileImage
-                    .padding(.top, 65.0)
-                nicknameTextField
-                    .padding(.top, 15.0)
-                
-                Spacer()
-                
-                doneButton
-                    .padding(.bottom, 20)
+            ZStack {
+                mainContent
+                keyboardToolbarContent
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .contentShape(Rectangle())
@@ -37,8 +31,32 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             .onAppear {
                 viewModel.loadInfo()
             }
-            
         }
+    }
+    
+    private var mainContent: some View {
+        VStack {
+            profileImage
+                .padding(.top, 65.0)
+            nicknameTextField
+                .padding(.top, 15.0)
+            
+            Spacer()
+            
+            doneButton
+                .padding(.bottom, 20)
+        }
+    }
+    
+    private var keyboardToolbarContent: some View {
+        VStack {
+            Spacer()
+                keyboardToolbar
+                    .opacity(keyboardResponder.didKeyboardShow ? 1 : 0)
+                    .offset(y: keyboardResponder.didKeyboardShow ? -keyboardResponder.currentHeight : 50)
+                    .animation(.easeOut(duration: 0.35))
+        }
+        .edgesIgnoringSafeArea(.bottom)
     }
     
     var nicknameTextField: some View {
@@ -91,6 +109,33 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         )
     }
     
+    var keyboardToolbar: some View {
+        HStack {
+            Button(action: {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                viewModel.resetNickname()
+            }) {
+                Text("취소")
+                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .foregroundColor(Color("MainThemeColor"))
+                    .padding(.leading, 20)
+            }
+            Spacer()
+            Button(action: {
+                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                viewModel.setPreviousNickname()
+            }) {
+                Text("OK")
+                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .foregroundColor(Color("MainThemeColor"))
+                    .padding(.trailing, 20)
+            }
+        }
+        .frame(height: 42)
+        .background(Color.white)
+        .border(Color("TextFieldBorderColor"), width: 1)
+    }
+    
     private func done() {
         viewModel.updateUserProfile()
         presentationMode.wrappedValue.dismiss()
@@ -132,8 +177,4 @@ struct ClearableTextField: View {
             }
         }
     }
-}
-
-#Preview {
-    ProfileEditView(viewModel: ProfileEditViewModel())
 }

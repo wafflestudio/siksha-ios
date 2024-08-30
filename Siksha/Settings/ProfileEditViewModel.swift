@@ -16,6 +16,8 @@ protocol ProfileEditViewModelType: ObservableObject {
     var enableDoneButton: Bool { get }
     
     func loadInfo()
+    func resetNickname()
+    func setPreviousNickname()
     func updateUserProfile()
 }
 
@@ -27,6 +29,8 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     @Published private(set) var imageURL: String?
     @Published private(set) var profileImage: UIImage?
     @Published private(set) var enableDoneButton: Bool = false
+    
+    private var previousNickname: String?
     
     private var doneButtonEnabledPublisher: AnyPublisher<Bool, Never> {
         return Publishers.CombineLatest($nickname, $addedImages)
@@ -58,6 +62,15 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
         UserManager.shared.loadUserInfo()
     }
     
+    func resetNickname() {
+        guard let previousNickname else { return }
+        nickname = previousNickname
+    }
+    
+    func setPreviousNickname() {
+        previousNickname = nickname
+    }
+    
     func updateUserProfile() {
         let imageData = addedImages.first?.jpegData(compressionQuality: 0.8)
         UserManager.shared.updateUserProfile(nickname: nickname, image: imageData) { success in
@@ -85,6 +98,9 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
             .receive(on: RunLoop.main)
             .sink { [weak self] nickname in
                 self?.nickname = nickname ?? ""
+                if self?.previousNickname == nil {
+                    self?.previousNickname = nickname
+                }
             }
             .store(in: &cancellables)
         

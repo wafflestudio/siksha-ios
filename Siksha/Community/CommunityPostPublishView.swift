@@ -400,32 +400,6 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     }
 }
 
-class KeyboardResponder: ObservableObject {
-    @Published var currentHeight: CGFloat = 0
-    private var cancellable: AnyCancellable?
-
-    init() {
-        self.cancellable = NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
-            .merge(with: NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification))
-            .sink { [weak self] notification in
-                self?.keyboardNotification(notification: notification)
-            }
-    }
-
-    private func keyboardNotification(notification: Notification) {
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            let isKeyboardShowing = notification.name == UIResponder.keyboardWillShowNotification
-            withAnimation(.easeOut(duration: 0.25)) {
-                self.currentHeight = isKeyboardShowing ? keyboardFrame.height : 0
-            }
-        }
-    }
-    
-    deinit {
-        self.cancellable?.cancel()
-    }
-}
-
 
 /*struct CommunityPostPublishView_Previews: PreviewProvider {
     static var previews: some View {
