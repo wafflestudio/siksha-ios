@@ -27,6 +27,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             .ignoresSafeArea(.keyboard)
             .onTapGesture {
                 UIApplication.shared.endEditing()
+                viewModel.setPreviousNickname()
             }
             .onAppear {
                 viewModel.loadInfo()
@@ -71,7 +72,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     }
     
     var profileImage: some View {
-        VStack {
+        ZStack(alignment: .topTrailing) {
             Button(action: {
                 isShowingPhotoLibrary = true
             }) {
@@ -86,13 +87,36 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                         .clipShape(Circle())
                 }
             }
+            .frame(width: 171, height: 171)
             .sheet(isPresented: $isShowingPhotoLibrary) {
                 ImagePickerCoordinatorView(selectedImages: $viewModel.addedImages, maxSelection: 1)
             }
+            
+            cameraButton
+                .offset(x: -2.5, y: 2.5)
         }
-        .onAppear {
-            viewModel.loadInfo()
+        
+    }
+    
+    var cameraButton: some View {
+        Button(action: {
+            print("clicked")
+        }) {
+            ZStack {
+                Circle()
+                    .frame(width: 41.61, height: 41.61)
+                    .foregroundColor(.white)
+                    .overlay(
+                        Circle()
+                        .stroke(Color("TextFieldBorderColor"), lineWidth: 1)
+                    )
+                
+                Image("Camera")
+                    .frame(width: 22.5, height: 18)
+                    .foregroundColor(Color("LightGrayColor"))
+            }
         }
+        .frame(width: 41.61, height: 41.61)
     }
     
     var doneButton: some View {
