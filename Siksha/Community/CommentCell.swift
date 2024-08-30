@@ -8,6 +8,8 @@
 import Foundation
 import SwiftUI
 
+import Kingfisher
+
 struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType {
     var comment:CommentInfo
     var viewModel: ViewModel
@@ -41,7 +43,8 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
             VStack(alignment:.leading,spacing:0){
                 HStack{
                     if let profileUrl = comment.profileUrl {
-                        RemoteImage(url: profileUrl)
+                        KFImage(URL(string:profileUrl))
+                            .resizable()
                             .frame(width: 16,height:16)
                             .clipShape(Circle())
                     }
