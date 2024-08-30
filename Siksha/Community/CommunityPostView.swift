@@ -18,6 +18,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var needRefresh = false
     @State private var imageIndex = 0
     @State private var showImages = false
+    @State private var showAlert = false
     @State private var showPostMenu = false
     @State private var showPostDeleteAlert = false
     @Binding var needPostViewRefresh:Bool
@@ -261,11 +262,19 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     Spacer()
                         .frame(height:15)
                     
-                    Button(action:{     print("report post click")
-                    },label: {Text("신고하기")
+                    
+                    Button(action:{
+                        showPostMenu = false
+                        showAlert = true
+                        
+                    },label:{
+                        Text("신고하기")
                             .frame(maxWidth:.infinity)
                             .font(.custom("Inter-Medium", size: 16))
-                        .foregroundColor(Color("CommunityPostMenuTextColor"))})
+                            .foregroundColor(Color("CommunityPostMenuTextColor"))
+                    })
+                    
+                    
                     Spacer()
                         .frame(height:15)
                     
@@ -326,22 +335,22 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 Divider()
                 Button(action:{
                     viewModel.deletePost { success in
-                    if success {
-                    self.needPostViewRefresh = true
-                    self.presentationMode.wrappedValue.dismiss()
-                    } else {
-                    
-                    }
+                        if success {
+                            self.needPostViewRefresh = true
+                            self.presentationMode.wrappedValue.dismiss()
+                        } else {
+                            
+                        }
                     }
                 },label:{Text("삭제")    .font(.custom("Inter-Regular", size: 16))
                     .frame(maxWidth:.infinity)})
-                    .frame(maxWidth: .infinity,alignment: .center)
-
-
-
+                .frame(maxWidth: .infinity,alignment: .center)
+                
+                
+                
             }
         }.frame(height:130.27,alignment: .center)
-            
+        
     }
     var body: some View {
         NavigationLink(
@@ -433,13 +442,13 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             if(showPostMenu){
                 Color.black.opacity(0.4)
                     .ignoresSafeArea(.keyboard, edges: .bottom)
-
+                
                 postMenu
             }
             if(showPostDeleteAlert){
                 Color.black.opacity(0.4)
                     .ignoresSafeArea(.keyboard, edges: .bottom)
-
+                
                 ZStack(alignment: .center){
                     postDeleteAlert
                         .background(Color.white)
@@ -474,9 +483,13 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 ImageView(viewModel: viewModel, imageIndex: imageIndex)
                 
             }
-            
+            .fullScreenCover(isPresented: $showAlert){
+                AlertView(RenewalSettingsViewModel(), viewModel)
+            }
+        
             .onAppear{
                 appState.showTabbar = false
+                print("onAppear")
             }
             .onDisappear{
                 appState.showTabbar = true
@@ -502,6 +515,7 @@ extension View {
  }*/
 
 class StubCommunityPostViewModel: CommunityPostViewModelType {
+    
     var boardNamePublisher: String
     
     @Published var reportAlert: Bool = false
