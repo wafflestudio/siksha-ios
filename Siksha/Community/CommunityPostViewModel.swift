@@ -99,6 +99,7 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
         self.postId = postId
         print("POST ID: \(postId)")
         self.post = Post()
+        self.loadBasicInfos()
     }
 }
 
