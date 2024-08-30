@@ -11,7 +11,7 @@ import SwiftUI
 struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType {
     var comment:CommentInfo
     var viewModel: ViewModel
-    
+    var onMenuPressed: ()->()
     @State private var showingDeleteAlert = false
     @State private var reportAlertIsShown = false
     @Binding var reportCompleteAlertIsShown: Bool
@@ -26,13 +26,14 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
     @State private var showingEditView = false
     @State private var editedContent: String
     
-    init(comment: CommentInfo, viewModel: ViewModel,reportCompleteAlertIsShown: Binding<Bool>, alertTitle: Binding<String>, alertMessage: Binding<String>) {
+    init(comment: CommentInfo, viewModel: ViewModel,reportCompleteAlertIsShown: Binding<Bool>, alertTitle: Binding<String>, alertMessage: Binding<String>, onMenuPressed:@escaping()->()) {
         self.comment = comment
         self.viewModel = viewModel
         self._reportCompleteAlertIsShown = reportCompleteAlertIsShown
         self._alertTitle = alertTitle
         self._alertMessage = alertMessage
         _editedContent = State(initialValue: comment.content)
+        self.onMenuPressed = onMenuPressed
     }
     
     var body:some View{
@@ -67,30 +68,15 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                 Text(comment.content)
                     .font(.custom("NanumSquareOTFRegular", size: 12))
                     .foregroundColor(.init("ReviewHighColor"))
-                Menu{
-                    if (comment.isMine) {
-                        Button("수정", action: {
-                            self.showingEditView = true
-                        })
-                        Button("삭제", action: {
-                            self.showingDeleteAlert = true
-                        })
-                    }
-                    if(!comment.isMine){
-                        Button("신고하기", action: {
-                            reportAlertIsShown = true
-                        })
-                    }
-                    Button("취소", action: {})
-                }
                 
                 
-            label:{
                 Image("etc")
                     .frame(width:16,height:2.29)
                     .padding(EdgeInsets(top: 10.36, leading: 2.25, bottom: 10.36, trailing: 0))
-                
-            }
+                    .onTapGesture {
+                        onMenuPressed()
+                    }
+            
                 
                 
             }
@@ -130,16 +116,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                 showingEditView = false
             })
         }
-        .alert(isPresented: $showingDeleteAlert) {
-            Alert(
-                title: Text(""),
-                message: Text("이 댓글을 삭제하시겠습니까?"),
-                primaryButton: .default(Text("확인")) {
-                    viewModel.deleteComment(id: comment.id)
-                },
-                secondaryButton: .cancel()
-            )
-        }
+      
         .textFieldAlert(isPresented: $reportAlertIsShown, title: "신고 사유", action: {reason in
             viewModel.reportComment(commentId: comment.id, reason: reason ?? "") {
                 success, errorMessage in
