@@ -638,7 +638,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             }.customNavigationBar(title: viewModel.boardNamePublisher)
                 .navigationBarItems(leading: backButton)
                 .onAppear {
-                    viewModel.loadBasicInfos()
+                 //   viewModel.loadBasicInfos()
                 }
                 .textFieldAlert(isPresented: $reportAlertIsShown, title: "신고 사유", action: { reason in
                     viewModel.reportPost(reason: reason ?? "") { success, errorMessage in
