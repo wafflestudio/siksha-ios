@@ -353,7 +353,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         
     }
     var body: some View {
-        NavigationLink(
+        /*NavigationLink(
             destination: CommunityPostPublishView(
                 needRefresh: self.$needRefresh, viewModel: CommunityPostPublishViewModel(
                     boardId: viewModel.postInfo.boardId,
@@ -364,141 +364,175 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             isActive: $isEditingPost
         ) {
             EmptyView()
-        }
+        }*/
         
         ZStack(alignment:.bottomTrailing) {
-            ScrollView(.vertical, showsIndicators: false) {
-                VStack(spacing:0) {
-                    postHeader
-                    VStack(alignment: .leading) {
-                        
-                        Text(viewModel.postInfo.title)
-                            .font(.custom("NanumSquareOTFExtraBold", size: 16))
+            VStack{
+                ZStack{
+                    Color("MainThemeColor")
+                        .ignoresSafeArea(.all)
+                    HStack{
+                        backButton
                         Spacer()
-                            .frame(height:12)
-                        Text(viewModel.postInfo.content)
-                            .font(.custom("NanumSquareOTFRegular", size: 12))
-                        Spacer()
-                            .frame(height:19)
-                        imageSection
-                        
-                        Spacer()
-                            .frame(height: viewModel.postInfo.imageURLs?.isEmpty ?? true ? 1 : 12.5)
-                        HStack {
-                            HStack(alignment: .center) {
-                                
-                                Image(viewModel.postInfo.isLiked ? "PostLike-liked" : "PostLike-default")
-                                    .frame(width: 11.5, height: 10)
-                                    .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
-                                
-                                Spacer()
-                                    .frame(width: 4)
-                                Text(String(viewModel.postInfo.likeCount))
-                                    .font(.custom("Inter-Regular", size: 9))
-                                    .foregroundColor(Color("MainThemeColor"))
-                            }
+                    }.padding(.zero)
+                    HStack{
+                        Text("신고하기")
+                            .foregroundColor(.white)
+                            .frame(alignment: .center)
+                            .font(.custom("Inter-Bold", size: 16))
+                    }.padding(.zero)
+                    
+                }.frame(height:44)
+                ScrollView(.vertical, showsIndicators: false) {
+                    VStack(spacing:0) {
+                        postHeader
+                        VStack(alignment: .leading) {
                             
-                            HStack(alignment: .center) {
-                                Image("Reply")
-                                    .frame(width: 11.5, height: 11)
-                                Spacer()
-                                    .frame(width: 4)
-                                Text(String(viewModel.postInfo.commentCount))
-                                    .font(.custom("Inter-Regular", size: 9))
-                                    .foregroundColor(Color.init("ReviewMediumColor"))
-                                    .frame(height: 11, alignment: .center)
-                            }
+                            Text(viewModel.postInfo.title)
+                                .font(.custom("NanumSquareOTFExtraBold", size: 16))
+                            Spacer()
+                                .frame(height:12)
+                            Text(viewModel.postInfo.content)
+                                .font(.custom("NanumSquareOTFRegular", size: 12))
+                            Spacer()
+                                .frame(height:19)
+                            imageSection
                             
                             Spacer()
-                            
-                            
+                                .frame(height: viewModel.postInfo.imageURLs?.isEmpty ?? true ? 1 : 12.5)
+                            HStack {
+                                HStack(alignment: .center) {
+                                    
+                                    Image(viewModel.postInfo.isLiked ? "PostLike-liked" : "PostLike-default")
+                                        .frame(width: 11.5, height: 10)
+                                        .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
+                                    
+                                    Spacer()
+                                        .frame(width: 4)
+                                    Text(String(viewModel.postInfo.likeCount))
+                                        .font(.custom("Inter-Regular", size: 9))
+                                        .foregroundColor(Color("MainThemeColor"))
+                                }
+                                
+                                HStack(alignment: .center) {
+                                    Image("Reply")
+                                        .frame(width: 11.5, height: 11)
+                                    Spacer()
+                                        .frame(width: 4)
+                                    Text(String(viewModel.postInfo.commentCount))
+                                        .font(.custom("Inter-Regular", size: 9))
+                                        .foregroundColor(Color.init("ReviewMediumColor"))
+                                        .frame(height: 11, alignment: .center)
+                                }
+                                
+                                Spacer()
+                                
+                                
+                                
+                            }
+                            Spacer()
+                                .frame(height:14)
+                            likeButton
                             
                         }
-                        Spacer()
-                            .frame(height:14)
-                        likeButton
+                        .padding(EdgeInsets(top: 15, leading: 22, bottom: 12.5, trailing: 19))
                         
+                        Divider()
+                            .foregroundColor(Color("Low"))
+                            .padding(.zero)
+                        
+                        commentList
+                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 0))
+                        
+                        Spacer()
                     }
-                    .padding(EdgeInsets(top: 15, leading: 22, bottom: 12.5, trailing: 19))
+                }
+                .onTapGesture {
                     
-                    Divider()
-                        .foregroundColor(Color("Low"))
-                        .padding(.zero)
-                    
-                    commentList
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 0))
-                    
-                    Spacer()
+                    //  self.endTextEditing()
                 }
             }
-            .onTapGesture {
-                
-                //  self.endTextEditing()
-            }
-            
-            CommunityReplyBar(onCommentSubmit: { commentText,isAnonymous in
-                viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText,isAnonymous: isAnonymous)
-            })
-            if(showPostMenu){
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea(.keyboard, edges: .bottom)
-                
-                postMenu
-            }
-            if(showPostDeleteAlert){
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea(.keyboard, edges: .bottom)
-                
-                ZStack(alignment: .center){
-                    postDeleteAlert
-                        .background(Color.white)
-                        .cornerRadius(26)
+                CommunityReplyBar(onCommentSubmit: { commentText,isAnonymous in
+                    viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText,isAnonymous: isAnonymous)
+                })
+                if(showPostMenu){
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea(.all)
                     
-                }.frame(maxWidth:.infinity,maxHeight: .infinity)
-                    .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
-            }
-            
-        }.customNavigationBar(title: viewModel.boardNamePublisher)
-            .navigationBarItems(leading: backButton)
-            .onAppear {
-                viewModel.loadBasicInfos()
-            }
-            .textFieldAlert(isPresented: $reportAlertIsShown, title: "신고 사유", action: { reason in
-                viewModel.reportPost(reason: reason ?? "") { success, errorMessage in
-                    if success {
-                        alertTitle = "신고"
-                        alertMessage = "신고되었습니다."
-                    } else {
-                        alertTitle = "신고"
-                        alertMessage = errorMessage ?? "신고에 실패했습니다."
-                    }
-                    reportAlertIsShown = false
-                    reportCompleteAlertIsShown = true
+                    postMenu
                 }
-            })
-            .alert(isPresented: $reportCompleteAlertIsShown, content: {
-                Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-            })
-            .fullScreenCover(isPresented: $showImages){
-                ImageView(viewModel: viewModel, imageIndex: imageIndex)
+                if(showPostDeleteAlert){
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea(.all)
+                    
+                    ZStack(alignment: .center){
+                        postDeleteAlert
+                            .background(Color.white)
+                            .cornerRadius(26)
+                        
+                    }.frame(maxWidth:.infinity,maxHeight: .infinity)
+                        .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
+                }
                 
-            }
-            .fullScreenCover(isPresented: $showAlert){
-                AlertView(RenewalSettingsViewModel(), viewModel)
-            }
-        
-            .onAppear{
-                appState.showTabbar = false
-                print("onAppear")
-            }
-            .onDisappear{
-                appState.showTabbar = true
-            }
-        
+            }.customNavigationBar(title: viewModel.boardNamePublisher)
+                .navigationBarItems(leading: backButton)
+                .onAppear {
+                    viewModel.loadBasicInfos()
+                }
+                .textFieldAlert(isPresented: $reportAlertIsShown, title: "신고 사유", action: { reason in
+                    viewModel.reportPost(reason: reason ?? "") { success, errorMessage in
+                        if success {
+                            alertTitle = "신고"
+                            alertMessage = "신고되었습니다."
+                        } else {
+                            alertTitle = "신고"
+                            alertMessage = errorMessage ?? "신고에 실패했습니다."
+                        }
+                        reportAlertIsShown = false
+                        reportCompleteAlertIsShown = true
+                    }
+                })
+                .alert(isPresented: $reportCompleteAlertIsShown, content: {
+                    Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                })
+                .fullScreenCover(isPresented: $isEditingPost){
+                    CommunityPostPublishView(
+                        needRefresh: self.$needRefresh, viewModel: CommunityPostPublishViewModel(
+                            boardId: viewModel.postInfo.boardId,
+                            communityRepository:DomainManager.shared.domain.communityRepository,
+                            postInfo: viewModel.postInfo
+                        )
+                    )
+                }
+                .fullScreenCover(isPresented: $showImages){
+                    ImageView(viewModel: viewModel, imageIndex: imageIndex)
+                    
+                }
+                .fullScreenCover(isPresented: $showAlert){
+                    AlertView(RenewalSettingsViewModel(), viewModel)
+                }
+            
+                .onAppear{
+                    appState.showTabbar = false
+                    print("onAppear")
+                }
+                .onDisappear{
+                    appState.showTabbar = true
+                }
+                .onChange(of: isEditingPost, perform: {
+                    isEditingPost in
+                    if(!isEditingPost){
+                            self.presentationMode.wrappedValue.dismiss()
+
+                        
+
+                                  }
+                })
+            
+            
+        }
         
     }
-    
-}
 
 extension View {
     func endTextEditing() {

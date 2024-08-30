@@ -11,7 +11,7 @@ struct TopPostCell:View{
     var post:PostInfo
     let needRefresh:Binding<Bool>
     var body:some View{
-        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: post.id), needPostViewRefresh:needRefresh)) {
+        
             HStack(alignment: .center){
                 Text(post.title)
                     .font(.custom("NanumSquareOTFRegular", size: 12))
@@ -32,8 +32,6 @@ struct TopPostCell:View{
             
             .padding(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15))
             .highPriorityGesture(DragGesture())
-        }
-        .highPriorityGesture(DragGesture())
 
     }
 }
