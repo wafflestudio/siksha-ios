@@ -7,5 +7,6 @@
 
 enum NetworkError: Error {
     case decodingError
+    case conflict            // 409 Conflict
 }
 

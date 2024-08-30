@@ -32,6 +32,11 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             .onAppear {
                 viewModel.loadInfo()
             }
+            .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
+                if shouldDismiss {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
         }
     }
     
@@ -43,6 +48,9 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 .padding(.top, 15.0)
             
             Spacer()
+            
+            existingNicknameToast
+                .padding(.bottom, 25)
             
             doneButton
                 .padding(.bottom, 20)
@@ -121,16 +129,16 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     
     var doneButton: some View {
         Button(action: done) {
+            ZStack(alignment: .center) {
+                RoundedRectangle(cornerRadius: 8.0)
+                    .fill(viewModel.enableDoneButton ? Color("MainThemeColor") : Color("LightGrayColor"))
                 Text("완료")
                     .font(.custom("NanumSquareOTFB", size: 17))
+            }
         }
         .disabled(!viewModel.enableDoneButton)
         .frame(width: 343, height: 56)
         .foregroundColor(Color.white)
-        .background(
-            RoundedRectangle(cornerRadius: 8.0)
-                .fill(viewModel.enableDoneButton ? Color("MainThemeColor") : Color("LightGrayColor"))
-        )
     }
     
     var keyboardToolbar: some View {
@@ -162,16 +170,38 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     
     private func done() {
         viewModel.updateUserProfile()
-        presentationMode.wrappedValue.dismiss()
     }
     
-    var backButton: some View {
+    private var backButton: some View {
         Button(action: {
             presentationMode.wrappedValue.dismiss()
         }) {
             Image("NavigationBack")
                 .resizable()
                 .frame(width: 7, height: 15)
+        }
+    }
+    
+    private var existingNicknameToast: some View {
+        VStack {
+            ZStack(alignment: .center) {
+                RoundedRectangle(cornerRadius: 8.0)
+                    .fill(Color.black.opacity(0.5))
+                
+                HStack(spacing: 0) {
+                    Image("Error")
+                        .frame(width: 14, height: 14)
+                        .foregroundColor(Color("MainThemeColor"))
+                        .padding(.trailing, 10)
+                    Text("이미 존재하는 닉네임입니다.")
+                        .font(.custom("NanumSquareOTFB", size: 12))
+                        .lineLimit(1)
+                        .foregroundColor(.white)
+                }
+            }
+            .frame(width: 185, height: 30)
+            .opacity(viewModel.showNicknameExistsToast ? 1 : 0)
+            .animation(.easeIn(duration: 0.2))
         }
     }
 }

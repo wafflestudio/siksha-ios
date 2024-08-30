@@ -14,6 +14,8 @@ protocol ProfileEditViewModelType: ObservableObject {
     var imageURL: String? { get }
     var addedImages: [UIImage] { get set }
     var enableDoneButton: Bool { get }
+    var showNicknameExistsToast: Bool { get }
+    var shouldDismiss: Bool { get }
     
     func loadInfo()
     func resetNickname()
@@ -29,6 +31,10 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     @Published private(set) var imageURL: String?
     @Published private(set) var profileImage: UIImage?
     @Published private(set) var enableDoneButton: Bool = false
+    @Published private(set) var showNicknameExistsToast: Bool = false
+    @Published private(set) var shouldDismiss: Bool = false
+    
+    private var toastWorkItem: DispatchWorkItem?
     
     private var previousNickname: String?
     
@@ -73,14 +79,32 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     
     func updateUserProfile() {
         let imageData = addedImages.first?.jpegData(compressionQuality: 0.8)
-        UserManager.shared.updateUserProfile(nickname: nickname, image: imageData) { success in
+        UserManager.shared.updateUserProfile(nickname: nickname, image: imageData) {[weak self] success, error in
             if success {
-                print("업데이트 성공")
+                self?.shouldDismiss = true
             } else {
                 print("업데이트 실패")
+                if let networkError = error as? NetworkError {
+                    switch networkError {
+                    case .conflict:
+                        self?.showToast()
+                    default:
+                        break
+                    }
+                }
             }
-            
         }
+    }
+    
+    private func showToast() {
+        toastWorkItem?.cancel()
+        showNicknameExistsToast = true
+        
+        let workItem = DispatchWorkItem { [weak self] in
+            self?.showNicknameExistsToast = false
+        }
+        toastWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8, execute: workItem)
     }
     
     private func setupBindings() {

@@ -37,23 +37,21 @@ class UserManager: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func updateUserProfile(nickname: String?, image: Data?, completion: @escaping (Bool) -> Void) {
+    func updateUserProfile(nickname: String?, image: Data?, completion: @escaping (Bool, Error?) -> Void) {
         userRepository.updateUserProfile(nickname: nickname, image: image)
             .receive(on: DispatchQueue.main)
             .sink { completionStatus in
                 switch completionStatus {
                 case .finished:
-                    completion(true)
+                    completion(true, nil)
                 case .failure(let error):
-                    print(error)
-                    completion(false)
+                    completion(false, error)
                 }
             } receiveValue: { [weak self] user in
                 self?.nickname = user.nickname
                 self?.imageURL = user.image
             }
             .store(in: &cancellables)
-        
     }
     
     func fetchImage(from urlString: String) -> AnyPublisher<UIImage?, Never> {
