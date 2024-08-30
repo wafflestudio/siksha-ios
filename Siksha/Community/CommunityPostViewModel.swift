@@ -197,17 +197,7 @@ extension CommunityPostViewModel {
             .store(in: &cancellables)
     }
     
-    private func loadBoardInfo(){
-        self.communityRepository.loadBoardList()
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion:{
-                error in
-                print(error)
-            },receiveValue: {[weak self] boards in
-                self?.boardsList = boards
-            })
-            .store(in: &cancellables)
-    }
+ 
     
     private func loadInitialComments() {
         self.communityRepository

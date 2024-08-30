@@ -513,10 +513,11 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         .ignoresSafeArea(.all)
                     HStack{
                         backButton
+                            .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
                         Spacer()
                     }.padding(.zero)
                     HStack{
-                        Text("신고하기")
+                        Text(viewModel.boardNamePublisher)
                             .foregroundColor(.white)
                             .frame(alignment: .center)
                             .font(.custom("Inter-Bold", size: 16))
