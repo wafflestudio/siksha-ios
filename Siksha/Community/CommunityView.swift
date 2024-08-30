@@ -81,7 +81,8 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 needRefresh = false
             }
         })
-        .fullScreenCover(isPresented: $showPost, onDismiss: {clickedPost = 0}, content: {
+        .fullScreenCover(isPresented: $showPost, onDismiss: {clickedPost = 0
+            viewModel.loadBasicInfos()}, content: {
             CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: clickedPost), needPostViewRefresh:$needRefresh)
         })
         .onChange(of: clickedPost, perform: {

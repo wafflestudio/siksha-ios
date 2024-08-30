@@ -67,7 +67,7 @@ protocol CommunityPostViewModelType: ObservableObject {
     func loadMoreComments()
     func submitComment(postId: Int, content: String, isAnonymous: Bool)
     func editComment(commentId: Int, content: String)
-    func deleteComment(id: Int)
+    func deleteComment(id: Int,completion:@escaping(Bool)->Void)
     func toggleCommentLike(id: Int)
     func reportPost(reason: String, completion: @escaping (Bool, String?) -> Void)
     func reportComment(commentId:Int,reason:String, completion: @escaping (Bool, String?) -> Void)
@@ -265,17 +265,17 @@ extension CommunityPostViewModel {
             .store(in: &cancellables)
     }
 
-    func deleteComment(id: Int) {
-        self.communityRepository
-            .loadPost(postId: self.postId)
+    func deleteComment(id:Int,completion: @escaping (Bool) -> Void) {
+        self.communityRepository.deleteComment(commentId: id)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                    switch completion {
-                    case .finished:
-                        self?.commentsList.removeAll(where: { $0.id == id })
-                    case .failure(let error):
-                        print(error)
-                    }
+            .sink(receiveCompletion: { [weak self] completionStatus in
+                switch completionStatus {
+                case .finished:
+                    completion(true)
+                case .failure(let error):
+                    print(error)
+                    completion(false)
+                }
             }, receiveValue: { value in
                 
             })

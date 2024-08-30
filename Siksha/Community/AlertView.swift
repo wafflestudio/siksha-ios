@@ -5,6 +5,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
     private let fontColor = Color("DefaultFontColor")
     private let orangeColor = Color.init("main")
     private let lightGrayColor = Color.init("LightGrayColor")
+    private var commentId:Int? = nil
     @EnvironmentObject var appState:AppState
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
@@ -27,7 +28,11 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
         self.settingsViewModel = settingsViewModel
         self.communityPostViewModel = communityPostViewModel
     }
-    
+    init(_ settingsViewModel: RenewalSettingsViewModel,_ communityPostViewModel:CommunityPostViewModel,commentId:Int?) {
+        self.settingsViewModel = settingsViewModel
+        self.communityPostViewModel = communityPostViewModel
+        self.commentId = commentId
+    }
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -89,16 +94,31 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                     Spacer()
                     
                     Button(action: {
-                        communityPostViewModel.reportPost(reason: reportReason ) { success, errorMessage in
-                            if success {
-                                alertTitle = "신고"
-                                alertMessage = "신고되었습니다."
-                            } else {
-                                alertTitle = "신고"
-                                alertMessage = errorMessage ?? "신고에 실패했습니다."
+                        if(commentId == nil){
+                            communityPostViewModel.reportPost(reason: reportReason ) { success, errorMessage in
+                                if success {
+                                    alertTitle = "신고"
+                                    alertMessage = "신고되었습니다."
+                                } else {
+                                    alertTitle = "신고"
+                                    alertMessage = errorMessage ?? "신고에 실패했습니다."
+                                }
+                                reportCompleteAlertIsShown = true
                             }
-                            reportCompleteAlertIsShown = true
-                        }}, label: {
+                        }
+                        else{
+                            communityPostViewModel.reportComment(commentId:commentId!,reason: reportReason ) { success, errorMessage in
+                                if success {
+                                    alertTitle = "신고"
+                                    alertMessage = "신고되었습니다."
+                                } else {
+                                    alertTitle = "신고"
+                                    alertMessage = errorMessage ?? "신고에 실패했습니다."
+                                }
+                                reportCompleteAlertIsShown = true
+                            }
+                        }
+                    }, label: {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 8)
                                     .foregroundColor(reportReason.count > 0 ? orangeColor : lightGrayColor)
