@@ -97,6 +97,7 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
     init(communityRepository: CommunityRepositoryProtocol, postId: Int) {
         self.communityRepository = communityRepository
         self.postId = postId
+        print("POST ID: \(postId)")
         self.post = Post()
     }
 }
