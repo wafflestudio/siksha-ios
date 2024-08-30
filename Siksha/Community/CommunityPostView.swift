@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -129,7 +130,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     var postHeader:some View{
         HStack{
             if let profileUrl = viewModel.postInfo.profileUrl {
-                RemoteImage(url: profileUrl)
+                KFImage(URL(string:profileUrl))
+                    .resizable()
                     .frame(width: 33,height:33)
                     .clipShape(Circle())
             }
