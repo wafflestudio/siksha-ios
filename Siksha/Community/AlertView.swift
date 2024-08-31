@@ -36,6 +36,12 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
         self.settingsViewModel = settingsViewModel
         self.communityPostViewModel = communityPostViewModel
         self.commentId = commentId
+        print("COMMENT: \(commentId)")
+        if let commentId{
+            if (commentId <= 0){
+                self.commentId = nil
+            }
+        }
     }
     var body: some View {
         GeometryReader { geometry in

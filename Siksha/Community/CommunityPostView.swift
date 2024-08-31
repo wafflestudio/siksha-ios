@@ -22,10 +22,10 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var showAlert = false
     @State private var showPostMenu = false
     @State private var showPostDeleteAlert = false
-    @State private var showCommentMenu = false
     @State private var showCommentId = 0
     @State private var showCommentEditView = false
     @State private var showCommentMine = false
+    @State private var deleteCommentId = 0
     @State private var showCommentDeleteAlert = false
     @Binding var needPostViewRefresh:Bool
     
@@ -156,6 +156,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             Image("etc")
                 .frame(width:13,height:13)
                 .onTapGesture {
+                    showCommentId = -1
                     showPostMenu = true
                 }
         }.padding(EdgeInsets(top: 16, leading: 21, bottom: 0, trailing: 19))
@@ -183,10 +184,11 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             ForEach(viewModel.commentsListPublisher) { comment in
                 CommentCell(comment: comment, viewModel: viewModel, reportCompleteAlertIsShown: $reportCompleteAlertIsShown, alertTitle: $alertTitle, alertMessage: $alertMessage,onMenuPressed: {
                     showCommentId = comment.id
+                    print("showCommentID:\(showCommentId)")
                     commentContent = comment.content
                     showCommentMine = comment.isMine
-                    showCommentMenu = true
                 })
+              
                     
                 Divider()
                     .padding(EdgeInsets(top: 0, leading: 7.5, bottom: 0, trailing: 7.5))
@@ -222,7 +224,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         .frame(height:15)
                     Button(action:{     
                         showCommentEditView = true
-                        showCommentMenu = false
                     },label: {Text("수정하기")
                             .frame(maxWidth:.infinity)
                             .font(.custom("Inter-Medium", size: 16))
@@ -236,8 +237,9 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     Spacer()
                         .frame(height:15)
                     
-                    Button(action:{ showCommentDeleteAlert = true
-                        showCommentMenu = false
+                    Button(action:{ deleteCommentId = showCommentId
+                        showCommentId = -1
+                        
                     },label: {Text("삭제하기")
                             .frame(maxWidth:.infinity)
                             .font(.custom("Inter-Medium", size: 16))
@@ -254,7 +256,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     
                     
                     Button(action:{
-                        showCommentMenu = false
                         showAlert = true
                         
                     },label:{
@@ -280,7 +281,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     .frame(height:15)
                 
                 Button(action:{
-                    showCommentMenu = false
+                    showCommentId = -1
                 },label: {Text("취소")
                         .frame(maxWidth:.infinity)
                         .font(.custom("Inter-SemiBold", size: 16))
@@ -449,16 +450,17 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 .frame(height:16.84)
             Divider()
             HStack(spacing:0){
-                Button(action:{showPostDeleteAlert = false},label:{Text("취소")
+                Button(action:{deleteCommentId = -1
+                },label:{Text("취소")
                         .font(.custom("Inter-Bold", size: 16))
                     .frame(maxWidth:.infinity)})
                 .foregroundColor(Color("MainThemeColor"))
                 .frame(maxWidth: .infinity,alignment: .center)
                 Divider()
                 Button(action:{
-                    viewModel.deleteComment(id:showCommentId){completion in
+                    viewModel.deleteComment(id:deleteCommentId){completion in
                         viewModel.loadBasicInfos()
-                        showCommentDeleteAlert = false
+                        deleteCommentId = -1
                     }
                 },label:{Text("삭제")    .font(.custom("Inter-Regular", size: 16))
                     .frame(maxWidth:.infinity)})
@@ -603,7 +605,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     }.frame(maxWidth:.infinity,maxHeight: .infinity)
                         .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
                 }
-            if(showCommentDeleteAlert){
+            if(deleteCommentId > 0){
                 Color.black.opacity(0.4)
                     .ignoresSafeArea(.all)
                 
@@ -615,7 +617,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 }.frame(maxWidth:.infinity,maxHeight: .infinity)
                     .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
             }
-            if(showCommentMenu){
+            if(showCommentId > 0){
                 Color.black.opacity(0.4)
                     .ignoresSafeArea(.all)
                 
@@ -657,15 +659,17 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     ImageView(viewModel: viewModel, imageIndex: imageIndex)
                     
                 }
-                .fullScreenCover(isPresented: $showAlert){
-                    AlertView(RenewalSettingsViewModel(), viewModel,commentId: showPostMenu ? nil : showCommentId)
+                .fullScreenCover(isPresented: $showAlert,onDismiss: {showCommentId = -1}){
+                    AlertView(RenewalSettingsViewModel(), viewModel,commentId: showCommentId <= 0 ? nil : showCommentId)
                 }
                 .fullScreenCover(isPresented: $showCommentEditView) {
                     EditCommentView(isPresented: $showCommentEditView, editedContent: commentContent, onSave: { newContent in
                         viewModel.editComment(commentId: showCommentId, content: newContent)
                         showCommentEditView = false
+                        showCommentId = -1
                     }, onCancel: {
                         showCommentEditView = false
+                        showCommentId = -1
                     })
                 }
                 .onAppear{
