@@ -111,7 +111,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
             
         }
             else{
-                Text("신고된 댓글입니다.")
+                Text("신고가 누적되어 숨겨진 댓글입니다.")
                     .font(.custom("NanumSquareOTFRegular", size: 12))
                     .foregroundColor(Color(hex: 0xB7B7B7))
                     .frame(maxWidth: .infinity,alignment:.leading)
