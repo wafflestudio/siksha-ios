@@ -100,32 +100,22 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     
     struct CustomCheckboxStyle: ToggleStyle {
         func makeBody(configuration: Configuration) -> some View {
-            HStack {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 4)
-                        .stroke(configuration.isOn ? Color.clear : Color(hex:0xDFDFDF), lineWidth: 1)
-                        .frame(width: 14, height: 14)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(configuration.isOn ? Color("MainThemeColor") : Color.clear)
-                        )
-
-
+            HStack(spacing: 5) {
                     if configuration.isOn {
-                        Image(systemName: "checkmark")
-                            .resizable()
-                            .scaledToFit()
-                            .foregroundColor(.white)
-                            .frame(width: 10, height: 10)
+                        Image("CheckboxTicked")
+                            .frame(width: 13, height: 13)
+                    } else {
+                        Image("Checkbox")
+                            .frame(width: 13, height: 13)
                     }
-                }
-                .onTapGesture {
-                    configuration.isOn.toggle()
-                }
-
-                Text("익명")
-                    .font(.custom("Inter-Regular", size: 14))
+                
+                configuration.label
                     .foregroundColor(configuration.isOn ? Color("MainThemeColor") : Color(hex:0x575757))
+            }
+            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+            .contentShape(Rectangle())
+            .onTapGesture {
+                configuration.isOn.toggle()
             }
         }
     }
