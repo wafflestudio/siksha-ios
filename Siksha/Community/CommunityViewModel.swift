@@ -100,8 +100,8 @@ final class CommunityViewModel: CommunityViewModelType {
     struct Constants {
         static let initialPage = 1
         static let pageCount = 20
-        static let trendingLikes = 1
-        static let trendingCreatedBefore = 50
+        static let trendingLikes = 10
+        static let trendingCreatedBefore = 7
     }
     
     private let communityRepository: CommunityRepositoryProtocol

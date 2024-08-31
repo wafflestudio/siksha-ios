@@ -42,6 +42,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                             .ignoresSafeArea(.all)
                         HStack{
                             backButton
+                                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
                             Spacer()
                         }.padding(.zero)
                         HStack{
