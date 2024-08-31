@@ -19,7 +19,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     @ObservedObject  var viewModel:ViewModel
     @StateObject private var keyboardResponder = KeyboardResponder()
     private var cancellables = Set<AnyCancellable>()
-    init( needRefresh: Binding<Bool> , viewModel: ViewModel) {
+    init(needRefresh: Binding<Bool>, viewModel: ViewModel) {
         self._needRefresh = needRefresh
         self.viewModel = viewModel
     }

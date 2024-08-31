@@ -29,13 +29,18 @@ class CommunityPostPublishViewModel:CommunityPostPublishViewType{
     @Published var boardsList: [Board] = []
     @Published var content = ""
     @Published var title = ""
-    @Published var isAnonymous = false
+    @Published var isAnonymous: Bool {
+        didSet {
+            UserDefaults.standard.set(isAnonymous, forKey: "isAnonymous")
+        }
+    }
     @Published var images:[UIImage] = []
     @Published var isSubmitted = false
     @Published var isErrorAlert = false
     init(boardId:Int,communityRepository: CommunityRepositoryProtocol, postInfo: PostInfo? = nil) {
         self.boardId = boardId
         self.communityRepository = communityRepository
+        self.isAnonymous = UserDefaults.standard.bool(forKey: "isAnonymous")
         
         loadBoardInfo()
         

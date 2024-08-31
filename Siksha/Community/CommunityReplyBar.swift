@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CommunityReplyBar: View {
     @State var commentText: String = ""
-    @State var isAnonymous:Bool = false
+    @State var isAnonymous: Bool = UserDefaults.standard.bool(forKey: "isAnonymous")
     var onCommentSubmit: (String,Bool) -> Void
     
     let dividerColor = Color(red: 183/255, green: 183/255, blue: 183/255, opacity: 1)
@@ -77,6 +77,9 @@ struct CommunityReplyBar: View {
                 .font(.custom("Inter-Regular", size: 14))
         }
         .toggleStyle(CustomCheckboxStyle())
+        .onChange(of: isAnonymous) { newValue in
+            UserDefaults.standard.set(newValue, forKey: "isAnonymous")
+        }
     }
     struct CustomCheckboxStyle: ToggleStyle {
         func makeBody(configuration: Configuration) -> some View {
