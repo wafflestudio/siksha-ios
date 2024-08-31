@@ -43,7 +43,7 @@ struct MyPostPreView: View {
                                 .foregroundColor(likeColor)
                         }
                         HStack(alignment: .center) {
-                            Image("Reply")
+                            Image("Comment")
                                 .frame(width: 11.5, height: 11)
                             Spacer()
                                 .frame(width: 4)
