@@ -59,19 +59,19 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                     Spacer()
                         .frame(width:5.5)
                     Text("\(comment.nickname)")
-                        .font(.custom("NanumSquareOTFBold",size:11))
+                        .font(.custom("NanumSquareOTFB",size:11))
                         .foregroundColor(.black)
                     Spacer()
                         .frame(width:8.2)
                     Text(relativeDate)
-                        .font(.custom("NanumSquareOTFRegular", size: 10))
+                        .font(.custom("NanumSquareOTFR", size: 10))
                         .foregroundColor(.init("ReviewLowColor"))
                     
                 }
                 Spacer()
                     .frame(height:9.37)
                 Text(comment.content)
-                    .font(.custom("NanumSquareOTFRegular", size: 12))
+                    .font(.custom("NanumSquareOTFR", size: 12))
                     .foregroundColor(.init("ReviewHighColor"))
                 
                 
@@ -114,7 +114,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
         }
             else{
                 Text("신고가 누적되어 숨겨진 댓글입니다.")
-                    .font(.custom("NanumSquareOTFRegular", size: 12))
+                    .font(.custom("NanumSquareOTFR", size: 12))
                     .foregroundColor(Color(hex: 0xB7B7B7))
                     .frame(maxWidth: .infinity,alignment:.leading)
                     .padding(EdgeInsets(top: 17.55

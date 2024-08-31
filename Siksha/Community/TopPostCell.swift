@@ -14,7 +14,7 @@ struct TopPostCell:View{
         
             HStack(alignment: .center){
                 Text(post.title)
-                    .font(.custom("NanumSquareOTFRegular", size: 12))
+                    .font(.custom("NanumSquareOTFR", size: 12))
                     .foregroundColor(.black)
                     .lineLimit(1)
                     .highPriorityGesture(DragGesture())
@@ -26,7 +26,7 @@ struct TopPostCell:View{
                     .highPriorityGesture(DragGesture())
                 
                 Text("\(post.likeCount)").foregroundColor(Color.init(red:1,green:149/255,blue:34/255))
-                    .font(.custom("NanumSquareOTFRegular",size:8))
+                    .font(.custom("NanumSquareOTFR",size:8))
                     .highPriorityGesture(DragGesture())
             }
             
