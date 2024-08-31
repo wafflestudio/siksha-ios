@@ -8,10 +8,13 @@
 import SwiftUI
 
 struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
+    @EnvironmentObject var appState: AppState
+    
     @State var tag: Int? = nil
     @State var needRefresh = false
     @State var clickedPost = 0
     @State var showPost = false
+    @State var needTabBarShown = false
     let dividerColor = Color("DividerColor")
     
     let topPosts: [PostInfo] = (1..<5).map {
@@ -59,7 +62,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                         .background(Color.init("MainThemeColor"))
                         .clipShape(Circle())
                 }
-                .offset(x: -30, y: -22)
+                .offset(x: -30, y: needTabBarShown ? -99 : -22)
                 .disabled(selectedBoardId == nil
                 )
                 NavigationLink(destination: CommunityPostPublishView( needRefresh: $needRefresh, viewModel: CommunityPostPublishViewModel(boardId:selectedBoardId ?? 0,communityRepository: DomainManager.shared.domain.communityRepository)),
@@ -71,6 +74,11 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                                )
 
             }
+            .onAppear {
+                self.needTabBarShown = !appState.showTabbar
+                appState.showTabbar = true
+            }
+
             
         }
         .onAppear {
@@ -95,13 +103,6 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 showPost = true
             }
         })
-      
-       
-       
-        
-        
-        
-      
     }
     
     var divider: some View {
