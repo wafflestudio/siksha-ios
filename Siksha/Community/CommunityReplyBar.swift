@@ -40,10 +40,10 @@ struct CommunityReplyBar: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(6)
                         }
-                        .padding(EdgeInsets(top: 5, leading: 6, bottom: 5, trailing: 12))
+                        .padding(EdgeInsets(top: 5, leading: 6.5, bottom: 5, trailing: 6.5))
                     }
                 )
-                .padding(EdgeInsets(top: 0, leading: 16, bottom: 5, trailing: 16))
+                .padding(EdgeInsets(top: 0, leading: 8.5, bottom: 5, trailing: 8.5))
         }
     }
     /*var anonymousButton: some View {
