@@ -216,6 +216,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 })
                     
                 Divider()
+                    .padding(EdgeInsets(top: 0, leading: 7.5, bottom: 0, trailing: 7.5))
             }
             
             if self.viewModel.hasNextPublisher == true {
@@ -583,8 +584,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         
                         Divider()
                             .foregroundColor(Color("Low"))
-                            .padding(.zero)
-                        
+                            .padding(EdgeInsets(top: 0, leading: 7.5, bottom: 0, trailing: 7.5))
+
                         commentList
                             .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 0))
                         
