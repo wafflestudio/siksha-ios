@@ -10,6 +10,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @State private var reportCompleteAlertIsShown = false
+    @State private var isReportSuccessful = false
     @State private var reportReason = ""
     @State private var alertTitle = ""
     @State private var alertMessage = ""
@@ -112,6 +113,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                                 if success {
                                     alertTitle = "신고"
                                     alertMessage = "신고되었습니다."
+                                    isReportSuccessful = true
                                 } else {
                                     alertTitle = "신고"
                                     alertMessage = errorMessage ?? "신고에 실패했습니다."
@@ -138,7 +140,11 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                     UIApplication.shared.endEditing()
                 })
                 .alert(isPresented: $reportCompleteAlertIsShown, content: {
-                    Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
+                    Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")) {
+                        if isReportSuccessful {
+                            self.presentationMode.wrappedValue.dismiss()
+                        }
+                    })
                 })
                 
                 .ignoresSafeArea(.keyboard)
