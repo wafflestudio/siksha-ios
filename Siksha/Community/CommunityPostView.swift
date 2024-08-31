@@ -485,7 +485,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         }*/
         
         ZStack(alignment:.bottomTrailing) {
-            VStack{
+            VStack(spacing: 0){
                 ZStack{
                     Color("MainThemeColor")
                         .ignoresSafeArea(.all)
