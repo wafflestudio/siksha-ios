@@ -597,10 +597,22 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     self.endTextEditing()
                 }
             }
-                CommunityReplyBar(onCommentSubmit: { commentText,isAnonymous in
-                    viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText,isAnonymous: isAnonymous)
+            .padding(.bottom, 60)
+            
+            ZStack {
+                Rectangle()
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 95)
+                    .foregroundColor(.white)
+
+                CommunityReplyBar(onCommentSubmit: { commentText, isAnonymous in
+                    viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText, isAnonymous: isAnonymous)
                 })
-                if(showPostMenu){
+                .padding(.bottom, 40)
+            }
+
+
+            if(showPostMenu){
                     Color.black.opacity(0.4)
                         .ignoresSafeArea(.all)
                     
@@ -637,7 +649,9 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 commentMenu
             }
                 
-            }.customNavigationBar(title: viewModel.boardNamePublisher)
+            }
+            .ignoresSafeArea(edges: .bottom)
+            .customNavigationBar(title: viewModel.boardNamePublisher)
                 .navigationBarItems(leading: backButton)
                 .onAppear {
                  //   viewModel.loadBasicInfos()
