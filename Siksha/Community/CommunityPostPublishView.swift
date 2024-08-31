@@ -11,7 +11,6 @@ import Combine
 struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPublishViewModel {
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @EnvironmentObject var appState: AppState
     
     @Binding var needRefresh:Bool
     @State private var isShowingPhotoLibrary = false
@@ -20,11 +19,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     @ObservedObject  var viewModel:ViewModel
     @StateObject private var keyboardResponder = KeyboardResponder()
     private var cancellables = Set<AnyCancellable>()
-    
     init(needRefresh: Binding<Bool>, viewModel: ViewModel) {
         self._needRefresh = needRefresh
         self.viewModel = viewModel
     }
+ 
     
     var backButton: some View {
         Button(action: {
@@ -370,9 +369,6 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         }
         .ignoresSafeArea(.keyboard)
         .navigationBarBackButtonHidden(true)
-        .onAppear {
-            appState.showTabbar = false
-        }
     }
     
     var alertButton: Alert.Button {
