@@ -79,12 +79,12 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                     .padding(EdgeInsets(top: 0, leading: 28, bottom: 8, trailing: 28))
                     
                     ZStack(alignment: .bottom) {
-                        TextView(text: $reportReason, placeHolder: .constant(""))
+                        TextView(text: $reportReason, placeHolder: .constant(""), maxCount: 200)
                             .frame(height: 280)
                         
                         HStack {
                             Spacer()
-                            Text("\(reportReason.count)자 / 500자")
+                            Text("\(reportReason.count)자 / 200자")
                                 .font(.custom("NanumSquareOTFL", size: 11))
                                 .foregroundColor(fontColor)
                         }

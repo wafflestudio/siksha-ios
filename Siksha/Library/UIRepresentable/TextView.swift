@@ -11,9 +11,10 @@ import SwiftUI
 struct TextView: UIViewRepresentable {
     @Binding var text: String
     @Binding var placeHolder: String
+    var maxCount: Int = 150
     
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        Coordinator(self, maxCount: self.maxCount)
     }
     
     func makeUIView(context: Context) -> UITextView {
@@ -43,9 +44,11 @@ struct TextView: UIViewRepresentable {
     
     class Coordinator : NSObject, UITextViewDelegate {
         var parent: TextView
+        let maxCount: Int
         
-        init(_ uiTextView: TextView) {
+        init(_ uiTextView: TextView, maxCount: Int) {
             self.parent = uiTextView
+            self.maxCount = maxCount
         }
         
         func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
@@ -68,7 +71,7 @@ struct TextView: UIViewRepresentable {
             let currentText = textView.text ?? ""
             guard let stringRange = Range(range, in: currentText) else { return false }
             let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
-            return updatedText.count <= 200
+            return updatedText.count <= self.maxCount
         }
     }
 }
