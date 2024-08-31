@@ -44,6 +44,9 @@ struct RenewalSettingsView: View {
                     .padding(.bottom, 15)
                 
             }
+            .onAppear {
+                appState.showTabbar = true
+            }
             .padding(.top, 24)
             .padding([.leading, .trailing], 20)
             .customNavigationBar(title: "icon")

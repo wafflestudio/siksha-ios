@@ -35,9 +35,6 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 viewModel.loadInfo()
                 appState.showTabbar = false
             }
-            .onDisappear{
-                appState.showTabbar = true
-            }
             .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
                 if shouldDismiss {
                     presentationMode.wrappedValue.dismiss()
