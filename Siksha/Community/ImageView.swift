@@ -19,7 +19,7 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType{
             Image("ImageReturn")
                 .resizable()
                 .frame(width: 12, height: 12)
-                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 16))
         }
         .contentShape(Rectangle())
     }
@@ -38,6 +38,7 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType{
                     }
                     HStack{
                         Text("\(imageIndex + 1)/\(viewModel.postInfo.imageURLs!.count)")
+                            .kerning(2.7)
                             .foregroundColor(.white)
                             .frame(alignment: .center)
                             .font(.custom("Inter-Bold", size: 16))
