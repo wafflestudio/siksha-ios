@@ -14,7 +14,17 @@ class UserManager: ObservableObject {
     static let shared = UserManager()
     
     @Published var nickname: String?
-    @Published var imageURL: String?
+    @Published var imageURL: String? {
+        didSet {
+            if let imageURL {
+                fetchImageData(from: imageURL) { [weak self] data in
+                    self?.imageData = data
+                }
+            } else {
+                imageData = nil
+            }
+        }
+    }
     @Published var imageData: Data?
     
     private var cancellables = Set<AnyCancellable>()
@@ -34,10 +44,6 @@ class UserManager: ObservableObject {
             }, receiveValue: { [weak self] user in
                 self?.nickname = user.nickname
                 self?.imageURL = user.profileUrl
-                guard let imageURL = user.profileUrl else { return }
-                self?.fetchImageData(from: imageURL) { [weak self] data in
-                    self?.imageData = data
-                }
             })
             .store(in: &cancellables)
     }
@@ -56,10 +62,6 @@ class UserManager: ObservableObject {
             } receiveValue: { [weak self] user in
                 self?.nickname = user.nickname
                 self?.imageURL = user.profileUrl
-                guard let imageURL = user.profileUrl else { return }
-                self?.fetchImageData(from: imageURL) { [weak self] data in
-                    self?.imageData = data
-                }
             }
             .store(in: &cancellables)
     }

@@ -273,7 +273,7 @@ enum SikshaAPI: URLRequestConvertible {
         case let .reportComment(commentId, _):
             return "/community/comments/\(commentId)/report"
         case .loadUserInfo:
-            return "/auth/me"
+            return "/auth/me/image"
         case .updateUserProfile:
             return "/auth/me/image/profile"
         case .deleteUser:
