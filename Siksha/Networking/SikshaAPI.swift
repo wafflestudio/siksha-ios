@@ -85,7 +85,7 @@ enum SikshaAPI: URLRequestConvertible {
     case reportComment(commentId:Int,reason:String)
     // User
     case loadUserInfo
-    case updateUserProfile(nickname: String?, image: Data?)
+    case updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool)
     case deleteUser
 
     static var baseURL = Config.shared.baseURL!
@@ -368,7 +368,7 @@ enum SikshaAPI: URLRequestConvertible {
                 data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }
             return data
-        case let .updateUserProfile(nickname, image):
+        case let .updateUserProfile(nickname, image, changeToDefaultImage):
             let data = MultipartFormData()
             if let nickname {
                 data.append("\(nickname)".data(using: .utf8)!, withName: "nickname", mimeType: "text/plain")
@@ -376,7 +376,12 @@ enum SikshaAPI: URLRequestConvertible {
             if let image {
                 data.append(image, withName: "image", fileName: "profileImage.jpeg", mimeType: "image/jpeg")
             }
-            return data            
+            if changeToDefaultImage {
+                data.append("true".data(using: .utf8)!, withName: "change_to_default_image", mimeType: "text/plain")
+            } else {
+                data.append("false".data(using: .utf8)!, withName: "change_to_default_image", mimeType: "text/plain")
+            }
+            return data
         case let .editPost(_, boardId, title, content, images,anonymous):
             let data = MultipartFormData()
             data.append("\(boardId)".data(using: .utf8)!, withName: "board_id", mimeType: "text/plain")

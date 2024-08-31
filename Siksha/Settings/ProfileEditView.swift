@@ -84,8 +84,9 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             Button(action: {
                 isShowingPhotoLibrary = true
             }) {
-                if let profileImage = viewModel.profileImage {
-                    Image(uiImage: profileImage)
+                if let profileImageData = viewModel.profileImageData,
+                let uiImage = UIImage(data: profileImageData) {
+                    Image(uiImage: uiImage)
                         .resizable()
                         .clipShape(Circle())
                         .frame(width: 171, height: 171)
@@ -97,7 +98,12 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }
             .frame(width: 171, height: 171)
             .sheet(isPresented: $isShowingPhotoLibrary) {
-                ImagePickerCoordinatorView(selectedImages: $viewModel.addedImages, maxSelection: 1)
+                ImagePickerCoordinatorView(selectedImages: .constant([]), maxSelection: 1) { images in
+                    if let firstImage = images.first,
+                       let imageData = firstImage.jpegData(compressionQuality: 0.8) {
+                        viewModel.setProfileImage(with: imageData)
+                    }
+                }
             }
             
             cameraButton

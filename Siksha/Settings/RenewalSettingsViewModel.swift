@@ -63,9 +63,9 @@ class RenewalSettingsViewModel: ObservableObject {
         noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide")
         
         getUserId()
-        
         getVersion()
         getAppStoreVersion()
+        loadInfo()
         
         $noMenuHide
             .sink { hide in

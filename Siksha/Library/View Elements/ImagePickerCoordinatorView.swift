@@ -13,6 +13,7 @@ struct ImagePickerCoordinatorView {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var selectedImages: [UIImage]
     var maxSelection: Int
+    var onImagesSelected: (([UIImage]) -> Void)?
     
     private func dismiss() {
         self.presentationMode.wrappedValue.dismiss()
@@ -68,6 +69,7 @@ extension ImagePickerCoordinatorView {
             //            parent.selectedImages = getAssetThumbnail(assets: assets)
             let newImages = getAssetThumbnail(assets: assets)
             parent.selectedImages.append(contentsOf: newImages)
+            parent.onImagesSelected?(newImages)
             parent.dismiss()
         }
         
@@ -85,13 +87,15 @@ extension ImagePickerCoordinatorView {
             for asset in assets {
                 let manager = PHImageManager.default()
                 let option = PHImageRequestOptions()
-                var image = UIImage()
+                var image: UIImage?
                 option.isSynchronous = true
                 manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
-                    image = result!
+                    image = result
                 })
-                image = image.resizeWithWidth(width: 800)!
-                images.append(image)
+                image = image?.resizeWithWidth(width: 800)
+                if let image {
+                    images.append(image)
+                }
             }
             return images
         }

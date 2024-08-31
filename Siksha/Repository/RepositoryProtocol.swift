@@ -36,7 +36,7 @@ protocol CommunityRepositoryProtocol {
 
 protocol UserRepositoryProtocol {
     func loadUserInfo() -> AnyPublisher<User, Error>
-    func updateUserProfile(nickname: String?, image: Data?) -> AnyPublisher<User, Error>
-    func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, any Error> 
+    func updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool) -> AnyPublisher<User, Error>
+    func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, any Error>
     func deleteUser() -> AnyPublisher<Void, Error>
 }

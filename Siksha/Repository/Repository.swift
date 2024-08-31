@@ -128,8 +128,8 @@ extension Repository: UserRepositoryProtocol {
         return self.networkModule.requestWithNoContent(endpoint: endpoint)
     }
     
-    func updateUserProfile(nickname: String?, image: Data?) -> AnyPublisher<User, any Error> {
-        let endpoint = SikshaAPI.updateUserProfile(nickname: nickname, image: image)
+    func updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool) -> AnyPublisher<User, any Error> {
+        let endpoint = SikshaAPI.updateUserProfile(nickname: nickname, image: image, changeToDefaultImage: changeToDefaultImage)
         return self.networkModule.request(endpoint: endpoint)
     }
 }

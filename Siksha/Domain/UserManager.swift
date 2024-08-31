@@ -15,6 +15,7 @@ class UserManager: ObservableObject {
     
     @Published var nickname: String?
     @Published var imageURL: String?
+    @Published var imageData: Data?
     
     private var cancellables = Set<AnyCancellable>()
     private let userRepository: UserRepositoryProtocol
@@ -37,8 +38,9 @@ class UserManager: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func updateUserProfile(nickname: String?, image: Data?, completion: @escaping (Bool, Error?) -> Void) {
-        userRepository.updateUserProfile(nickname: nickname, image: image)
+    func updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool, completion: @escaping (Bool, Error?) -> Void) {
+        let nickname = self.nickname == nickname ? nil : nickname
+        userRepository.updateUserProfile(nickname: nickname, image: image, changeToDefaultImage: changeToDefaultImage)
             .receive(on: DispatchQueue.main)
             .sink { completionStatus in
                 switch completionStatus {
@@ -50,6 +52,10 @@ class UserManager: ObservableObject {
             } receiveValue: { [weak self] user in
                 self?.nickname = user.nickname
                 self?.imageURL = user.image
+                guard let imageURL = user.image else { return }
+                self?.fetchImageData(from: imageURL) { [weak self] data in
+                    self?.imageData = data
+                }
             }
             .store(in: &cancellables)
     }
@@ -65,6 +71,12 @@ class UserManager: ObservableObject {
             }
         }
         .eraseToAnyPublisher()
+    }
+    
+    private func fetchImageData(from urlString: String, completion: @escaping (Data?) -> Void) {
+        AF.request(urlString).responseData { response in
+            completion(response.data)
+        }
     }
 
 }
