@@ -55,7 +55,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         .background(Color("LightFontColor"))
                         .foregroundColor(.white)
                         .cornerRadius(10)
-                        .font(.custom("NanumSquareOTFRegular", size: 10))
+                        .font(.custom("NanumSquareOTFR", size: 10))
                         .offset(x: -15,y: 15)
                         .zIndex(1)
                     
@@ -119,9 +119,9 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             
             VStack(alignment: .leading){
                 Text(viewModel.postInfo.isAnonymous ? "익명" : "\(viewModel.postInfo.nickname ?? "")")
-                    .font(Font.custom("NanumSquareOTFBold", size: 11))
+                    .font(Font.custom("NanumSquareOTFB", size: 11))
                 Text(relativeDate)
-                    .font(Font.custom("NanumSquareOTFRegular", size: 10))
+                    .font(Font.custom("NanumSquareOTFR", size: 10))
                     .foregroundColor(Color("ReviewLowColor"))
             }
             Spacer()
@@ -170,7 +170,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 Spacer()
                     .frame(width: 5)
                 Text("공감")
-                    .font(.custom("NanumSquareOTFBold", size: 10))
+                    .font(.custom("NanumSquareOTFB", size: 10))
                     .foregroundColor(Color("MainThemeColor"))
             }
             .padding(EdgeInsets(top: 6.5, leading: 8.25, bottom: 6.5, trailing: 8.25))
@@ -507,11 +507,11 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         VStack(alignment: .leading) {
                             
                             Text(viewModel.postInfo.title)
-                                .font(.custom("NanumSquareOTFExtraBold", size: 16))
+                                .font(.custom("NanumSquareOTFEB", size: 16))
                             Spacer()
                                 .frame(height:12)
                             Text(viewModel.postInfo.content)
-                                .font(.custom("NanumSquareOTFRegular", size: 12))
+                                .font(.custom("NanumSquareOTFR", size: 12))
                             Spacer()
                                 .frame(height:19)
                             imageSection

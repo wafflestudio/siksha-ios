@@ -38,7 +38,7 @@ struct CommunityReplyBar: View {
                             Text("올리기")
                                 .padding(EdgeInsets(top: 6.5, leading: 11, bottom: 6.5, trailing: 11))
                                 .background(Color("main"))
-                                .font(.custom("NanumSquareOTFBold", size: 12))
+                                .font(.custom("NanumSquareOTFB", size: 12))
                                 .foregroundColor(.white)
                                 .cornerRadius(6)
                         }
