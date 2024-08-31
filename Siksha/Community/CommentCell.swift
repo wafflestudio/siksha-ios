@@ -77,7 +77,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                 
                 Image("etc")
                     .frame(width:16,height:2.29)
-                    .padding(EdgeInsets(top: 10.36, leading: 2.25, bottom: 10.36, trailing: 0))
+                    .padding(EdgeInsets(top: 15, leading: 2.25, bottom: 15, trailing: 0))
                     .onTapGesture {
                         onMenuPressed()
                     }

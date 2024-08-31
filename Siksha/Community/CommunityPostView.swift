@@ -155,6 +155,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
              }*/
             Image("etc")
                 .frame(width:13,height:13)
+                .padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 0))
                 .onTapGesture {
                     showCommentId = -1
                     showPostMenu = true
