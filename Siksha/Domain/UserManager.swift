@@ -33,7 +33,11 @@ class UserManager: ObservableObject {
                 }
             }, receiveValue: { [weak self] user in
                 self?.nickname = user.nickname
-                self?.imageURL = user.image
+                self?.imageURL = user.profileUrl
+                guard let imageURL = user.profileUrl else { return }
+                self?.fetchImageData(from: imageURL) { [weak self] data in
+                    self?.imageData = data
+                }
             })
             .store(in: &cancellables)
     }
@@ -51,8 +55,8 @@ class UserManager: ObservableObject {
                 }
             } receiveValue: { [weak self] user in
                 self?.nickname = user.nickname
-                self?.imageURL = user.image
-                guard let imageURL = user.image else { return }
+                self?.imageURL = user.profileUrl
+                guard let imageURL = user.profileUrl else { return }
                 self?.fetchImageData(from: imageURL) { [weak self] data in
                     self?.imageData = data
                 }

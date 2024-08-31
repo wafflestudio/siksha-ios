@@ -57,19 +57,20 @@ struct RenewalSettingsView: View {
     var profileState: some View {
         NavigationLink(destination: ProfileEditView(viewModel: ProfileEditViewModel())) {
             HStack {
-                if (userModel.imageURL != nil){
-                    ThumbnailImage(userModel.imageURL!)
-                        .frame(width: 48, height: 48)
+                if let profileImageData = userModel.imageData,
+                let uiImage = UIImage(data: profileImageData) {
+                    Image(uiImage: uiImage)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
                         .clipShape(Circle())
+                        .frame(width: 48, height: 48)
                         .padding(EdgeInsets(top: 13, leading: 12, bottom: 13, trailing: 6))
-                } else{
+                } else {
                     Image("LogoEllipse")
                         .resizable()
                         .frame(width: 48, height: 48)
                         .padding(EdgeInsets(top: 13, leading: 12, bottom: 13, trailing: 6))
                 }
-                
-                
                 
                 Text(userModel.nickname ?? "무명의 미식가")
                     .font(.custom("NanumSquareOTFB", size: 16))

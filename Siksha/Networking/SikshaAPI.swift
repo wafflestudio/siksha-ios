@@ -275,7 +275,7 @@ enum SikshaAPI: URLRequestConvertible {
         case .loadUserInfo:
             return "/auth/me"
         case .updateUserProfile:
-            return "/auth/me/profile"
+            return "/auth/me/image/profile"
         case .deleteUser:
             return "/auth"
         }
