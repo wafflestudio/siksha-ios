@@ -109,6 +109,8 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                                 if success {
                                     alertTitle = "신고"
                                     alertMessage = "신고되었습니다."
+                                    isReportSuccessful = true
+
                                 } else {
                                     alertTitle = "신고"
                                     alertMessage = errorMessage ?? "신고에 실패했습니다."
