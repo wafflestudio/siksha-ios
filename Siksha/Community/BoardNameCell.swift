@@ -23,7 +23,7 @@ struct BoardNameCell: View{
             .padding(EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 12))
             .background(isSelected ? selectedBackgroundColor : unSelectedBackgroundColor)
             .foregroundColor(isSelected ? selectedFontColor : unSelectedFontColor)
-            .cornerRadius(16)
+            .cornerRadius(12)
     }
     
 }
