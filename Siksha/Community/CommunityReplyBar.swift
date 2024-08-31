@@ -102,13 +102,14 @@ struct CommunityReplyBar: View {
                             .frame(width: 10, height: 10)
                     }
                 }
-                .onTapGesture {
-                    configuration.isOn.toggle()
-                }
                 
-                Text("익명")
-                    .font(.custom("Inter-Regular", size: 14))
+                configuration.label
                     .foregroundColor(configuration.isOn ? Color("MainThemeColor") : Color(hex:0x575757))
+            }
+            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+            .contentShape(Rectangle())
+            .onTapGesture {
+                configuration.isOn.toggle()
             }
         }
     }

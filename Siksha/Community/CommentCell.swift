@@ -86,28 +86,30 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                 
             }
             Spacer()
-            VStack(spacing:0){
-                Spacer()
-                    .frame(height:10)
-                VStack(spacing:8){
-                    Button(action: {
-                        viewModel.toggleCommentLike(id: comment.id)
-                    }) {
+            
+            Button(action: {
+                viewModel.toggleCommentLike(id: comment.id)
+            }) {
+                VStack(spacing: 0) {
+                    Spacer()
+                        .frame(height: 10)
+                    VStack(spacing: 8) {
                         Image(comment.isLiked ? "PostLike-liked" : "PostLike-default")
                             .frame(width: 11.5, height: 11)
                             .padding(.init(top: 0, leading: 0, bottom: 4, trailing: 0))
+                        Text("\(comment.likeCnt)")
+                            .font(.custom("Inter-Regular", size: 8))
+                            .foregroundColor(.init("MainThemeColor"))
                     }
-                    Text("\(comment.likeCnt)")
-                        .font(.custom("Inter-Regular", size: 8))
-                        .foregroundColor(.init("MainThemeColor"))
+                    .padding(EdgeInsets(top: 12.5, leading: 11, bottom: 12.5, trailing: 11))
+                    .background(Color("CommentLikeBackgroundColor"))
+                    .cornerRadius(6)
+                    Spacer()
+                        .frame(height: 10)
                 }
-                .padding(EdgeInsets(top: 12.5, leading: 11, bottom: 12.5, trailing: 11))
-                .background(Color("CommentLikeBackgroundColor"))
-                .cornerRadius(6)
-                Spacer()
-                    .frame(height:10)
             }
-            
+            .buttonStyle(PlainButtonStyle())
+
             
         }
             else{
