@@ -22,6 +22,7 @@ struct PostInfo: Identifiable, Equatable {
     let imageURLs: [String]?
     let isAnonymous: Bool
     let isMine: Bool
+    let isAvailable: Bool
     
     init(post: Post) {
         self.boardId = post.boardId
@@ -37,6 +38,7 @@ struct PostInfo: Identifiable, Equatable {
         self.imageURLs = post.images
         self.isAnonymous = post.anonymous
         self.isMine = post.isMine
+        self.isAvailable = post.available
     }
     
     init(title: String, content: String, isLiked: Bool, likeCount: Int, commentCount: Int, imageURLs: [String]?,isAnonymous:Bool,isMine:Bool) {
@@ -54,7 +56,7 @@ struct PostInfo: Identifiable, Equatable {
         self.profileUrl = nil
         self.isAnonymous = isAnonymous
         self.isMine = isMine
-        
+        self.isAvailable = true
     }
 }
 
