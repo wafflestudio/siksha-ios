@@ -41,7 +41,9 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             Image("NavigationBack")
                 .resizable()
                 .frame(width: 7, height: 15)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
         }
+        .contentShape(Rectangle())
     }
     
     var imageSection: some View {
@@ -515,7 +517,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         .ignoresSafeArea(.all)
                     HStack{
                         backButton
-                            .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
                         Spacer()
                     }.padding(.zero)
                     HStack{

@@ -19,8 +19,11 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType{
             Image("ImageReturn")
                 .resizable()
                 .frame(width: 12, height: 12)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
         }
+        .contentShape(Rectangle())
     }
+    
     @ObservedObject var viewModel: ViewModel
     @State var imageIndex: Int
     var body: some View {

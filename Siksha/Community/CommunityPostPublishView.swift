@@ -32,8 +32,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             Image(systemName: "xmark")
                 .resizable()
                 .foregroundColor(Color.white)
-                .frame(width: 10, height: 10)
+                .frame(width: 12, height: 12)
+                .padding(.vertical, 15)
+                .padding(.trailing, 15)
         }
+        .contentShape(Rectangle())
     }
     
     var postAndEditButton: some View {

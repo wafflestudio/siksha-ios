@@ -23,8 +23,11 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
             Image("NavigationBack")
                 .resizable()
                 .frame(width: 7, height: 15)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
         }
+        .contentShape(Rectangle())
     }
+
     init(_ settingsViewModel: RenewalSettingsViewModel,_ communityPostViewModel:CommunityPostViewModel) {
         self.settingsViewModel = settingsViewModel
         self.communityPostViewModel = communityPostViewModel
@@ -43,7 +46,6 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                             .ignoresSafeArea(.all)
                         HStack{
                             backButton
-                                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
                             Spacer()
                         }.padding(.zero)
                         HStack{
