@@ -597,19 +597,19 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     self.endTextEditing()
                 }
             }
-            .padding(.bottom, 60)
+            .padding(.bottom, 20)
             
             ZStack {
                 Rectangle()
                     .frame(maxWidth: .infinity)
-                    .frame(height: 95)
+                    .frame(height: 50)
                     .foregroundColor(.white)
 
                 CommunityReplyBar(onCommentSubmit: { commentText, isAnonymous in
                     viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText, isAnonymous: isAnonymous)
                 })
-                .padding(.bottom, 40)
             }
+            .ignoresSafeArea(edges: .bottom)
 
 
             if(showPostMenu){
@@ -650,7 +650,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             }
                 
             }
-            .ignoresSafeArea(edges: .bottom)
             .customNavigationBar(title: viewModel.boardNamePublisher)
                 .navigationBarItems(leading: backButton)
                 .onAppear {
