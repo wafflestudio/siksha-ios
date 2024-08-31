@@ -66,7 +66,7 @@ extension ImagePickerCoordinatorView {
         
         public func imagePicker(_ imagePicker: ImagePickerController, didFinishWithAssets assets: [PHAsset]) {
             print("Finished with selections: \(assets)")
-            //            parent.selectedImages = getAssetThumbnail(assets: assets)
+            
             let newImages = getAssetThumbnail(assets: assets)
             parent.selectedImages.append(contentsOf: newImages)
             parent.onImagesSelected?(newImages)

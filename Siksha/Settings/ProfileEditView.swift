@@ -12,6 +12,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     
     @StateObject  var viewModel:ViewModel
     @StateObject private var keyboardResponder = KeyboardResponder()
+    @State private var isShowingActionSheet = false
     @State private var isShowingPhotoLibrary = false
     
     var body: some View {
@@ -80,57 +81,64 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     }
     
     var profileImage: some View {
-        ZStack(alignment: .topTrailing) {
-            Button(action: {
-                isShowingPhotoLibrary = true
-            }) {
+        Button(action: {
+            isShowingActionSheet = true
+        }) {
+            ZStack(alignment: .topTrailing) {
                 if let profileImageData = viewModel.profileImageData,
                 let uiImage = UIImage(data: profileImageData) {
                     Image(uiImage: uiImage)
                         .resizable()
+                        .aspectRatio(contentMode: .fill)
                         .clipShape(Circle())
                         .frame(width: 171, height: 171)
                 } else {
-                    Color("DefaultImageColor")
-                        .frame(width: 171, height: 171)
+                    Image("LogoEllipse")
+                        .resizable()
                         .clipShape(Circle())
+                        .frame(width: 171, height: 171)
+                }
+                
+                cameraImage
+                    .offset(x: -2.5, y: 2.5)
+            }
+        }
+        .actionSheet(isPresented: $isShowingActionSheet) {
+            ActionSheet(title: Text("프로필 사진 설정"), buttons: [
+                .default(Text("앨범에서 사진 선택"), action: {
+                    isShowingPhotoLibrary = true
+                }),
+                .default(Text("기본 이미지 적용"), action: {
+                    viewModel.setProfileImage(with: nil)
+                }),
+                .cancel(Text("취소"))
+            ])
+        }
+        .sheet(isPresented: $isShowingPhotoLibrary) {
+            ImagePickerCoordinatorView(selectedImages: .constant([]), maxSelection: 1) { images in
+                if let firstImage = images.first,
+                   let imageData = firstImage.jpegData(compressionQuality: 0.8) {
+                    viewModel.setProfileImage(with: imageData)
                 }
             }
-            .frame(width: 171, height: 171)
-            .sheet(isPresented: $isShowingPhotoLibrary) {
-                ImagePickerCoordinatorView(selectedImages: .constant([]), maxSelection: 1) { images in
-                    if let firstImage = images.first,
-                       let imageData = firstImage.jpegData(compressionQuality: 0.8) {
-                        viewModel.setProfileImage(with: imageData)
-                    }
-                }
-            }
-            
-            cameraButton
-                .offset(x: -2.5, y: 2.5)
         }
         
     }
     
-    var cameraButton: some View {
-        Button(action: {
-            print("clicked")
-        }) {
-            ZStack {
-                Circle()
-                    .frame(width: 41.61, height: 41.61)
-                    .foregroundColor(.white)
-                    .overlay(
-                        Circle()
-                        .stroke(Color("TextFieldBorderColor"), lineWidth: 1)
-                    )
-                
-                Image("Camera")
-                    .frame(width: 22.5, height: 18)
-                    .foregroundColor(Color("LightGrayColor"))
-            }
+    var cameraImage: some View {
+        ZStack {
+            Circle()
+                .frame(width: 41.61, height: 41.61)
+                .foregroundColor(.white)
+                .overlay(
+                    Circle()
+                    .stroke(Color("TextFieldBorderColor"), lineWidth: 1)
+                )
+            
+            Image("Camera")
+                .frame(width: 22.5, height: 18)
+                .foregroundColor(Color("LightGrayColor"))
         }
-        .frame(width: 41.61, height: 41.61)
     }
     
     var doneButton: some View {

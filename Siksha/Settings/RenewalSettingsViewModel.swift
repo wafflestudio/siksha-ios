@@ -40,6 +40,10 @@ class RenewalSettingsViewModel: ObservableObject {
         self.version = version
     }
     
+    func loadInfo() {
+        UserManager.shared.loadUserInfo()
+    }
+    
     func getAppStoreVersion() {
         guard let url = URL(string: "http://itunes.apple.com/lookup?id=1032700617"),
             let data = try? Data(contentsOf: url),

@@ -19,7 +19,7 @@ protocol ProfileEditViewModelType: ObservableObject {
     func resetNickname()
     func setPreviousNickname()
     func updateUserProfile()
-    func setProfileImage(with imageData: Data)
+    func setProfileImage(with imageData: Data?)
 }
 
 final class ProfileEditViewModel: ProfileEditViewModelType {
@@ -61,7 +61,7 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
         previousNickname = nickname
     }
     
-    func setProfileImage(with imageData: Data) {
+    func setProfileImage(with imageData: Data?) {
         self.profileImageData = imageData
         self.isProfileImageChanged = true
     }
