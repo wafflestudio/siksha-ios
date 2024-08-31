@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @EnvironmentObject var appState: AppState
     
     @StateObject  var viewModel:ViewModel
     @StateObject private var keyboardResponder = KeyboardResponder()
@@ -32,6 +33,10 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }
             .onAppear {
                 viewModel.loadInfo()
+                appState.showTabbar = false
+            }
+            .onDisappear{
+                appState.showTabbar = true
             }
             .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
                 if shouldDismiss {
