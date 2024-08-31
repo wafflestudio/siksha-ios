@@ -589,10 +589,10 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         
                         Spacer()
                     }
+                    .edgesIgnoringSafeArea(.top)
                 }
                 .onTapGesture {
-                    
-                    //  self.endTextEditing()
+                    self.endTextEditing()
                 }
             }
                 CommunityReplyBar(onCommentSubmit: { commentText,isAnonymous in
