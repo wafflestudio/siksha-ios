@@ -96,6 +96,7 @@ protocol CommunityViewModelType: ObservableObject {
     func loadMorePosts()
     func getSelectedBoardName() -> String
     func loadSelectedBoardPosts()
+    func loadTrendingPosts()
 }
 
 final class CommunityViewModel: CommunityViewModelType {
@@ -167,7 +168,7 @@ extension CommunityViewModel {
             .store(in: &cancellables)
     }
     
-    private func loadTrendingPosts() {
+     func loadTrendingPosts() {
         self.communityRepository.loadTrendingPosts(likes:Constants.trendingLikes, created_before: Constants.trendingCreatedBefore)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { error in

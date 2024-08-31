@@ -77,12 +77,13 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
         .onChange(of: needRefresh, perform: { refresh in
             if refresh{
                 self.viewModel.loadSelectedBoardPosts()
-                self.viewModel.loadBasicInfos()
+                self.viewModel.loadTrendingPosts()
                 needRefresh = false
             }
         })
         .fullScreenCover(isPresented: $showPost, onDismiss: {clickedPost = 0
-            viewModel.loadBasicInfos()}, content: {
+            self.viewModel.loadSelectedBoardPosts()
+            self.viewModel.loadTrendingPosts()}, content: {
             CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: clickedPost), needPostViewRefresh:$needRefresh)
         })
         .onChange(of: clickedPost, perform: {
@@ -233,6 +234,10 @@ struct ComunityView_Previews: PreviewProvider {
 }
 
 class StubCommunityViewModel: CommunityViewModelType {
+    func loadTrendingPosts() {
+        
+    }
+    
     var trendingPostsListPublisher: [PostInfo] = []
     
     var hasNextPublisher: Bool {
