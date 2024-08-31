@@ -110,12 +110,13 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     var postList: some View {
         LazyVStack(spacing: 0) {
             ForEach(self.viewModel.postsListPublisher) { postInfo in
-                CommunityPostPreView(info: postInfo, boardName: viewModel.getSelectedBoardName(), needRefresh: $needRefresh)
-                    .onTapGesture {
-                        clickedPost = postInfo.id
-                        print("POSTINFO ID: \(clickedPost)")
-                       
-                    }
+                Button(action:{
+                    clickedPost = postInfo.id
+
+                }){
+                    CommunityPostPreView(info: postInfo, boardName: viewModel.getSelectedBoardName(), needRefresh: $needRefresh)
+                     
+                }
                 divider
             }
             
