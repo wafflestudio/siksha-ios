@@ -122,7 +122,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
     }
    
     
-        .padding(EdgeInsets(top: 9.95, leading: 10, bottom: 0, trailing: 18.67))
+        .padding(EdgeInsets(top: 9.95, leading: 22, bottom: 0, trailing: 18.67))
         .fullScreenCover(isPresented: $showingEditView) {
             EditCommentView(isPresented: $showingEditView, editedContent: comment.content, onSave: { newContent in
                 viewModel.editComment(commentId: comment.id, content: newContent)
