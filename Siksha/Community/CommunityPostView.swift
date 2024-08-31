@@ -66,7 +66,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                         .resizable()
                                         .aspectRatio(contentMode: .fit)
                                 } placeholder: {
-                                    Color.gray
+                                    Color.white
                                 }
                                 .frame(width: UIScreen.main.bounds.width * 0.9)
                                 .tag(index)
