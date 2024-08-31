@@ -93,7 +93,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                         .clipShape(Circle())
                         .frame(width: 171, height: 171)
                 } else {
-                    Image("LogoEllipse")
+                    Image("BigLogoEllipse")
                         .resizable()
                         .clipShape(Circle())
                         .frame(width: 171, height: 171)
