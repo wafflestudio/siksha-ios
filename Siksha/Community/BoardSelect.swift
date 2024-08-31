@@ -27,7 +27,7 @@ struct BoardSelect<ViewModel>: View where ViewModel: CommunityViewModelType{
                 }
             }
         }
-        .padding(EdgeInsets(top: 23, leading: 28, bottom: 18, trailing: 28))
+        .padding(EdgeInsets(top: 23, leading: 20, bottom: 18, trailing: 28))
     }
 }
 

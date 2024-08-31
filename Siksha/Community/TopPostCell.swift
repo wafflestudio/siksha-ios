@@ -26,7 +26,7 @@ struct TopPostCell:View{
                     .highPriorityGesture(DragGesture())
                 
                 Text("\(post.likeCount)").foregroundColor(Color.init(red:1,green:149/255,blue:34/255))
-                    .font(.custom("NanumSquareOTFR",size:8))
+                    .font(.custom("NanumSquareOTFRegular",size:10))
                     .highPriorityGesture(DragGesture())
             }
             

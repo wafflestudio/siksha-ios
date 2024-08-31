@@ -38,7 +38,10 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
             ZStack(alignment: .bottomTrailing) {
                 VStack(spacing:0){
                     BoardSelect(viewModel: viewModel)
-                    divider
+                    Divider()
+                        .foregroundColor(dividerColor)
+                        .frame(height:1)
+                        .padding(.zero)
                     TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh, clickedPost: $clickedPost).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
                     
                     ScrollView{
@@ -51,8 +54,8 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 Button {
                     self.tag = 1
                 } label: {
-                    Image("writeButton")
-                        .frame(width:44, height:44)
+                    Image("CircleWriteButton")
+                        .frame(width:50, height:50)
                         .background(Color.init("MainThemeColor"))
                         .clipShape(Circle())
                 }
@@ -185,7 +188,7 @@ struct CommunityPostPreView: View {
                             Spacer()
                                 .frame(width: 4)
                             Text(String(info.likeCount))
-                                .font(.custom("NanumSquareOTFR", size: 9))
+                                .font(.custom("NanumSquareOTFRegular", size: 10))
                             
                                 .foregroundColor(likeColor)
                         }
@@ -195,7 +198,7 @@ struct CommunityPostPreView: View {
                             Spacer()
                                 .frame(width: 4)
                             Text(String(info.commentCount))
-                                .font(.custom("NanumSquareOTFR", size: 9))
+                                .font(.custom("NanumSquareOTFRegular", size: 10))
                                 .foregroundColor(Color.init("ReviewMediumColor"))
                                 .frame(height: 11, alignment: .center)
                             
