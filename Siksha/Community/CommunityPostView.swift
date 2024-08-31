@@ -95,34 +95,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             }
         }
     }
-    
-    var anonymousButton: some View {
-        Button(action: {
-            anonymousIsToggled.toggle()
-            print(anonymousIsToggled)
-        }) {
-            if anonymousIsToggled {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 15.0)
-                        .fill(Color("MainThemeColor"))
-                        .frame(width: 34, height: 25)
-                    Text("익명")
-                        .font(.custom("Inter-SemiBold", size: 12))
-                        .foregroundColor(Color.white)
-                }
-            } else {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 15.0)
-                        .stroke(Color("MainThemeColor"))
-                        .frame(width: 34, height: 25)
-                    Text("익명")
-                        .font(.custom("Inter-SemiBold", size: 12))
-                        .foregroundColor(Color("MainThemeColor"))
-                }
-            }
-        }
-    }
-    
+        
     var relativeDate: String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
