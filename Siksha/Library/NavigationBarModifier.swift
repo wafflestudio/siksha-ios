@@ -28,7 +28,7 @@ struct NavigationBarModifier: ViewModifier {
                     } else {
                         Text(title)
                             .foregroundColor(.white)
-                            .font(.custom("NanumSquareOTFEB", size: 20))
+                            .font(.custom("NanumSquareOTFEB", size: 16))
                     }
                 }
             }
