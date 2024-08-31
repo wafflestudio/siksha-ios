@@ -528,7 +528,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                     Spacer()
                                         .frame(width: 4)
                                     Text(String(viewModel.postInfo.likeCount))
-                                        .font(.custom("Inter-Regular", size: 9))
+                                        .font(.custom("Inter-Regular", size: 10))
                                         .foregroundColor(Color("MainThemeColor"))
                                 }
                                 
@@ -538,7 +538,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                     Spacer()
                                         .frame(width: 4)
                                     Text(String(viewModel.postInfo.commentCount))
-                                        .font(.custom("Inter-Regular", size: 9))
+                                        .font(.custom("Inter-Regular", size: 10))
                                         .foregroundColor(Color.init("ReviewMediumColor"))
                                         .frame(height: 11, alignment: .center)
                                 }
