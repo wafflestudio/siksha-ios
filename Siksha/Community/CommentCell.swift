@@ -40,6 +40,8 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
     
     var body:some View{
         HStack{
+
+        if(comment.available){
             VStack(alignment:.leading,spacing:0){
                 HStack{
                     if let profileUrl = comment.profileUrl {
@@ -79,7 +81,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                     .onTapGesture {
                         onMenuPressed()
                     }
-            
+                
                 
                 
             }
@@ -105,10 +107,20 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                 Spacer()
                     .frame(height:10)
             }
-           
-
+            
+            
         }
-        
+            else{
+                Text("신고된 댓글입니다.")
+                    .font(.custom("NanumSquareOTFRegular", size: 12))
+                    .foregroundColor(Color(hex: 0xB7B7B7))
+                    .frame(maxWidth: .infinity,alignment:.leading)
+                    .padding(EdgeInsets(top: 17.55
+                                        , leading: 0, bottom: 27.5
+, trailing: 0))
+            }
+    }
+   
     
         .padding(EdgeInsets(top: 9.95, leading: 10, bottom: 0, trailing: 18.67))
         .fullScreenCover(isPresented: $showingEditView) {

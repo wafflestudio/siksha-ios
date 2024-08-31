@@ -320,7 +320,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
           
             
         }
-        .frame(height: 298.83) // Adjust height as needed
+      //  .frame(height: 298.83) // Adjust height as needed
         .padding(EdgeInsets(top: 0, leading: 15.5, bottom: 0, trailing: 16.5))
     }
     var postMenu: some View{
