@@ -166,18 +166,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         Button(action: {
             viewModel.togglePostLike()
         }) {
-            HStack{
-                Image(viewModel.postInfo.isLiked ? "PostLike-liked" : "PostLike-default")
-                    .frame(width:11.5,height: 11)
-                Spacer()
-                    .frame(width: 5)
-                Text("공감")
-                    .font(.custom("NanumSquareOTFB", size: 10))
-                    .foregroundColor(Color("MainThemeColor"))
-            }
-            .padding(EdgeInsets(top: 6.5, leading: 8.25, bottom: 6.5, trailing: 8.25))
-            .cornerRadius(6)
-            .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color("MainThemeColor"),lineWidth: 1))
+                Image(viewModel.postInfo.isLiked ? "LikeButton-liked" : "LikeButton-default")
+          
         }
     }
     var commentList: some View {
@@ -550,7 +540,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                 
                                 
                                 
-                            }
+                            }.padding(EdgeInsets(top: 0, leading: 1.5, bottom: 0, trailing: 0))
                             Spacer()
                                 .frame(height:14)
                             likeButton
