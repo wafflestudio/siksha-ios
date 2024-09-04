@@ -1086,7 +1086,7 @@
 				BUNDLE_NAME = "식샤-Debug";
 				CODE_SIGN_ENTITLEMENTS = Siksha/Siksha.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.1;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = ###;
@@ -1097,7 +1097,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1.1;
+				MARKETING_VERSION = 3.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ###dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -1114,7 +1114,7 @@
 				BUNDLE_NAME = "식샤";
 				CODE_SIGN_ENTITLEMENTS = Siksha/Siksha.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.1.1;
+				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = ###;
@@ -1125,7 +1125,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.1.1;
+				MARKETING_VERSION = 3.1.2;
 				PRODUCT_BUNDLE_IDENTIFIER = ###;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
