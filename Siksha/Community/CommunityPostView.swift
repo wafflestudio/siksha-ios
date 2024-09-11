@@ -29,10 +29,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var showCommentDeleteAlert = false
     @Binding var needPostViewRefresh:Bool
     
-    @State private var reportAlertIsShown = false
-    @State private var reportCompleteAlertIsShown = false
-    @State private var alertTitle: String = ""
-    @State private var alertMessage: String = ""
     var backButton: some View {
         Button(action: {
             needPostViewRefresh = true
@@ -173,7 +169,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     var commentList: some View {
         LazyVStack(spacing:0){
             ForEach(viewModel.commentsListPublisher) { comment in
-                CommentCell(comment: comment, viewModel: viewModel, reportCompleteAlertIsShown: $reportCompleteAlertIsShown, alertTitle: $alertTitle, alertMessage: $alertMessage,onMenuPressed: {
+                CommentCell(comment: comment, viewModel: viewModel,onMenuPressed: {
                     showCommentId = comment.id
                     print("showCommentID:\(showCommentId)")
                     commentContent = comment.content
@@ -621,22 +617,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 .onAppear {
                  //   viewModel.loadBasicInfos()
                 }
-                .textFieldAlert(isPresented: $reportAlertIsShown, title: "신고 사유", action: { reason in
-                    viewModel.reportPost(reason: reason ?? "") { success, errorMessage in
-                        if success {
-                            alertTitle = "신고"
-                            alertMessage = "신고되었습니다."
-                        } else {
-                            alertTitle = "신고"
-                            alertMessage = errorMessage ?? "신고에 실패했습니다."
-                        }
-                        reportAlertIsShown = false
-                        reportCompleteAlertIsShown = true
-                    }
-                })
-                .alert(isPresented: $reportCompleteAlertIsShown, content: {
-                    Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")))
-                })
+               
                 .fullScreenCover(isPresented: $isEditingPost){
                     CommunityPostPublishView(
                         needRefresh: self.$needRefresh, viewModel: CommunityPostPublishViewModel(
