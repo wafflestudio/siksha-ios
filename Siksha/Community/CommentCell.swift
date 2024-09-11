@@ -44,7 +44,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
         if(comment.available){
             VStack(alignment:.leading,spacing:0){
                 HStack{
-                    if let profileUrl = comment.profileUrl {
+                    if let profileUrl = comment.profileUrl,!comment.isAnonymous{
                         KFImage(URL(string:profileUrl))
                             .resizable()
                             .frame(width: 16,height:16)
