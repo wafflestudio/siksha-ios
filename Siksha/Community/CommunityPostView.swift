@@ -475,21 +475,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         
         ZStack(alignment:.bottomTrailing) {
             VStack(spacing: 0){
-                ZStack{
-                    Color("MainThemeColor")
-                        .ignoresSafeArea(.all)
-                    HStack{
-                        backButton
-                        Spacer()
-                    }.padding(.zero)
-                    HStack{
-                        Text(viewModel.boardNamePublisher)
-                            .foregroundColor(.white)
-                            .frame(alignment: .center)
-                            .font(.custom("Inter-Bold", size: 16))
-                    }.padding(.zero)
-                    
-                }.frame(height:44)
+                
                 ScrollView(.vertical, showsIndicators: false) {
                     VStack(spacing:0) {
                         postHeader
