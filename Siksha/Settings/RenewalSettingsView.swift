@@ -10,7 +10,6 @@ import UIKit
 
 struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
-    @EnvironmentObject var appState: AppState
     
     @ObservedObject var userModel = UserManager.shared
     @ObservedObject var viewModel: RenewalSettingsViewModel
@@ -25,7 +24,6 @@ struct RenewalSettingsView: View {
     private let borderColor = Color.init(white: 232/255)
     
     var body: some View {
-        NavigationView {
             VStack(alignment: .center, spacing: 0) {
                 profileState
                     .padding(.bottom, 20)
@@ -44,14 +42,12 @@ struct RenewalSettingsView: View {
                     .padding(.bottom, 15)
                 
             }
-            .onAppear {
-                appState.showTabbar = true
-            }
+         
             .padding(.top, 24)
             .padding([.leading, .trailing], 20)
-            .customNavigationBar(title: "icon")
-        }
-        .navigationBarHidden(true)
+        
+        .customNavigationBar(title: "icon")
+
         .sheet(isPresented: $viewModel.showVOC) {
             RenewalVOCView(viewModel)
         }

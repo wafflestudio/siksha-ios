@@ -101,10 +101,7 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .customNavigationBar(title: "내가 쓴 글")
                 .navigationBarItems(leading: backButton)
-            .onAppear {
-                print("onappear")
-                self.viewModel.loadPosts()
-            }
+           
             .onChange(of: needRefresh, perform: { refresh in
                 if refresh{
                     self.viewModel.loadPosts()
@@ -118,16 +115,12 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
             }
             .customNavigationBar(title: "내가 쓴 글")
                 .navigationBarItems(leading: backButton)
-            .onAppear {
-                print("onappear")
-                self.viewModel.loadPosts()
-            }
-            .onChange(of: needRefresh, perform: { refresh in
-                if refresh{
-                    self.viewModel.loadPosts()
-                    needRefresh = false
-                }
-            })
+                .onChange(of: needRefresh, perform: { refresh in
+                    if refresh{
+                        self.viewModel.loadPosts()
+                        needRefresh = false
+                    }
+                })
         }
     }
     

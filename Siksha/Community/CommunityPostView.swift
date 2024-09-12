@@ -10,7 +10,6 @@ import Kingfisher
 
 struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @EnvironmentObject var appState: AppState
     @ObservedObject var viewModel: ViewModel
     
     @State private var anonymousIsToggled = false
@@ -630,13 +629,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         showCommentId = -1
                     })
                 }
-                .onAppear{
-                    appState.showTabbar = false
-                    print("onAppear")
-                }
-                .onDisappear{
-                    appState.showTabbar = true
-                }
+                
                 .onChange(of: isEditingPost, perform: {
                     isEditingPost in
                     if(!isEditingPost){
