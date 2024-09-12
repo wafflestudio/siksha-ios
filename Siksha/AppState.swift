@@ -12,7 +12,6 @@ import RealmSwift
 import Combine
 
 public class AppState: ObservableObject {
-    @Published var showTabbar = true
     private var cancellables = Set<AnyCancellable>()
     
     init(){

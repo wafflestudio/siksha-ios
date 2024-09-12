@@ -33,6 +33,7 @@ final class MyPostViewModel: MyPostViewModelType {
     
     init(communityRepository: CommunityRepositoryProtocol) {
         self.communityRepository = communityRepository
+        loadPosts()
     }
 }
 

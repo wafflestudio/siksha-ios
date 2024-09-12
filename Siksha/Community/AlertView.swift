@@ -162,9 +162,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                 //        .navigationBarHidden(true)
                 
             }
-            .onAppear{
-                appState.showTabbar = false
-            }
+          
             
             
         }
