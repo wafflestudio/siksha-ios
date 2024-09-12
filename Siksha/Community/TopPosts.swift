@@ -12,7 +12,6 @@ struct TopPosts:View{
     var infos: [PostInfo]
     let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     let needRefresh:Binding<Bool>
-    @Binding var clickedPost:Int
     @State private var counter = 0
     @State private var select = 0
     var body:some View{
@@ -27,9 +26,7 @@ struct TopPosts:View{
                         .rotationEffect(.degrees(-90))
                         .rotation3DEffect(flippingAngle, axis: (x: 1, y: 0, z: 0))
                         .gesture(DragGesture())
-                        .onTapGesture {
-                            clickedPost = info.id
-                        }
+                     
                     
                 }
 

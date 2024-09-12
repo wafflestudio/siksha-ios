@@ -10,8 +10,6 @@ import SwiftUI
 struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     @State var tag: Int? = nil
     @State var needRefresh = false
-    @State var clickedPost = 0
-    @State var showPost = false
     let dividerColor = Color("DividerColor")
     
     let topPosts: [PostInfo] = (1..<5).map {
@@ -34,7 +32,6 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
 
     var body: some View {
         
-        NavigationView {
             ZStack(alignment: .bottomTrailing) {
                 VStack(spacing:0){
                     BoardSelect(viewModel: viewModel)
@@ -42,7 +39,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                         .foregroundColor(dividerColor)
                         .frame(height:1)
                         .padding(.zero)
-                    TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh, clickedPost: $clickedPost).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
+                    TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
                     
                     ScrollView{
                         divider
@@ -70,7 +67,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                                .disabled(selectedBoardId == nil
                                )
 
-            }
+            
             
         }
         .onAppear {
@@ -84,17 +81,8 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 needRefresh = false
             }
         })
-        .fullScreenCover(isPresented: $showPost, onDismiss: {clickedPost = 0
-            self.viewModel.loadSelectedBoardPosts()
-            self.viewModel.loadTrendingPosts()}, content: {
-            CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: clickedPost), needPostViewRefresh:$needRefresh)
-        })
-        .onChange(of: clickedPost, perform: {
-            clickedPost in
-            if(clickedPost != 0){
-                showPost = true
-            }
-        })
+        
+       
       
        
        
@@ -115,13 +103,10 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
         LazyVStack(spacing: 0) {
             ForEach(self.viewModel.postsListPublisher) { postInfo in
                 if postInfo.isAvailable {
-                    Button(action:{
-                        clickedPost = postInfo.id
-
-                    }){
+                 
                         CommunityPostPreView(info: postInfo, boardName: viewModel.getSelectedBoardName(), needRefresh: $needRefresh)
                          
-                    }
+                    
                     divider
                 }
             }
@@ -165,7 +150,8 @@ struct CommunityPostPreView: View {
     let boardName: String
     let needRefresh:Binding<Bool>
     var body: some View {
-      
+        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: info.id), needPostViewRefresh:needRefresh)) {
+            
             HStack {
                 VStack(alignment: .leading) {
                     Text(info.title)
@@ -208,25 +194,26 @@ struct CommunityPostPreView: View {
                 Spacer()
                 
                 if let firstImageURL = info.imageURLs?.first, let url = URL(string: firstImageURL) {
-                                    if #available(iOS 15.0, *) {
-                                        AsyncImage(url: url) { image in
-                                            image
-                                                .resizable()
-                                                .scaledToFill()
-                                        } placeholder: {
-                                            ProgressView()
-                                        }
-                                        .frame(width: 61, height: 61)
-                                        .clipped()
-                                    } else {
-                                        ThumbnailImage(firstImageURL)
-                                            .frame(width: 61, height: 61)
-                                    }
-                                }
-
+                    if #available(iOS 15.0, *) {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .scaledToFill()
+                        } placeholder: {
+                            ProgressView()
+                        }
+                        .frame(width: 61, height: 61)
+                        .clipped()
+                    } else {
+                        ThumbnailImage(firstImageURL)
+                            .frame(width: 61, height: 61)
+                    }
+                }
+                
             }
             .padding(EdgeInsets(top: 15, leading: 20, bottom: 14, trailing: 20))
         }
+    }
     
 }
 

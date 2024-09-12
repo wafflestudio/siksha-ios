@@ -66,12 +66,11 @@ struct ContentView: View {
                     VStack {
                             
                             tabItems[selectedTab].content
-                        if(appState.showTabbar){
                             
                             Spacer()
                             tabBar(geometry)
                             
-                        }
+                        
                     }
                       .ignoresSafeArea(.keyboard, edges: .bottom)
                     
