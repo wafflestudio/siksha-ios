@@ -9,6 +9,11 @@ import SwiftUI
 import Kingfisher
 
 struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
+    enum actionSheetType{
+        case post
+        case comment(comment:Comment)
+    }
+    
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel: ViewModel
     
@@ -26,6 +31,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var showCommentMine = false
     @State private var deleteCommentId = 0
     @State private var showCommentDeleteAlert = false
+    @State private var showActionSheet:actionSheetType? = nil
     @Binding var needPostViewRefresh:Bool
     
     var backButton: some View {
@@ -36,7 +42,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             Image("NavigationBack")
                 .resizable()
                 .frame(width: 7, height: 15)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 16))
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 30))
         }
         .contentShape(Rectangle())
     }
