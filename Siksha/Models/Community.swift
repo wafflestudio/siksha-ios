@@ -162,7 +162,7 @@ struct CommentsPage: Decodable {
 }
 
 
-struct Comment: Decodable {
+struct Comment: Decodable,Identifiable {
     enum CodingKeys: String, CodingKey {
         case id
         case postId = "post_id"

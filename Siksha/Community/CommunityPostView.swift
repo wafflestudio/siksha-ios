@@ -9,9 +9,21 @@ import SwiftUI
 import Kingfisher
 
 struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
-    enum actionSheetType{
-        case post
-        case comment(comment:Comment)
+    enum chosenType:Identifiable{
+        var id:Int{
+            switch self{
+            case .post(let post):
+                return post.id
+            case .comment(let comment):
+                return -comment.id
+            }
+    
+        }
+        
+      
+        
+        case post(post:PostInfo)
+        case comment(comment:CommentInfo)
     }
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -23,15 +35,12 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var needRefresh = false
     @State private var imageIndex = 0
     @State private var showImages = false
-    @State private var showAlert = false
+    @State private var showAlert:chosenType? = nil
     @State private var showPostMenu = false
     @State private var showPostDeleteAlert = false
-    @State private var showCommentId = 0
-    @State private var showCommentEditView = false
-    @State private var showCommentMine = false
+    @State private var editComment:CommentInfo? = nil
     @State private var deleteCommentId = 0
-    @State private var showCommentDeleteAlert = false
-    @State private var showActionSheet:actionSheetType? = nil
+    @State private var showActionSheet:chosenType? = nil
     @Binding var needPostViewRefresh:Bool
     
     var backButton: some View {
@@ -158,8 +167,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 .frame(width:13,height:13)
                 .padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 0))
                 .onTapGesture {
-                    showCommentId = -1
-                    showPostMenu = true
+                    showActionSheet = .post(post:viewModel.postInfo)
                 }
         }.padding(EdgeInsets(top: 16, leading: 21, bottom: 0, trailing: 19))
     }
@@ -175,10 +183,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         LazyVStack(spacing:0){
             ForEach(viewModel.commentsListPublisher) { comment in
                 CommentCell(comment: comment, viewModel: viewModel,onMenuPressed: {
-                    showCommentId = comment.id
-                    print("showCommentID:\(showCommentId)")
+                    showActionSheet = .comment(comment: comment)
                     commentContent = comment.content
-                    showCommentMine = comment.isMine
                 })
               
                     
@@ -199,196 +205,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             }
         }
     }
-    var commentMenu: some View{
-        VStack{
-            VStack(spacing:0){
-                Spacer()
-                    .frame(height:12.4)
-                Text("댓글 메뉴")
-                    .font(.custom("Inter-Medium", size: 10))
-                    .foregroundColor(Color("Grey5"))
-                Spacer()
-                    .frame(height:16.9)
-                if(showCommentMine){
-                    Divider()
-                        .foregroundColor(Color("CommunityPostMenuColor"))
-                    Spacer()
-                        .frame(height:15)
-                    Button(action:{     
-                        showCommentEditView = true
-                    },label: {Text("수정하기")
-                            .frame(maxWidth:.infinity)
-                            .font(.custom("Inter-Medium", size: 16))
-                        .foregroundColor(Color("CommunityPostMenuTextColor"))}
-                    )
-                    Spacer()
-                        .frame(height:15)
-                    
-                    Divider()
-                        .foregroundColor(Color("CommunityPostMenuColor"))
-                    Spacer()
-                        .frame(height:15)
-                    
-                    Button(action:{ deleteCommentId = showCommentId
-                        showCommentId = -1
-                        
-                    },label: {Text("삭제하기")
-                            .frame(maxWidth:.infinity)
-                            .font(.custom("Inter-Medium", size: 16))
-                        .foregroundColor(Color("CommunityPostMenuTextColor"))})
-                    Spacer()
-                        .frame(height:15)
-                    
-                }
-                else{
-                    Divider()
-                        .foregroundColor(Color("CommunityPostMenuColor"))
-                    Spacer()
-                        .frame(height:15)
-                    
-                    
-                    Button(action:{
-                        showAlert = true
-                        
-                    },label:{
-                        Text("신고하기")
-                            .frame(maxWidth:.infinity)
-                            .font(.custom("Inter-Medium", size: 16))
-                            .foregroundColor(Color("CommunityPostMenuTextColor"))
-                    })
-                    
-                    
-                    Spacer()
-                        .frame(height:15)
-                    
-                }
-                // color really change
-            }
-            .background(Color("DividerColor") ) // NO NAME
-            .cornerRadius(10)
-            Color.clear
-                .frame(height: 8)
-            VStack{
-                Spacer()
-                    .frame(height:15)
-                
-                Button(action:{
-                    showCommentId = -1
-                },label: {Text("취소")
-                        .frame(maxWidth:.infinity)
-                        .font(.custom("Inter-SemiBold", size: 16))
-                    .foregroundColor(Color("CommunityPostMenuTextColor"))})
-                
-                
-                Spacer()
-                    .frame(height:15)
-            }
-            .frame(maxWidth: .infinity)
-            .background(Color.white)
-            .cornerRadius(10)
-          
-            
-        }
-      //  .frame(height: 298.83) // Adjust height as needed
-        .padding(EdgeInsets(top: 0, leading: 15.5, bottom: 0, trailing: 16.5))
-    }
-    var postMenu: some View{
-        VStack{
-            VStack(spacing:0){
-                Spacer()
-                    .frame(height:12.4)
-                Text("게시글 메뉴")
-                    .font(.custom("Inter-Medium", size: 10))
-                    .foregroundColor(Color("Grey5"))
-                Spacer()
-                    .frame(height:16.9)
-                if(viewModel.postInfo.isMine){
-                    Divider()
-                        .foregroundColor(Color("CommunityPostMenuColor"))
-                    Spacer()
-                        .frame(height:15)
-                    Button(action:{     isEditingPost = true
-                        showPostMenu = false
-                    },label: {Text("수정하기")
-                            .frame(maxWidth:.infinity)
-                            .font(.custom("Inter-Medium", size: 16))
-                        .foregroundColor(Color("CommunityPostMenuTextColor"))}
-                    )
-                    Spacer()
-                        .frame(height:15)
-                    
-                    Divider()
-                        .foregroundColor(Color("CommunityPostMenuColor"))
-                    Spacer()
-                        .frame(height:15)
-                    
-                    Button(action:{ showPostMenu = false
-                        showPostDeleteAlert = true
-                    },label: {Text("삭제하기")
-                            .frame(maxWidth:.infinity)
-                            .font(.custom("Inter-Medium", size: 16))
-                        .foregroundColor(Color("CommunityPostMenuTextColor"))})
-                    Spacer()
-                        .frame(height:15)
-                    
-                }
-                else{
-                    Divider()
-                        .foregroundColor(Color("CommunityPostMenuColor"))
-                    Spacer()
-                        .frame(height:15)
-                    
-                    
-                    Button(action:{
-                        showPostMenu = false
-                        showAlert = true
-                        
-                    },label:{
-                        Text("신고하기")
-                            .frame(maxWidth:.infinity)
-                            .font(.custom("Inter-Medium", size: 16))
-                            .foregroundColor(Color("CommunityPostMenuTextColor"))
-                    })
-                    
-                    
-                    Spacer()
-                        .frame(height:15)
-                    
-                }
-                // color really change
-            }
-            .background(Color("DividerColor") ) // NO NAME
-            .cornerRadius(10)
-            Color.clear
-                .frame(height: 8)
-            VStack{
-                Spacer()
-                    .frame(height:15)
-                
-                Button(action:{
-                    showPostMenu =  false
-                },label: {Text("취소")
-                        .frame(maxWidth:.infinity)
-                        .font(.custom("Inter-SemiBold", size: 16))
-                    .foregroundColor(Color("CommunityPostMenuTextColor"))})
-                
-                
-                Spacer()
-                    .frame(height:15)
-            }
-            .frame(maxWidth: .infinity)
-            .background(Color.white)
-            .cornerRadius(10)
-            
-            
-            
-            
-            
-        }
-        //.frame(height: 298.83) // Adjust height as needed
-        .padding(EdgeInsets(top: 0, leading: 15.5, bottom: 0, trailing: 16.5))
-        
-    }
+  
+
     var postDeleteAlert: some View{
         VStack(spacing:0){
             Spacer()
@@ -462,6 +280,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 
             }
         }.frame(height:130.27,alignment: .center)
+           
         
     }
     var body: some View {
@@ -565,16 +384,13 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             .ignoresSafeArea(edges: .bottom)
 
 
-            if(showPostMenu){
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea(.all)
-                    
-                    postMenu
-                }
+          
                 if(showPostDeleteAlert){
                     Color.black.opacity(0.4)
                         .ignoresSafeArea(.all)
-                    
+                        .onTapGesture {
+                            showPostDeleteAlert = false
+                        }
                     ZStack(alignment: .center){
                         postDeleteAlert
                             .background(Color.white)
@@ -582,11 +398,14 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         
                     }.frame(maxWidth:.infinity,maxHeight: .infinity)
                         .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
+                       
                 }
             if(deleteCommentId > 0){
                 Color.black.opacity(0.4)
                     .ignoresSafeArea(.all)
-                
+                    .onTapGesture {
+                        deleteCommentId = -1
+                    }
                 ZStack(alignment: .center){
                     commentDeleteAlert
                         .background(Color.white)
@@ -594,19 +413,66 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     
                 }.frame(maxWidth:.infinity,maxHeight: .infinity)
                     .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
+                   
             }
-            if(showCommentId > 0){
-                Color.black.opacity(0.4)
-                    .ignoresSafeArea(.all)
-                
-                commentMenu
-            }
+         
                 
             }
             .customNavigationBar(title: viewModel.boardNamePublisher)
                 .navigationBarItems(leading: backButton)
-                .onAppear {
-                 //   viewModel.loadBasicInfos()
+                .actionSheet(item:$showActionSheet){item in
+                    switch(item){
+                    case .post(let post):
+                        let editButton = ActionSheet.Button.default(Text("수정"), action: {
+                                    isEditingPost = true
+                                    showPostMenu = false
+                                })
+                                let deleteButton = ActionSheet.Button.default(Text("삭제"), action: {
+                                    showPostMenu = false
+                                        showPostDeleteAlert = true
+                                })
+                                let reportButton = ActionSheet.Button.default(Text("신고"), action: {
+                                    showPostMenu = false
+                                    showAlert = item
+                                })
+                                if(viewModel.postInfo.isMine){
+                                    return ActionSheet(title: Text("게시글 메뉴"), buttons: [
+                                       editButton,deleteButton,
+                                        .cancel(Text("취소"))
+                                    ])
+                                }
+                                else{
+                                    return ActionSheet(title: Text("게시글 메뉴"), buttons: [
+                                       reportButton,
+                                        .cancel(Text("취소"))
+                                    ])
+                                }
+                    case .comment(let comment):
+                        let editButton = ActionSheet.Button.default(Text("수정"), action: {
+                                    editComment = comment
+                                    showActionSheet = nil
+                                })
+                                let deleteButton = ActionSheet.Button.default(Text("삭제"), action: {
+                                    deleteCommentId = comment.id
+                                    showActionSheet = nil
+                                })
+                                let reportButton = ActionSheet.Button.default(Text("신고"), action: {
+                                    showAlert = item
+
+                                })
+                        if(comment.isMine){
+                                    return ActionSheet(title: Text("댓글 메뉴"), buttons: [
+                                       editButton,deleteButton,
+                                        .cancel(Text("취소"))
+                                    ])
+                                }
+                                else{
+                                    return ActionSheet(title: Text("댓글 메뉴"), buttons: [
+                                       reportButton,
+                                        .cancel(Text("취소"))
+                                    ])
+                                }
+                    }
                 }
                
                 .fullScreenCover(isPresented: $isEditingPost){
@@ -622,17 +488,20 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     ImageView(viewModel: viewModel, imageIndex: imageIndex)
                     
                 }
-                .fullScreenCover(isPresented: $showAlert,onDismiss: {showCommentId = -1}){
-                    AlertView(RenewalSettingsViewModel(), viewModel,commentId: showCommentId <= 0 ? nil : showCommentId)
+                .fullScreenCover(item: $showAlert){item in
+                    switch item{
+                    case .post:
+                        AlertView(RenewalSettingsViewModel(), viewModel,commentId: nil)
+                    case .comment(let comment):
+                        AlertView(RenewalSettingsViewModel(),viewModel,commentId: comment.id)
+                    }
                 }
-                .fullScreenCover(isPresented: $showCommentEditView) {
-                    EditCommentView(isPresented: $showCommentEditView, editedContent: commentContent, onSave: { newContent in
-                        viewModel.editComment(commentId: showCommentId, content: newContent)
-                        showCommentEditView = false
-                        showCommentId = -1
+                .fullScreenCover(item:$editComment) {comment in
+                    EditCommentView( editedContent: comment.content, onSave: { newContent in
+                        viewModel.editComment(commentId: comment.id, content: newContent)
+                        editComment = nil
                     }, onCancel: {
-                        showCommentEditView = false
-                        showCommentId = -1
+                        editComment = nil
                     })
                 }
                 
