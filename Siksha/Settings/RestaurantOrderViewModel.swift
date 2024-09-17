@@ -66,19 +66,24 @@ class RestaurantOrderViewModel: ObservableObject {
                 }
                 var restOrder = (UserDefaults.standard.dictionary(forKey: "restaurantOrder") as? [String : Int]) ?? [String : Int]()
                 var favRestOrder = (UserDefaults.standard.dictionary(forKey: "favRestaurantOrder") as? [String : Int]) ?? [String : Int]()
-                
+           
                 restJSON.forEach { json in
                     let id = json["id"].intValue
                     let name = json["name_kr"].stringValue
-                    
-                    UserDefaults.standard.set(name, forKey: "restName\(id)")
-                    
-                    if restOrder["\(id)"] == nil {
-                     
-                        restOrder["\(id)"] = .max
+                        UserDefaults.standard.set(name, forKey: "restName\(id)")
+                    if(!name.contains("[축제]")){
+
+                        if restOrder["\(id)"] == nil {
+                            
+                            restOrder["\(id)"] = .max
+                        }
+                        if favRestOrder["\(id)"] == nil {
+                            favRestOrder["\(id)"] = .max
+                        }
                     }
-                    if favRestOrder["\(id)"] == nil {
-                        favRestOrder["\(id)"] = .max
+                    else{
+                        restOrder.removeValue(forKey: "\(id)")
+                        favRestOrder.removeValue(forKey: "\(id)")
                     }
                 }
                 UserDefaults.standard.set(restOrder, forKey: "restaurantOrder")
