@@ -72,6 +72,11 @@ public class FavoriteViewModel: ObservableObject {
                   self?.isFestival = false
               }
           }.store(in: &cancellables)
+        isFestival = isFestivalAvailable && UserDefaults.standard.bool(forKey: "isFavoriteFestival")
+        $isFestival.sink{
+            isFestival in
+            UserDefaults.standard.set(isFestival,forKey: "isFavoriteFestival")
+        }.store(in: &cancellables)
         $selectedDate
             .sink { [weak self] dateString in
                 guard let self = self else { return }

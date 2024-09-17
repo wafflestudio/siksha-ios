@@ -70,6 +70,11 @@ public class MenuViewModel: ObservableObject {
                 self?.isFestival = false
             }
         }.store(in: &cancellables)
+        isFestival = isFestivalAvailable && UserDefaults.standard.bool(forKey: "isFestival")
+        $isFestival.sink{
+            isFestival in
+            UserDefaults.standard.set(isFestival,forKey: "isFestival")
+        }.store(in: &cancellables)
         $selectedDate
             .removeDuplicates()
             .sink { [weak self] dateString in
