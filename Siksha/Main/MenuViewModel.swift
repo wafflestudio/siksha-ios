@@ -9,6 +9,9 @@ import Foundation
 import Combine
 
 public class MenuViewModel: ObservableObject {
+    
+    let FESTIVAL_END: Date
+    
     private var cancellables = Set<AnyCancellable>()
     
     private let repository = MenuRepository()
@@ -40,12 +43,17 @@ public class MenuViewModel: ObservableObject {
     
     @Published var reloadOnAppear: Bool = true
     
+    
+    @Published var isFestivalAvailable: Bool
+    @Published var isFestival: Bool = false
+    
     init() {
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
-        
+        FESTIVAL_END = Calendar(identifier: .gregorian).startOfDay(for: formatter.date(from: "2024-09-27")!)
+
         selectedDate = formatter.string(from: Date())
-        
+        isFestivalAvailable = Date() < FESTIVAL_END
         let calendar = Calendar.current
         
         let components = calendar.dateComponents([.hour], from: Date())
@@ -56,12 +64,17 @@ public class MenuViewModel: ObservableObject {
                 selectedPage = 1
             }
         }
-        
+        $isFestivalAvailable.sink{ [weak self]
+            available in
+            if(!available){
+                self?.isFestival = false
+            }
+        }.store(in: &cancellables)
         $selectedDate
             .removeDuplicates()
             .sink { [weak self] dateString in
                 guard let self = self else { return }
-                
+                isFestivalAvailable = Date() < FESTIVAL_END
                 self.formatter.dateFormat = "yyyy-MM-dd"
                 let selected = self.formatter.date(from: dateString) ?? Date()
                 
@@ -108,17 +121,28 @@ public class MenuViewModel: ObservableObject {
             .store(in: &cancellables)
         
         $selectedMenu
-            .sink { [weak self] menu in
+            .combineLatest($isFestival)
+            .sink { [weak self] (menu,isFestival) in
                 guard let self = self else { return }
                 
                 if let menu = menu {
                     let restOrder = (UserDefaults.standard.dictionary(forKey: "restaurantOrder") as? [String : Int]) ?? [String : Int]()
                     
                     let br = Array(menu.getRestaurants(.breakfast))
+                        .filter{ restaurant in
+                            restaurant.nameKr.contains("[축제]") == isFestival
+                        }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
+                        
                     let lu = Array(menu.getRestaurants(.lunch))
+                        .filter{ restaurant in
+                            restaurant.nameKr.contains("[축제]") == isFestival
+                        }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     let dn = Array(menu.getRestaurants(.dinner))
+                        .filter{ restaurant in
+                            restaurant.nameKr.contains("[축제]") == isFestival
+                        }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     self.restaurantsLists = [br, lu, dn]
                     self.noMenu = false

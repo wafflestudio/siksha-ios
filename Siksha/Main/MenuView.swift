@@ -66,10 +66,31 @@ private extension MenuView {
             })
             .disabled(viewModel.showCalendar)
             .padding(.trailing, 16)
+           
         }
         .frame(height: 50)
     }
-    
+    struct CustomCheckboxStyle: ToggleStyle {
+        func makeBody(configuration: Configuration) -> some View {
+            HStack(spacing: 5) {
+                    if configuration.isOn {
+                        Image("CheckboxTicked")
+                            .frame(width: 13, height: 13)
+                    } else {
+                        Image("Checkbox")
+                            .frame(width: 13, height: 13)
+                    }
+                
+                configuration.label
+                    .foregroundColor(configuration.isOn ? Color("MainThemeColor") : Color(hex:0x575757))
+            }
+            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+            .contentShape(Rectangle())
+            .onTapGesture {
+                configuration.isOn.toggle()
+            }
+        }
+    }
     var menuList: some View {
         // Menus
         VStack(alignment: .center) {
@@ -82,14 +103,33 @@ private extension MenuView {
                 .frame(maxWidth: .infinity)
             } else {
                 if viewModel.restaurantsLists.count > 0 {
-                    HStack(alignment: .bottom, spacing: 28) {
-                        Spacer()
-                        ForEach(typeInfos) { type in
-                            typeButton(type: type)
-                        }
-                        Spacer()
+                    if viewModel.isFestivalAvailable{
+                        ZStack{
+                            HStack(alignment: .bottom, spacing: 28) {
+                                ForEach(typeInfos) { type in
+                                    typeButton(type: type)
+                                }
+                            }.padding(.top, 8)
+                                .frame(alignment: .center)
+                            VStack(alignment:   .trailing){
+                                Toggle(isOn: $viewModel.isFestival) {
+                                    Text("축제")
+                                        .font(.custom("Inter-Regular", size: 14))
+                                }
+                                .toggleStyle(CustomCheckboxStyle())
+                                .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 16))
+                                
+                            }.frame(maxWidth: .infinity,alignment:.trailing)
+                            
+                        }.frame(maxWidth: .infinity)
                     }
-                    .padding(.top, 8)
+                    else{
+                        HStack(alignment: .bottom, spacing: 28) {
+                            ForEach(typeInfos) { type in
+                                typeButton(type: type)
+                            }
+                        }.padding(.top, 8)
+                    }
                     
                     if #available(iOS 15, *) {
                         TabView(selection: $viewModel.selectedPage) {
