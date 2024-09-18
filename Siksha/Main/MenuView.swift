@@ -70,26 +70,33 @@ private extension MenuView {
         }
         .frame(height: 50)
     }
-    struct CustomCheckboxStyle: ToggleStyle {
+    struct CustomSwitchStyle:ToggleStyle{
         func makeBody(configuration: Configuration) -> some View {
-            HStack(spacing: 5) {
-                    if configuration.isOn {
-                        Image("CheckboxTicked")
-                            .frame(width: 13, height: 13)
-                    } else {
-                        Image("Checkbox")
-                            .frame(width: 13, height: 13)
+            RoundedRectangle(cornerSize: CGSize(width: 9.69, height: 9.69))
+                .fill(configuration.isOn ? Color("MainThemeColor") : Color("ReviewLowColor"))
+                .frame(width:45,height:19)
+                .overlay(
+                    Circle()
+                        .fill(Color.white)
+                        .frame(width:17,height: 17,alignment: .leading)
+                        .offset(x: configuration.isOn ? 26.19 : 1.6,y:0)
+                    ,alignment: .leading
+                )
+                .overlay(
+                    Text("축제")
+                        .foregroundColor(Color.white)
+                        .font(.custom("NanumSquareOTFB", size: 10))
+                        .offset(x: configuration.isOn ? 6.5 : 21.83,y:0)
+                    ,alignment: .leading
+                            
+                )
+                .onTapGesture {
+                    withAnimation{
+                        configuration.$isOn.wrappedValue.toggle()
                     }
-                
-                configuration.label
-                    .foregroundColor(configuration.isOn ? Color("MainThemeColor") : Color(hex:0x575757))
-            }
-            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
-            .contentShape(Rectangle())
-            .onTapGesture {
-                configuration.isOn.toggle()
-            }
+                }
         }
+        
     }
     var menuList: some View {
         // Menus
@@ -113,11 +120,9 @@ private extension MenuView {
                                 .frame(alignment: .center)
                             VStack(alignment:   .trailing){
                                 Toggle(isOn: $viewModel.isFestival) {
-                                    Text("축제")
-                                        .font(.custom("Inter-Regular", size: 14))
                                 }
-                                .toggleStyle(CustomCheckboxStyle())
-                                .padding(EdgeInsets(top: 4, leading: 0, bottom: 0, trailing: 16))
+                                .toggleStyle(CustomSwitchStyle())
+                                .padding(EdgeInsets(top: 5.56, leading: 0, bottom: 0, trailing: 17))
                                 
                             }.frame(maxWidth: .infinity,alignment:.trailing)
                             
@@ -185,6 +190,13 @@ struct MenuView: View {
     
     var body: some View {
         VStack(spacing: 0) {
+            if(viewModel.isFestivalAvailable){
+                Link(destination: URL(string:"https://www.instagram.com/snufestival/")!){
+                    Image("FestivalBanner")
+                        .frame(maxWidth:.infinity,maxHeight:50)
+                    
+                }
+            }
             dayPageTab
             
             ZStack(alignment: .top) {
