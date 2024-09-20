@@ -84,7 +84,7 @@ private extension FavoriteView {
                 .overlay(
                     Text("축제")
                         .foregroundColor(Color.white)
-                        .font(.custom("NanumSquareOTFB", size: 9))
+                        .font(.custom("NanumSquareOTFB", size: 10))
                         .offset(x: configuration.isOn ? 6.5 : 21.83,y:0)
                     ,alignment: .leading
                             
@@ -195,9 +195,13 @@ struct FavoriteView: View {
             if(viewModel.isFestivalAvailable){
                             Link(destination: URL(string:"https://www.instagram.com/snufestival/")!){
                                 Image("FestivalBanner")
-                                    .frame(maxWidth:.infinity,maxHeight:50)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(maxWidth:.infinity)
                                 
-                            }
+                                    
+                                
+                            } 
                         }
             if viewModel.noFavorites {
                 Spacer()
