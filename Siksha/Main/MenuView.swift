@@ -191,13 +191,13 @@ struct MenuView: View {
     var body: some View {
         VStack(spacing: 0) {
             if(viewModel.isFestivalAvailable){
-                Link(destination: URL(string:"https://www.instagram.com/snufestival/")!){
+                Button(action: {
+                    openInstagram()
+                }) {
                     Image("FestivalBanner")
                         .resizable()
                         .scaledToFit()
-                        .frame(maxWidth:.infinity)
-                    
-                    
+                        .frame(maxWidth: .infinity)
                 }
             }
             dayPageTab
@@ -235,6 +235,16 @@ struct MenuView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             viewModel.getMenu(date: viewModel.selectedDate)
+        }
+    }
+    
+    func openInstagram() {
+        let appURL = URL(string: "instagram://user?username=snufestival")!
+        let webURL = URL(string: "https://www.instagram.com/snufestival/")!
+        if UIApplication.shared.canOpenURL(appURL) {
+            UIApplication.shared.open(appURL, options: [:], completionHandler: nil)
+        } else {
+            UIApplication.shared.open(webURL, options: [:], completionHandler: nil)
         }
     }
 }
