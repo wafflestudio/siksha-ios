@@ -35,12 +35,13 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
             ZStack(alignment: .bottomTrailing) {
                 VStack(spacing:0){
                     BoardSelect(viewModel: viewModel)
-                    Divider()
-                        .foregroundColor(dividerColor)
-                        .frame(height:1)
-                        .padding(.zero)
-                    TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
-                    
+                    if !viewModel.trendingPostsListPublisher.isEmpty {
+                        Divider()
+                            .foregroundColor(dividerColor)
+                            .frame(height:1)
+                            .padding(.zero)
+                        TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
+                    }
                     ScrollView{
                         divider
                         postList
