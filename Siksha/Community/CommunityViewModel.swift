@@ -163,7 +163,15 @@ extension CommunityViewModel {
                 print(error)
             }, receiveValue: { [weak self] boards in
                 self?.boardsList = boards
-                self?.selectBoard(id: boards.first?.id ?? 0)
+                if(self?.selectedBoardId == 0){
+                    self?.selectBoard(id: boards.first?.id ?? 0)
+                }
+                else{
+                    self?.selectBoard(id: self?.selectedBoardId ?? (boards.first?.id ?? 0))
+
+                }
+               
+                
             })
             .store(in: &cancellables)
     }
