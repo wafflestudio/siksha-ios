@@ -104,6 +104,7 @@
 		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
 		4EE5729F2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */; };
 		4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */; };
+		747811C02CE0B7E600EEEB6C /* KakaoShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747811BF2CE0B7DB00EEEB6C /* KakaoShareManager.swift */; };
 		A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */; };
 		A6CBB8672C8204CB0067723D /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */; };
 		A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */; };
@@ -251,6 +252,7 @@
 		4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishViewModel.swift; sourceTree = "<group>"; };
 		4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostViewModel.swift; sourceTree = "<group>"; };
 		55CDCFB8585C558508960F06 /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
+		747811BF2CE0B7DB00EEEB6C /* KakaoShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoShareManager.swift; sourceTree = "<group>"; };
 		A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewModel.swift; sourceTree = "<group>"; };
 		A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
@@ -596,6 +598,7 @@
 				BF97DF522AAEFE380083FC6F /* Domain.swift */,
 				BF97DF582AAF00B30083FC6F /* DomainManager.swift */,
 				BF60ADE32AC1EAA20015C468 /* DomainUtils.swift */,
+				747811BF2CE0B7DB00EEEB6C /* KakaoShareManager.swift */,
 				BF60ADE52AC1EABF0015C468 /* Errors.swift */,
 				4E64650F2B1D8DB200A4ABAD /* UserManager.swift */,
 			);
@@ -859,6 +862,7 @@
 				234DB0D9264156150049FE6B /* CalendarView.swift in Sources */,
 				4EC08B512C67ABF600AB2001 /* HexColor.swift in Sources */,
 				1ECB255225F2999100875E18 /* RatingStar.swift in Sources */,
+				747811C02CE0B7E600EEEB6C /* KakaoShareManager.swift in Sources */,
 				BF97DF552AAF003D0083FC6F /* RepositoryProtocol.swift in Sources */,
 				1EB5F4412644710A0012201A /* Networking.swift in Sources */,
 				4EE5729F2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift in Sources */,
