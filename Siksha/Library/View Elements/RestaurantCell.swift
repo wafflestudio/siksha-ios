@@ -59,6 +59,16 @@ struct RestaurantCell: View {
                         .frame(width: 18, height: 17)
                 })
                 
+                Button(action: {
+                    // KakaoShareManager.shared.shareToKakao(restaurant: restaurant)
+                }) {
+                    Image(systemName: "square.and.arrow.up")
+                        .resizable()
+                        .renderingMode(.original)
+                        .frame(width: 17, height: 17)
+                        .foregroundColor(orangeColor)
+                }
+                
                 Spacer()
                 
                 Text("Price")
