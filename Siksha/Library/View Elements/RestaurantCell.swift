@@ -19,6 +19,7 @@ struct RestaurantCell: View {
     var meals: [Meal]
     @State var isFavorite: Bool = false
     @State var showRestaurant: Bool = false
+    @StateObject private var kakaoShareManager = KakaoShareManager()
     @Environment(\.favoriteViewModel) var favViewModel: FavoriteViewModel?
     @Environment(\.menuViewModel) var viewModel: MenuViewModel?
     
@@ -60,14 +61,17 @@ struct RestaurantCell: View {
                 })
                 
                 Button(action: {
-                    let kakaoManager = KakaoShareManager(restaurant)
-                    kakaoManager.shareToKakao(restaurant: restaurant)
+                    kakaoShareManager.shareToKakao(restaurant: restaurant)
                 }) {
                     Image(systemName: "square.and.arrow.up")
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 17, height: 17)
                         .foregroundColor(orangeColor)
+                }.sheet(isPresented: $kakaoShareManager.showWebView) {
+                    if let urlString = kakaoShareManager.urlToLoad {
+                        WebView(urlString: urlString)
+                    }
                 }
                 
                 Spacer()

@@ -110,6 +110,7 @@
 		741BE33A2CE3514D00A09881 /* KakaoSDKTemplate in Frameworks */ = {isa = PBXBuildFile; productRef = 741BE3392CE3514D00A09881 /* KakaoSDKTemplate */; };
 		741BE33C2CE3514D00A09881 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 741BE33B2CE3514D00A09881 /* KakaoSDKUser */; };
 		747811C02CE0B7E600EEEB6C /* KakaoShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747811BF2CE0B7DB00EEEB6C /* KakaoShareManager.swift */; };
+		749AA1222CE3618E00AD61E5 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749AA1212CE3617B00AD61E5 /* WebView.swift */; };
 		A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */; };
 		A6CBB8672C8204CB0067723D /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */; };
 		A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */; };
@@ -258,6 +259,7 @@
 		4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostViewModel.swift; sourceTree = "<group>"; };
 		55CDCFB8585C558508960F06 /* Pods-Siksha.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Siksha.debug.xcconfig"; path = "Target Support Files/Pods-Siksha/Pods-Siksha.debug.xcconfig"; sourceTree = "<group>"; };
 		747811BF2CE0B7DB00EEEB6C /* KakaoShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoShareManager.swift; sourceTree = "<group>"; };
+		749AA1212CE3617B00AD61E5 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Siksha.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewModel.swift; sourceTree = "<group>"; };
 		A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
@@ -519,6 +521,7 @@
 				23DFD2032664110B0049F8D7 /* RemoteImage.swift */,
 				1ECB255C25F2B3EA00875E18 /* ReviewCell.swift */,
 				23258E9B26496D9D00146BC5 /* HorizontalGraph.swift */,
+				749AA1212CE3617B00AD61E5 /* WebView.swift */,
 				231C9D1325F8568C0072C07A /* MapView.swift */,
 				231C9CE425F835B40072C07A /* BackButton.swift */,
 				231C9D2025FB5E490072C07A /* SegmentedControlView.swift */,
@@ -909,6 +912,7 @@
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
 				BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
+				749AA1222CE3618E00AD61E5 /* WebView.swift in Sources */,
 				1ED44A4625CC6579001D916B /* MealInfoViewModel.swift in Sources */,
 				1ECB254D25F2975A00875E18 /* MealInfoView.swift in Sources */,
 				1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */,

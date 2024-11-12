@@ -6,18 +6,16 @@
 //
 
 import UIKit
+import SwiftUI
 
 import KakaoSDKCommon
 import KakaoSDKShare
 import KakaoSDKTemplate
 import KakaoSDKAuth
 
-class KakaoShareManager {
-    var restaurant: Restaurant
-    
-    init(_ restaurant: Restaurant) {
-        self.restaurant = restaurant
-    }
+class KakaoShareManager: ObservableObject {
+    @Published var showWebView = false
+    @Published var urlToLoad: String?
     
     let kakaoAppKey = (UIApplication.shared.delegate as! AppDelegate).configDict?.object(forKey: "kakao_app_key") as! String
     
@@ -51,8 +49,8 @@ class KakaoShareManager {
             let redirectURI = "kakao\(kakaoAppKey)://oauth"
             // Redirect to Kakao login page
             let loginUrl = "https://kauth.kakao.com/oauth/authorize?client_id=\(kakaoAppKey)&redirect_uri=\(redirectURI)&response_type=code"
-//            let webVC = DRWebViewController(urlString: loginUrl)
-//            context.present(webVC, animated: true, completion: nil)
+            urlToLoad = loginUrl
+            showWebView = true
             return
         }
         
@@ -63,7 +61,7 @@ class KakaoShareManager {
         if ShareApi.isKakaoTalkSharingAvailable() {
             ShareApi.shared.shareCustom(
                 templateId: templateId,
-                templateArgs: kakaoShareInfo) {(sharingResult, error) in
+                templateArgs: kakaoShareInfo) { (sharingResult, error) in
                     if let error = error {
                         print(error)
                     }
@@ -77,12 +75,12 @@ class KakaoShareManager {
         } else {
             if let sharingResult = ShareApi.shared.makeCustomUrl(templateId: templateId, templateArgs: kakaoShareInfo) {
                 print("makeCustomURL success")
-//                let webVC = DRWebViewController(urlString: sharingResult.absoluteString)
-//                context.present(webVC, animated: true, completion: nil)
+                urlToLoad = sharingResult.absoluteString
+                showWebView = true
             } else {
                 let error = NSError(domain: "CustomURL", code: -1, userInfo: [NSLocalizedDescriptionKey: "Failed to create custom URL"])
                 print(error)
             }
         }
-    } 
+    }
 }
