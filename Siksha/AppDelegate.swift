@@ -14,6 +14,8 @@ import FirebaseCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    public var configDict: NSDictionary?
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
@@ -26,20 +28,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         #endif
         
         let dictPath = Bundle.main.path(forResource: "config", ofType: "plist")
-        let configDict = NSDictionary(contentsOfFile: dictPath!)!.object(forKey: configKey) as! NSDictionary
+        self.configDict = NSDictionary(contentsOfFile: dictPath!)!.object(forKey: configKey) as? NSDictionary
         
         
-        
-        let googleClientId = configDict.object(forKey: "google_client_id") as! String
-        let kakaoAppKey = configDict.object(forKey: "kakao_app_key") as! String
-        let naverMapClientId = configDict.object(forKey: "naver_map_client_id") as! String
+        let googleClientId = configDict?.object(forKey: "google_client_id") as! String
+        let kakaoAppKey = configDict?.object(forKey: "kakao_app_key") as! String
+        let naverMapClientId = configDict?.object(forKey: "naver_map_client_id") as! String
         
         NMFAuthManager.shared().clientId = naverMapClientId
         
         GIDSignIn.sharedInstance()?.clientID = googleClientId
         FirebaseApp.configure()
         
-        KakaoSDKCommon.initSDK(appKey: kakaoAppKey)
+        KakaoSDK.initSDK(appKey: kakaoAppKey)
         
         let config = Realm.Configuration(
             schemaVersion: 2, // 새로운 스키마 버전 설정

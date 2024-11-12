@@ -1,5 +1,4 @@
 PODS:
-  - Alamofire (5.9.1)
   - AppAuth (1.7.3):
     - AppAuth/Core (= 1.7.3)
     - AppAuth/ExternalUserAgent (= 1.7.3)
@@ -139,13 +138,6 @@ PODS:
     - GTMSessionFetcher/Core (< 3.0, >= 1.5)
   - GTMSessionFetcher/Core (1.7.2)
   - JTAppleCalendar (8.0.5)
-  - KakaoSDKAuth (2.3.2):
-    - KakaoSDKCommon (= 2.3.2)
-  - KakaoSDKCommon (2.3.2):
-    - Alamofire (~> 5.1)
-  - KakaoSDKUser (2.3.2):
-    - KakaoSDKAuth (= 2.3.2)
-    - KakaoSDKCommon (= 2.3.2)
   - Kingfisher (7.11.0)
   - nanopb (2.30910.0):
     - nanopb/decode (= 2.30910.0)
@@ -172,9 +164,6 @@ DEPENDENCIES:
   - Firebase/Crashlytics
   - GoogleSignIn (= 5.0.2)
   - JTAppleCalendar (= 8.0.5)
-  - KakaoSDKAuth (= 2.3.2)
-  - KakaoSDKCommon (= 2.3.2)
-  - KakaoSDKUser (= 2.3.2)
   - Kingfisher (~> 7.0)
   - NMapsMap
   - RealmSwift (= 10.6.0)
@@ -182,7 +171,6 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Alamofire
     - AppAuth
     - BSImagePicker
     - Firebase
@@ -201,9 +189,6 @@ SPEC REPOS:
     - GTMAppAuth
     - GTMSessionFetcher
     - JTAppleCalendar
-    - KakaoSDKAuth
-    - KakaoSDKCommon
-    - KakaoSDKUser
     - Kingfisher
     - nanopb
     - NMapsGeometry
@@ -215,7 +200,6 @@ SPEC REPOS:
     - SwiftyJSON
 
 SPEC CHECKSUMS:
-  Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   AppAuth: a13994980c1ec792f7e2e665acd4d4aa6be43240
   BSImagePicker: 0fe04b574d4d6b81093785d2af6c26227efc8428
   Firebase: cf09623f98ae25a3ad484e23c7e0e5f464152d80
@@ -234,9 +218,6 @@ SPEC CHECKSUMS:
   GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
   GTMSessionFetcher: 5595ec75acf5be50814f81e9189490412bad82ba
   JTAppleCalendar: 16c6501b22cb27520372c28b0a2e0b12c8d0cd73
-  KakaoSDKAuth: 8db7c7a0561b137477bb984bbdab2eeda7745d23
-  KakaoSDKCommon: 4bb3981337921686948b7be094590f2edec5df87
-  KakaoSDKUser: e6c0017a41e87a94bdcd873d0178ad75be8126d4
   Kingfisher: b9c985d864d43515f404f1ef4a8ce7d802ace3ac
   nanopb: 438bc412db1928dac798aa6fd75726007be04262
   NMapsGeometry: 53c573ead66466681cf123f99f698dc8071a4b83
@@ -247,6 +228,6 @@ SPEC CHECKSUMS:
   RealmSwift: f80216fb8334b01ccf526e4f2dd5ff0da61863a2
   SwiftyJSON: 36413e04c44ee145039d332b4f4e2d3e8d6c4db7
 
-PODFILE CHECKSUM: 170edf47eb9b0b689280dc4f6a92976b6c9235ef
+PODFILE CHECKSUM: c76bb6662cb1ac46e1f5f7cad480beda3eafcc6d
 
 COCOAPODS: 1.15.2
