@@ -13,10 +13,13 @@ import KakaoSDKTemplate
 import KakaoSDKAuth
 
 class KakaoShareManager {
-    static let shared = KakaoShareManager()
+    var restaurant: Restaurant
+    
+    init(_ restaurant: Restaurant) {
+        self.restaurant = restaurant
+    }
     
     let kakaoAppKey = (UIApplication.shared.delegate as! AppDelegate).configDict?.object(forKey: "kakao_app_key") as! String
-    private init() {} // 외부에서 초기화 방지
     
     var kakaoShareInfo: [String: String] = [:]
     var maxPlaces = 0
@@ -54,7 +57,7 @@ class KakaoShareManager {
         }
         
         let templateId: Int64 = ###
-        setTempArgs(restaurant: Restaurant)
+        setTempArgs(restaurant: restaurant)
         
         // Check if KakaoTalk is installed
         if ShareApi.isKakaoTalkSharingAvailable() {

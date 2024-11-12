@@ -8,6 +8,7 @@
 import SwiftUI
 import AuthenticationServices
 import KakaoSDKAuth
+import KakaoSDKUser
 import GoogleSignIn
 
 struct LoginView: View {
@@ -85,11 +86,11 @@ struct LoginView: View {
     
     func handleKakaoLogin() {
         // checks whether KakaoTalk is installed
-        if (AuthApi.isKakaoTalkLoginAvailable()) {
-            AuthApi.shared.loginWithKakaoTalk(completion: self.handleKakaoLoginResponse)
+        if (UserApi.isKakaoTalkLoginAvailable()) {
+            UserApi.shared.loginWithKakaoTalk(completion: self.handleKakaoLoginResponse)
         } else {
             // Login through Safari
-            AuthApi.shared.loginWithKakaoAccount(completion: self.handleKakaoLoginResponse)
+            UserApi.shared.loginWithKakaoAccount(completion: self.handleKakaoLoginResponse)
         }
     }
     

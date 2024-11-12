@@ -60,7 +60,8 @@ struct RestaurantCell: View {
                 })
                 
                 Button(action: {
-                    // KakaoShareManager.shared.shareToKakao(restaurant: restaurant)
+                    let kakaoManager = KakaoShareManager(restaurant)
+                    kakaoManager.shareToKakao(restaurant: restaurant)
                 }) {
                     Image(systemName: "square.and.arrow.up")
                         .resizable()
