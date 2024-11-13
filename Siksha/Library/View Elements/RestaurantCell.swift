@@ -60,17 +60,33 @@ struct RestaurantCell: View {
                         .frame(width: 18, height: 17)
                 })
                 
-                Button(action: {
-                    kakaoShareManager.shareToKakao(restaurant: restaurant)
-                }) {
-                    Image(systemName: "square.and.arrow.up")
-                        .resizable()
-                        .renderingMode(.original)
-                        .frame(width: 17, height: 17)
-                        .foregroundColor(orangeColor)
-                }.sheet(isPresented: $kakaoShareManager.showWebView) {
-                    if let urlString = kakaoShareManager.urlToLoad {
-                        WebView(urlString: urlString)
+                if #available(iOS 15.0, *) {
+                    Button(action: {
+                        kakaoShareManager.shareToKakao(restaurant: restaurant)
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 17, height: 17)
+                            .foregroundColor(orangeColor)
+                    }.sheet(isPresented: $kakaoShareManager.showWebView) {
+                        if let urlString = kakaoShareManager.urlToLoad {
+                            WebView(urlString: urlString)
+                        }
+                    }.interactiveDismissDisabled(false)
+                } else {
+                    Button(action: {
+                        kakaoShareManager.shareToKakao(restaurant: restaurant)
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 17, height: 17)
+                            .foregroundColor(orangeColor)
+                    }.sheet(isPresented: $kakaoShareManager.showWebView) {
+                        if let urlString = kakaoShareManager.urlToLoad {
+                            WebView(urlString: urlString)
+                        }
                     }
                 }
                 
