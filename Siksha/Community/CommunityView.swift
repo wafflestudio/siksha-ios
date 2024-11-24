@@ -42,9 +42,18 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                             .padding(.zero)
                         TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
                     }
-                    ScrollView{
-                        divider
-                        postList
+                    if viewModel.loadInitialPostsStatus == .loading {
+                        VStack {
+                            Spacer()
+                            ActivityIndicator(isAnimating: .constant(true), style: .large)
+                            Spacer()
+                        }
+                        .frame(maxWidth: .infinity)
+                    } else {
+                        ScrollView{
+                            divider
+                            postList
+                        }
                     }
                 }
                 .customNavigationBar(title: "icon")
@@ -261,6 +270,8 @@ class StubCommunityViewModel: CommunityViewModelType {
         BoardInfo(id: 2, type: 1, name: "name2", isSelected: false),
         BoardInfo(id: 3, type: 1, name: "name3", isSelected: false)
     ]
+    
+    var loadInitialPostsStatus: InitialPostsStatus = .idle
     
     func loadBasicInfos() { }
     func loadMorePosts() { }

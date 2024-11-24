@@ -90,6 +90,7 @@ protocol CommunityViewModelType: ObservableObject {
     var postsListPublisher: [PostInfo] { get }
     var trendingPostsListPublisher: [PostInfo] { get }
     var hasNextPublisher: Bool { get }
+    var loadInitialPostsStatus: InitialPostsStatus { get }
     
     func selectBoard(id: Int)
     func loadBasicInfos()
@@ -119,7 +120,10 @@ final class CommunityViewModel: CommunityViewModelType {
     
     @Published private var hasNext: Bool = false
     
+    @Published var loadInitialPostsStatus: InitialPostsStatus = .idle
+    
     private var cancellables = Set<AnyCancellable>()
+    private var loadInitialPostsCancellable: AnyCancellable?
     
     init(communityRepository: CommunityRepositoryProtocol) {
         self.communityRepository = communityRepository
@@ -214,6 +218,12 @@ extension CommunityViewModel {
          }
     }
     func selectBoard(id: Int) {
+        if self.loadInitialPostsStatus == .loading {
+            if self.selectedBoardId == id {
+                return
+            }
+            self.loadInitialPostsCancellable?.cancel()
+        }
         self.selectedBoardId = id
         
         self.loadInitialPosts(boardId: id)
@@ -224,7 +234,10 @@ extension CommunityViewModel {
     }
     
     private func loadInitialPosts(boardId: Int) {
-        self.communityRepository
+        
+        self.loadInitialPostsStatus = .loading
+        
+        loadInitialPostsCancellable = self.communityRepository
             .loadPostsPage(boardId: boardId, page: Constants.initialPage, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { error in
@@ -233,8 +246,8 @@ extension CommunityViewModel {
                 self?.currPostList = postsPage.posts
                 self?.currentPage = 1
                 self?.hasNext = postsPage.hasNext
+                self?.loadInitialPostsStatus = .idle
             })
-            .store(in: &cancellables)
     }
     
     func loadMorePosts() {

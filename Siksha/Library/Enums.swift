@@ -55,6 +55,11 @@ enum MenuStatus {
     case needRerender // use when the user removes restaurants from favorite view
 }
 
+enum InitialPostsStatus {
+    case loading
+    case idle
+}
+
 enum NetworkStatus {
     case loading
     case failed
