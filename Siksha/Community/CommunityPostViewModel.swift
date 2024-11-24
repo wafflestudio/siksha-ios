@@ -60,6 +60,7 @@ protocol CommunityPostViewModelType: ObservableObject {
     var hasNextPublisher: Bool { get }
     var boardNamePublisher: String { get }
     
+    func asyncRefresh() async
     func editPost()
     func deletePost(completion: @escaping (Bool) -> Void)
     func togglePostLike()
@@ -136,7 +137,40 @@ extension CommunityPostViewModel {
     func editPost() {
         
     }
-    
+     func asyncRefresh() async{
+        let postPublisher =  self.communityRepository.loadPost(postId: self.postId)
+        let commentsPublisher = self.communityRepository.loadCommentsPage(postId: self.postId, page: Constants.initialPage, perPage: Constants.pageCount)
+         let boardInfoPublisher = self.communityRepository.loadBoardList()
+         do{
+             for try await response in postPublisher.values{
+                 self.post = response
+             }
+             
+         }
+         catch{
+             print("\(error)")
+         }
+         do{
+             for try await response in commentsPublisher.values{
+                 self.commentsList = response.comments
+                 self.currentPage = 1
+                 self.hasNext = response.hasNext
+
+             }
+         }
+         catch{
+             print("\(error)")
+         }
+         do{
+             for try await response in boardInfoPublisher.values{
+                 self.boardsList = response
+             }
+         }
+         catch{
+             print("\(error)")
+         }
+        
+    }
     func deletePost(completion: @escaping (Bool) -> Void) {
         self.communityRepository.deletePost(postId: self.postId)
             .receive(on: RunLoop.main)

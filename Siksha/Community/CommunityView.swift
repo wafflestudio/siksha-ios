@@ -48,6 +48,10 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                     }
                 }
                 .customNavigationBar(title: "icon")
+                .refreshable {
+                        await viewModel.asyncRefresh()
+                    
+                }
                 
                 Button {
                     self.tag = 1
@@ -82,6 +86,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 needRefresh = false
             }
         })
+        
         
        
       
@@ -225,6 +230,10 @@ struct ComunityView_Previews: PreviewProvider {
 }
 
 class StubCommunityViewModel: CommunityViewModelType {
+    func asyncRefresh() async {
+        
+    }
+    
     func loadTrendingPosts() {
         
     }

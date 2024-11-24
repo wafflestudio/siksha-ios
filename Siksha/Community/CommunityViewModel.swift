@@ -97,6 +97,7 @@ protocol CommunityViewModelType: ObservableObject {
     func getSelectedBoardName() -> String
     func loadSelectedBoardPosts()
     func loadTrendingPosts()
+    func asyncRefresh() async
 }
 
 final class CommunityViewModel: CommunityViewModelType {
@@ -187,7 +188,31 @@ extension CommunityViewModel {
             })
             .store(in: &cancellables)
     }
-    
+     func asyncRefresh() async{
+         let trendingPublisher = self.communityRepository.loadTrendingPosts(likes:Constants.trendingLikes, created_before: Constants.trendingCreatedBefore)
+         let postsPublisher =  self.communityRepository.loadPostsPage(boardId: selectedBoardId, page: Constants.initialPage, perPage: Constants.pageCount)
+         do{
+             for try await response in trendingPublisher.values{
+                 self.trendingPostList = response.result
+             }
+             
+         }
+         catch{
+             print("\(error)")
+         }
+         do{
+             for try await postsPage in postsPublisher.values{
+                 self.currPostList = postsPage.posts
+                 self.currentPage = 1
+                 self.hasNext = postsPage.hasNext
+
+             }
+             
+         }
+         catch{
+             print("\(error)")
+         }
+    }
     func selectBoard(id: Int) {
         self.selectedBoardId = id
         

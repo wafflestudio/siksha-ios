@@ -514,9 +514,13 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
 
                                   }
                 })
+                .refreshable {
+                    await viewModel.asyncRefresh()
+                }
             
             
         }
+        
         
     }
 
@@ -535,6 +539,10 @@ extension View {
  }*/
 
 class StubCommunityPostViewModel: CommunityPostViewModelType {
+    func asyncRefresh() async {
+        
+    }
+    
     func deleteComment(id: Int, completion: @escaping (Bool) -> Void) {
         
     }
