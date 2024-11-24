@@ -12,11 +12,16 @@ struct RestaurantInformationView: View {
     
     var restaurant: Restaurant
     
-    let position: NMGLatLng
-        
+    let position: NMGLatLng?
+
     init(_ restaurant: Restaurant) {
         self.restaurant = restaurant
-        self.position = NMGLatLng(lat: Double(restaurant.lat)!, lng: Double(restaurant.lng)!)
+        
+        if let lat = Double(restaurant.lat), let lng = Double(restaurant.lng) {
+                    self.position = NMGLatLng(lat: lat, lng: lng)
+                } else {
+                    self.position = nil
+                }
     }
     
     @State var selected = 0
@@ -33,35 +38,39 @@ struct RestaurantInformationView: View {
             }
             .padding(EdgeInsets(top: 14, leading: 16, bottom: 10, trailing: 16))
 
-            Color.init("main")
-                .frame(height: 1)
-                .frame(maxWidth: .infinity)
-                .padding([.leading, .trailing], 16)
+            if let position = position {
+                Color.init("main")
+                    .frame(height: 1)
+                    .frame(maxWidth: .infinity)
+                    .padding([.leading, .trailing], 16)
+            }
             
             ScrollView {
-                HStack {
-                    Text("식당 위치")
-                        .font(.custom("NanumSquareOTFR", size: 14))
-                        .foregroundColor(.black)
-                    Spacer()
+                if let position = position {
+                    HStack {
+                        Text("식당 위치")
+                            .font(.custom("NanumSquareOTFR", size: 14))
+                            .foregroundColor(.black)
+                        Spacer()
+                        
+                        Image("Location")
+                            .resizable()
+                            .frame(width: 16, height: 16)
+                        Text(restaurant.addr)
+                            .font(.custom("NanumSquareOTFR", size: 14))
+                            .foregroundColor(Color("LightFontColor"))
+                    }
+                    .padding(EdgeInsets(top: 16, leading: 16, bottom: 12, trailing: 16))
                     
-                    Image("Location")
-                        .resizable()
-                        .frame(width: 16, height: 16)
-                    Text(restaurant.addr)
-                        .font(.custom("NanumSquareOTFR", size: 14))
-                        .foregroundColor(Color("LightFontColor"))
+                    MapView(coordinate: position, markerText: restaurant.addr)
+                        .cornerRadius(10.0)
+                        .frame(height: 250)
+                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 24, trailing: 16))
+                    Color.init("DarkBackgroundColor")
+                        .frame(height: 10)
+                        .frame(maxWidth: .infinity)
                 }
-                .padding(EdgeInsets(top: 16, leading: 16, bottom: 12, trailing: 16))
 
-                MapView(coordinate: position, markerText: restaurant.addr)
-                    .cornerRadius(10.0)
-                    .frame(height: 250)
-                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 24, trailing: 16))
-                
-                Color.init("DarkBackgroundColor")
-                    .frame(height: 10)
-                    .frame(maxWidth: .infinity)
 
                 HStack(alignment: .center, spacing: 0) {
                     Text("영업 시간")
