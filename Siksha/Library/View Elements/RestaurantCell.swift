@@ -64,7 +64,7 @@ struct RestaurantCell: View {
                     Button(action: {
                         kakaoShareManager.shareToKakao(restaurant: restaurant)
                     }) {
-                        Image(systemName: "square.and.arrow.up")
+                        Image(.kakaoShare)
                             .resizable()
                             .renderingMode(.original)
                             .frame(width: 17, height: 17)
