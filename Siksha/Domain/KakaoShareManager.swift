@@ -20,18 +20,18 @@ class KakaoShareManager: ObservableObject {
     let kakaoAppKey = (UIApplication.shared.delegate as! AppDelegate).configDict?.object(forKey: "kakao_app_key") as! String
     
     var kakaoShareInfo: [String: String] = [:]
-    var maxPlaces = 0
+    var maxMenus = 0
     
     func setTempArgs(restaurant: Restaurant) {
         kakaoShareInfo["restuarant"] = restaurant.nameKr
         let maxMenus = min(restaurant.menus.count, 5)
         switch restaurant.menus.count <= 5 {
         case true:
-            for i in 0...maxPlaces-1 {
+            for i in 0...maxMenus-1 {
                 kakaoShareInfo["menu\(i+1)"] = restaurant.menus[i].nameKr
                 kakaoShareInfo["price\(i+1)"] = "\(restaurant.menus[i].price)원"
             }
-            for i in maxPlaces...5 {
+            for i in maxMenus...5 {
                 kakaoShareInfo["menu\(i+1)"] = nil
                 kakaoShareInfo["price\(i+1)"] = nil
             }
@@ -47,6 +47,7 @@ class KakaoShareManager: ObservableObject {
         if !AuthApi.hasToken() {
             // Generate Redirect URI
             let redirectURI = "kakao\(kakaoAppKey)://oauth"
+            guard let encodedRedirectURI = redirectURI.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) else { return }
             // Redirect to Kakao login page
             let loginUrl = "https://kauth.kakao.com/oauth/authorize?client_id=\(kakaoAppKey)&redirect_uri=\(redirectURI)&response_type=code"
             urlToLoad = loginUrl
