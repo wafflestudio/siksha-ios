@@ -42,7 +42,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                             .padding(.zero)
                         TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
                     }
-                    if viewModel.loadInitialPostsStatus == .loading {
+                    if viewModel.loadInitialPostsStatus == .loading && (self.viewModel.postsListPublisher.isEmpty || self.viewModel.isChangingBoard) {
                         VStack {
                             Spacer()
                             ActivityIndicator(isAnimating: .constant(true), style: .large)
@@ -272,6 +272,7 @@ class StubCommunityViewModel: CommunityViewModelType {
     ]
     
     var loadInitialPostsStatus: InitialPostsStatus = .idle
+    var isChangingBoard: Bool = false
     
     func loadBasicInfos() { }
     func loadMorePosts() { }

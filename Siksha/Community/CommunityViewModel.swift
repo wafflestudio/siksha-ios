@@ -91,6 +91,7 @@ protocol CommunityViewModelType: ObservableObject {
     var trendingPostsListPublisher: [PostInfo] { get }
     var hasNextPublisher: Bool { get }
     var loadInitialPostsStatus: InitialPostsStatus { get }
+    var isChangingBoard: Bool { get }
     
     func selectBoard(id: Int)
     func loadBasicInfos()
@@ -124,6 +125,7 @@ final class CommunityViewModel: CommunityViewModelType {
     
     private var cancellables = Set<AnyCancellable>()
     private var loadInitialPostsCancellable: AnyCancellable?
+    var isChangingBoard: Bool = false
     
     init(communityRepository: CommunityRepositoryProtocol) {
         self.communityRepository = communityRepository
@@ -173,10 +175,7 @@ extension CommunityViewModel {
                 }
                 else{
                     self?.selectBoard(id: self?.selectedBoardId ?? (boards.first?.id ?? 0))
-
                 }
-               
-                
             })
             .store(in: &cancellables)
     }
@@ -224,6 +223,9 @@ extension CommunityViewModel {
             }
             self.loadInitialPostsCancellable?.cancel()
         }
+        if selectedBoardId != id {
+            self.isChangingBoard = true
+        }
         self.selectedBoardId = id
         
         self.loadInitialPosts(boardId: id)
@@ -247,6 +249,7 @@ extension CommunityViewModel {
                 self?.currentPage = 1
                 self?.hasNext = postsPage.hasNext
                 self?.loadInitialPostsStatus = .idle
+                self?.isChangingBoard = false
             })
     }
     
