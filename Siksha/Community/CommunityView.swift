@@ -84,8 +84,8 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
             
             
         }
+        .errorAlert(error: $viewModel.error)
         .onAppear {
-            print("onappear")
             self.viewModel.loadBasicInfos()
         }
         .onChange(of: needRefresh, perform: { refresh in
@@ -239,6 +239,7 @@ struct ComunityView_Previews: PreviewProvider {
 }
 
 class StubCommunityViewModel: CommunityViewModelType {
+    @Published var error: AppError?
     func asyncRefresh() async {
         
     }

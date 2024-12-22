@@ -90,6 +90,7 @@ protocol CommunityViewModelType: ObservableObject {
     var postsListPublisher: [PostInfo] { get }
     var trendingPostsListPublisher: [PostInfo] { get }
     var hasNextPublisher: Bool { get }
+    var error: AppError? { get set }
     var loadInitialPostsStatus: InitialPostsStatus { get }
     var isChangingBoard: Bool { get }
     
@@ -111,6 +112,8 @@ final class CommunityViewModel: CommunityViewModelType {
     }
     
     private let communityRepository: CommunityRepositoryProtocol
+    
+    @Published var error: AppError?
     
     @Published private var boardsList: [Board] = []
     @Published private var selectedBoardId: Int = 0
@@ -166,8 +169,10 @@ extension CommunityViewModel {
         self.communityRepository
             .loadBoardList()
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                print(error)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    self.error = ErrorHelper.categorize(error)
+                }
             }, receiveValue: { [weak self] boards in
                 self?.boardsList = boards
                 if(self?.selectedBoardId == 0){
@@ -183,14 +188,17 @@ extension CommunityViewModel {
      func loadTrendingPosts() {
         self.communityRepository.loadTrendingPosts(likes:Constants.trendingLikes, created_before: Constants.trendingCreatedBefore)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                print(error)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    self.error = ErrorHelper.categorize(error)
+                }
             }, receiveValue: {[weak self] response in
                 self?.trendingPostList = response.result
                 
             })
             .store(in: &cancellables)
     }
+    
      func asyncRefresh() async{
          let trendingPublisher = self.communityRepository.loadTrendingPosts(likes:Constants.trendingLikes, created_before: Constants.trendingCreatedBefore)
          let postsPublisher =  self.communityRepository.loadPostsPage(boardId: selectedBoardId, page: Constants.initialPage, perPage: Constants.pageCount)
@@ -201,7 +209,8 @@ extension CommunityViewModel {
              
          }
          catch{
-             print("\(error)")
+             self.error = ErrorHelper.categorize(error)
+             return
          }
          do{
              for try await postsPage in postsPublisher.values{
@@ -213,9 +222,11 @@ extension CommunityViewModel {
              
          }
          catch{
-             print("\(error)")
+             self.error = ErrorHelper.categorize(error)
+             return
          }
     }
+    
     func selectBoard(id: Int) {
         if self.loadInitialPostsStatus == .loading {
             if self.selectedBoardId == id {
@@ -242,8 +253,10 @@ extension CommunityViewModel {
         loadInitialPostsCancellable = self.communityRepository
             .loadPostsPage(boardId: boardId, page: Constants.initialPage, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                print(error)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    self.error = ErrorHelper.categorize(error)
+                }
             }, receiveValue: { [weak self] postsPage in
                 self?.currPostList = postsPage.posts
                 self?.currentPage = 1
@@ -261,8 +274,10 @@ extension CommunityViewModel {
         self.communityRepository
             .loadPostsPage(boardId: self.selectedBoardId, page: self.currentPage + 1, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                print(error)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    self.error = ErrorHelper.categorize(error)
+                }
             }, receiveValue: { [weak self] postsPage in
                 self?.currPostList.append(contentsOf: postsPage.posts)
                 self?.currentPage += 1
