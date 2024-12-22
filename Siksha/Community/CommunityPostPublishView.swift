@@ -13,14 +13,16 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @Binding var needRefresh:Bool
+    @Binding var needPostViewRefresh:Bool
     @State private var isShowingPhotoLibrary = false
     @State private var isExpanded = false
     private var cornerRadius = 7.0
     @ObservedObject  var viewModel:ViewModel
     @StateObject private var keyboardResponder = KeyboardResponder()
     private var cancellables = Set<AnyCancellable>()
-    init(needRefresh: Binding<Bool>, viewModel: ViewModel) {
+    init(needRefresh: Binding<Bool>, needPostViewRefresh: Binding<Bool> = .constant(false), viewModel: ViewModel) {
         self._needRefresh = needRefresh
+        self._needPostViewRefresh = needPostViewRefresh
         self.viewModel = viewModel
     }
  
@@ -376,6 +378,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         if viewModel.isSubmitted {
             action = {
                 needRefresh = true
+                needPostViewRefresh = true
                 presentationMode.wrappedValue.dismiss()
             }
         } else {

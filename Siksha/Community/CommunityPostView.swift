@@ -477,7 +477,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                
                 .fullScreenCover(isPresented: $isEditingPost){
                     CommunityPostPublishView(
-                        needRefresh: self.$needRefresh, viewModel: CommunityPostPublishViewModel(
+                        needRefresh: self.$needRefresh, needPostViewRefresh: self.$needPostViewRefresh, viewModel: CommunityPostPublishViewModel(
                             boardId: viewModel.postInfo.boardId,
                             communityRepository:DomainManager.shared.domain.communityRepository,
                             postInfo: viewModel.postInfo
@@ -505,15 +505,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     })
                 }
                 
-                .onChange(of: isEditingPost, perform: {
-                    isEditingPost in
-                    if(!isEditingPost){
-                            self.presentationMode.wrappedValue.dismiss()
-
-                        
-
-                                  }
-                })
                 .refreshable {
                     await viewModel.asyncRefresh()
                 }
