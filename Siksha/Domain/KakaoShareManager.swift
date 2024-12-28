@@ -18,6 +18,7 @@ class KakaoShareManager: ObservableObject {
     @Published var urlToLoad: String?
     
     let kakaoAppKey = (UIApplication.shared.delegate as! AppDelegate).configDict?.object(forKey: "kakao_app_key") as! String
+    let templateId = Int64((UIApplication.shared.delegate as! AppDelegate).configDict?.object(forKey: "kakao_share_template_id") as! String) ?? 0
     
     var kakaoShareInfo: [String: String] = [:]
     var maxMenus = 0
@@ -61,7 +62,6 @@ class KakaoShareManager: ObservableObject {
             return
         }
         
-        let templateId: Int64 = ###
         setTempArgs(restaurant: restaurant, selectedDateString: selectedDateString)
         
         // Check if KakaoTalk is installed
