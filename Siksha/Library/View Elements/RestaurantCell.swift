@@ -62,7 +62,7 @@ struct RestaurantCell: View {
                 
                 if #available(iOS 15.0, *) {
                     Button(action: {
-                        kakaoShareManager.shareToKakao(restaurant: restaurant)
+                        kakaoShareManager.shareToKakao(restaurant: restaurant, selectedDateString: viewModel?.selectedDate ?? "오늘")
                     }) {
                         Image(.kakaoShare)
                             .resizable()
@@ -76,7 +76,7 @@ struct RestaurantCell: View {
                     }.interactiveDismissDisabled(false)
                 } else {
                     Button(action: {
-                        kakaoShareManager.shareToKakao(restaurant: restaurant)
+                        kakaoShareManager.shareToKakao(restaurant: restaurant, selectedDateString: viewModel?.selectedDate ?? "오늘")
                     }) {
                         Image(systemName: "square.and.arrow.up")
                             .resizable()

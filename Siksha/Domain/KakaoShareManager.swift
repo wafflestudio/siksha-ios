@@ -22,14 +22,20 @@ class KakaoShareManager: ObservableObject {
     var kakaoShareInfo: [String: String] = [:]
     var maxMenus = 0
     
-    func setTempArgs(restaurant: Restaurant) {
-        kakaoShareInfo["restuarant"] = restaurant.nameKr
+    let dateFormatter = DateFormatter()
+    
+    func setTempArgs(restaurant: Restaurant, selectedDateString: String) {
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        let today = dateFormatter.string(from: Date())
+        kakaoShareInfo["date"] = selectedDateString == today ? "오늘" : selectedDateString
+
+        kakaoShareInfo["restaurant"] = restaurant.nameKr
         let maxMenus = min(restaurant.menus.count, 5)
         switch restaurant.menus.count <= 5 {
         case true:
             for i in 0...maxMenus-1 {
                 kakaoShareInfo["menu\(i+1)"] = restaurant.menus[i].nameKr
-                kakaoShareInfo["price\(i+1)"] = "\(restaurant.menus[i].price)원"
+                kakaoShareInfo["price\(i+1)"] = restaurant.menus[i].price != 0 ? "\(restaurant.menus[i].price)원" : "-"
             }
             for i in maxMenus...5 {
                 kakaoShareInfo["menu\(i+1)"] = nil
@@ -38,12 +44,12 @@ class KakaoShareManager: ObservableObject {
         case false:
             for i in 0...4 {
                 kakaoShareInfo["menu\(i+1)"] = restaurant.menus[i].nameKr
-                kakaoShareInfo["price\(i+1)"] = "\(restaurant.menus[i].price)원"
+                kakaoShareInfo["price\(i+1)"] = restaurant.menus[i].price != 0 ? "\(restaurant.menus[i].price)원" : "-"
             }
         }
     }
     
-    func shareToKakao(restaurant: Restaurant) {
+    func shareToKakao(restaurant: Restaurant, selectedDateString: String) {
         if !AuthApi.hasToken() {
             // Generate Redirect URI
             let redirectURI = "kakao\(kakaoAppKey)://oauth"
@@ -56,7 +62,7 @@ class KakaoShareManager: ObservableObject {
         }
         
         let templateId: Int64 = ###
-        setTempArgs(restaurant: restaurant)
+        setTempArgs(restaurant: restaurant, selectedDateString: selectedDateString)
         
         // Check if KakaoTalk is installed
         if ShareApi.isKakaoTalkSharingAvailable() {
