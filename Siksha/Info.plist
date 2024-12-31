@@ -23,7 +23,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>###</string>
+				<string>kakao${kakao_app_key}</string>
 			</array>
 		</dict>
 		<dict>

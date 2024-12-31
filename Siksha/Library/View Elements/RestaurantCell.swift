@@ -71,7 +71,7 @@ struct RestaurantCell: View {
                             .foregroundColor(orangeColor)
                     }.sheet(isPresented: $kakaoShareManager.showWebView) {
                         if let urlString = kakaoShareManager.urlToLoad {
-                            WebView(urlString: urlString)
+                            KakaoShareWebView(urlString: urlString, showWebView: $kakaoShareManager.showWebView, restaurant: restaurant, selectedDate: viewModel?.selectedDate ?? "오늘")
                         }
                     }.interactiveDismissDisabled(false)
                 } else {
@@ -85,7 +85,7 @@ struct RestaurantCell: View {
                             .foregroundColor(orangeColor)
                     }.sheet(isPresented: $kakaoShareManager.showWebView) {
                         if let urlString = kakaoShareManager.urlToLoad {
-                            WebView(urlString: urlString)
+                            KakaoShareWebView(urlString: urlString, showWebView: $kakaoShareManager.showWebView, restaurant: restaurant, selectedDate: viewModel?.selectedDate ?? "오늘")
                         }
                     }
                 }
