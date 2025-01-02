@@ -204,6 +204,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 .frame(height: 40)
             }
         }
+        .errorAlert(error: $viewModel.error)
     }
   
 
@@ -530,6 +531,8 @@ extension View {
  }*/
 
 class StubCommunityPostViewModel: CommunityPostViewModelType {
+    var error: AppError?
+    
     func asyncRefresh() async {
         
     }

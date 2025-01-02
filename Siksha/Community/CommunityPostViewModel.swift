@@ -55,6 +55,7 @@ struct CommentInfo: Identifiable, Equatable {
 }
 
 protocol CommunityPostViewModelType: ObservableObject {
+    var error: AppError? { get set }
     var postInfo: PostInfo { get }
     var commentsListPublisher: [CommentInfo] { get }
     var hasNextPublisher: Bool { get }
@@ -151,6 +152,7 @@ extension CommunityPostViewModel {
          }
          catch{
              self.error = ErrorHelper.categorize(error)
+             print("1")
          }
          do{
              for try await response in commentsPublisher.values{
@@ -162,6 +164,8 @@ extension CommunityPostViewModel {
          }
          catch{
              self.error = ErrorHelper.categorize(error)
+             print("1")
+
          }
          do{
              for try await response in boardInfoPublisher.values{
@@ -170,6 +174,8 @@ extension CommunityPostViewModel {
          }
          catch{
              self.error = ErrorHelper.categorize(error)
+             print("1")
+
          }
         
     }
@@ -348,7 +354,7 @@ extension CommunityPostViewModel {
                 .receive(on: RunLoop.main)
                 .sink(receiveCompletion: { completion in
                     if case .failure(let error) = completion {
-                        print("Error occurred while liking the comment: \(error)")
+                        self.error = ErrorHelper.categorize(error)
                     }
                 }, receiveValue: { [weak self] updatedComment in
                     self?.commentsList[index] = updatedComment
