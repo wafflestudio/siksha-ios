@@ -42,6 +42,7 @@ struct RenewalSettingsView: View {
                     .padding(.bottom, 15)
                 
             }
+            .errorAlert(error: $viewModel.error)
          
             .padding(.top, 24)
             .padding([.leading, .trailing], 20)

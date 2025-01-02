@@ -98,6 +98,7 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
                     .foregroundColor(Color(white: 166/255))
                 Spacer()
             }
+            .errorAlert(error: $viewModel.error)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .customNavigationBar(title: "내가 쓴 글")
                 .navigationBarItems(leading: backButton)
@@ -159,6 +160,7 @@ struct MyPostView_Previews: PreviewProvider {
 }
 
 class StubMyPostViewModel: MyPostViewModelType {
+    var error: AppError?
     
     var hasNextPublisher: Bool {
         return false

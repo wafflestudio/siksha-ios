@@ -13,6 +13,7 @@ import UIKit
 class UserManager: ObservableObject {
     static let shared = UserManager()
     
+    @Published var error: AppError?
     @Published var nickname: String?
     @Published var imageURL: String? {
         didSet {
@@ -39,7 +40,7 @@ class UserManager: ObservableObject {
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
-                    print(error)
+                    self.error = ErrorHelper.categorize(error)
                 }
             }, receiveValue: { [weak self] user in
                 self?.nickname = user.nickname

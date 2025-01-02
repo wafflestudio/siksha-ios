@@ -21,6 +21,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 mainContent
                 keyboardToolbarContent
             }
+            .errorAlert(error: $viewModel.error)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .contentShape(Rectangle())
             .customNavigationBar(title: "프로필 관리")

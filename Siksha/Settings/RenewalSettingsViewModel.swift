@@ -14,6 +14,8 @@ class RenewalSettingsViewModel: ObservableObject {
     
     private let repository: UserRepositoryProtocol = DomainManager.shared.domain.userRepository
     
+    @Published var error: AppError?
+
     @Published var noMenuHide = false
   
     @Published var networkStatus: NetworkStatus = .idle
@@ -92,9 +94,9 @@ class RenewalSettingsViewModel: ObservableObject {
     func getUserId() {
         repository.loadUserInfo()
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
+            .sink(receiveCompletion: { [weak self] completion in
                 if case .failure(let error) = completion {
-                    print("Error172: \(error)")
+                    self?.error = ErrorHelper.categorize(error)
                 }
             }, receiveValue: { [weak self] user in
                 self?.userId = user.id
@@ -110,7 +112,7 @@ class RenewalSettingsViewModel: ObservableObject {
                 case .finished:
                     self?.postVOCStatus = .succeeded
                 case .failure(let error):
-                    print(error)
+                    self?.error = ErrorHelper.categorize(error)
                 }
             }, receiveValue: { value in
                 
@@ -135,7 +137,7 @@ class RenewalSettingsViewModel: ObservableObject {
                     UserDefaults.standard.set(nil, forKey: "accessToken")
                     completion(true)
                 case .failure(let error):
-                    print(error)
+                    self?.error = ErrorHelper.categorize(error)
                     completion(false)
                 }
             }, receiveValue: { value in
