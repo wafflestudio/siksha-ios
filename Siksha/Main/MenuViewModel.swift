@@ -8,11 +8,23 @@
 import Foundation
 import Combine
 
+
+public struct MenuFilters {
+    var distance: Int? = nil               // Distance in meters (e.g., 400m); nil = all distances
+    var priceRange: ClosedRange<Int>? = nil // Price range (e.g., 5000원 ~ 8000원); nil = all prices
+    var isOpen: Bool? = nil                // Open status; true = open only, nil = open + closed
+    var hasReview: Bool? = nil             // Review status; true = with reviews only, nil = review + no review
+    var minimumRating: Float? = nil        // Minimum rating (e.g., 3.5); nil = all ratings
+    var categories: [String]? = nil            // Category filter (e.g., 한식, 중식); nil = all categories
+}
+
 public class MenuViewModel: ObservableObject {
     
     let FESTIVAL_END: Date
     
     private var cancellables = Set<AnyCancellable>()
+    
+    @Published var selectedFilters: MenuFilters = MenuFilters()
     
     private let repository = MenuRepository()
     private let formatter = DateFormatter()
