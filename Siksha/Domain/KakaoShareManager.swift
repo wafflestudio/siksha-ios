@@ -49,21 +49,7 @@ class KakaoShareManager: ObservableObject {
             }
         }
     }
-    
-    func shareToKakao(restaurant: Restaurant, selectedDateString: String) {
-        print("Token exists: \(AuthApi.hasToken())")  // 토큰 상태 확인
-        
-        if !AuthApi.hasToken() {
-            let redirectURI = "kakao\(kakaoAppKey)://oauth"
-            let loginUrl = "https://kauth.kakao.com/oauth/authorize?client_id=\(kakaoAppKey)&redirect_uri=\(redirectURI)&response_type=code"
-            urlToLoad = loginUrl
-            showWebView = true
-            return
-        }
-        
-        shareKakao(restaurant: restaurant, selectedDateString: selectedDateString)
-    }
-    
+
     func shareKakao(restaurant: Restaurant, selectedDateString: String) {
         setTempArgs(restaurant: restaurant, selectedDateString: selectedDateString)
         
