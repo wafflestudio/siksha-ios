@@ -135,6 +135,20 @@ private extension MenuView {
                             }
                         }.padding(.top, 8)
                     }
+                    ScrollView(.horizontal,showsIndicators: false){
+                        HStack(spacing:5){
+                            Image("Filter")
+                            FilterItem(text: "거리",isOn: true, isCheck: false)
+                            FilterItem(text: "가격",isOn: false, isCheck: false)
+                            FilterItem(text: "영업 중",isOn:true,isCheck: true)
+                            FilterItem(text: "리뷰",isOn:false,isCheck: true)
+                            FilterItem(text: "최소 평점",isOn:true,isCheck: false)
+                            FilterItem(text: "카테고리",isOn:true,isCheck: false)
+                            
+                        }
+                        
+                        .padding(EdgeInsets(top: 17, leading: 0, bottom: 17, trailing: 0))
+                    }
                     
                     if #available(iOS 15, *) {
                         TabView(selection: $viewModel.selectedPage) {
