@@ -1,0 +1,71 @@
+//
+//  SegmentedPicker.swift
+//  Siksha
+//
+//  Created by 권현구 on 1/31/25.
+//
+
+import SwiftUI
+
+struct SegmentedPicker<T: Hashable>: View {
+    @Binding var selectedOption: T
+    var options: [T]
+    var format: (T) -> String // Function to convert option to text
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 30)
+            .stroke(Color("Grey2"))
+            .foregroundStyle(.clear)
+            .frame(height: 34)
+            .overlay(
+                HStack(alignment: .center, spacing: 1) {
+                    ForEach(options, id: \.self) { option in
+                        RoundedRectangle(cornerRadius: 30)
+                            .stroke(self.selectedOption == option ? Color("SelectedBorder") : .clear)
+                            .background(self.selectedOption == option ? Color("SelectedBackground") : .clear, in: RoundedRectangle(cornerRadius: 30))
+                            .overlay(
+                                Text(self.format(option))
+                                    .font(.system(size: 14))
+                            )
+                            .onTapGesture {
+                                self.selectedOption = option
+                            }
+                    }
+                }
+            )
+    }
+}
+
+struct CustomSegmentedPicker_Previews: PreviewProvider {
+    static var previews: some View {
+        PreviewWrapper()
+    }
+    
+    struct PreviewWrapper: View {
+        @State private var isOpen: Bool = true
+        @State private var hasReview: Bool = true
+        @State private var minimumRating: Float = 3.5
+        
+        var body: some View {
+            VStack(spacing: 20) {
+                SegmentedPicker(
+                    selectedOption: $isOpen,
+                    options: [false, true],
+                    format: { $0 ? "영업 중" : "전체" }
+                )
+                
+                SegmentedPicker(
+                    selectedOption: $hasReview,
+                    options: [false, true],
+                    format: { $0 ? "리뷰 있음" : "전체" }
+                )
+                
+                SegmentedPicker(
+                    selectedOption: $minimumRating,
+                    options: [0, 3.5, 4.0, 4.5],
+                    format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) }
+                )
+            }
+        }
+    }
+}
