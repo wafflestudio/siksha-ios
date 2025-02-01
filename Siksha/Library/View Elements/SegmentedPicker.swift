@@ -9,8 +9,8 @@ import SwiftUI
 
 struct SegmentedPicker<T: Hashable>: View {
     @Binding var selectedOption: T
-    var options: [T]
-    var format: (T) -> String // Function to convert option to text
+    let options: [T]
+    let format: (T) -> String
     
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
