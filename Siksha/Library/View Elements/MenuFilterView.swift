@@ -14,40 +14,31 @@ struct MenuFilterView: View {
     @State private var isOpen: Bool = false
     @State private var hasReview: Bool = false
     @State private var minimumRating: Double = 0.0
-    @State private var selectedCategory: String = "전체"
+    @State private var selectedCategories: [String] = ["전체", "분식", "양식"]
     
     let ratings = [3.5, 4.0, 4.5]
     let categories = ["전체", "한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
     
     var body: some View {
         VStack(spacing: 0) {
-            // Handle
             Capsule()
                 .fill(Color.secondary)
                 .opacity(0.5)
                 .frame(width: 42, height: 4)
                 .padding(.vertical, 17)
             
-            // Header
             Text("필터")
                 .font(.custom("NanumSquareOTFB", size: 14))
                 .padding(EdgeInsets(top: 1.32, leading: 0, bottom: 13.68, trailing: 0))
             
-            // Sections
             ScrollView {
                 VStack(spacing: 40) {
-                    // Distance Section
-                    //                    SectionHeader(title: "거리")
-                    //                    SliderView(label: "\(Int(distanceValue))m 이내", value: $distanceValue, range: 0...1000)
+                    SectionHeader(title: "거리")
+                    DistanceSliderView(targetValue: $distanceValue)
                     
-                    // Price Section
-                    //                    SectionHeader(title: "가격")
-                    //                    RangeSliderView(label: "\(Int(lowerPrice))원 ~ \(Int(upperPrice))원",
-                    //                                    lowerValue: $lowerPrice,
-                    //                                    upperValue: $upperPrice,
-                    //                                    bounds: 0...20000)
+                    SectionHeader(title: "가격")
+                    PriceRangeSliderView(lowerValue: $lowerPrice, upperValue: $upperPrice)
                     
-                    // Operating Hours Section
                     PickerFilterSection(title: "영업시간") {
                         SegmentedPicker(
                             selectedOption: $isOpen,
@@ -56,7 +47,6 @@ struct MenuFilterView: View {
                         )
                     }
                     
-                    // Reviews Section
                     PickerFilterSection(title: "리뷰") {
                         SegmentedPicker(
                             selectedOption: $hasReview,
@@ -65,7 +55,6 @@ struct MenuFilterView: View {
                         )
                     }
                     
-                    // Minimum Rating Section
                     PickerFilterSection(title: "최소 평점") {
                         SegmentedPicker(
                             selectedOption: $minimumRating,
@@ -74,60 +63,66 @@ struct MenuFilterView: View {
                         )
                     }
                     
-                    // Category Section
-                    //                    SectionHeader(title: "카테고리")
-                    //                    FlowLayout(items: categories, selected: $selectedCategory)
+                    VStack(spacing: 14.5) {
+                        SectionHeader(title: "카테고리")
+                        CategoriesFlowLayout(items: categories, selected: $selectedCategories)
+                    }
+                    
                 }
             }
+            .padding(.horizontal, 16)
             
-            Divider()
-            
-            // Bottom Buttons
-            HStack {
-                Button("초기화") {
-                    resetFilters()
-                }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.gray.opacity(0.7))
-                .foregroundColor(.white)
-                .cornerRadius(8)
+            ZStack {
+                Rectangle()
+                    .fill(Color.white)
+                    .frame(height: 77)
+                    .shadow(color: Color.black.opacity(0.05), radius: 3, y: -1)
+                    .zIndex(0)
                 
-                Button("적용") {
-                    applyFilters()
+                HStack {
+                    Button("초기화") {
+                        resetFilters()
+                    }
+                    .font(.custom("NanumSquareOTF", size: 16))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 38)
+                    .background(Color("Grey3"))
+                    .foregroundColor(.white)
+                    .cornerRadius(20)
+                    
+                    Button("적용") {
+                        applyFilters()
+                    }
+                    .font(.custom("NanumSquareOTF", size: 16))
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 38)
+                    .background(Color("main"))
+                    .foregroundColor(.white)
+                    .cornerRadius(20)
                 }
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.orange)
-                .foregroundColor(.white)
-                .cornerRadius(8)
+                .padding(EdgeInsets(top: 19, leading: 16, bottom: 20, trailing: 16))
+                .background(Color.white)
+                .zIndex(1)
             }
-            .padding(.horizontal)
-            .padding(.bottom)
+            
         }
-        .padding(.horizontal, 16)
-        .navigationTitle("title")
     }
     
-    // Reset Filters
     func resetFilters() {
         distanceValue = 400
         lowerPrice = 5000
         upperPrice = 8000
-        //        priceRange = 5000...8000
         isOpen = true
         hasReview = true
         minimumRating = 4.0
-        selectedCategory = "전체"
+        selectedCategories = ["전체"]
     }
     
-    // Apply Filters
     func applyFilters() {
+        // TODO: apply filters setting
         print("Filters applied!")
     }
 }
-
-// MARK: - Components
 
 struct PickerFilterSection<Content: View>: View {
     let title: String
@@ -147,7 +142,6 @@ struct PickerFilterSection<Content: View>: View {
     }
 }
 
-// Section Header
 struct SectionHeader: View {
     let title: String
     
@@ -158,78 +152,54 @@ struct SectionHeader: View {
     }
 }
 
-// Slider View
-struct SliderView: View {
-    let label: String
-    @Binding var value: Double
-    let range: ClosedRange<Double>
+struct CategoryButton: View {
+    let category: String
+    let isSelected: Bool
+    private let selectedBackground = Color(hex: 0xFFE8CE)
     
     var body: some View {
-        VStack {
-            Text(label)
-                .font(.caption)
-                .foregroundColor(.gray)
-            Slider(value: $value, in: range)
-                .foregroundColor(.orange)
-        }
-        .tint(Color("Grey4"))
+        RoundedRectangle(cornerRadius: 30)
+            .stroke(isSelected ? Color("main") : Color("Grey2"))
+            .frame(height: 34)
+            .overlay(
+                Text(category)
+                    .font(.custom("NanumSquareOTF", size: 13))
+                    .foregroundColor(.black)
+            )
+            .background(isSelected ? selectedBackground : .clear, in: RoundedRectangle(cornerRadius: 30))
     }
 }
 
-// Range Slider View
-struct RangeSliderView: View {
-    let label: String
-    @Binding var lowerValue: Double
-    @Binding var upperValue: Double
-    let bounds: ClosedRange<Double>
-    
-    var body: some View {
-        VStack {
-            Text(label)
-                .font(.caption)
-                .foregroundColor(.gray)
-            RangeSlider(lowerValue: $lowerValue, upperValue: $upperValue, bounds: bounds)
-        }
-        .padding(.horizontal)
-    }
-}
-
-// Flow Layout for Categories
-struct FlowLayout: View {
+struct CategoriesFlowLayout: View {
     let items: [String]
-    @Binding var selected: String
+    @Binding var selected: [String]
+    
+    private let flexibleColumn = [
+        GridItem(.fixed(56)),
+        GridItem(.fixed(56)),
+        GridItem(.fixed(56)),
+        GridItem(.fixed(56)),
+        GridItem(.fixed(56)),
+    ]
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 10)], spacing: 10) {
+        LazyVGrid(columns: flexibleColumn, alignment: .leading, spacing: 8) {
             ForEach(items, id: \.self) { item in
-                Button(item) {
-                    selected = item
-                }
-                .padding(8)
-                .background(selected == item ? Color.orange : Color.gray.opacity(0.2))
-                .foregroundColor(selected == item ? .white : .black)
-                .cornerRadius(8)
+                CategoryButton(category: item, isSelected: selected.contains(item))
+                    .onTapGesture {
+                        if selected.contains(item) {
+                            selected = selected.filter{$0 != item}
+                        } else {
+                            selected.append(item)
+                        }
+                    }
             }
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 1)
     }
 }
 
-// MARK: - Range Slider Component
-struct RangeSlider: View {
-    @Binding var lowerValue: Double
-    @Binding var upperValue: Double
-    let bounds: ClosedRange<Double>
-    
-    var body: some View {
-        VStack {
-            HStack {
-                Slider(value: $lowerValue, in: bounds.lowerBound...upperValue, step: 100)
-                Slider(value: $upperValue, in: lowerValue...bounds.upperBound, step: 100)
-            }
-        }
-    }
-}
+
 
 struct MenuFilterView_Previews: PreviewProvider {
     struct ContainerView: View {
@@ -237,7 +207,6 @@ struct MenuFilterView_Previews: PreviewProvider {
         
         var body: some View {
             Button(action: {
-                print("clicked")
                 self.showFilters = true
             }) {
                 Text("button")
@@ -247,7 +216,7 @@ struct MenuFilterView_Previews: PreviewProvider {
         }
     }
     static var previews: some View {
-        //        ContainerView()
+//                ContainerView()
         MenuFilterView()
     }
     
