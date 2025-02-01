@@ -68,6 +68,7 @@ struct MenuFilterView: View {
                         CategoriesFlowLayout(items: categories, selected: $selectedCategories)
                     }
                     
+                    Spacer(minLength: 88)
                 }
             }
             .padding(.horizontal, 16)
@@ -174,28 +175,30 @@ struct CategoriesFlowLayout: View {
     let items: [String]
     @Binding var selected: [String]
     
-    private let flexibleColumn = [
-        GridItem(.fixed(56)),
-        GridItem(.fixed(56)),
-        GridItem(.fixed(56)),
-        GridItem(.fixed(56)),
-        GridItem(.fixed(56)),
-    ]
+    private let spacing: CGFloat = 8
+    private let itemWidth: CGFloat = 56
     
     var body: some View {
-        LazyVGrid(columns: flexibleColumn, alignment: .leading, spacing: 8) {
-            ForEach(items, id: \.self) { item in
-                CategoryButton(category: item, isSelected: selected.contains(item))
-                    .onTapGesture {
-                        if selected.contains(item) {
-                            selected = selected.filter{$0 != item}
-                        } else {
-                            selected.append(item)
-                        }
+        VStack {
+            GeometryReader { geometry in
+                let maxColumns = Int((spacing + geometry.size.width) / (itemWidth + spacing))
+                let columns = Array(repeating: GridItem(.fixed(itemWidth), spacing: spacing), count: maxColumns)
+                LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+                    ForEach(items, id: \.self) { item in
+                        CategoryButton(category: item, isSelected: selected.contains(item))
+                            .onTapGesture {
+                                if selected.contains(item) {
+                                    selected = selected.filter{$0 != item}
+                                } else {
+                                    selected.append(item)
+                                }
+                            }
                     }
+                }
             }
         }
         .padding(.horizontal, 1)
+
     }
 }
 
