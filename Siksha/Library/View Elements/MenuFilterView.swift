@@ -110,12 +110,12 @@ struct MenuFilterView: View {
     }
     
     func resetFilters() {
-        distanceValue = 400
-        lowerPrice = 5000
-        upperPrice = 8000
-        isOpen = true
-        hasReview = true
-        minimumRating = 4.0
+        distanceValue = 1000
+        lowerPrice = 0
+        upperPrice = 15000
+        isOpen = false
+        hasReview = false
+        minimumRating = 0
         selectedCategories = ["전체"]
     }
     
