@@ -140,8 +140,26 @@ private extension MenuView {
                             Image("Filter")
                             FilterItem(text: "거리",isOn: true, isCheck: false)
                             FilterItem(text: "가격",isOn: false, isCheck: false)
-                            FilterItem(text: "영업 중",isOn:true,isCheck: true)
-                            FilterItem(text: "리뷰",isOn:false,isCheck: true)
+                            FilterItem(text: "영업 중",isOn:viewModel.selectedFilters.isOpen ?? false,isCheck: true)
+                                .onTapGesture {
+                                    
+                                    if let hasReviewFilter = viewModel.selectedFilters.isOpen{
+                                        viewModel.selectedFilters.isOpen?.toggle()
+                                    }
+                                    else{
+                                        viewModel.selectedFilters.isOpen = true
+                                    }
+                                }
+                            FilterItem(text: "리뷰",isOn:viewModel.selectedFilters.hasReview ?? false,isCheck: true)
+                                .onTapGesture {
+                                    
+                                    if let hasReviewFilter = viewModel.selectedFilters.hasReview{
+                                        viewModel.selectedFilters.hasReview?.toggle()
+                                    }
+                                    else{
+                                        viewModel.selectedFilters.hasReview = true
+                                    }
+                                }
                             FilterItem(text: "최소 평점",isOn:true,isCheck: false)
                             FilterItem(text: "카테고리",isOn:true,isCheck: false)
                             
