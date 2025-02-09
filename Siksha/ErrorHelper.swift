@@ -7,11 +7,6 @@
 
 import Foundation
 
-struct APIErrorResponse: Decodable {
-    let message: String
-    let code: String
-}
-
 struct ErrorHelper {
     static func categorize(_ error: Error) -> AppError {
         if let urlError = error as? URLError {
