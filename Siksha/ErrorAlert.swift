@@ -11,6 +11,7 @@ enum AppError: LocalizedError, Identifiable {
     case networkError(String)
     case parsingError(String)
     case unknownError(String)
+    case serverError(String, String)
 
     var id: String { // Required for `Identifiable`
         UUID().uuidString
@@ -22,8 +23,10 @@ enum AppError: LocalizedError, Identifiable {
             return "Network Error: \(message)"
         case .parsingError(let message):
             return "Parsing Error: \(message)"
+        case .serverError(let message, let code):
+            return "Server Error (\(code)): \(message)"
         case .unknownError(let message):
-            return message
+            return "Unknown Error: \(message)"
         }
     }
 }
