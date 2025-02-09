@@ -7,6 +7,11 @@
 
 import Foundation
 
+struct APIErrorResponse: Decodable {
+    let message: String
+    let code: String
+}
+
 struct ErrorHelper {
     static func categorize(_ error: Error) -> AppError {
         if let urlError = error as? URLError {
@@ -15,6 +20,10 @@ struct ErrorHelper {
         
         if let decodingError = error as? DecodingError {
             return handleDecodingError(decodingError)
+        }
+
+        if let apiError = handleAPIError(error) {
+            return apiError
         }
 
         return .unknownError(error.localizedDescription)
@@ -48,5 +57,17 @@ struct ErrorHelper {
         @unknown default:
             return .parsingError("알 수 없는 디코딩 오류가 발생했습니다.")
         }
+    }
+    
+    private static func handleAPIError(_ error: Error) -> AppError? {
+        if let networkError = error as? NetworkError {
+            switch networkError {
+            case .apiError(let message, let code):
+                return .serverError(message, code)
+            default:
+                return nil
+            }
+        }
+        return nil
     }
 }
