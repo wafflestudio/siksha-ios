@@ -34,9 +34,11 @@ class KakaoShareManager: ObservableObject {
         let maxMenus = min(restaurant.menus.count, 5)
         switch restaurant.menus.count <= 5 {
         case true:
-            for i in 0...maxMenus-1 {
-                kakaoShareInfo["menu\(i+1)"] = restaurant.menus[i].nameKr
-                kakaoShareInfo["price\(i+1)"] = restaurant.menus[i].price != 0 ? "\(restaurant.menus[i].price)원" : "-"
+            if maxMenus > 0{
+                for i in 0...maxMenus-1 {
+                    kakaoShareInfo["menu\(i+1)"] = restaurant.menus[i].nameKr
+                    kakaoShareInfo["price\(i+1)"] = restaurant.menus[i].price != 0 ? "\(restaurant.menus[i].price)원" : "-"
+                }
             }
             for i in maxMenus...5 {
                 kakaoShareInfo["menu\(i+1)"] = nil
