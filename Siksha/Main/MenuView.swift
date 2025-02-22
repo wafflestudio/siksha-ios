@@ -138,6 +138,10 @@ private extension MenuView {
                     ScrollView(.horizontal,showsIndicators: false){
                         HStack(spacing:5){
                             Image("Filter")
+                                .onTapGesture {
+                                    isFilterModal = true
+                                }
+                                
                             FilterItem(text: "거리",isOn: true, isCheck: false)
                             FilterItem(text: "가격",isOn: false, isCheck: false)
                             FilterItem(text: "영업 중",isOn:viewModel.selectedFilters.isOpen ?? false,isCheck: true)
@@ -209,7 +213,7 @@ private extension MenuView {
 
 struct MenuView: View {
     @StateObject var viewModel = MenuViewModel()
-    
+    @State var isFilterModal = false
     private let lightGrayColor = Color.init("LightGrayColor")
     private let orangeColor = Color.init("main")
     private let fontColor = Color("DefaultFontColor")
@@ -268,8 +272,10 @@ struct MenuView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             viewModel.getMenu(date: viewModel.selectedDate)
         }
+        .sheet(isPresented:$isFilterModal){
+            MenuFilterView(menuViewModel: viewModel)
+        }
     }
-    
     func openInstagram() {
         let appURL = URL(string: "instagram://user?username=snufestival")!
         let webURL = URL(string: "https://www.instagram.com/snufestival/")!

@@ -15,10 +15,10 @@ struct MenuFilterView: View {
     @State private var hasReview: Bool = false
     @State private var minimumRating: Double = 0.0
     @State private var selectedCategories: [String] = ["전체", "분식", "양식"]
-    
+    @ObservedObject var menuViewModel: MenuViewModel
+    @Environment(\.dismiss) var dismiss
     let ratings = [3.5, 4.0, 4.5]
     let categories = ["전체", "한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
-    
     var body: some View {
         VStack(spacing: 0) {
             Capsule()
@@ -120,7 +120,20 @@ struct MenuFilterView: View {
     }
     
     func applyFilters() {
-        // TODO: apply filters setting
+        
+        /*@State private var distanceValue: Double = 400
+        @State private var lowerPrice: Double = 5000
+        @State private var upperPrice: Double = 8000
+        @State private var isOpen: Bool = false
+        @State private var hasReview: Bool = false
+        @State private var minimumRating: Double = 0.0
+        @State private var selectedCategories: [String] = ["전체", "분식", "양식"]*/
+        menuViewModel.selectedFilters.distance = Int(distanceValue)
+        menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(upperPrice)
+        menuViewModel.selectedFilters.isOpen = isOpen
+        menuViewModel.selectedFilters.hasReview = hasReview
+        menuViewModel.selectedFilters.categories = selectedCategories
+        dismiss()
         print("Filters applied!")
     }
 }
@@ -214,13 +227,13 @@ struct MenuFilterView_Previews: PreviewProvider {
             }) {
                 Text("button")
             }.sheet(isPresented: $showFilters, content: {
-                MenuFilterView()
+                MenuFilterView(menuViewModel: MenuViewModel())
             })
         }
     }
     static var previews: some View {
 //                ContainerView()
-        MenuFilterView()
+        MenuFilterView(menuViewModel: MenuViewModel())
     }
     
 }
