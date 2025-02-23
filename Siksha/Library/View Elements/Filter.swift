@@ -17,7 +17,7 @@ struct FilterItem:View{
             Text(text)
                 .font(.custom("NanumSquareOTFB", size: 13))
             if(!isCheck){
-                Image("Select")
+                Image("select")
             }
         }.padding(EdgeInsets(top: 9, leading: 10, bottom: 10, trailing: 9))
             .background(isOn ? Color("MainActiveColor") : .white)
