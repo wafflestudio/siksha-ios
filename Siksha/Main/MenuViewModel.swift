@@ -21,7 +21,7 @@ public struct MenuFilters {
 public class MenuViewModel: ObservableObject {
     
     let FESTIVAL_END: Date
-    
+    let MAX_PRICE = 15000
     private var cancellables = Set<AnyCancellable>()
     
     @Published var selectedFilters: MenuFilters = MenuFilters()
@@ -59,6 +59,40 @@ public class MenuViewModel: ObservableObject {
     @Published var isFestivalAvailable: Bool
     @Published var isFestival: Bool = false
     
+    public var priceLabel:String{
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        
+        if let priceRange = selectedFilters.priceRange{
+            let formattedLower = numberFormatter.string(from: NSNumber(value: priceRange.lowerBound))!
+            let formattedUpper = numberFormatter.string(from: NSNumber(value: priceRange.upperBound))!
+            if priceRange.upperBound == MAX_PRICE{
+                return "\(formattedLower)원 ~ \(formattedUpper)원 이상"
+            }
+            else{
+                return "\(formattedLower)원 ~ \(formattedUpper)원"
+            }
+        }
+        return "가격"
+    }
+    public var distanceLabel:String{
+        if let distance = selectedFilters.distance{
+            return "\(distance)m 이내"
+        }
+        return "거리"
+    }
+    public var minRatingLabel:String{
+        if let minimumRating = selectedFilters.minimumRating{
+            return "평점 \(minimumRating) 이상"
+        }
+        return "최소 평점"
+    }
+    public var categoryLabel:String{
+        if let categories = selectedFilters.categories{
+            return categories.joined(separator: ",")
+        }
+        return "카테고리"
+    }
     init() {
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
