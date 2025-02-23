@@ -142,8 +142,8 @@ private extension MenuView {
                                     isFilterModal = true
                                 }
                                 
-                            FilterItem(text: "거리",isOn: true, isCheck: false)
-                            FilterItem(text: "가격",isOn: false, isCheck: false)
+                            FilterItem(text: viewModel.distanceLabel,isOn: viewModel.selectedFilters.distance != nil, isCheck: false)
+                            FilterItem(text: viewModel.priceLabel,isOn: viewModel.selectedFilters.priceRange != nil, isCheck: false)
                             FilterItem(text: "영업 중",isOn:viewModel.selectedFilters.isOpen ?? false,isCheck: true)
                                 .onTapGesture {
                                     
@@ -164,8 +164,8 @@ private extension MenuView {
                                         viewModel.selectedFilters.hasReview = true
                                     }
                                 }
-                            FilterItem(text: "최소 평점",isOn:true,isCheck: false)
-                            FilterItem(text: "카테고리",isOn:true,isCheck: false)
+                            FilterItem(text:viewModel.minRatingLabel,isOn:viewModel.selectedFilters.minimumRating != nil,isCheck: false)
+                            FilterItem(text: viewModel.categoryLabel,isOn:viewModel.selectedFilters.categories != nil,isCheck: false)
                             
                         }
                         
