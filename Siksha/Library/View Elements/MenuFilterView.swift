@@ -6,21 +6,45 @@
 //
 
 import SwiftUI
-
+class MenuFilterViewModel:ObservableObject{
+    @Published var distanceValue: Double = 1000
+    @Published var lowerPrice: Double = 0
+    @Published var upperPrice: Double = 15000
+    @Published var isOpen: Bool = false
+    @Published var hasReview: Bool = false
+    @Published var minimumRating: Float = 0.0
+    @Published var selectedCategories: [String] = ["전체", "분식", "양식"]
+}
 struct MenuFilterView: View {
-    @State private var distanceValue: Double = 400
-    @State private var lowerPrice: Double = 5000
-    @State private var upperPrice: Double = 8000
-    @State private var isOpen: Bool = false
-    @State private var hasReview: Bool = false
-    @State private var minimumRating: Float = 0.0
-    @State private var selectedCategories: [String] = ["전체", "분식", "양식"]
     @ObservedObject var menuViewModel: MenuViewModel
+    @ObservedObject var menuFilterViewModel = MenuFilterViewModel()
     @Environment(\.dismiss) var dismiss
     let ratings = [3.5, 4.0, 4.5]
     let categories = ["전체", "한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
     let maxPrice = 15000.0
     let maxDistance = 1000.0
+    init(menuViewModel:MenuViewModel){
+        self.menuViewModel = menuViewModel
+        if let distanceValue = menuViewModel.selectedFilters.distance{
+            menuFilterViewModel.distanceValue = Double(distanceValue)
+        }
+        if let lowerPrice = menuViewModel.selectedFilters.priceRange?.lowerBound{
+            menuFilterViewModel.lowerPrice = Double(lowerPrice)
+        }
+        if let upperPrice = menuViewModel.selectedFilters.priceRange?.upperBound{
+            menuFilterViewModel.upperPrice = Double(upperPrice)
+        }
+        if let isOpen = menuViewModel.selectedFilters.isOpen{
+            menuFilterViewModel.isOpen = isOpen
+        }
+        if let hasReivew = menuViewModel.selectedFilters.hasReview{
+            menuFilterViewModel.hasReview = hasReivew
+        }
+        if let minimumRating = menuViewModel.selectedFilters.minimumRating{
+            menuFilterViewModel.minimumRating = minimumRating
+        }
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             Capsule()
@@ -36,14 +60,14 @@ struct MenuFilterView: View {
             ScrollView {
                 VStack(spacing: 40) {
                     SectionHeader(title: "거리")
-                    DistanceSliderView(targetValue: $distanceValue)
+                    DistanceSliderView(targetValue: $menuFilterViewModel.distanceValue)
                     
                     SectionHeader(title: "가격")
-                    PriceRangeSliderView(lowerValue: $lowerPrice, upperValue: $upperPrice)
+                    PriceRangeSliderView(lowerValue: $menuFilterViewModel.lowerPrice, upperValue: $menuFilterViewModel.upperPrice)
                     
                     PickerFilterSection(title: "영업시간") {
                         SegmentedPicker(
-                            selectedOption: $isOpen,
+                            selectedOption: $menuFilterViewModel.isOpen,
                             options: [false, true],
                             format: { $0 ? "영업 중" : "전체" }
                         )
@@ -51,7 +75,7 @@ struct MenuFilterView: View {
                     
                     PickerFilterSection(title: "리뷰") {
                         SegmentedPicker(
-                            selectedOption: $hasReview,
+                            selectedOption: $menuFilterViewModel.hasReview,
                             options: [false, true],
                             format: { $0 ? "리뷰 있음" : "전체" }
                         )
@@ -59,7 +83,7 @@ struct MenuFilterView: View {
                     
                     PickerFilterSection(title: "최소 평점") {
                         SegmentedPicker(
-                            selectedOption: $minimumRating,
+                            selectedOption: $menuFilterViewModel.minimumRating,
                             options: [0, 3.5, 4.0, 4.5],
                             format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) }
                         )
@@ -67,7 +91,7 @@ struct MenuFilterView: View {
                     
                     VStack(spacing: 14.5) {
                         SectionHeader(title: "카테고리")
-                        CategoriesFlowLayout(items: categories, selected: $selectedCategories)
+                        CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
                     }
                     
                     Spacer(minLength: 88)
@@ -112,13 +136,13 @@ struct MenuFilterView: View {
     }
     
     func resetFilters() {
-        distanceValue = maxDistance
-        lowerPrice = 0
-        upperPrice = maxPrice
-        isOpen = false
-        hasReview = false
-        minimumRating = 0
-        selectedCategories = ["전체"]
+        menuFilterViewModel.distanceValue = maxDistance
+        menuFilterViewModel.lowerPrice = 0
+        menuFilterViewModel.upperPrice = maxPrice
+        menuFilterViewModel.isOpen = false
+        menuFilterViewModel.hasReview = false
+        menuFilterViewModel.minimumRating = 0
+        menuFilterViewModel.selectedCategories = ["전체"]
     }
     
     func applyFilters() {
@@ -130,31 +154,31 @@ struct MenuFilterView: View {
         @State private var hasReview: Bool = false
         @State private var minimumRating: Double = 0.0
         @State private var selectedCategories: [String] = ["전체", "분식", "양식"]*/
-        if distanceValue < maxDistance{
-            menuViewModel.selectedFilters.distance = Int(distanceValue)
+        if menuFilterViewModel.distanceValue < maxDistance{
+            menuViewModel.selectedFilters.distance = Int(menuFilterViewModel.distanceValue)
         }
         else{
             menuViewModel.selectedFilters.distance = nil
         }
-        if lowerPrice == 0 && upperPrice == maxPrice{
+        if menuFilterViewModel.lowerPrice == 0 && menuFilterViewModel.upperPrice == maxPrice{
             menuViewModel.selectedFilters.priceRange = nil
         }
         else{
-            menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(upperPrice)
+            menuViewModel.selectedFilters.priceRange = Int(menuFilterViewModel.lowerPrice)...Int(menuFilterViewModel.upperPrice)
         }
-        if minimumRating > 0{
-            menuViewModel.selectedFilters.minimumRating = minimumRating
+        if menuFilterViewModel.minimumRating > 0{
+            menuViewModel.selectedFilters.minimumRating = menuFilterViewModel.minimumRating
         }
         else{
             menuViewModel.selectedFilters.minimumRating = nil
         }
-        menuViewModel.selectedFilters.isOpen = isOpen ? true : nil
-        menuViewModel.selectedFilters.hasReview = hasReview ? true : nil
-        if selectedCategories.contains("전체"){
+        menuViewModel.selectedFilters.isOpen = menuFilterViewModel.isOpen ? true : nil
+        menuViewModel.selectedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
+        if menuFilterViewModel.selectedCategories.contains("전체"){
             menuViewModel.selectedFilters.categories = nil
         }
         else{
-            menuViewModel.selectedFilters.categories = selectedCategories
+            menuViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories
         }
         menuViewModel.saveFilters()
         dismiss()
