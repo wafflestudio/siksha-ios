@@ -156,6 +156,7 @@ struct MenuFilterView: View {
         else{
             menuViewModel.selectedFilters.categories = selectedCategories
         }
+        menuViewModel.saveFilters()
         dismiss()
         print("Filters applied!")
     }

@@ -9,7 +9,7 @@ import Foundation
 import Combine
 
 
-public struct MenuFilters {
+public struct MenuFilters:Codable {
     var distance: Int? = nil               // Distance in meters (e.g., 400m); nil = all distances
     var priceRange: ClosedRange<Int>? = nil // Price range (e.g., 5000원 ~ 8000원); nil = all prices
     var isOpen: Bool? = nil                // Open status; true = open only, nil = open + closed
@@ -203,6 +203,7 @@ public class MenuViewModel: ObservableObject {
                 self.pageViewReload = true
             }
             .store(in: &cancellables)
+        self.selectedFilters = loadFilters() ?? MenuFilters()
     }
     
     func getMenu(date: String) {
@@ -216,5 +217,20 @@ public class MenuViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .assign(to: \.getMenuStatus, on: self)
             .store(in: &cancellables)
+    }
+    func loadFilters() -> MenuFilters?{
+        if let savedFilters = UserDefaults.standard.object(forKey: "menuFilters") as? Data{
+            let decoder = JSONDecoder()
+            if let filters = try? decoder.decode(MenuFilters.self, from: savedFilters){
+                return filters
+            }
+        }
+        return nil
+    }
+    func saveFilters(){
+        let encoder = JSONEncoder()
+        if let filters = try? encoder.encode(selectedFilters){
+            UserDefaults.standard.setValue(filters, forKey: "menuFilters")
+        }
     }
 }
