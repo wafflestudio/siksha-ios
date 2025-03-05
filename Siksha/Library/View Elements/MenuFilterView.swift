@@ -43,7 +43,8 @@ struct MenuFilterView: View {
                         SegmentedPicker(
                             selectedOption: $isOpen,
                             options: [false, true],
-                            format: { $0 ? "영업 중" : "전체" }
+                            format: { $0 ? "영업 중" : "전체" },
+                            isRateFilter: false
                         )
                     }
                     
@@ -51,7 +52,8 @@ struct MenuFilterView: View {
                         SegmentedPicker(
                             selectedOption: $hasReview,
                             options: [false, true],
-                            format: { $0 ? "리뷰 있음" : "전체" }
+                            format: { $0 ? "리뷰 있음" : "전체" },
+                            isRateFilter: false
                         )
                     }
                     
@@ -59,7 +61,8 @@ struct MenuFilterView: View {
                         SegmentedPicker(
                             selectedOption: $minimumRating,
                             options: [0, 3.5, 4.0, 4.5],
-                            format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) }
+                            format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
+                            isRateFilter: true
                         )
                     }
                     
@@ -198,7 +201,7 @@ struct CategoriesFlowLayout: View {
             }
         }
         .padding(.horizontal, 1)
-
+        
     }
 }
 
@@ -219,8 +222,7 @@ struct MenuFilterView_Previews: PreviewProvider {
         }
     }
     static var previews: some View {
-//                ContainerView()
-        MenuFilterView()
+        ContainerView()
     }
     
 }
