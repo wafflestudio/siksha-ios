@@ -40,21 +40,18 @@ struct DistanceSliderView: View {
                                     targetValue = newValue
                                 }
                         )
+                    
+                    SliderValueIndicator(text: distanceString, sliderWidth: sliderWidth, pointerOffset: targetX)
+                        .offset(y: -31)
                 }
-                .overlay(
-                    Text("\(Int(targetValue))m 이내")
-                        .font(.custom("NanumSquareOTF", size: 12))
-                        .foregroundStyle(Color(hex: 0x707070, opacity: 1))
-                        .padding(6)
-                        .background(Color("Grey0.5"))
-                        .cornerRadius(1)
-                        .offset(x: targetX, y: -36)
-                    , alignment: .top
-                )
             }
             .frame(height: 24)
         }
         .padding(.horizontal, 12)
+    }
+    
+    private var distanceString: String {
+        Int(targetValue) == 1000 ? "1km 이내" : "\(Int(targetValue))m 이내"
     }
     
     private func position(for value: Double, in geometry: GeometryProxy) -> CGFloat {
@@ -83,6 +80,7 @@ struct PriceRangeSliderView: View {
                 let lowerX = position(for: lowerValue, in: geometry)
                 let upperX = position(for: upperValue, in: geometry)
                 let centerX = (lowerX + upperX) / 2
+                let sliderWidth = geometry.size.width
                 
                 ZStack {
                     Capsule()
@@ -121,17 +119,10 @@ struct PriceRangeSliderView: View {
                                     }
                                 }
                         )
+                    
+                    SliderValueIndicator(text: "\(Int(lowerValue))원 ~ \(Int(upperValue))원", sliderWidth: sliderWidth, pointerOffset: centerX)
+                        .offset(y: -31)
                 }
-                .overlay(
-                    Text("\(Int(lowerValue))원 ~ \(Int(upperValue))원")
-                        .font(.custom("NanumSquareOTF", size: 12))
-                        .foregroundStyle(Color(hex: 0x707070))
-                        .padding(6)
-                        .background(Color("Grey0.5"))
-                        .cornerRadius(1)
-                        .offset(x: centerX, y: -36)
-                    , alignment: .top
-                )
             }
             .frame(height: 24)
         }
@@ -147,6 +138,77 @@ struct PriceRangeSliderView: View {
         let sliderWidth = geometry.size.width
         let percentage = min(max((x + sliderWidth / 2) / sliderWidth, 0), 1)
         return (minValue + (maxValue - minValue) * Double(percentage))
+    }
+}
+
+struct SliderValueIndicator: View {
+    let text: String
+    let sliderWidth: CGFloat
+    let pointerOffset: CGFloat
+    
+    @State private var boxWidth: CGFloat = 0
+    
+    var body: some View {
+        VStack(spacing: 0) {
+            Text(text)
+                .font(.custom("NanumSquareOTF", size: 12).weight(.bold))
+                .foregroundStyle(Color(hex: 0x707070, opacity: 1))
+                .padding(6)
+                .background(RoundedRectangle(cornerRadius: 2)
+                    .fill(Color("Grey0.5")))
+                .background(GeometryReader { proxy in
+                    Color.clear
+                        .preference(key: BubbleWidthKey.self, value: proxy.size.width)
+                })
+                .offset(x: adjustedXOffset)
+            
+            BubblePointer()
+                .fill(Color("Grey0.5"))
+                .frame(width: 10, height: 5)
+                .offset(x: pointerOffset)
+        }
+        .onPreferenceChange(BubbleWidthKey.self) { newWidth in
+            boxWidth = newWidth
+        }
+    }
+    
+    private var adjustedXOffset: CGFloat {
+        let sliderHandleRadius: CGFloat = 12
+        let minX = (boxWidth - sliderWidth) / 2 - sliderHandleRadius
+        let maxX = (sliderWidth - boxWidth) / 2 + sliderHandleRadius
+        return max(minX, min(pointerOffset, maxX))
+    }
+}
+
+struct BubblePointer: Shape {
+    var cornerRadius: CGFloat = 1.0
+    
+    func path(in rect: CGRect) -> Path {
+        let path = CGMutablePath()
+        let bottomY = rect.maxY
+        let topY = rect.minY
+        
+        path.move(to: CGPoint(x: rect.midX - cornerRadius, y: bottomY - cornerRadius))
+        path.addArc(tangent1End: CGPoint(x: rect.minX + cornerRadius, y: topY),
+                    tangent2End: CGPoint(x: rect.minX, y: topY),
+                    radius: cornerRadius)
+        path.addLine(to: CGPoint(x: rect.maxX, y: topY))
+        path.addArc(tangent1End: CGPoint(x: rect.maxX - cornerRadius, y: topY),
+                    tangent2End: CGPoint(x: rect.midX + cornerRadius, y: bottomY - cornerRadius),
+                    radius: cornerRadius)
+        path.addLine(to: CGPoint(x: rect.midX + cornerRadius, y: bottomY - cornerRadius))
+        path.addArc(tangent1End: CGPoint(x: rect.midX, y: bottomY),
+                    tangent2End: CGPoint(x: rect.midX - cornerRadius, y: bottomY - cornerRadius),
+                    radius: cornerRadius)
+        
+        return Path(path)
+    }
+}
+
+struct BubbleWidthKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 
