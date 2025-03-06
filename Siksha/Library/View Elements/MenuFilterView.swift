@@ -14,10 +14,10 @@ struct MenuFilterView: View {
     @State private var isOpen: Bool = false
     @State private var hasReview: Bool = false
     @State private var minimumRating: Double = 0.0
-    @State private var selectedCategories: [String] = ["전체", "분식", "양식"]
+    @State private var selectedCategories: [String] = ["분식", "양식"]
     
     let ratings = [3.5, 4.0, 4.5]
-    let categories = ["전체", "한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
+    let categories = ["한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
     
     var body: some View {
         VStack(spacing: 0) {
@@ -119,7 +119,7 @@ struct MenuFilterView: View {
         isOpen = false
         hasReview = false
         minimumRating = 0
-        selectedCategories = ["전체"]
+        selectedCategories = []
     }
     
     func applyFilters() {
@@ -187,6 +187,10 @@ struct CategoriesFlowLayout: View {
                 let maxColumns = Int((spacing + geometry.size.width) / (itemWidth + spacing))
                 let columns = Array(repeating: GridItem(.fixed(itemWidth), spacing: spacing), count: maxColumns)
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+                    CategoryButton(category: "전체", isSelected: selected.isEmpty)
+                        .onTapGesture {
+                            selected = []
+                        }
                     ForEach(items, id: \.self) { item in
                         CategoryButton(category: item, isSelected: selected.contains(item))
                             .onTapGesture {
