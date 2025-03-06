@@ -43,7 +43,7 @@ struct PickerContentView: View {
     var body: some View {
         HStack {
             Text(text)
-                .font(.custom("NanumSquareOTF", size: 14).weight(.bold))
+                .font(.custom("NanumSquareOTFB", size: 14))
             if needStarImage {
                 Image("RateStar")
             }

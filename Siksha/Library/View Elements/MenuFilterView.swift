@@ -87,7 +87,7 @@ struct MenuFilterView: View {
                     Button("초기화") {
                         resetFilters()
                     }
-                    .font(.custom("NanumSquareOTF", size: 16))
+                    .font(.custom("NanumSquareOTFB", size: 16))
                     .frame(maxWidth: .infinity)
                     .frame(height: 38)
                     .background(Color("Grey3"))
@@ -97,7 +97,7 @@ struct MenuFilterView: View {
                     Button("적용") {
                         applyFilters()
                     }
-                    .font(.custom("NanumSquareOTF", size: 16))
+                    .font(.custom("NanumSquareOTFB", size: 16))
                     .frame(maxWidth: .infinity)
                     .frame(height: 38)
                     .background(Color("main"))
@@ -167,7 +167,7 @@ struct CategoryButton: View {
             .frame(height: 34)
             .overlay(
                 Text(category)
-                    .font(.custom("NanumSquareOTF", size: 13))
+                    .font(.custom("NanumSquareOTFB", size: 13))
                     .foregroundColor(.black)
             )
             .background(isSelected ? selectedBackground : .clear, in: RoundedRectangle(cornerRadius: 30))

@@ -151,7 +151,7 @@ struct SliderValueIndicator: View {
     var body: some View {
         VStack(spacing: 0) {
             Text(text)
-                .font(.custom("NanumSquareOTF", size: 12).weight(.bold))
+                .font(.custom("NanumSquareOTFB", size: 12))
                 .foregroundStyle(Color(hex: 0x707070, opacity: 1))
                 .padding(6)
                 .background(RoundedRectangle(cornerRadius: 2)
