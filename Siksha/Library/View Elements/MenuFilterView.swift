@@ -48,73 +48,102 @@ struct MenuFilterView: View {
         case favorite
     }
     
+    private var menuFilterType: MenuFilterType
+
     // menuViewModel 사용
-    init(menuViewModel: MenuViewModel) {
+    init(menuViewModel: MenuViewModel, menuFilterType: MenuFilterType = .category) {
         self.menuViewModel = menuViewModel
         self.favoriteViewModel = FavoriteViewModel()
         self.viewModelType = .menu
+        self.menuFilterType = menuFilterType
     }
     
     // favoriteViewModel 사용
-    init(favoriteViewModel: FavoriteViewModel) {
+    init(favoriteViewModel: FavoriteViewModel, menuFilterType: MenuFilterType = .all) {
         self.favoriteViewModel = favoriteViewModel
-        self.menuViewModel = MenuViewModel() // 필요한 기본값
+        self.menuViewModel = MenuViewModel()
         self.viewModelType = .favorite
+        self.menuFilterType = menuFilterType
     }
     
     var body: some View {
         VStack(spacing: 0) {
-            Capsule()
-                .fill(Color.secondary)
-                .opacity(0.5)
-                .frame(width: 42, height: 4)
-                .padding(.vertical, 17)
-            
-            Text("필터")
-                .font(.custom("NanumSquareOTFB", size: 14))
-                .padding(EdgeInsets(top: 1.32, leading: 0, bottom: 13.68, trailing: 0))
-            
-            ScrollView {
-                VStack(spacing: 40) {
+            switch menuFilterType {
+            case .all:
+                Capsule()
+                    .fill(Color.secondary)
+                    .opacity(0.5)
+                    .frame(width: 42, height: 4)
+                    .padding(.vertical, 17)
+                
+                Text("필터")
+                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .padding(EdgeInsets(top: 1.32, leading: 0, bottom: 13.68, trailing: 0))
+                
+                ScrollView {
+                    VStack(spacing: 40) {
+                        SectionHeader(title: "거리")
+                        DistanceSliderView(targetValue: $distanceValue)
+                        
+                        SectionHeader(title: "가격")
+                        PriceRangeSliderView(lowerValue: $lowerPrice, upperValue: $upperPrice)
+                        
+                        PickerFilterSection(title: "영업시간") {
+                            SegmentedPicker(
+                                selectedOption: $isOpen,
+                                options: [false, true],
+                                format: { $0 ? "영업 중" : "전체" }
+                            )
+                        }
+                        
+                        PickerFilterSection(title: "리뷰") {
+                            SegmentedPicker(
+                                selectedOption: $hasReview,
+                                options: [false, true],
+                                format: { $0 ? "리뷰 있음" : "전체" }
+                            )
+                        }
+                        
+                        PickerFilterSection(title: "최소 평점") {
+                            SegmentedPicker(
+                                selectedOption: $minimumRating,
+                                options: [0, 3.5, 4.0, 4.5],
+                                format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) }
+                            )
+                        }
+                        
+                        VStack(spacing: 14.5) {
+                            SectionHeader(title: "카테고리")
+                            CategoriesFlowLayout(items: categories, selected: $selectedCategories)
+                        }
+                    }
+                    Spacer(minLength: 88)
+                }.padding(.horizontal, 16)
+            case .distance:
+                VStack(spacing: 56) {
                     SectionHeader(title: "거리")
                     DistanceSliderView(targetValue: $distanceValue)
-                    
+                }.padding(EdgeInsets(top: 16, leading: 16, bottom: 68, trailing: 16))
+            case .price:
+                VStack(spacing: 56) {
                     SectionHeader(title: "가격")
                     PriceRangeSliderView(lowerValue: $lowerPrice, upperValue: $upperPrice)
-                    
-                    PickerFilterSection(title: "영업시간") {
-                        SegmentedPicker(
-                            selectedOption: $isOpen,
-                            options: [false, true],
-                            format: { $0 ? "영업 중" : "전체" }
-                        )
-                    }
-                    
-                    PickerFilterSection(title: "리뷰") {
-                        SegmentedPicker(
-                            selectedOption: $hasReview,
-                            options: [false, true],
-                            format: { $0 ? "리뷰 있음" : "전체" }
-                        )
-                    }
-                    
-                    PickerFilterSection(title: "최소 평점") {
-                        SegmentedPicker(
-                            selectedOption: $minimumRating,
-                            options: [0, 3.5, 4.0, 4.5],
-                            format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) }
-                        )
-                    }
-                    
-                    VStack(spacing: 14.5) {
-                        SectionHeader(title: "카테고리")
-                        CategoriesFlowLayout(items: categories, selected: $selectedCategories)
-                    }
-                    
-                    Spacer(minLength: 88)
+                }.padding(EdgeInsets(top: 16, leading: 16, bottom: 68, trailing: 16))
+            case .minimumRating:
+                PickerFilterSection(title: "최소 평점") {
+                    SegmentedPicker(
+                        selectedOption: $minimumRating,
+                        options: [0, 3.5, 4.0, 4.5],
+                        format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) }
+                    )
                 }
+                .padding(EdgeInsets(top: 16, leading: 16, bottom: 52, trailing: 16))
+            case .category:
+                VStack(spacing: 20.5) {
+                    SectionHeader(title: "카테고리")
+                    CategoriesFlowLayout(items: categories, selected: $selectedCategories)
+                }.padding(EdgeInsets(top: 16, leading: 16, bottom: 68, trailing: 16))
             }
-            .padding(.horizontal, 16)
             
             ZStack {
                 Rectangle()
@@ -148,7 +177,6 @@ struct MenuFilterView: View {
                 .background(Color.white)
                 .zIndex(1)
             }
-            
         }
     }
     
