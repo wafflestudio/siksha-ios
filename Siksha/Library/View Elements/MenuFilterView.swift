@@ -8,12 +8,12 @@
 import SwiftUI
 class MenuFilterViewModel:ObservableObject{
     @Published var distanceValue: Double = 1000
-    @Published var lowerPrice: Double = 0
-    @Published var upperPrice: Double = 15000
+    @Published var lowerPrice: Double = 3000
+    @Published var upperPrice: Double = 10000
     @Published var isOpen: Bool = false
     @Published var hasReview: Bool = false
     @Published var minimumRating: Float = 0.0
-    @Published var selectedCategories: [String] = ["전체", "분식", "양식"]
+    @Published var selectedCategories: [String] = []
 }
 struct MenuFilterView: View {
     @ObservedObject var menuViewModel: MenuViewModel
@@ -22,6 +22,7 @@ struct MenuFilterView: View {
     let ratings = [3.5, 4.0, 4.5]
     let categories = ["한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
     let maxPrice = 10000.0
+    let minPrice = 3000.0
     let maxDistance = 1000.0
     init(menuViewModel:MenuViewModel){
         self.menuViewModel = menuViewModel
@@ -142,7 +143,7 @@ struct MenuFilterView: View {
     
     func resetFilters() {
         menuFilterViewModel.distanceValue = maxDistance
-        menuFilterViewModel.lowerPrice = 0
+        menuFilterViewModel.lowerPrice = minPrice
         menuFilterViewModel.upperPrice = maxPrice
         menuFilterViewModel.isOpen = false
         menuFilterViewModel.hasReview = false
