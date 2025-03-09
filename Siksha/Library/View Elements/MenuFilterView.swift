@@ -9,8 +9,8 @@ import SwiftUI
 
 struct MenuFilterView: View {
     @State private var distanceValue: Double = 400
-    @State private var lowerPrice: Double = 5000
-    @State private var upperPrice: Double = 8000
+    @State private var lowerPrice: Double = 4000
+    @State private var upperPrice: Double = 5000
     @State private var isOpen: Bool = false
     @State private var hasReview: Bool = false
     @State private var minimumRating: Double = 0.0

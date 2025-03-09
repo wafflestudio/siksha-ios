@@ -11,6 +11,7 @@ struct DistanceSliderView: View {
     @Binding var targetValue: Double
     let minValue: Double = 200
     let maxValue: Double = 1000
+    let step: Double = 50
     private let orangeColor = Color("main")
     
     var body: some View {
@@ -31,12 +32,12 @@ struct DistanceSliderView: View {
                     
                     Circle()
                         .fill(orangeColor)
-                        .frame(width: 24, height: 24)
+                        .frame(width: 18, height: 18)
                         .offset(x: targetX)
                         .gesture(
                             DragGesture()
                                 .onChanged { val in
-                                    let newValue = value(at: val.location.x - 12, in: geometry)
+                                    let newValue = steppedValue(at: val.location.x - 12, in: geometry)
                                     targetValue = newValue
                                 }
                         )
@@ -51,12 +52,18 @@ struct DistanceSliderView: View {
     }
     
     private var distanceString: String {
-        Int(targetValue) == 1000 ? "1km 이내" : "\(Int(targetValue))m 이내"
+        targetValue == maxValue ? "1km 이상" : "\(Int(targetValue))m 이내"
     }
     
     private func position(for value: Double, in geometry: GeometryProxy) -> CGFloat {
         let sliderWidth = geometry.size.width
         return sliderWidth * CGFloat((value - minValue) / (maxValue - minValue)) - sliderWidth / 2
+    }
+    
+    private func steppedValue(at x: CGFloat, in geometry: GeometryProxy) -> Double {
+        let rawValue = value(at: x, in: geometry)
+        let steppedValue = (round(rawValue / step) * step)
+        return min(max(steppedValue, minValue), maxValue)
     }
     
     private func value(at x: CGFloat, in geometry: GeometryProxy) -> Double {
@@ -70,8 +77,9 @@ struct PriceRangeSliderView: View {
     @Binding var lowerValue: Double
     @Binding var upperValue: Double
     
-    let minValue: Double = 0
-    let maxValue: Double = 15000
+    let minValue: Double = 3000
+    let maxValue: Double = 10000
+    let step: Double = 500
     private let orangeColor = Color("main")
     
     var body: some View {
@@ -94,33 +102,37 @@ struct PriceRangeSliderView: View {
                     
                     Circle()
                         .fill(orangeColor)
-                        .frame(width: 24, height: 24)
+                        .frame(width: 18, height: 18)
                         .offset(x: lowerX)
                         .gesture(
                             DragGesture()
                                 .onChanged { val in
-                                    let newValue = value(at: val.location.x - 12, in: geometry)
-                                    if newValue < upperValue {
+                                    let newValue = steppedValue(at: val.location.x - 12, in: geometry)
+                                    if newValue <= upperValue - step {
                                         lowerValue = newValue
+                                    } else {
+                                        lowerValue = upperValue - step
                                     }
                                 }
                         )
                     
                     Circle()
                         .fill(orangeColor)
-                        .frame(width: 24, height: 24)
+                        .frame(width: 18, height: 18)
                         .offset(x: upperX)
                         .gesture(
                             DragGesture()
                                 .onChanged { val in
-                                    let newValue = value(at: val.location.x - 12, in: geometry)
-                                    if newValue > lowerValue {
+                                    let newValue = steppedValue(at: val.location.x - 12, in: geometry)
+                                    if newValue >= lowerValue + step {
                                         upperValue = newValue
+                                    } else {
+                                        upperValue = lowerValue + step
                                     }
                                 }
                         )
                     
-                    SliderValueIndicator(text: "\(Int(lowerValue))원 ~ \(Int(upperValue))원", sliderWidth: sliderWidth, pointerOffset: centerX)
+                    SliderValueIndicator(text: "\(Int(lowerValue))원 ~ \(Int(upperValue))원\(upperValue == maxValue ? " 이상" : "")", sliderWidth: sliderWidth, pointerOffset: centerX)
                         .offset(y: -31)
                 }
             }
@@ -129,9 +141,19 @@ struct PriceRangeSliderView: View {
         .padding(.horizontal, 12)
     }
     
+    private var isUpperValue: String {
+        upperValue == maxValue ? "\(Int(upperValue))" : String(format: "%.0f", upperValue)
+    }
+    
     private func position(for value: Double, in geometry: GeometryProxy) -> CGFloat {
         let sliderWidth = geometry.size.width
         return sliderWidth * CGFloat((value - minValue) / (maxValue - minValue)) - sliderWidth / 2
+    }
+    
+    private func steppedValue(at x: CGFloat, in geometry: GeometryProxy) -> Double {
+        let rawValue = value(at: x, in: geometry)
+        let steppedValue = (round(rawValue / step) * step)
+        return min(max(steppedValue, minValue), maxValue)
     }
     
     private func value(at x: CGFloat, in geometry: GeometryProxy) -> Double {
@@ -218,8 +240,8 @@ struct RangeSlider_Previews: PreviewProvider {
     }
     
     struct PreviewWrapper: View {
-        @State private var lowerValue: Double = 2000
-        @State private var upperValue: Double = 8000
+        @State private var lowerValue: Double = 5000
+        @State private var upperValue: Double = 6000
         @State private var targetDistance: Double = 400
         var body: some View {
             VStack(spacing: 60) {
