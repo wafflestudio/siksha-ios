@@ -138,6 +138,43 @@ private extension FavoriteView {
                            }
                        }.padding(.top, 8)
                        ScrollView(.horizontal,showsIndicators: false){
+                           HStack(spacing:5){
+                               Image("Filter")
+                                   .onTapGesture {
+                                       isFilterModal = true
+                                   }
+                                   
+                               FilterItem(text: viewModel.distanceLabel,isOn: viewModel.selectedFilters.distance != nil, isCheck: false)
+                               FilterItem(text: viewModel.priceLabel,isOn: viewModel.selectedFilters.priceRange != nil, isCheck: false)
+                               FilterItem(text: "영업 중",isOn:viewModel.selectedFilters.isOpen ?? false,isCheck: true)
+                                   .onTapGesture {
+                                       
+                                       if let hasReviewFilter = viewModel.selectedFilters.isOpen{
+                                           viewModel.selectedFilters.isOpen?.toggle()
+                                       }
+                                       else{
+                                           viewModel.selectedFilters.isOpen = true
+                                       }
+                                   }
+                               FilterItem(text: "리뷰",isOn:viewModel.selectedFilters.hasReview ?? false,isCheck: true)
+                                   .onTapGesture {
+                                       
+                                       if let hasReviewFilter = viewModel.selectedFilters.hasReview{
+                                           viewModel.selectedFilters.hasReview?.toggle()
+                                       }
+                                       else{
+                                           viewModel.selectedFilters.hasReview = true
+                                       }
+                                   }
+                               FilterItem(text:viewModel.minRatingLabel,isOn:viewModel.selectedFilters.minimumRating != nil,isCheck: false)
+                               FilterItem(text: viewModel.categoryLabel,isOn:viewModel.selectedFilters.categories != nil,isCheck: false)
+                               
+                           }
+                           
+                           .padding(EdgeInsets(top: 17, leading: 0, bottom: 17, trailing: 0))
+                       }
+                       
+                   }
                     
                     if #available(iOS 15, *) {
                         TabView(selection: $viewModel.selectedPage) {
@@ -179,7 +216,7 @@ private extension FavoriteView {
 
 struct FavoriteView: View {
     @ObservedObject var viewModel = FavoriteViewModel()
-    
+    @State var isFilterModal = false
     private let lightGrayColor = Color.init("LightGrayColor")
     private let orangeColor = Color.init("main")
     private let fontColor = Color("DefaultFontColor")
@@ -246,6 +283,9 @@ struct FavoriteView: View {
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             viewModel.getMenu(date: viewModel.selectedDate)
+        }
+        .sheet(isPresented:$isFilterModal){
+            MenuFilterView(favoriteViewModel: viewModel)
         }
     }
 }
