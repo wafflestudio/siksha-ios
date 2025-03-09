@@ -16,11 +16,33 @@ struct MenuFilterView: View {
     @State private var minimumRating: Float = 0.0
     @State private var selectedCategories: [String] = ["전체", "분식", "양식"]
     @ObservedObject var menuViewModel: MenuViewModel
+    @ObservedObject var favoriteViewModel: FavoriteViewModel
     @Environment(\.dismiss) var dismiss
     let ratings = [3.5, 4.0, 4.5]
     let categories = ["전체", "한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
     let maxPrice = 15000.0
     let maxDistance = 1000.0
+    
+    private var viewModelType: ViewModelType
+    enum ViewModelType {
+        case menu
+        case favorite
+    }
+    
+    // menuViewModel 사용
+    init(menuViewModel: MenuViewModel) {
+        self.menuViewModel = menuViewModel
+        self.favoriteViewModel = FavoriteViewModel()
+        self.viewModelType = .menu
+    }
+    
+    // favoriteViewModel 사용
+    init(favoriteViewModel: FavoriteViewModel) {
+        self.favoriteViewModel = favoriteViewModel
+        self.menuViewModel = MenuViewModel() // 필요한 기본값
+        self.viewModelType = .favorite
+    }
+    
     var body: some View {
         VStack(spacing: 0) {
             Capsule()
@@ -130,31 +152,21 @@ struct MenuFilterView: View {
         @State private var hasReview: Bool = false
         @State private var minimumRating: Double = 0.0
         @State private var selectedCategories: [String] = ["전체", "분식", "양식"]*/
-        if distanceValue < maxDistance{
-            menuViewModel.selectedFilters.distance = Int(distanceValue)
-        }
-        else{
-            menuViewModel.selectedFilters.distance = nil
-        }
-        if lowerPrice == 0 && upperPrice == maxPrice{
-            menuViewModel.selectedFilters.priceRange = nil
-        }
-        else{
-            menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(upperPrice)
-        }
-        if minimumRating > 0{
-            menuViewModel.selectedFilters.minimumRating = minimumRating
-        }
-        else{
-            menuViewModel.selectedFilters.minimumRating = nil
-        }
-        menuViewModel.selectedFilters.isOpen = isOpen ? true : nil
-        menuViewModel.selectedFilters.hasReview = hasReview ? true : nil
-        if selectedCategories.contains("전체"){
-            menuViewModel.selectedFilters.categories = nil
-        }
-        else{
-            menuViewModel.selectedFilters.categories = selectedCategories
+        switch viewModelType {
+        case .menu:
+            menuViewModel.selectedFilters.distance = distanceValue < maxDistance ? Int(distanceValue) : nil
+            menuViewModel.selectedFilters.priceRange = lowerPrice == 0 && upperPrice == maxPrice ? nil : Int(lowerPrice)...Int(upperPrice)
+            menuViewModel.selectedFilters.minimumRating = minimumRating > 0 ? minimumRating : nil
+            menuViewModel.selectedFilters.isOpen = isOpen ? true : nil
+            menuViewModel.selectedFilters.hasReview = hasReview ? true : nil
+            menuViewModel.selectedFilters.categories = selectedCategories.contains("전체") ? nil : selectedCategories
+        case .favorite:
+            favoriteViewModel.selectedFilters.distance = distanceValue < maxDistance ? Int(distanceValue) : nil
+            favoriteViewModel.selectedFilters.priceRange = lowerPrice == 0 && upperPrice == maxPrice ? nil : Int(lowerPrice)...Int(upperPrice)
+            favoriteViewModel.selectedFilters.minimumRating = minimumRating > 0 ? minimumRating : nil
+            favoriteViewModel.selectedFilters.isOpen = isOpen ? true : nil
+            favoriteViewModel.selectedFilters.hasReview = hasReview ? true : nil
+            favoriteViewModel.selectedFilters.categories = selectedCategories.contains("전체") ? nil : selectedCategories
         }
         dismiss()
         print("Filters applied!")
