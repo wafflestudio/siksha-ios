@@ -529,6 +529,8 @@
 			isa = PBXGroup;
 			children = (
 
+
+
 				330C55122D4D04730011345D /* Sliders.swift */,
 				330C55102D4CCA3F0011345D /* SegmentedPicker.swift */,
 
