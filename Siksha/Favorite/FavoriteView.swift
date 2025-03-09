@@ -112,32 +112,32 @@ private extension FavoriteView {
             } else {
                 if viewModel.restaurantsLists.count > 0 {
                     if viewModel.isFestivalAvailable{
-                                           ZStack{
-                                               HStack(alignment: .bottom, spacing: 28) {
-                                                   ForEach(typeInfos) { type in
-                                                       typeButton(type: type)
-                                                   }
-                                               }.padding(.top, 8)
-                                                   .frame(alignment: .center)
-                                               VStack(alignment:   .trailing){
-                                                   Toggle(isOn: $viewModel.isFestival) {
-                                                      
-                                                   }
-                                                   .toggleStyle(CustomSwitchStyle())
-                                                   .padding(EdgeInsets(top: 5.56, leading: 0, bottom: 0, trailing: 17))
+                       ZStack{
+                           HStack(alignment: .bottom, spacing: 28) {
+                               ForEach(typeInfos) { type in
+                                   typeButton(type: type)
+                               }
+                           }.padding(.top, 8)
+                               .frame(alignment: .center)
+                           VStack(alignment:   .trailing){
+                               Toggle(isOn: $viewModel.isFestival) {
+                                  
+                               }
+                               .toggleStyle(CustomSwitchStyle())
+                               .padding(EdgeInsets(top: 5.56, leading: 0, bottom: 0, trailing: 17))
 
-                                                   
-                                               }.frame(maxWidth: .infinity,alignment:.trailing)
-                                               
-                                           }.frame(maxWidth: .infinity)
-                                       }
-                                       else{
-                                           HStack(alignment: .bottom, spacing: 28) {
-                                               ForEach(typeInfos) { type in
-                                                   typeButton(type: type)
-                                               }
-                                           }.padding(.top, 8)
-                                       }
+                               
+                           }.frame(maxWidth: .infinity,alignment:.trailing)
+                           
+                       }.frame(maxWidth: .infinity)
+                   }
+                   else{
+                       HStack(alignment: .bottom, spacing: 28) {
+                           ForEach(typeInfos) { type in
+                               typeButton(type: type)
+                           }
+                       }.padding(.top, 8)
+                       ScrollView(.horizontal,showsIndicators: false){
                     
                     if #available(iOS 15, *) {
                         TabView(selection: $viewModel.selectedPage) {
