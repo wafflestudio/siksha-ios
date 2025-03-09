@@ -7,6 +7,25 @@
 
 import SwiftUI
 
+public enum MenuFilterType {
+    case all
+    case distance
+    case price
+    case minimumRating
+    case category
+    
+    var modalSheetHeight: CGFloat {
+        switch self {
+        case .all:
+            return 727
+        case .distance, .price, .category:
+            return 259
+        case .minimumRating:
+            return 211
+        }
+    }
+}
+
 struct MenuFilterView: View {
     @State private var distanceValue: Double = 400
     @State private var lowerPrice: Double = 5000
