@@ -55,6 +55,7 @@ struct CommentInfo: Identifiable, Equatable {
 }
 
 protocol CommunityPostViewModelType: ObservableObject {
+    var error: AppError? { get set }
     var postInfo: PostInfo { get }
     var commentsListPublisher: [CommentInfo] { get }
     var hasNextPublisher: Bool { get }
@@ -90,6 +91,8 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
     @Published private var hasNext: Bool = false
     @Published var reportAlert:Bool = false
     @Published var reportErrorAlert:Bool = false
+    
+    @Published var error: AppError?
 
     private var currentPage: Int = 0
     
@@ -148,7 +151,8 @@ extension CommunityPostViewModel {
              
          }
          catch{
-             print("\(error)")
+             self.error = ErrorHelper.categorize(error)
+             print("1")
          }
          do{
              for try await response in commentsPublisher.values{
@@ -159,7 +163,9 @@ extension CommunityPostViewModel {
              }
          }
          catch{
-             print("\(error)")
+             self.error = ErrorHelper.categorize(error)
+             print("1")
+
          }
          do{
              for try await response in boardInfoPublisher.values{
@@ -167,7 +173,9 @@ extension CommunityPostViewModel {
              }
          }
          catch{
-             print("\(error)")
+             self.error = ErrorHelper.categorize(error)
+             print("1")
+
          }
         
     }
@@ -179,7 +187,7 @@ extension CommunityPostViewModel {
                 case .finished:
                     completion(true)
                 case .failure(let error):
-                    print(error)
+                    self?.error = ErrorHelper.categorize(error)
                     completion(false)
                 }
             }, receiveValue: { value in
@@ -192,8 +200,10 @@ extension CommunityPostViewModel {
         if self.post.isLiked {
             self.communityRepository.unlikePost(postId: self.postId)
                 .receive(on: RunLoop.main)
-                .sink(receiveCompletion: { error in
-                    print(error)
+                .sink(receiveCompletion: { [weak self] completion in
+                    if case .failure(let error) = completion {
+                        self?.error = ErrorHelper.categorize(error)
+                    }
                 }, receiveValue: { [weak self] post in
                     self?.post = post
                 })
@@ -201,8 +211,10 @@ extension CommunityPostViewModel {
         } else {
             self.communityRepository.likePost(postId: self.postId)
                 .receive(on: RunLoop.main)
-                .sink(receiveCompletion: { error in
-                    print(error)
+                .sink(receiveCompletion: { [weak self] completion in
+                    if case .failure(let error) = completion {
+                        self?.error = ErrorHelper.categorize(error)
+                    }
                 }, receiveValue: { [weak self] post in
                     self?.post = post
                 })
@@ -212,20 +224,24 @@ extension CommunityPostViewModel {
     private func loadBoardInfo(){
         self.communityRepository.loadBoardList()
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion:{
-                error in
-                print(error)
+            .sink(receiveCompletion:{ [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.error = ErrorHelper.categorize(error)
+                }
             },receiveValue: {[weak self] boards in
                 self?.boardsList = boards
             })
             .store(in: &cancellables)
     }
+    
     private func loadPost() {
         self.communityRepository
             .loadPost(postId: self.postId)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                print(error)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.error = ErrorHelper.categorize(error)
+                }
             }, receiveValue: { [weak self] post in
                 self?.post = post
             })
@@ -238,8 +254,10 @@ extension CommunityPostViewModel {
         self.communityRepository
             .loadCommentsPage(postId: self.postId, page: Constants.initialPage, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                print(error)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.error = ErrorHelper.categorize(error)
+                }
             }, receiveValue: { [weak self] commentsPage in
                 self?.commentsList = commentsPage.comments
                 self?.currentPage = 1
@@ -256,8 +274,10 @@ extension CommunityPostViewModel {
         self.communityRepository
             .loadCommentsPage(postId: self.postId, page: self.currentPage + 1, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                print(error)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.error = ErrorHelper.categorize(error)
+                }
             }, receiveValue: { [weak self] commentsPage in
                 self?.commentsList.append(contentsOf: commentsPage.comments)
                 self?.currentPage += 1
@@ -270,9 +290,11 @@ extension CommunityPostViewModel {
     func submitComment(postId: Int, content: String,isAnonymous:Bool) {
         communityRepository.postComment(postId: postId, content: content,anonymous: isAnonymous)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                    print(error)
-                }, receiveValue: { [weak self] newComment in
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.error = ErrorHelper.categorize(error)
+                }
+            }, receiveValue: { [weak self] newComment in
                 self?.commentsList.append(newComment)
             })
             .store(in: &cancellables)
@@ -280,8 +302,10 @@ extension CommunityPostViewModel {
     func editComment(commentId: Int, content: String) {
         self.communityRepository.editComment(commentId: commentId, content: content)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                print(error)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.error = ErrorHelper.categorize(error)
+                }
             }, receiveValue: { [weak self] updatedComment in
                 if let index = self?.commentsList.firstIndex(where: { $0.id == updatedComment.id }) {
                     self?.commentsList[index] = updatedComment
@@ -298,7 +322,7 @@ extension CommunityPostViewModel {
                 case .finished:
                     completion(true)
                 case .failure(let error):
-                    print(error)
+                    self?.error = ErrorHelper.categorize(error)
                     completion(false)
                 }
             }, receiveValue: { value in
@@ -317,9 +341,9 @@ extension CommunityPostViewModel {
         if comment.isLiked {
             self.communityRepository.unlikeComment(commentId: id)
                 .receive(on: RunLoop.main)
-                .sink(receiveCompletion: { completion in
+                .sink(receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
-                        print("Error occurred while unliking the comment: \(error)")
+                        self?.error = ErrorHelper.categorize(error)
                     }
                 }, receiveValue: { [weak self] updatedComment in
                     self?.commentsList[index] = updatedComment
@@ -330,7 +354,7 @@ extension CommunityPostViewModel {
                 .receive(on: RunLoop.main)
                 .sink(receiveCompletion: { completion in
                     if case .failure(let error) = completion {
-                        print("Error occurred while liking the comment: \(error)")
+                        self.error = ErrorHelper.categorize(error)
                     }
                 }, receiveValue: { [weak self] updatedComment in
                     self?.commentsList[index] = updatedComment

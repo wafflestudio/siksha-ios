@@ -11,7 +11,8 @@ import Combine
 protocol MyPostViewModelType: ObservableObject {
     var postsListPublisher: [PostInfo] { get }
     var hasNextPublisher: Bool { get }
-    
+    var error: AppError? { get set }
+
     func loadMorePosts()
     func loadPosts()
 }
@@ -21,6 +22,8 @@ final class MyPostViewModel: MyPostViewModelType {
         static let initialPage = 1
         static let pageCount = 20
     }
+    
+    @Published var error: AppError?
     
     private let communityRepository: CommunityRepositoryProtocol
     
@@ -54,8 +57,10 @@ extension MyPostViewModel {
         self.communityRepository
             .loadMyPostsPage(page: Constants.initialPage, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                print(error)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.error = ErrorHelper.categorize(error)
+                }
             }, receiveValue: { [weak self] postsPage in
                 self?.currPostList = postsPage.posts
                 self?.currentPage = 1
@@ -72,8 +77,10 @@ extension MyPostViewModel {
         self.communityRepository
             .loadMyPostsPage(page: self.currentPage + 1, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { error in
-                print(error)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.error = ErrorHelper.categorize(error)
+                }
             }, receiveValue: { [weak self] postsPage in
                 self?.currPostList.append(contentsOf: postsPage.posts)
                 self?.currentPage += 1

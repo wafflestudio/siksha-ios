@@ -45,6 +45,7 @@ struct DistanceSliderView: View {
                     SliderValueIndicator(text: distanceString, sliderWidth: sliderWidth, pointerOffset: targetX)
                         .offset(y: -31)
                 }
+
             }
             .frame(height: 24)
         }
@@ -55,6 +56,7 @@ struct DistanceSliderView: View {
         targetValue == maxValue ? "1km 이상" : "\(Int(targetValue))m 이내"
     }
     
+
     private func position(for value: Double, in geometry: GeometryProxy) -> CGFloat {
         let sliderWidth = geometry.size.width
         return sliderWidth * CGFloat((value - minValue) / (maxValue - minValue)) - sliderWidth / 2

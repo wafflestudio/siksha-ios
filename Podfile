@@ -29,4 +29,13 @@ post_install do |installer|
 		      end
           end
      end
+    installer.pods_project.targets.each do |target|
+      if target.name == 'NMapsMap'
+        `xcrun --sdk iphoneos bitcode_strip -r Pods/NMapsMap/framework/NMapsMap.xcframework/ios-arm64/NMapsMap.framework/NMapsMap -o Pods/NMapsMap/framework/NMapsMap.xcframework/ios-arm64/NMapsMap.framework/NMapsMap`
+      end
+
+      if target.name == 'NMapsGeometry'
+        `xcrun --sdk iphoneos bitcode_strip -r Pods/NMapsGeometry/framework/NMapsGeometry.xcframework/ios-arm64_armv7/NMapsGeometry.framework/NMapsGeometry -o Pods/NMapsGeometry/framework/NMapsGeometry.xcframework/ios-arm64_armv7/NMapsGeometry.framework/NMapsGeometry`
+      end
+    end
 end

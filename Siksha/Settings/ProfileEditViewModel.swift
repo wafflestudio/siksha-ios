@@ -9,6 +9,7 @@ import Foundation
 import Combine
 
 protocol ProfileEditViewModelType: ObservableObject {
+    var error: AppError? { get set }
     var nickname: String { get set }
     var profileImageData: Data? { get set }
     var enableDoneButton: Bool { get }
@@ -26,6 +27,7 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     
     private var cancellables = Set<AnyCancellable>()
     
+    @Published var error: AppError?
     @Published var nickname = ""
     @Published var profileImageData: Data?
     @Published private(set) var enableDoneButton = false
@@ -71,7 +73,7 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
             if success {
                 self?.shouldDismiss = true
             } else {
-                print("업데이트 실패")
+                self?.error = AppError.unknownError("업데이트 실패")
                 if let networkError = error as? NetworkError {
                     switch networkError {
                     case .conflict:

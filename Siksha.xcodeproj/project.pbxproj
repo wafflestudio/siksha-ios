@@ -81,6 +81,8 @@
 		330C55132D4D047A0011345D /* Sliders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330C55122D4D04730011345D /* Sliders.swift */; };
 		45EF4169BF5F3B9E1C55FE7E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */; };
 		4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BDE232A7F75BC00046ADC /* CommunityView.swift */; };
+		4E23C5A62D17DCDA0088C1F6 /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */; };
+		4E23C5A82D17E1E10088C1F6 /* ErrorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E23C5A72D17E1DD0088C1F6 /* ErrorHelper.swift */; };
 		4E3D4EE72A74E02A005C7AB2 /* BoardNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE62A74E02A005C7AB2 /* BoardNameCell.swift */; };
 		4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */; };
 		4E3D4EEB2A74F743005C7AB2 /* TopPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */; };
@@ -103,6 +105,7 @@
 		4EAB93E22BCBD2AF007341D7 /* TextFieldAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAB93E12BCBD2AF007341D7 /* TextFieldAlert.swift */; };
 		4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */; };
 		4EC08B512C67ABF600AB2001 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC08B502C67ABF600AB2001 /* HexColor.swift */; };
+		4ED177EB2D33C39C00374D0C /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED177EA2D33C39700374D0C /* Filter.swift */; };
 		4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED628352B11D51900ECE221 /* CommunityPostView.swift */; };
 		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
 		4EE5729F2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */; };
@@ -237,6 +240,8 @@
 		330C55102D4CCA3F0011345D /* SegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPicker.swift; sourceTree = "<group>"; };
 		330C55122D4D04730011345D /* Sliders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sliders.swift; sourceTree = "<group>"; };
 		4E1BDE232A7F75BC00046ADC /* CommunityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
+		4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorAlert.swift; sourceTree = "<group>"; };
+		4E23C5A72D17E1DD0088C1F6 /* ErrorHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHelper.swift; sourceTree = "<group>"; };
 		4E3D4EE62A74E02A005C7AB2 /* BoardNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardNameCell.swift; sourceTree = "<group>"; };
 		4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSelect.swift; sourceTree = "<group>"; };
 		4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPostCell.swift; sourceTree = "<group>"; };
@@ -259,6 +264,7 @@
 		4EAB93E12BCBD2AF007341D7 /* TextFieldAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlert.swift; sourceTree = "<group>"; };
 		4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishView.swift; sourceTree = "<group>"; };
 		4EC08B502C67ABF600AB2001 /* HexColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
+		4ED177EA2D33C39700374D0C /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 		4ED628352B11D51900ECE221 /* CommunityPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityPostView.swift; sourceTree = "<group>"; };
 		4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderViewModel.swift; sourceTree = "<group>"; };
 		4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishViewModel.swift; sourceTree = "<group>"; };
@@ -347,6 +353,8 @@
 		1E3A56E925C6FCE600DBB3F4 /* Siksha */ = {
 			isa = PBXGroup;
 			children = (
+				4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */,
+				4E23C5A72D17E1DD0088C1F6 /* ErrorHelper.swift */,
 				4EB660B82A74DBC100E52314 /* Community */,
 				BF97DF512AAEFE2E0083FC6F /* Domain */,
 				1E96F95825E255B00074940C /* Siksha.entitlements */,
@@ -520,8 +528,14 @@
 		1ECB250125F16D7900875E18 /* View Elements */ = {
 			isa = PBXGroup;
 			children = (
+
+
+
 				330C55122D4D04730011345D /* Sliders.swift */,
 				330C55102D4CCA3F0011345D /* SegmentedPicker.swift */,
+
+				4ED177EA2D33C39700374D0C /* Filter.swift */,
+
 				231C9C8F25F82D660072C07A /* RestaurantOrderRow.swift */,
 				1EB5F43B263E8EDE0012201A /* OperatingHoursTable.swift */,
 				1E3A583625CACC9A00DBB3F4 /* RestaurantCell.swift */,
@@ -893,9 +907,11 @@
 				330C55132D4D047A0011345D /* Sliders.swift in Sources */,
 				4EE5729F2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift in Sources */,
 				1ECB257D25F5412300875E18 /* TextView.swift in Sources */,
+				4E23C5A82D17E1E10088C1F6 /* ErrorHelper.swift in Sources */,
 				23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */,
 				330BAD1B2D4616CF003C4B8D /* MenuFilterView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
+				4E23C5A62D17DCDA0088C1F6 /* ErrorAlert.swift in Sources */,
 				4E79A1842C7DCBFE007CE49B /* ImageView.swift in Sources */,
 				4E6465102B1D8DB200A4ABAD /* UserManager.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
@@ -974,6 +990,7 @@
 				4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */,
 				1E7226F825FBDE72008C272E /* MealCell.swift in Sources */,
 				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,
+				4ED177EB2D33C39C00374D0C /* Filter.swift in Sources */,
 				BFE76F652ADD1A5C00A7D124 /* FeatureFlag.swift in Sources */,
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				23DFD2042664110B0049F8D7 /* RemoteImage.swift in Sources */,
@@ -1175,7 +1192,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.3.0;
+				MARKETING_VERSION = 3.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ###dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -1205,7 +1222,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 3.3.0;
+				MARKETING_VERSION = 3.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = ###;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";

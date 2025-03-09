@@ -9,7 +9,7 @@ import Combine
 import Alamofire
 
 final class AlamofireNetworking: NetworkModuleProtocol {
-    func request<T: Decodable>(endpoint: SikshaAPI) -> AnyPublisher<T, Error> {
+    func request<T: Decodable>(endpoint: SikshaAPI) -> AnyPublisher<T, AppError> {
         var request:DataRequest
         if(endpoint.multiPartFormDataNeeded) {
             request = AF.upload(multipartFormData: endpoint.multipartFormData!, with: endpoint)
@@ -25,29 +25,43 @@ final class AlamofireNetworking: NetworkModuleProtocol {
                 }
             })
             .mapError { error in
-                if error.isResponseValidationError {
-                    if let statusCode = error.responseCode {
-                        switch statusCode {
-                        case 409:
-                            return NetworkError.conflict
-                        default:
-                            return error
-                        }
-                    }
-                }
-                return error
+                self.mapToAppError(error: error)
             }
             .eraseToAnyPublisher()
     }
     
-    func requestWithNoContent(endpoint: SikshaAPI) -> AnyPublisher<Void, Error> {
+    func requestWithNoContent(endpoint: SikshaAPI) -> AnyPublisher<Void, AppError> {
         let request = AF.request(endpoint)
-        
+
         return request
             .validate()
-            .publishData() // Use publishData() to get a publisher
-            .map { _ in () } // Map the data response to Void, since no content is expected
-            .mapError { $0 as Error } // Map any errors to the Error type
+            .publishData()
+            .tryMap { response in
+                if let error = response.error {
+                    throw error
+                }
+                return ()
+            }
+            .mapError { error in
+                if let afError = error as? AFError {
+                    return self.mapToAppError(error: afError)
+                }
+                return .unknownError(error.localizedDescription)
+            }
             .eraseToAnyPublisher()
+    }
+
+    private func mapToAppError(error: AFError) -> AppError {
+        if error.isResponseValidationError {
+            if let statusCode = error.responseCode {
+                switch statusCode {
+                case 409:
+                    return .networkError("Conflict error occurred.")
+                default:
+                    return .networkError("HTTP \(statusCode): \(error.localizedDescription)")
+                }
+            }
+        }
+        return .unknownError(error.localizedDescription)
     }
 }
