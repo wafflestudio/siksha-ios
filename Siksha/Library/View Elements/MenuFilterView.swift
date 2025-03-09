@@ -20,8 +20,8 @@ struct MenuFilterView: View {
     @ObservedObject var menuFilterViewModel = MenuFilterViewModel()
     @Environment(\.dismiss) var dismiss
     let ratings = [3.5, 4.0, 4.5]
-    let categories = ["전체", "한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
-    let maxPrice = 15000.0
+    let categories = ["한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
+    let maxPrice = 10000.0
     let maxDistance = 1000.0
     init(menuViewModel:MenuViewModel){
         self.menuViewModel = menuViewModel
@@ -69,7 +69,8 @@ struct MenuFilterView: View {
                         SegmentedPicker(
                             selectedOption: $menuFilterViewModel.isOpen,
                             options: [false, true],
-                            format: { $0 ? "영업 중" : "전체" }
+                            format: { $0 ? "영업 중" : "전체" },
+                            isRateFilter: false
                         )
                     }
                     
@@ -77,7 +78,9 @@ struct MenuFilterView: View {
                         SegmentedPicker(
                             selectedOption: $menuFilterViewModel.hasReview,
                             options: [false, true],
-                            format: { $0 ? "리뷰 있음" : "전체" }
+                            format: { $0 ? "리뷰 있음" : "전체" },
+                            isRateFilter: false
+
                         )
                     }
                     
@@ -85,7 +88,9 @@ struct MenuFilterView: View {
                         SegmentedPicker(
                             selectedOption: $menuFilterViewModel.minimumRating,
                             options: [0, 3.5, 4.0, 4.5],
-                            format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) }
+                            format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
+                            isRateFilter: true
+
                         )
                     }
                     
@@ -110,7 +115,7 @@ struct MenuFilterView: View {
                     Button("초기화") {
                         resetFilters()
                     }
-                    .font(.custom("NanumSquareOTF", size: 16))
+                    .font(.custom("NanumSquareOTFB", size: 16))
                     .frame(maxWidth: .infinity)
                     .frame(height: 38)
                     .background(Color("Grey3"))
@@ -120,7 +125,7 @@ struct MenuFilterView: View {
                     Button("적용") {
                         applyFilters()
                     }
-                    .font(.custom("NanumSquareOTF", size: 16))
+                    .font(.custom("NanumSquareOTFB", size: 16))
                     .frame(maxWidth: .infinity)
                     .frame(height: 38)
                     .background(Color("main"))
@@ -142,7 +147,7 @@ struct MenuFilterView: View {
         menuFilterViewModel.isOpen = false
         menuFilterViewModel.hasReview = false
         menuFilterViewModel.minimumRating = 0
-        menuFilterViewModel.selectedCategories = ["전체"]
+        menuFilterViewModel.selectedCategories = []
     }
     
     func applyFilters() {
@@ -225,7 +230,7 @@ struct CategoryButton: View {
             .frame(height: 34)
             .overlay(
                 Text(category)
-                    .font(.custom("NanumSquareOTF", size: 13))
+                    .font(.custom("NanumSquareOTFB", size: 13))
                     .foregroundColor(.black)
             )
             .background(isSelected ? selectedBackground : .clear, in: RoundedRectangle(cornerRadius: 30))
@@ -245,6 +250,11 @@ struct CategoriesFlowLayout: View {
                 let maxColumns = Int((spacing + geometry.size.width) / (itemWidth + spacing))
                 let columns = Array(repeating: GridItem(.fixed(itemWidth), spacing: spacing), count: maxColumns)
                 LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+                    CategoryButton(category: "전체", isSelected: selected.isEmpty)
+                        .onTapGesture {
+                            selected = []
+                        }
+
                     ForEach(items, id: \.self) { item in
                         CategoryButton(category: item, isSelected: selected.contains(item))
                             .onTapGesture {
@@ -275,12 +285,12 @@ struct MenuFilterView_Previews: PreviewProvider {
             }) {
                 Text("button")
             }.sheet(isPresented: $showFilters, content: {
+
                 MenuFilterView(menuViewModel: MenuViewModel())
             })
         }
     }
     static var previews: some View {
-//                ContainerView()
         MenuFilterView(menuViewModel: MenuViewModel())
     }
     
