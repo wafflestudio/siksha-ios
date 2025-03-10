@@ -48,22 +48,22 @@ struct MenuFilterView: View {
         case favorite
     }
     
-    private var menuFilterType: MenuFilterType
-
+    @Binding var menuFilterType: MenuFilterType
+    
     // menuViewModel 사용
-    init(menuViewModel: MenuViewModel, menuFilterType: MenuFilterType = .category) {
+    init(menuViewModel: MenuViewModel, menuFilterType: Binding<MenuFilterType>) {
         self.menuViewModel = menuViewModel
         self.favoriteViewModel = FavoriteViewModel()
         self.viewModelType = .menu
-        self.menuFilterType = menuFilterType
+        self._menuFilterType = menuFilterType
     }
     
     // favoriteViewModel 사용
-    init(favoriteViewModel: FavoriteViewModel, menuFilterType: MenuFilterType = .all) {
+    init(favoriteViewModel: FavoriteViewModel, menuFilterType: Binding<MenuFilterType>) {
         self.favoriteViewModel = favoriteViewModel
         self.menuViewModel = MenuViewModel()
         self.viewModelType = .favorite
-        self.menuFilterType = menuFilterType
+        self._menuFilterType = menuFilterType
     }
     
     var body: some View {

@@ -235,6 +235,7 @@ struct FavoriteView: View {
     @ObservedObject var viewModel = FavoriteViewModel()
     @State var isFilterModal = false
     @State var selectedFilterType: MenuFilterType = .all
+    @State var selectedModalHeight: CGFloat = 727
     private let lightGrayColor = Color.init("LightGrayColor")
     private let orangeColor = Color.init("main")
     private let fontColor = Color("DefaultFontColor")
@@ -302,15 +303,19 @@ struct FavoriteView: View {
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             viewModel.getMenu(date: viewModel.selectedDate)
         }
+        .onChange(of: selectedFilterType) { newValue in
+            selectedModalHeight = newValue.modalSheetHeight
+        }
         .sheet(isPresented:$isFilterModal){
             // TODO: - 버전 16으로 올릴 경우 분기처리 필요 X
             if #available(iOS 16.0, *) {
-                MenuFilterView(favoriteViewModel: viewModel, menuFilterType: selectedFilterType).presentationDetents([.height(selectedFilterType.modalSheetHeight)])
+                MenuFilterView(favoriteViewModel: viewModel, menuFilterType: $selectedFilterType)
+                .presentationDetents([.height(selectedModalHeight)])
             } else {
                 GeometryReader { geometry in
                     VStack {
-                        MenuFilterView(favoriteViewModel: viewModel, menuFilterType: selectedFilterType)
-                            .frame(height: min(selectedFilterType.modalSheetHeight, geometry.size.height * 0.9))
+                        MenuFilterView(favoriteViewModel: viewModel, menuFilterType: $selectedFilterType)
+                        .frame(height: min(selectedModalHeight, geometry.size.height * 0.9))
                         Spacer()
                     }
                     .frame(width: geometry.size.width)
