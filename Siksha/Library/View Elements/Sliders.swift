@@ -45,7 +45,6 @@ struct DistanceSliderView: View {
                     SliderValueIndicator(text: distanceString, sliderWidth: sliderWidth, pointerOffset: targetX)
                         .offset(y: -31)
                 }
-
             }
             .frame(height: 24)
         }
@@ -56,7 +55,6 @@ struct DistanceSliderView: View {
         targetValue == maxValue ? "1km 이상" : "\(Int(targetValue))m 이내"
     }
     
-
     private func position(for value: Double, in geometry: GeometryProxy) -> CGFloat {
         let sliderWidth = geometry.size.width
         return sliderWidth * CGFloat((value - minValue) / (maxValue - minValue)) - sliderWidth / 2
@@ -79,7 +77,7 @@ struct PriceRangeSliderView: View {
     @Binding var lowerValue: Double
     @Binding var upperValue: Double
     
-    let minValue: Double = 3000
+    let minValue: Double = 2500
     let maxValue: Double = 10000
     let step: Double = 500
     private let orangeColor = Color("main")
@@ -134,7 +132,7 @@ struct PriceRangeSliderView: View {
                                 }
                         )
                     
-                    SliderValueIndicator(text: "\(Int(lowerValue))원 ~ \(Int(upperValue))원\(upperValue == maxValue ? " 이상" : "")", sliderWidth: sliderWidth, pointerOffset: centerX)
+                    SliderValueIndicator(text: priceRangeString, sliderWidth: sliderWidth, pointerOffset: centerX)
                         .offset(y: -31)
                 }
             }
@@ -143,8 +141,17 @@ struct PriceRangeSliderView: View {
         .padding(.horizontal, 12)
     }
     
-    private var isUpperValue: String {
-        upperValue == maxValue ? "\(Int(upperValue))" : String(format: "%.0f", upperValue)
+    private var priceRangeString: String {
+        let lowerPriceStr = lowerValue == minValue ? "0원" : formatPrice(lowerValue)
+        let upperPriceStr = upperValue == maxValue ? "\(formatPrice(maxValue)) 이상" : formatPrice(upperValue)
+        return "\(lowerPriceStr) ~ \(upperPriceStr)"
+    }
+    
+    func formatPrice(_ price: Double) -> String {
+        let intPrice = Int(price)
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .decimal
+        return (numberFormatter.string(from: NSNumber(value: intPrice)) ?? "\(intPrice)") + "원"
     }
     
     private func position(for value: Double, in geometry: GeometryProxy) -> CGFloat {

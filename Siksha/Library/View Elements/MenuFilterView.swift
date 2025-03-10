@@ -28,13 +28,14 @@ public enum MenuFilterType {
 
 class MenuFilterViewModel:ObservableObject{
     @Published var distanceValue: Double = 1000
-    @Published var lowerPrice: Double = 3000
+    @Published var lowerPrice: Double = 2500
     @Published var upperPrice: Double = 10000
     @Published var isOpen: Bool = false
     @Published var hasReview: Bool = false
     @Published var minimumRating: Float = 0.0
     @Published var selectedCategories: [String] = []
 }
+
 struct MenuFilterView: View {
     @ObservedObject var menuViewModel: MenuViewModel
     @ObservedObject var favoriteViewModel: FavoriteViewModel
@@ -43,7 +44,7 @@ struct MenuFilterView: View {
     let ratings = [3.5, 4.0, 4.5]
     let categories = ["한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
     let maxPrice = 10000.0
-    let minPrice = 3000.0
+    let minPrice = 2500.0
     let maxDistance = 1000.0
     
     private var viewModelType: ViewModelType
@@ -63,20 +64,23 @@ struct MenuFilterView: View {
         if let distanceValue = menuViewModel.selectedFilters.distance{
             menuFilterViewModel.distanceValue = Double(distanceValue)
         }
-        if let lowerPrice = menuViewModel.selectedFilters.priceRange?.lowerBound{
-            menuFilterViewModel.lowerPrice = Double(lowerPrice)
+        if let lowerPrice = menuViewModel.selectedFilters.priceRange?.lowerBound {
+            menuFilterViewModel.lowerPrice = lowerPrice == 0 ? minPrice : Double(lowerPrice)
         }
-        if let upperPrice = menuViewModel.selectedFilters.priceRange?.upperBound{
+        if let upperPrice = menuViewModel.selectedFilters.priceRange?.upperBound {
             menuFilterViewModel.upperPrice = Double(upperPrice)
         }
-        if let isOpen = menuViewModel.selectedFilters.isOpen{
+        if let isOpen = menuViewModel.selectedFilters.isOpen {
             menuFilterViewModel.isOpen = isOpen
         }
-        if let hasReivew = menuViewModel.selectedFilters.hasReview{
+        if let hasReivew = menuViewModel.selectedFilters.hasReview {
             menuFilterViewModel.hasReview = hasReivew
         }
-        if let minimumRating = menuViewModel.selectedFilters.minimumRating{
+        if let minimumRating = menuViewModel.selectedFilters.minimumRating {
             menuFilterViewModel.minimumRating = minimumRating
+        }
+        if let selectedCategories = menuViewModel.selectedFilters.categories {
+            menuFilterViewModel.selectedCategories = selectedCategories
         }
     }
     
@@ -90,7 +94,7 @@ struct MenuFilterView: View {
             menuFilterViewModel.distanceValue = Double(distanceValue)
         }
         if let lowerPrice = favoriteViewModel.selectedFilters.priceRange?.lowerBound{
-            menuFilterViewModel.lowerPrice = Double(lowerPrice)
+            menuFilterViewModel.lowerPrice = lowerPrice == 0 ? minPrice : Double(lowerPrice)
         }
         if let upperPrice = favoriteViewModel.selectedFilters.priceRange?.upperBound{
             menuFilterViewModel.upperPrice = Double(upperPrice)
@@ -246,14 +250,6 @@ struct MenuFilterView: View {
     }
     
     func applyFilters() {
-        
-        /*@State private var distanceValue: Double = 400
-         @State private var lowerPrice: Double = 5000
-         @State private var upperPrice: Double = 8000
-         @State private var isOpen: Bool = false
-         @State private var hasReview: Bool = false
-         @State private var minimumRating: Double = 0.0
-         @State private var selectedCategories: [String] = ["전체", "분식", "양식"]*/
         switch viewModelType {
         case .menu:
             switch menuFilterType {
@@ -261,14 +257,24 @@ struct MenuFilterView: View {
             case .distance:
                 menuViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
             case .price:
-                menuViewModel.selectedFilters.priceRange = menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice ? nil : Int(menuFilterViewModel.lowerPrice)...Int(menuFilterViewModel.upperPrice)
+                if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
+                    menuViewModel.selectedFilters.priceRange = nil
+                } else {
+                    let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
+                    menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
+                }
             default:
                 menuViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
-                menuViewModel.selectedFilters.priceRange = menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice ? nil : Int(menuFilterViewModel.lowerPrice)...Int(menuFilterViewModel.upperPrice)
+                if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
+                    menuViewModel.selectedFilters.priceRange = nil
+                } else {
+                    let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
+                    menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
+                }
                 menuViewModel.selectedFilters.minimumRating = menuFilterViewModel.minimumRating > 0 ? menuFilterViewModel.minimumRating : nil
                 menuViewModel.selectedFilters.isOpen = menuFilterViewModel.isOpen ? true : nil
                 menuViewModel.selectedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
-                menuViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.contains("전체") ? nil : menuFilterViewModel.selectedCategories
+                menuViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.isEmpty ? nil : menuFilterViewModel.selectedCategories
             }
             menuViewModel.saveFilters()
         case .favorite:
@@ -276,125 +282,130 @@ struct MenuFilterView: View {
             case .distance:
                 favoriteViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
             case .price:
-                favoriteViewModel.selectedFilters.priceRange = menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice ? nil : Int(menuFilterViewModel.lowerPrice)...Int(menuFilterViewModel.upperPrice)
+                if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
+                    favoriteViewModel.selectedFilters.priceRange = nil
+                } else {
+                    let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
+                    favoriteViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
+                }
             default:
                 favoriteViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
-                favoriteViewModel.selectedFilters.priceRange = menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice ? nil : Int(menuFilterViewModel.lowerPrice)...Int(menuFilterViewModel.upperPrice)
+                if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
+                    favoriteViewModel.selectedFilters.priceRange = nil
+                } else {
+                    let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
+                    favoriteViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
+                }
                 favoriteViewModel.selectedFilters.minimumRating = menuFilterViewModel.minimumRating > 0 ? menuFilterViewModel.minimumRating : nil
                 favoriteViewModel.selectedFilters.isOpen = menuFilterViewModel.isOpen ? true : nil
                 favoriteViewModel.selectedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
-                favoriteViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.contains("전체") ? nil : menuFilterViewModel.selectedCategories
+                favoriteViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.isEmpty ? nil : menuFilterViewModel.selectedCategories
             }
             favoriteViewModel.saveFilters()
         }
         
         dismiss()
         print("Filters applied!")
+    }
+}
 
+struct PickerFilterSection<Content: View>: View {
+    let title: String
+    let pickerView: Content
+    
+    init(title: String, @ViewBuilder pickerView: () -> Content) {
+        self.title = title
+        self.pickerView = pickerView()
     }
     
-    struct PickerFilterSection<Content: View>: View {
-        let title: String
-        let pickerView: Content
-        
-        init(title: String, @ViewBuilder pickerView: () -> Content) {
-            self.title = title
-            self.pickerView = pickerView()
-        }
-        
-        var body: some View {
-            VStack(spacing: 14.5) {
-                SectionHeader(title: self.title)
-                pickerView
-                    .padding(1)
-            }
+    var body: some View {
+        VStack(spacing: 14.5) {
+            SectionHeader(title: self.title)
+            pickerView
+                .padding(1)
         }
     }
+}
+
+struct SectionHeader: View {
+    let title: String
     
-    struct SectionHeader: View {
-        let title: String
-        
-        var body: some View {
-            Text(title)
-                .font(.custom("NanumSquareOTFEB", size: 16))
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }
+    var body: some View {
+        Text(title)
+            .font(.custom("NanumSquareOTFEB", size: 16))
+            .frame(maxWidth: .infinity, alignment: .leading)
     }
+}
+
+struct CategoryButton: View {
+    let category: String
+    let isSelected: Bool
+    private let selectedBackground = Color(hex: 0xFFE8CE)
     
-    struct CategoryButton: View {
-        let category: String
-        let isSelected: Bool
-        private let selectedBackground = Color(hex: 0xFFE8CE)
-        
-        var body: some View {
-            RoundedRectangle(cornerRadius: 30)
-                .stroke(isSelected ? Color("main") : Color("Grey2"))
-                .frame(height: 34)
-                .overlay(
-                    Text(category)
-                        .font(.custom("NanumSquareOTFB", size: 13))
-                        .foregroundColor(.black)
-                )
-                .background(isSelected ? selectedBackground : .clear, in: RoundedRectangle(cornerRadius: 30))
-        }
+    var body: some View {
+        RoundedRectangle(cornerRadius: 30)
+            .stroke(isSelected ? Color("main") : Color("Grey2"))
+            .frame(height: 34)
+            .overlay(
+                Text(category)
+                    .font(.custom("NanumSquareOTFB", size: 13))
+                    .foregroundColor(.black)
+            )
+            .background(isSelected ? selectedBackground : .clear, in: RoundedRectangle(cornerRadius: 30))
     }
+}
+
+struct CategoriesFlowLayout: View {
+    let items: [String]
+    @Binding var selected: [String]
     
-    struct CategoriesFlowLayout: View {
-        let items: [String]
-        @Binding var selected: [String]
-        
-        private let spacing: CGFloat = 8
-        private let itemWidth: CGFloat = 56
-        
-        var body: some View {
-            VStack {
-                GeometryReader { geometry in
-                    let maxColumns = Int((spacing + geometry.size.width) / (itemWidth + spacing))
-                    let columns = Array(repeating: GridItem(.fixed(itemWidth), spacing: spacing), count: maxColumns)
-                    LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
-                        CategoryButton(category: "전체", isSelected: selected.isEmpty)
-                            .onTapGesture {
-                                selected = []
-                            }
-                        
-                        ForEach(items, id: \.self) { item in
-                            CategoryButton(category: item, isSelected: selected.contains(item))
-                                .onTapGesture {
-                                    if selected.contains(item) {
-                                        selected = selected.filter{$0 != item}
-                                    } else {
-                                        selected.append(item)
-                                    }
-                                }
+    private let spacing: CGFloat = 8
+    private let itemWidth: CGFloat = 56
+    
+    var body: some View {
+        VStack {
+            GeometryReader { geometry in
+                let maxColumns = Int((spacing + geometry.size.width) / (itemWidth + spacing))
+                let columns = Array(repeating: GridItem(.fixed(itemWidth), spacing: spacing), count: maxColumns)
+                LazyVGrid(columns: columns, alignment: .leading, spacing: 8) {
+                    CategoryButton(category: "전체", isSelected: selected.isEmpty)
+                        .onTapGesture {
+                            selected = []
                         }
+                    
+                    ForEach(items, id: \.self) { item in
+                        CategoryButton(category: item, isSelected: selected.contains(item))
+                            .onTapGesture {
+                                if selected.contains(item) {
+                                    selected = selected.filter{$0 != item}
+                                } else {
+                                    selected.append(item)
+                                }
+                            }
                     }
                 }
             }
-            .padding(.horizontal, 1)
-            
         }
+        .padding(.horizontal, 1)
     }
-    
 }
-    
-  /*  struct MenuFilterView_Previews: PreviewProvider {
-        struct ContainerView: View {
-            @State private var showFilters: Bool = false
-            
-            var body: some View {
-                Button(action: {
-                    self.showFilters = true
-                }) {
-                    Text("button")
-                }.sheet(isPresented: $showFilters, content: {
-                    
-                         MenuFilterView(menuViewModel: MenuViewModel())
-                })
-            }
-        }
-        static var previews: some View {
-             MenuFilterView(menuViewModel: MenuViewModel())
-        }
-        
-    }
-}*/
+
+//struct MenuFilterView_Previews: PreviewProvider {
+//    struct ContainerView: View {
+//        @State private var showFilters: Bool = false
+//
+//        var body: some View {
+//            Button(action: {
+//                self.showFilters = true
+//            }) {
+//                Text("button")
+//            }.sheet(isPresented: $showFilters, content: {
+//
+//                MenuFilterView(menuViewModel: MenuViewModel())
+//            })
+//        }
+//    }
+//    static var previews: some View {
+//        MenuFilterView(menuViewModel: MenuViewModel())
+//    }
+//}
