@@ -11,7 +11,7 @@ import SwiftyJSON
 
 public class FavoriteViewModel: ObservableObject {
     let FESTIVAL_END: Date
-    let MAX_PRICE = 15000
+    let MAX_PRICE = 10000
     private var cancellables = Set<AnyCancellable>()
     
     @Published var selectedFilters: MenuFilters = MenuFilters()
