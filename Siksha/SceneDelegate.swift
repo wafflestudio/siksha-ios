@@ -44,13 +44,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         accessToken = nil
                         UserDefaults.standard.set(nil, forKey: "userToken")
                         
-                        DispatchQueue.main.async {
-                            let loginView = LoginView()
-                            let loginController = UIHostingController(rootView: loginView)
-                            
-                            loginController.modalPresentationStyle = .fullScreen
-                            UIApplication.shared.windows.first?.rootViewController?.present(loginController, animated: true, completion: nil)
-                        }
+                        // TODO: - 없어도 잘 되는지 확인 필요
+//                        DispatchQueue.main.async {
+//                            let loginView = LoginView()
+//                            let loginController = UIHostingController(rootView: loginView)
+//                            
+//                            loginController.modalPresentationStyle = .fullScreen
+//                            UIApplication.shared.windows.first?.rootViewController?.present(loginController, animated: true, completion: nil)
+//                        }
                     default:
                         break
                     }

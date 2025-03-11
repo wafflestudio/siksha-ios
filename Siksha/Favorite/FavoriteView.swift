@@ -112,32 +112,86 @@ private extension FavoriteView {
             } else {
                 if viewModel.restaurantsLists.count > 0 {
                     if viewModel.isFestivalAvailable{
-                                           ZStack{
-                                               HStack(alignment: .bottom, spacing: 28) {
-                                                   ForEach(typeInfos) { type in
-                                                       typeButton(type: type)
-                                                   }
-                                               }.padding(.top, 8)
-                                                   .frame(alignment: .center)
-                                               VStack(alignment:   .trailing){
-                                                   Toggle(isOn: $viewModel.isFestival) {
-                                                      
-                                                   }
-                                                   .toggleStyle(CustomSwitchStyle())
-                                                   .padding(EdgeInsets(top: 5.56, leading: 0, bottom: 0, trailing: 17))
+                       ZStack{
+                           HStack(alignment: .bottom, spacing: 28) {
+                               ForEach(typeInfos) { type in
+                                   typeButton(type: type)
+                               }
+                           }.padding(.top, 8)
+                               .frame(alignment: .center)
+                           VStack(alignment:   .trailing){
+                               Toggle(isOn: $viewModel.isFestival) {
+                                  
+                               }
+                               .toggleStyle(CustomSwitchStyle())
+                               .padding(EdgeInsets(top: 5.56, leading: 0, bottom: 0, trailing: 17))
 
-                                                   
-                                               }.frame(maxWidth: .infinity,alignment:.trailing)
-                                               
-                                           }.frame(maxWidth: .infinity)
+                               
+                           }.frame(maxWidth: .infinity,alignment:.trailing)
+                           
+                       }.frame(maxWidth: .infinity)
+                   }
+                   else{
+                       HStack(alignment: .bottom, spacing: 28) {
+                           ForEach(typeInfos) { type in
+                               typeButton(type: type)
+                           }
+                       }.padding(.top, 8)
+                       ScrollView(.horizontal,showsIndicators: false){
+                           HStack(spacing:5){
+                               Image("Filter")
+                                   .onTapGesture {
+                                       selectedFilterType = .all
+                                       isFilterModal = true
+                                   }
+                                   
+                               FilterItem(text: viewModel.distanceLabel,isOn: viewModel.selectedFilters.distance != nil, isCheck: false)
+                                   .onTapGesture {
+                                       selectedFilterType = .distance
+                                       isFilterModal = true
+                                   }
+                               FilterItem(text: viewModel.priceLabel,isOn: viewModel.selectedFilters.priceRange != nil, isCheck: false)
+                                   .onTapGesture {
+                                       selectedFilterType = .price
+                                       isFilterModal = true
+                                   }
+                               FilterItem(text: "영업 중",isOn:viewModel.selectedFilters.isOpen ?? false,isCheck: true)
+                                   .onTapGesture {
+                                       
+                                       if let hasReviewFilter = viewModel.selectedFilters.isOpen{
+                                           viewModel.selectedFilters.isOpen?.toggle()
                                        }
                                        else{
-                                           HStack(alignment: .bottom, spacing: 28) {
-                                               ForEach(typeInfos) { type in
-                                                   typeButton(type: type)
-                                               }
-                                           }.padding(.top, 8)
+                                           viewModel.selectedFilters.isOpen = true
                                        }
+                                   }
+                               FilterItem(text: "리뷰",isOn:viewModel.selectedFilters.hasReview ?? false,isCheck: true)
+                                   .onTapGesture {
+                                       
+                                       if let hasReviewFilter = viewModel.selectedFilters.hasReview{
+                                           viewModel.selectedFilters.hasReview?.toggle()
+                                       }
+                                       else{
+                                           viewModel.selectedFilters.hasReview = true
+                                       }
+                                   }
+                               FilterItem(text:viewModel.minRatingLabel,isOn:viewModel.selectedFilters.minimumRating != nil,isCheck: false)
+                                   .onTapGesture {
+                                       selectedFilterType = .minimumRating
+                                       isFilterModal = true
+                                   }
+                               FilterItem(text: viewModel.categoryLabel,isOn:viewModel.selectedFilters.categories != nil,isCheck: false)
+                                   .onTapGesture {
+                                       selectedFilterType = .category
+                                       isFilterModal = true
+                                   }
+                               
+                           }
+                           
+                           .padding(EdgeInsets(top: 17, leading: 0, bottom: 17, trailing: 0))
+                       }
+                       
+                   }
                     
                     if #available(iOS 15, *) {
                         TabView(selection: $viewModel.selectedPage) {
@@ -179,7 +233,9 @@ private extension FavoriteView {
 
 struct FavoriteView: View {
     @ObservedObject var viewModel = FavoriteViewModel()
-    
+    @State var isFilterModal = false
+    @State var selectedFilterType: MenuFilterType = .all
+    @State var selectedModalHeight: CGFloat = 727
     private let lightGrayColor = Color.init("LightGrayColor")
     private let orangeColor = Color.init("main")
     private let fontColor = Color("DefaultFontColor")
@@ -240,12 +296,36 @@ struct FavoriteView: View {
         .onAppear {
             if viewModel.reloadOnAppear {
                 viewModel.getMenu(date: viewModel.selectedDate)
+                viewModel.loadFilters()
+
             } else {
                 viewModel.reloadOnAppear = true
+                viewModel.loadFilters()
+
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
             viewModel.getMenu(date: viewModel.selectedDate)
+        }
+        .onChange(of: selectedFilterType) { newValue in
+            selectedModalHeight = newValue.modalSheetHeight
+        }
+        .sheet(isPresented:$isFilterModal){
+            // TODO: - 버전 16으로 올릴 경우 분기처리 필요 X
+            if #available(iOS 16.0, *) {
+                MenuFilterView(favoriteViewModel: viewModel, menuFilterType: $selectedFilterType)
+                .presentationDetents([.height(selectedModalHeight)])
+            } else {
+                GeometryReader { geometry in
+                    VStack {
+                        MenuFilterView(favoriteViewModel: viewModel, menuFilterType: $selectedFilterType)
+                        .frame(height: min(selectedModalHeight, geometry.size.height * 0.9))
+                        Spacer()
+                    }
+                    .frame(width: geometry.size.width)
+                }
+                .edgesIgnoringSafeArea(.bottom)
+            }
         }
     }
 }

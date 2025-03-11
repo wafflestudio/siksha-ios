@@ -203,7 +203,7 @@ public class MenuViewModel: ObservableObject {
                 self.pageViewReload = true
             }
             .store(in: &cancellables)
-        self.selectedFilters = loadFilters() ?? MenuFilters()
+        loadFilters()
     }
     
     func getMenu(date: String) {
@@ -218,14 +218,15 @@ public class MenuViewModel: ObservableObject {
             .assign(to: \.getMenuStatus, on: self)
             .store(in: &cancellables)
     }
-    func loadFilters() -> MenuFilters?{
+    func loadFilters(){
         if let savedFilters = UserDefaults.standard.object(forKey: "menuFilters") as? Data{
             let decoder = JSONDecoder()
             if let filters = try? decoder.decode(MenuFilters.self, from: savedFilters){
-                return filters
+                self.selectedFilters = filters
+                return
             }
         }
-        return nil
+        self.selectedFilters = MenuFilters()
     }
     func saveFilters(){
         let encoder = JSONEncoder()
