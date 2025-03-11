@@ -197,11 +197,13 @@ struct MenuFilterView: View {
             }
             
             ZStack {
-                Rectangle()
-                    .fill(Color.white)
-                    .frame(height: 77)
-                    .shadow(color: Color.black.opacity(0.05), radius: 3, y: -1)
-                    .zIndex(0)
+                if menuFilterType == .all {
+                    Rectangle()
+                        .fill(Color.white)
+                        .frame(height: 77)
+                        .shadow(color: Color.black.opacity(0.05), radius: 3, y: -1)
+                        .zIndex(0)                    
+                }
                 
                 HStack {
                     Button("초기화") {
