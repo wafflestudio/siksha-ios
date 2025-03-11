@@ -234,7 +234,7 @@ struct MenuView: View {
     @StateObject var viewModel = MenuViewModel()
     @State var isFilterModal = false
     @State var selectedFilterType: MenuFilterType = .all
-    @State var selectedModalHeight: CGFloat = 0
+    @State var selectedModalHeight: CGFloat = 727
     private let lightGrayColor = Color.init("LightGrayColor")
     private let orangeColor = Color.init("main")
     private let fontColor = Color("DefaultFontColor")
