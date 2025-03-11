@@ -108,7 +108,9 @@ struct MenuFilterView: View {
         if let minimumRating = favoriteViewModel.selectedFilters.minimumRating{
             menuFilterViewModel.minimumRating = minimumRating
         }
-        
+        if let selectedCategories = menuViewModel.selectedFilters.categories {
+            menuFilterViewModel.selectedCategories = selectedCategories
+        }
     }
     
     var body: some View {
