@@ -162,6 +162,7 @@ private extension MenuView {
                                     else{
                                         viewModel.selectedFilters.isOpen = true
                                     }
+                                    viewModel.saveFilters()
                                 }
                             FilterItem(text: "리뷰",isOn:viewModel.selectedFilters.hasReview ?? false,isCheck: true)
                                 .onTapGesture {
@@ -172,6 +173,7 @@ private extension MenuView {
                                     else{
                                         viewModel.selectedFilters.hasReview = true
                                     }
+                                    viewModel.saveFilters()
                                 }
                             FilterItem(text:viewModel.minRatingLabel,isOn:viewModel.selectedFilters.minimumRating != nil,isCheck: false)
                                 .onTapGesture {

@@ -11,6 +11,8 @@ struct SegmentedPicker<T: Hashable>: View {
     @Binding var selectedOption: T
     let options: [T]
     let format: (T) -> String
+    let isRateFilter: Bool
+
     
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
@@ -24,8 +26,8 @@ struct SegmentedPicker<T: Hashable>: View {
                             .stroke(self.selectedOption == option ? Color("SelectedBorder") : .clear)
                             .background(self.selectedOption == option ? Color("SelectedBackground") : .clear, in: RoundedRectangle(cornerRadius: 30))
                             .overlay(
-                                Text(self.format(option))
-                                    .font(.system(size: 14))
+                                PickerContentView(text: format(option), needStarImage: isRateFilter && format(option) != "모두" ? true : false)
+
                             )
                             .onTapGesture {
                                 self.selectedOption = option
@@ -33,6 +35,21 @@ struct SegmentedPicker<T: Hashable>: View {
                     }
                 }
             )
+    }
+}
+
+struct PickerContentView: View {
+    let text: String
+    let needStarImage: Bool
+    
+    var body: some View {
+        HStack {
+            Text(text)
+                .font(.custom("NanumSquareOTFB", size: 14))
+            if needStarImage {
+                Image("RateStar")
+            }
+        }
     }
 }
 
@@ -51,19 +68,22 @@ struct CustomSegmentedPicker_Previews: PreviewProvider {
                 SegmentedPicker(
                     selectedOption: $isOpen,
                     options: [false, true],
-                    format: { $0 ? "영업 중" : "전체" }
+                    format: { $0 ? "영업 중" : "전체" },
+                    isRateFilter: false
                 )
                 
                 SegmentedPicker(
                     selectedOption: $hasReview,
                     options: [false, true],
-                    format: { $0 ? "리뷰 있음" : "전체" }
+                    format: { $0 ? "리뷰 있음" : "전체" },
+                    isRateFilter: false
                 )
                 
                 SegmentedPicker(
                     selectedOption: $minimumRating,
                     options: [0, 3.5, 4.0, 4.5],
-                    format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) }
+                    format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
+                    isRateFilter: true
                 )
             }
         }
