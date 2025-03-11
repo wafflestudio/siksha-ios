@@ -270,6 +270,7 @@ struct MenuFilterView: View {
                 menuViewModel.selectedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
                 menuViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.contains("전체") ? nil : menuFilterViewModel.selectedCategories
             }
+            menuViewModel.saveFilters()
         case .favorite:
             switch menuFilterType {
             case .distance:
@@ -284,11 +285,12 @@ struct MenuFilterView: View {
                 favoriteViewModel.selectedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
                 favoriteViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.contains("전체") ? nil : menuFilterViewModel.selectedCategories
             }
-            
-            menuViewModel.saveFilters()
-            dismiss()
-            print("Filters applied!")
+            favoriteViewModel.saveFilters()
         }
+        
+        dismiss()
+        print("Filters applied!")
+
     }
     
     struct PickerFilterSection<Content: View>: View {

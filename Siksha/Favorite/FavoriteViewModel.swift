@@ -210,6 +210,8 @@ public class FavoriteViewModel: ObservableObject {
                 self.pageViewReload = true
             }
             .store(in: &cancellables)
+        loadFilters()
+
     }
     
     func getMenu(date: String) {
@@ -246,5 +248,21 @@ public class FavoriteViewModel: ObservableObject {
                 self.noFavorites = !hasFavorite
             }
             .store(in: &cancellables)
+    }
+    func loadFilters(){
+        if let savedFilters = UserDefaults.standard.object(forKey: "menuFilters") as? Data{
+            let decoder = JSONDecoder()
+            if let filters = try? decoder.decode(MenuFilters.self, from: savedFilters){
+                self.selectedFilters = filters
+                return
+            }
+        }
+        self.selectedFilters = MenuFilters()
+    }
+    func saveFilters(){
+        let encoder = JSONEncoder()
+        if let filters = try? encoder.encode(selectedFilters){
+            UserDefaults.standard.setValue(filters, forKey: "menuFilters")
+        }
     }
 }

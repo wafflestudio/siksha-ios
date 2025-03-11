@@ -296,8 +296,12 @@ struct FavoriteView: View {
         .onAppear {
             if viewModel.reloadOnAppear {
                 viewModel.getMenu(date: viewModel.selectedDate)
+                viewModel.loadFilters()
+
             } else {
                 viewModel.reloadOnAppear = true
+                viewModel.loadFilters()
+
             }
         }
         .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
