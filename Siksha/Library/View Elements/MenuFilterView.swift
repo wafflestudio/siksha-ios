@@ -26,7 +26,7 @@ public enum MenuFilterType {
     }
 }
 
-class MenuFilterViewModel:ObservableObject{
+class MenuFilterViewModel: ObservableObject {
     @Published var distanceValue: Double = 1000
     @Published var lowerPrice: Double = 2500
     @Published var upperPrice: Double = 10000
@@ -61,7 +61,7 @@ struct MenuFilterView: View {
         self.favoriteViewModel = FavoriteViewModel()
         self.viewModelType = .menu
         self._menuFilterType = menuFilterType
-        if let distanceValue = menuViewModel.selectedFilters.distance{
+        if let distanceValue = menuViewModel.selectedFilters.distance {
             menuFilterViewModel.distanceValue = Double(distanceValue)
         }
         if let lowerPrice = menuViewModel.selectedFilters.priceRange?.lowerBound {
@@ -90,22 +90,22 @@ struct MenuFilterView: View {
         self.menuViewModel = MenuViewModel()
         self.viewModelType = .favorite
         self._menuFilterType = menuFilterType
-        if let distanceValue = favoriteViewModel.selectedFilters.distance{
+        if let distanceValue = favoriteViewModel.selectedFilters.distance {
             menuFilterViewModel.distanceValue = Double(distanceValue)
         }
-        if let lowerPrice = favoriteViewModel.selectedFilters.priceRange?.lowerBound{
+        if let lowerPrice = favoriteViewModel.selectedFilters.priceRange?.lowerBound {
             menuFilterViewModel.lowerPrice = lowerPrice == 0 ? minPrice : Double(lowerPrice)
         }
-        if let upperPrice = favoriteViewModel.selectedFilters.priceRange?.upperBound{
+        if let upperPrice = favoriteViewModel.selectedFilters.priceRange?.upperBound {
             menuFilterViewModel.upperPrice = Double(upperPrice)
         }
-        if let isOpen = favoriteViewModel.selectedFilters.isOpen{
+        if let isOpen = favoriteViewModel.selectedFilters.isOpen {
             menuFilterViewModel.isOpen = isOpen
         }
-        if let hasReivew = favoriteViewModel.selectedFilters.hasReview{
+        if let hasReivew = favoriteViewModel.selectedFilters.hasReview {
             menuFilterViewModel.hasReview = hasReivew
         }
-        if let minimumRating = favoriteViewModel.selectedFilters.minimumRating{
+        if let minimumRating = favoriteViewModel.selectedFilters.minimumRating {
             menuFilterViewModel.minimumRating = minimumRating
         }
         if let selectedCategories = menuViewModel.selectedFilters.categories {
@@ -139,7 +139,8 @@ struct MenuFilterView: View {
                             SegmentedPicker(
                                 selectedOption: $menuFilterViewModel.isOpen,
                                 options: [false, true],
-                                format: { $0 ? "영업 중" : "전체" }, isRateFilter: false
+                                format: { $0 ? "영업 중" : "전체" },
+                                isRateFilter: false
                             )
                         }
                         
@@ -147,7 +148,8 @@ struct MenuFilterView: View {
                             SegmentedPicker(
                                 selectedOption: $menuFilterViewModel.hasReview,
                                 options: [false, true],
-                                format: { $0 ? "리뷰 있음" : "전체" }, isRateFilter: false
+                                format: { $0 ? "리뷰 있음" : "전체" },
+                                isRateFilter: false
                             )
                         }
                         
@@ -155,7 +157,8 @@ struct MenuFilterView: View {
                             SegmentedPicker(
                                 selectedOption: $menuFilterViewModel.minimumRating,
                                 options: [0, 3.5, 4.0, 4.5],
-                                format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) }, isRateFilter: true
+                                format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
+                                isRateFilter: true
                             )
                         }
                         
@@ -181,9 +184,9 @@ struct MenuFilterView: View {
                     SegmentedPicker(
                         selectedOption: $menuFilterViewModel.minimumRating,
                         options: [0, 3.5, 4.0, 4.5],
-                        format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) }, isRateFilter: true
+                        format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
+                        isRateFilter: true
                     )
-                    
                 }
                 .padding(EdgeInsets(top: 16, leading: 16, bottom: 52, trailing: 16))
             case .category:

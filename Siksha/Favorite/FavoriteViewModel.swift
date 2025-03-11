@@ -25,7 +25,7 @@ public class FavoriteViewModel: ObservableObject {
     }
     
     @Published var showCalendar: Bool = false
-
+    
     @Published var selectedDate: String
     @Published var nextDate: String = ""
     @Published var prevDate: String = ""
@@ -48,49 +48,49 @@ public class FavoriteViewModel: ObservableObject {
     @Published var reloadOnAppear: Bool = true
     @Published var isFestivalAvailable: Bool
     @Published var isFestival: Bool = false
-
-    public var priceLabel:String{
+    
+    public var priceLabel: String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         
-        if let priceRange = selectedFilters.priceRange{
+        if let priceRange = selectedFilters.priceRange {
             let formattedLower = numberFormatter.string(from: NSNumber(value: priceRange.lowerBound))!
             let formattedUpper = numberFormatter.string(from: NSNumber(value: priceRange.upperBound))!
-            if priceRange.upperBound == MAX_PRICE{
+            if priceRange.upperBound == MAX_PRICE {
                 return "\(formattedLower)원 ~ \(formattedUpper)원 이상"
-            }
-            else{
+            } else {
                 return "\(formattedLower)원 ~ \(formattedUpper)원"
             }
         }
         return "가격"
     }
-    public var distanceLabel:String{
-        if let distance = selectedFilters.distance{
+    public var distanceLabel: String {
+        if let distance = selectedFilters.distance {
             return "\(distance)m 이내"
         }
         return "거리"
     }
-    public var minRatingLabel:String{
-        if let minimumRating = selectedFilters.minimumRating{
+    public var minRatingLabel: String {
+        if let minimumRating = selectedFilters.minimumRating {
             return "평점 \(minimumRating) 이상"
         }
         return "최소 평점"
     }
-    public var categoryLabel:String{
-        if let categories = selectedFilters.categories{
+    public var categoryLabel: String {
+        if let categories = selectedFilters.categories {
             return categories.joined(separator: ",")
         }
         return "카테고리"
     }
+    
     init() {
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
         FESTIVAL_END = Calendar(identifier: .gregorian).startOfDay(for: formatter.date(from: "2024-09-27")!)
-
+        
         selectedDate = formatter.string(from: Date())
         isFestivalAvailable = Date() < FESTIVAL_END
-
+        
         let calendar = Calendar.current
         
         let components = calendar.dateComponents([.hour], from: Date())
@@ -102,11 +102,11 @@ public class FavoriteViewModel: ObservableObject {
             }
         }
         $isFestivalAvailable.sink{ [weak self]
-              available in
-              if(!available){
-                  self?.isFestival = false
-              }
-          }.store(in: &cancellables)
+            available in
+            if(!available){
+                self?.isFestival = false
+            }
+        }.store(in: &cancellables)
         isFestival = isFestivalAvailable && UserDefaults.standard.bool(forKey: "isFavoriteFestival")
         $isFestival.sink{
             isFestival in
@@ -116,7 +116,7 @@ public class FavoriteViewModel: ObservableObject {
             .sink { [weak self] dateString in
                 guard let self = self else { return }
                 isFestivalAvailable = Date() < FESTIVAL_END
-
+                
                 self.formatter.dateFormat = "yyyy-MM-dd"
                 let selected = self.formatter.date(from: dateString) ?? Date()
                 
@@ -145,7 +145,7 @@ public class FavoriteViewModel: ObservableObject {
             .combineLatest($selectedDate)
             .sink { [weak self] (_, date) in
                 guard let self = self else { return }
-
+                
                 self.showCalendar = false
                 self.selectedMenu = self.repository.getMenu(date: date)
                 
@@ -170,7 +170,7 @@ public class FavoriteViewModel: ObservableObject {
         
         $selectedMenu
             .combineLatest($isFestival)
-
+        
             .sink { [weak self] (menu,isFestival) in
                 guard let self = self else { return }
                 
@@ -180,20 +180,20 @@ public class FavoriteViewModel: ObservableObject {
                     let br = Array(menu.getRestaurants(.breakfast))
                         .filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
                         .filter{ restaurant in
-                                                restaurant.nameKr.contains("[축제]") == isFestival
-                                               }
+                            restaurant.nameKr.contains("[축제]") == isFestival
+                        }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     let lu = Array(menu.getRestaurants(.lunch))
                         .filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
                         .filter{ restaurant in
-                                                   restaurant.nameKr.contains("[축제]") == isFestival
-                                               }
+                            restaurant.nameKr.contains("[축제]") == isFestival
+                        }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     let dn = Array(menu.getRestaurants(.dinner))
                         .filter { UserDefaults.standard.bool(forKey: "fav\($0.id)") }
                         .filter{ restaurant in
-                                                   restaurant.nameKr.contains("[축제]") == isFestival
-                                               }
+                            restaurant.nameKr.contains("[축제]") == isFestival
+                        }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     self.restaurantsLists = [br, lu, dn]
                     
@@ -211,7 +211,6 @@ public class FavoriteViewModel: ObservableObject {
             }
             .store(in: &cancellables)
         loadFilters()
-
     }
     
     func getMenu(date: String) {
@@ -249,19 +248,21 @@ public class FavoriteViewModel: ObservableObject {
             }
             .store(in: &cancellables)
     }
-    func loadFilters(){
-        if let savedFilters = UserDefaults.standard.object(forKey: "menuFilters") as? Data{
+    
+    func loadFilters() {
+        if let savedFilters = UserDefaults.standard.object(forKey: "menuFilters") as? Data {
             let decoder = JSONDecoder()
-            if let filters = try? decoder.decode(MenuFilters.self, from: savedFilters){
+            if let filters = try? decoder.decode(MenuFilters.self, from: savedFilters) {
                 self.selectedFilters = filters
                 return
             }
         }
         self.selectedFilters = MenuFilters()
     }
-    func saveFilters(){
+    
+    func saveFilters() {
         let encoder = JSONEncoder()
-        if let filters = try? encoder.encode(selectedFilters){
+        if let filters = try? encoder.encode(selectedFilters) {
             UserDefaults.standard.setValue(filters, forKey: "menuFilters")
         }
     }
