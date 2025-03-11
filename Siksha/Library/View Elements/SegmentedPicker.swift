@@ -12,7 +12,6 @@ struct SegmentedPicker<T: Hashable>: View {
     let options: [T]
     let format: (T) -> String
     let isRateFilter: Bool
-
     
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
@@ -27,7 +26,6 @@ struct SegmentedPicker<T: Hashable>: View {
                             .background(self.selectedOption == option ? Color("SelectedBackground") : .clear, in: RoundedRectangle(cornerRadius: 30))
                             .overlay(
                                 PickerContentView(text: format(option), needStarImage: isRateFilter && format(option) != "모두" ? true : false)
-
                             )
                             .onTapGesture {
                                 self.selectedOption = option
