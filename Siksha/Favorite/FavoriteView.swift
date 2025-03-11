@@ -203,7 +203,7 @@ private extension FavoriteView {
                                 }
                                 
                             }
-                            .padding(EdgeInsets(top: 17, leading: 0, bottom: 17, trailing: 0))
+                            .padding(EdgeInsets(top: 17, leading: 9, bottom: 17, trailing: 0))
                         }
                     }
                     
