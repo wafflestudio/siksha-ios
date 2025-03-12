@@ -16,20 +16,27 @@ struct SegmentedPicker<T: Hashable>: View {
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
             .stroke(Color("Grey2"))
-            .foregroundStyle(.clear)
             .frame(height: 34)
             .overlay(
                 HStack(alignment: .center, spacing: 1) {
                     ForEach(options, id: \.self) { option in
-                        RoundedRectangle(cornerRadius: 30)
-                            .stroke(self.selectedOption == option ? Color("SelectedBorder") : .clear)
-                            .background(self.selectedOption == option ? Color("SelectedBackground") : .clear, in: RoundedRectangle(cornerRadius: 30))
-                            .overlay(
-                                PickerContentView(text: format(option), needStarImage: isRateFilter && format(option) != "모두" ? true : false)
-                            )
-                            .onTapGesture {
-                                self.selectedOption = option
+                        ZStack {
+                            if self.selectedOption == option {
+                                RoundedRectangle(cornerRadius: 30)
+                                    .fill(Color("SelectedBackground"))
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 30)
+                                            .stroke(Color("SelectedBorder"), lineWidth: 1)
+                                    )
                             }
+                            PickerContentView(text: format(option), needStarImage: isRateFilter && format(option) != "모두")
+                                .frame(maxWidth: .infinity)
+                                .frame(height: 34)
+                                .contentShape(Rectangle())
+                        }
+                        .onTapGesture {
+                            self.selectedOption = option
+                        }
                     }
                 }
             )
