@@ -206,25 +206,31 @@ struct MenuFilterView: View {
                 }
                 
                 HStack {
-                    Button("초기화") {
-                        resetFilters()
-                    }
-                    .font(.custom("NanumSquareOTFB", size: 16))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 38)
-                    .background(Color("Grey3"))
-                    .foregroundColor(.white)
-                    .cornerRadius(20)
+                    Text("초기화")
+                        .font(.custom("NanumSquareOTFB", size: 16))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 38)
+                        .foregroundStyle(.white)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color("Grey3"))
+                        )
+                        .onTapGesture {
+                            resetFilters()
+                        }
                     
-                    Button("적용") {
-                        applyFilters()
-                    }
-                    .font(.custom("NanumSquareOTFB", size: 16))
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 38)
-                    .background(Color("main"))
-                    .foregroundColor(.white)
-                    .cornerRadius(20)
+                    Text("적용")
+                        .font(.custom("NanumSquareOTFB", size: 16))
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 38)
+                        .foregroundStyle(.white)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color("main"))
+                        )
+                        .onTapGesture {
+                            applyFilters()
+                        }
                 }
                 .padding(EdgeInsets(top: 19, leading: 16, bottom: 20, trailing: 16))
                 .background(Color.white)
