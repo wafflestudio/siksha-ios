@@ -25,13 +25,13 @@ final class MenuViewModel: ObservableObject {
     }
     
     @Published var showCalendar: Bool = false
-
+    
     @Published var selectedDate: String
     @Published var nextDate: String = ""
     @Published var prevDate: String = ""
     
     @Published var selectedFormatted: String = ""
-
+    
     @Published var selectedMenu: DailyMenu? = nil
     @Published var restaurantsLists: [[Restaurant]] = []
     @Published var noMenu = false
@@ -53,35 +53,31 @@ final class MenuViewModel: ObservableObject {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         
-        if let priceRange = selectedFilters.priceRange{
+        if let priceRange = selectedFilters.priceRange {
             let formattedLower = numberFormatter.string(from: NSNumber(value: priceRange.lowerBound))!
             let formattedUpper = numberFormatter.string(from: NSNumber(value: priceRange.upperBound))!
             if priceRange.upperBound == MAX_PRICE{
                 return "\(formattedLower)원 ~ \(formattedUpper)원 이상"
-            }
-            else{
+            } else {
                 return "\(formattedLower)원 ~ \(formattedUpper)원"
             }
         }
         return "가격"
     }
-    
     var distanceLabel:String{
-        if let distance = selectedFilters.distance{
+        if let distance = selectedFilters.distance {
             return "\(distance)m 이내"
         }
         return "거리"
     }
-    
     var minRatingLabel:String{
-        if let minimumRating = selectedFilters.minimumRating{
+        if let minimumRating = selectedFilters.minimumRating {
             return "평점 \(minimumRating) 이상"
         }
         return "최소 평점"
     }
-    
     var categoryLabel:String{
-        if let categories = selectedFilters.categories{
+        if let categories = selectedFilters.categories {
             return categories.joined(separator: ",")
         }
         return "카테고리"
@@ -92,6 +88,7 @@ final class MenuViewModel: ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         
         FESTIVAL_END = Calendar(identifier: .gregorian).startOfDay(for: formatter.date(from: "2024-09-27")!)
+
         selectedDate = formatter.string(from: Date())
         
         isFestivalAvailable = Date() < FESTIVAL_END
@@ -122,7 +119,7 @@ final class MenuViewModel: ObservableObject {
     private func subscribeToIsFestivalAvailable() {
         $isFestivalAvailable.sink{ [weak self]
             available in
-            if(!available){
+            if (!available) {
                 self?.isFestival = false
             }
         }.store(in: &cancellables)
@@ -203,7 +200,7 @@ final class MenuViewModel: ObservableObject {
                             restaurant.nameKr.contains("[축제]") == isFestival
                         }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
-                        
+                    
                     let lu = Array(menu.getRestaurants(.lunch))
                         .filter{ restaurant in
                             restaurant.nameKr.contains("[축제]") == isFestival
@@ -236,19 +233,21 @@ final class MenuViewModel: ObservableObject {
             .assign(to: \.getMenuStatus, on: self)
             .store(in: &cancellables)
     }
-    func loadFilters(){
-        if let savedFilters = UserDefaults.standard.object(forKey: "menuFilters") as? Data{
+    
+    func loadFilters() {
+        if let savedFilters = UserDefaults.standard.object(forKey: "menuFilters") as? Data {
             let decoder = JSONDecoder()
-            if let filters = try? decoder.decode(MenuFilters.self, from: savedFilters){
+            if let filters = try? decoder.decode(MenuFilters.self, from: savedFilters) {
                 self.selectedFilters = filters
                 return
             }
         }
         self.selectedFilters = MenuFilters()
     }
-    func saveFilters(){
+    
+    func saveFilters() {
         let encoder = JSONEncoder()
-        if let filters = try? encoder.encode(selectedFilters){
+        if let filters = try? encoder.encode(selectedFilters) {
             UserDefaults.standard.setValue(filters, forKey: "menuFilters")
         }
     }
