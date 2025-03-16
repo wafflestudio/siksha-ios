@@ -17,11 +17,11 @@ public enum MenuFilterType {
     var modalSheetHeight: CGFloat {
         switch self {
         case .all:
-            return 727
+            return 727 - 17
         case .distance, .price, .category:
-            return 259
+            return 259 - 17
         case .minimumRating:
-            return 211
+            return 211 - 17
         }
     }
 }
@@ -127,7 +127,7 @@ struct MenuFilterView: View {
                     .font(.custom("NanumSquareOTFB", size: 14))
                     .padding(EdgeInsets(top: 1.32, leading: 0, bottom: 13.68, trailing: 0))
                 
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(spacing: 40) {
                         SectionHeader(title: "거리")
                         DistanceSliderView(targetValue: $menuFilterViewModel.distanceValue)
@@ -166,34 +166,48 @@ struct MenuFilterView: View {
                             SectionHeader(title: "카테고리")
                             CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
                         }
+                        
+                        // bottom padding
+                        Rectangle()
+                            .frame(height: 88)
+                            .opacity(0)
                     }
-                    Spacer(minLength: 88)
-                }.padding(.horizontal, 16)
+                }
+                .padding(.horizontal, 16)
             case .distance:
-                VStack(spacing: 56) {
+                VStack(spacing: 0) {
                     SectionHeader(title: "거리")
+                    Spacer()
                     DistanceSliderView(targetValue: $menuFilterViewModel.distanceValue)
-                }.padding(EdgeInsets(top: 16, leading: 16, bottom: 68, trailing: 16))
+                }
+                .padding(EdgeInsets(top: 16, leading: 16, bottom: 58, trailing: 16))
             case .price:
-                VStack(spacing: 56) {
+                VStack(spacing: 0) {
                     SectionHeader(title: "가격")
+                    Spacer()
                     PriceRangeSliderView(lowerValue: $menuFilterViewModel.lowerPrice, upperValue: $menuFilterViewModel.upperPrice)
-                }.padding(EdgeInsets(top: 16, leading: 16, bottom: 68, trailing: 16))
+                }
+                .padding(EdgeInsets(top: 16, leading: 16, bottom: 58, trailing: 16))
             case .minimumRating:
                 PickerFilterSection(title: "최소 평점") {
-                    SegmentedPicker(
-                        selectedOption: $menuFilterViewModel.minimumRating,
-                        options: [0, 3.5, 4.0, 4.5],
-                        format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
-                        isRateFilter: true
-                    )
+                    VStack(spacing: 0) {
+                        SegmentedPicker(
+                            selectedOption: $menuFilterViewModel.minimumRating,
+                            options: [0, 3.5, 4.0, 4.5],
+                            format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
+                            isRateFilter: true
+                        )
+                        Spacer()
+                    }
                 }
-                .padding(EdgeInsets(top: 16, leading: 16, bottom: 52, trailing: 16))
+                .padding(EdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16))
             case .category:
-                VStack(spacing: 20.5) {
+                VStack(spacing: 0) {
                     SectionHeader(title: "카테고리")
+                    Spacer()
                     CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
-                }.padding(EdgeInsets(top: 16, leading: 16, bottom: 68, trailing: 16))
+                }
+                .padding(EdgeInsets(top: 16, leading: 16, bottom: 36, trailing: 16))
             }
             
             ZStack {
@@ -346,6 +360,7 @@ struct SectionHeader: View {
     var body: some View {
         Text(title)
             .font(.custom("NanumSquareOTFEB", size: 16))
+            .frame(height: 27.5)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

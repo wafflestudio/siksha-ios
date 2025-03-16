@@ -27,7 +27,6 @@ final class MenuViewModel: ObservableObject {
     @Published var selectedMenu: DailyMenu? = nil
     @Published var selectedFilters: MenuFilters = MenuFilters()
     @Published var restaurantsLists: [[Restaurant]] = []
-    @Published var noMenu = false
     
     @Published var getMenuStatus: MenuStatus = .idle
     
@@ -209,9 +208,6 @@ final class MenuViewModel: ObservableObject {
                         }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     self.restaurantsLists = [br, lu, dn]
-                    self.noMenu = false
-                } else {
-                    self.noMenu = true
                 }
                 self.pageViewReload = true
             }

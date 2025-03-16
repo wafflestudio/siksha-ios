@@ -22,96 +22,22 @@ struct MenuListView: View {
     ]
     
     var body: some View {
-        VStack(alignment: .center) {
+        VStack(alignment: .center, spacing: 0) {
             if viewModel.getMenuStatus == .loading {
                 loadingView
             } else {
+                mealSelectorView
+                    .padding(.top, 15)
+                
+                filterSelectorView
+                
                 if viewModel.restaurantsLists.count > 0 {
-                    mealSelectorView
-                    
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 5) {
-                            Image("Filter")
-                                .onTapGesture {
-                                    selectedFilterType = .all
-                                }
-                            
-                            FilterItem(
-                                text: viewModel.distanceLabel,
-                                isOn: viewModel.selectedFilters.distance != nil,
-                                isCheck: false
-                            ).onTapGesture {
-                                selectedFilterType = .distance
-                            }
-                            
-                            FilterItem(
-                                text: viewModel.priceLabel,
-                                isOn: viewModel.selectedFilters.priceRange != nil,
-                                isCheck: false
-                            )
-                            .onTapGesture {
-                                selectedFilterType = .price
-                            }
-                            
-                            FilterItem(
-                                text: "영업 중",
-                                isOn:viewModel.selectedFilters.isOpen ?? false,
-                                isCheck: true
-                            ).onTapGesture {
-                                if let hasReviewFilter = viewModel.selectedFilters.isOpen {
-                                    viewModel.selectedFilters.isOpen?.toggle()
-                                } else {
-                                    viewModel.selectedFilters.isOpen = true
-                                }
-                                viewModel.saveFilters()
-                            }
-                            
-                            FilterItem(
-                                text: "리뷰",
-                                isOn:viewModel.selectedFilters.hasReview ?? false,
-                                isCheck: true
-                            ).onTapGesture {
-                                if let hasReviewFilter = viewModel.selectedFilters.hasReview {
-                                    viewModel.selectedFilters.hasReview?.toggle()
-                                } else {
-                                    viewModel.selectedFilters.hasReview = true
-                                }
-                                viewModel.saveFilters()
-                            }
-                            
-                            FilterItem(
-                                text:viewModel.minRatingLabel,
-                                isOn:viewModel.selectedFilters.minimumRating != nil,
-                                isCheck: false
-                            ).onTapGesture {
-                                selectedFilterType = .minimumRating
-                            }
-                            
-                            FilterItem(
-                                text: viewModel.categoryLabel,
-                                isOn:viewModel.selectedFilters.categories != nil,
-                                isCheck: false
-                            ).onTapGesture {
-                                selectedFilterType = .category
-                            }
-                        }
-                        .padding(EdgeInsets(top: 17, leading: 9, bottom: 17, trailing: 0))
-                    }
-                    
                     PageView(
                         currentPage: $viewModel.selectedPage,
                         needReload: $viewModel.pageViewReload,
                         viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.menuViewModel, viewModel) })
                 } else {
-                    VStack {
-                        Spacer()
-                        Text("불러온 식단이 없습니다")
-                            .font(.custom("NanumSquareOTFB", size: 15))
-                            .foregroundColor(fontColor)
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity)
-                    .background(backgroundColor)
+                    emptyView
                 }
             }
         }
@@ -137,8 +63,8 @@ private extension MenuListView {
                 ForEach(typeInfos) { type in
                     typeButton(type: type)
                 }
-            }.padding(.top, 8)
-                .frame(alignment: .center)
+            }
+            .frame(alignment: .center)
             
             if viewModel.isFestivalAvailable {
                 HStack {
@@ -150,6 +76,92 @@ private extension MenuListView {
                 }
             }
         }.frame(maxWidth: .infinity)
+    }
+    
+    var filterSelectorView: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 5) {
+                Image("Filter")
+                    .resizable()
+                    .frame(width: 34, height: 34)
+                    .onTapGesture {
+                        selectedFilterType = .all
+                    }
+                
+                FilterItem(
+                    text: viewModel.distanceLabel,
+                    isOn: viewModel.selectedFilters.distance != nil,
+                    isCheck: false
+                ).onTapGesture {
+                    selectedFilterType = .distance
+                }
+                
+                FilterItem(
+                    text: viewModel.priceLabel,
+                    isOn: viewModel.selectedFilters.priceRange != nil,
+                    isCheck: false
+                )
+                .onTapGesture {
+                    selectedFilterType = .price
+                }
+                
+                FilterItem(
+                    text: "영업 중",
+                    isOn:viewModel.selectedFilters.isOpen ?? false,
+                    isCheck: true
+                ).onTapGesture {
+                    if let hasReviewFilter = viewModel.selectedFilters.isOpen {
+                        viewModel.selectedFilters.isOpen?.toggle()
+                    } else {
+                        viewModel.selectedFilters.isOpen = true
+                    }
+                    viewModel.saveFilters()
+                }
+                
+                FilterItem(
+                    text: "리뷰",
+                    isOn:viewModel.selectedFilters.hasReview ?? false,
+                    isCheck: true
+                ).onTapGesture {
+                    if let hasReviewFilter = viewModel.selectedFilters.hasReview {
+                        viewModel.selectedFilters.hasReview?.toggle()
+                    } else {
+                        viewModel.selectedFilters.hasReview = true
+                    }
+                    viewModel.saveFilters()
+                }
+                
+                FilterItem(
+                    text:viewModel.minRatingLabel,
+                    isOn:viewModel.selectedFilters.minimumRating != nil,
+                    isCheck: false
+                ).onTapGesture {
+                    selectedFilterType = .minimumRating
+                }
+                
+                FilterItem(
+                    text: viewModel.categoryLabel,
+                    isOn:viewModel.selectedFilters.categories != nil,
+                    isCheck: false
+                ).onTapGesture {
+                    selectedFilterType = .category
+                }
+            }
+            .padding(EdgeInsets(top: 17, leading: 9, bottom: 15, trailing: 9))
+        }
+
+    }
+    
+    var emptyView: some View {
+        VStack {
+            Spacer()
+            Text("불러온 식단이 없습니다")
+                .font(.custom("NanumSquareOTFB", size: 15))
+                .foregroundColor(fontColor)
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .background(backgroundColor)
     }
     
     func typeButton(type: TypeInfo) -> some View {

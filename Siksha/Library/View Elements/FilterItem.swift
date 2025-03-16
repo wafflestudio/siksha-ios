@@ -14,6 +14,8 @@ struct FilterItem: View {
         HStack(spacing: 2) {
             if (isOn && isCheck) {
                 Image("FilterCheck")
+                    .resizable()
+                    .frame(width: 16, height: 16)
             }
             if (isOn) {
                 Text(text)
@@ -24,8 +26,10 @@ struct FilterItem: View {
             }
             if (!isCheck) {
                 Image("select")
+                    .resizable()
+                    .frame(width: 16, height: 16)
             }
-        }.padding(EdgeInsets(top: 9, leading: 10, bottom: 10, trailing: 9))
+        }.padding(EdgeInsets(top: 9, leading: 10, bottom: 9, trailing: 10))
             .background(isOn ? Color("MainActiveColor") : .white)
             .cornerRadius(30)
             .overlay(
