@@ -31,7 +31,7 @@ struct MenuViewModelKey: EnvironmentKey {
     }
 }
 
-public extension EnvironmentValues {
+extension EnvironmentValues {
     var viewController: UIViewController? {
         get { return self[ViewControllerKey.self].value }
         set { self[ViewControllerKey.self].value = newValue }
@@ -48,7 +48,7 @@ public extension EnvironmentValues {
     }
 }
 
-public extension UIViewController {
+extension UIViewController {
     func present<Content: View>(style: UIModalPresentationStyle = .automatic, @ViewBuilder builder: () -> Content) {
         let toPresent = UIHostingController(rootView: AnyView(EmptyView()))
         toPresent.modalPresentationStyle = style

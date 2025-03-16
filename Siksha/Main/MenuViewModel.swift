@@ -8,20 +8,10 @@
 import Foundation
 import Combine
 
-
-public struct MenuFilters:Codable {
-    var distance: Int? = nil               // Distance in meters (e.g., 400m); nil = all distances
-    var priceRange: ClosedRange<Int>? = nil // Price range (e.g., 5000원 ~ 8000원); nil = all prices
-    var isOpen: Bool? = nil                // Open status; true = open only, nil = open + closed
-    var hasReview: Bool? = nil             // Review status; true = with reviews only, nil = review + no review
-    var minimumRating: Float? = nil        // Minimum rating (e.g., 3.5); nil = all ratings
-    var categories: [String]? = nil            // Category filter (e.g., 한식, 중식); nil = all categories
-}
-
-public class MenuViewModel: ObservableObject {
+final class MenuViewModel: ObservableObject {
     
-    let FESTIVAL_END: Date
-    let MAX_PRICE = 10000
+    private let FESTIVAL_END: Date
+    private let MAX_PRICE = 10000
     private var cancellables = Set<AnyCancellable>()
     
     @Published var selectedFilters: MenuFilters = MenuFilters()
@@ -59,7 +49,7 @@ public class MenuViewModel: ObservableObject {
     @Published var isFestivalAvailable: Bool
     @Published var isFestival: Bool = false
     
-    public var priceLabel:String{
+    var priceLabel:String{
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .decimal
         
@@ -75,33 +65,39 @@ public class MenuViewModel: ObservableObject {
         }
         return "가격"
     }
-    public var distanceLabel:String{
+    
+    var distanceLabel:String{
         if let distance = selectedFilters.distance{
             return "\(distance)m 이내"
         }
         return "거리"
     }
-    public var minRatingLabel:String{
+    
+    var minRatingLabel:String{
         if let minimumRating = selectedFilters.minimumRating{
             return "평점 \(minimumRating) 이상"
         }
         return "최소 평점"
     }
-    public var categoryLabel:String{
+    
+    var categoryLabel:String{
         if let categories = selectedFilters.categories{
             return categories.joined(separator: ",")
         }
         return "카테고리"
     }
+    
     init() {
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
-        FESTIVAL_END = Calendar(identifier: .gregorian).startOfDay(for: formatter.date(from: "2024-09-27")!)
-
-        selectedDate = formatter.string(from: Date())
-        isFestivalAvailable = Date() < FESTIVAL_END
-        let calendar = Calendar.current
         
+        FESTIVAL_END = Calendar(identifier: .gregorian).startOfDay(for: formatter.date(from: "2024-09-27")!)
+        selectedDate = formatter.string(from: Date())
+        
+        isFestivalAvailable = Date() < FESTIVAL_END
+        isFestival = isFestivalAvailable && UserDefaults.standard.bool(forKey: "isFestival")
+        
+        let calendar = Calendar.current
         let components = calendar.dateComponents([.hour], from: Date())
         if let hour = components.hour {
             if hour > 16 {
@@ -110,17 +106,36 @@ public class MenuViewModel: ObservableObject {
                 selectedPage = 1
             }
         }
+        
+        loadFilters()
+        subscribe()
+    }
+    
+    private func subscribe() {
+        subscribeToIsFestivalAvailable()
+        subscribeToIsFestival()
+        subscribeToSelectedDate()
+        subscribeToGetMenuStatus()
+        subscribeToSelectedMenu()
+    }
+    
+    private func subscribeToIsFestivalAvailable() {
         $isFestivalAvailable.sink{ [weak self]
             available in
             if(!available){
                 self?.isFestival = false
             }
         }.store(in: &cancellables)
-        isFestival = isFestivalAvailable && UserDefaults.standard.bool(forKey: "isFestival")
+    }
+    
+    private func subscribeToIsFestival() {
         $isFestival.sink{
             isFestival in
             UserDefaults.standard.set(isFestival,forKey: "isFestival")
         }.store(in: &cancellables)
+    }
+    
+    private func subscribeToSelectedDate() {
         $selectedDate
             .removeDuplicates()
             .sink { [weak self] dateString in
@@ -142,7 +157,9 @@ public class MenuViewModel: ObservableObject {
                 self.getMenu(date: dateString)
             }
             .store(in: &cancellables)
-        
+    }
+    
+    private func subscribeToGetMenuStatus() {
         $getMenuStatus
             .filter { $0 == .succeeded || $0 == .showCached }
             .combineLatest($selectedDate)
@@ -170,7 +187,9 @@ public class MenuViewModel: ObservableObject {
                 self.showNetworkAlert = true
             }
             .store(in: &cancellables)
-        
+    }
+    
+    private func subscribeToSelectedMenu() {
         $selectedMenu
             .combineLatest($isFestival)
             .sink { [weak self] (menu,isFestival) in
@@ -203,7 +222,6 @@ public class MenuViewModel: ObservableObject {
                 self.pageViewReload = true
             }
             .store(in: &cancellables)
-        loadFilters()
     }
     
     func getMenu(date: String) {
