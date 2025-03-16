@@ -53,14 +53,14 @@ struct MenuFilterView: View {
         case favorite
     }
     
-    @Binding var menuFilterType: MenuFilterType
+    var menuFilterType: MenuFilterType
     
     // menuViewModel 사용
-    init(menuViewModel: MenuViewModel, menuFilterType: Binding<MenuFilterType>) {
+    init(menuViewModel: MenuViewModel, menuFilterType: MenuFilterType) {
         self.menuViewModel = menuViewModel
         self.favoriteViewModel = FavoriteViewModel()
         self.viewModelType = .menu
-        self._menuFilterType = menuFilterType
+        self.menuFilterType = menuFilterType
         if let distanceValue = menuViewModel.selectedFilters.distance {
             menuFilterViewModel.distanceValue = Double(distanceValue)
         }
@@ -85,11 +85,11 @@ struct MenuFilterView: View {
     }
     
     // favoriteViewModel 사용
-    init(favoriteViewModel: FavoriteViewModel, menuFilterType: Binding<MenuFilterType>) {
+    init(favoriteViewModel: FavoriteViewModel, menuFilterType: MenuFilterType) {
         self.favoriteViewModel = favoriteViewModel
         self.menuViewModel = MenuViewModel()
         self.viewModelType = .favorite
-        self._menuFilterType = menuFilterType
+        self.menuFilterType = menuFilterType
         if let distanceValue = favoriteViewModel.selectedFilters.distance {
             menuFilterViewModel.distanceValue = Double(distanceValue)
         }

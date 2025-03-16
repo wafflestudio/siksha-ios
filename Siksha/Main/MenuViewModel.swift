@@ -9,20 +9,12 @@ import Foundation
 import Combine
 
 final class MenuViewModel: ObservableObject {
-    
     private let FESTIVAL_END: Date
     private let MAX_PRICE = 10000
     private var cancellables = Set<AnyCancellable>()
-    
-    @Published var selectedFilters: MenuFilters = MenuFilters()
-    
+
     private let repository = MenuRepository()
     private let formatter = DateFormatter()
-    
-    private var todayString: String {
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: Date())
-    }
     
     @Published var showCalendar: Bool = false
     
@@ -33,6 +25,7 @@ final class MenuViewModel: ObservableObject {
     @Published var selectedFormatted: String = ""
     
     @Published var selectedMenu: DailyMenu? = nil
+    @Published var selectedFilters: MenuFilters = MenuFilters()
     @Published var restaurantsLists: [[Restaurant]] = []
     @Published var noMenu = false
     
@@ -45,9 +38,13 @@ final class MenuViewModel: ObservableObject {
     
     @Published var reloadOnAppear: Bool = true
     
-    
     @Published var isFestivalAvailable: Bool
     @Published var isFestival: Bool = false
+    
+    private var todayString: String {
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: Date())
+    }
     
     var priceLabel:String{
         let numberFormatter = NumberFormatter()
