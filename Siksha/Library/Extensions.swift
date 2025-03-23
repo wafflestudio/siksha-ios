@@ -31,6 +31,19 @@ struct MenuViewModelKey: EnvironmentKey {
     }
 }
 
+struct SafeAreaInsetsKey: EnvironmentKey {
+    static var defaultValue: EdgeInsets {
+        (UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets ?? .zero).insets
+    }
+}
+
+extension UIEdgeInsets {
+    
+    var insets: EdgeInsets {
+        EdgeInsets(top: top, leading: left, bottom: bottom, trailing: right)
+    }
+}
+
 extension EnvironmentValues {
     var viewController: UIViewController? {
         get { return self[ViewControllerKey.self].value }
@@ -45,6 +58,10 @@ extension EnvironmentValues {
     var menuViewModel: MenuViewModel? {
         get { return self[MenuViewModelKey.self] }
         set { self[MenuViewModelKey.self] = newValue }
+    }
+    
+    var safeAreaInsets: EdgeInsets {
+        self[SafeAreaInsetsKey.self]
     }
 }
 

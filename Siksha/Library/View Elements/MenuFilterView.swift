@@ -18,11 +18,11 @@ public enum MenuFilterType {
     var modalSheetHeight: CGFloat {
         switch self {
         case .all:
-            return 727 - 17
+            return 727
         case .distance, .price, .category:
-            return 259 - 17
+            return 259
         case .minimumRating:
-            return 211 - 17
+            return 220
         }
     }
 }
@@ -133,25 +133,30 @@ struct MenuFilterView: View {
                         
                         // bottom padding
                         Rectangle()
-                            .frame(height: 88)
+                            .frame(height: 48)
                             .opacity(0)
                     }
                 }
                 .padding(.horizontal, 16)
+                
             case .distance:
                 VStack(spacing: 0) {
                     SectionHeader(title: "거리")
-                    Spacer()
+                        .padding(.bottom, 56.5)
                     DistanceSliderView(targetValue: $menuFilterViewModel.distanceValue)
+                    Spacer()
                 }
-                .padding(EdgeInsets(top: 16, leading: 16, bottom: 58, trailing: 16))
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
             case .price:
                 VStack(spacing: 0) {
                     SectionHeader(title: "가격")
-                    Spacer()
+                        .padding(.bottom, 56.5)
                     PriceRangeSliderView(lowerValue: $menuFilterViewModel.lowerPrice, upperValue: $menuFilterViewModel.upperPrice)
+                    Spacer()
                 }
-                .padding(EdgeInsets(top: 16, leading: 16, bottom: 58, trailing: 16))
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
             case .minimumRating:
                 PickerFilterSection(title: "최소 평점") {
                     VStack(spacing: 0) {
@@ -164,21 +169,23 @@ struct MenuFilterView: View {
                         Spacer()
                     }
                 }
-                .padding(EdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16))
+                .padding(EdgeInsets(top: 16.7, leading: 16, bottom: 0, trailing: 16))
             case .category:
                 VStack(spacing: 0) {
                     SectionHeader(title: "카테고리")
-                    Spacer()
+                        .padding(.bottom, 20.5)
                     CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
+                    Spacer()
                 }
-                .padding(EdgeInsets(top: 16, leading: 16, bottom: 36, trailing: 16))
+                .padding(.horizontal, 16)
+                .padding(.top, 16)
             }
             
             ZStack {
                 if menuFilterType == .all {
                     Rectangle()
                         .fill(Color.white)
-                        .frame(height: 77)
+                        .frame(height: 111)
                         .shadow(color: Color.black.opacity(0.05), radius: 3, y: -1)
                         .zIndex(0)                    
                 }
@@ -210,11 +217,13 @@ struct MenuFilterView: View {
                             applyFilters()
                         }
                 }
-                .padding(EdgeInsets(top: 19, leading: 16, bottom: 20, trailing: 16))
+                .padding(EdgeInsets(top: menuFilterType == .all ? 19 : 0, leading: 16, bottom: menuFilterType == .all ? 54 : 45, trailing: 16))
                 .background(Color.white)
                 .zIndex(1)
             }
         }
+        .ignoresSafeArea()
+        .filterCloseButton(filterType: menuFilterType, closeAction: dismiss)
         .alert("위치 서비스 사용", isPresented: $isDistanceAlertPresented, actions: {
             Button("취소") {}
             Button("설정으로 이동") {
@@ -312,7 +321,7 @@ struct PickerFilterSection<Content: View>: View {
     }
     
     var body: some View {
-        VStack(spacing: 14.5) {
+        VStack(spacing: 20.5) {
             SectionHeader(title: self.title)
             pickerView
                 .padding(1)
@@ -381,6 +390,45 @@ struct CategoriesFlowLayout: View {
             }
         }
         .padding(.horizontal, 1)
+    }
+}
+
+struct MenuFilterViewCloseButtonModifier: ViewModifier {
+    let filterType: MenuFilterType
+    let closeAction: DismissAction
+        
+    init(filterType: MenuFilterType, closeAction: DismissAction) {
+        self.filterType = filterType
+        self.closeAction = closeAction
+    }
+    
+    func body(content: Content) -> some View {
+        ZStack(alignment: .topTrailing) {
+            content
+            
+            Button(action: { closeAction() }) {
+                Image("Close")
+                    .resizable()
+                    .frame(width: 32, height: 32)
+                    .foregroundStyle(Color("Gray900"))
+            }
+            .padding(.top, filterType == .all ? 28 : 14)
+            .padding(.trailing, filterType == .all ? 13 : 16)
+        }
+    }
+}
+
+fileprivate extension View {
+    func filterCloseButton(
+        filterType: MenuFilterType,
+        closeAction: DismissAction
+    ) -> some View {
+        self.modifier(
+            MenuFilterViewCloseButtonModifier(
+                filterType: filterType,
+                closeAction: closeAction
+            )
+        )
     }
 }
 

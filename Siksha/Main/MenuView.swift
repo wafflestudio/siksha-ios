@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct MenuView: View {
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+    
     @StateObject private var viewModel: MenuViewModel
     @State private var selectedFilterType: MenuFilterType? = nil
     
@@ -79,7 +81,7 @@ struct MenuView: View {
             // TODO: - 버전 16으로 올릴 경우 분기처리 필요 X
             if #available(iOS 16.0, *) {
                 MenuFilterView(menuViewModel: viewModel, menuFilterType: selectedFilterType ?? .all)
-                    .presentationDetents([.height(selectedModalHeight)])
+                    .presentationDetents([.height(selectedModalHeight - safeAreaInsets.bottom)])
             } else {
                 GeometryReader { geometry in
                     VStack {
