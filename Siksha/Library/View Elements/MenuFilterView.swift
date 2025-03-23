@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 public enum MenuFilterType {
     case all
@@ -41,6 +42,7 @@ struct MenuFilterView: View {
     @ObservedObject var favoriteViewModel: FavoriteViewModel
     @ObservedObject var menuFilterViewModel = MenuFilterViewModel()
     @Environment(\.dismiss) var dismiss
+    @State var isDistanceAlertPresented = false
     let ratings = [3.5, 4.0, 4.5]
     let categories = ["한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
     let maxPrice = 10000.0
@@ -251,6 +253,16 @@ struct MenuFilterView: View {
                 .zIndex(1)
             }
         }
+        .alert("위치 서비스 사용", isPresented: $isDistanceAlertPresented, actions: {
+            Button("취소") {}
+            Button("설정으로 이동") {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }, message: {
+            Text("거리 필터를 사용하기 위해 위치서비스 사용이 필요합니다.\n 설정에서 위치서비스를 켜주세요.")
+        })
     }
     
     func resetFilters() {
@@ -277,6 +289,26 @@ struct MenuFilterView: View {
     }
     
     func applyFilters() {
+        
+        // 거리 설정 시 위치 권한 확인
+        if menuFilterViewModel.distanceValue < maxDistance {
+            let locationManager = CLLocationManager()
+            
+            switch locationManager.authorizationStatus {
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+                return
+            case .restricted:
+                DispatchQueue.main.async { self.isDistanceAlertPresented = true }
+                return
+            case .denied:
+                DispatchQueue.main.async { self.isDistanceAlertPresented = true }
+                return
+            case .authorizedAlways, .authorizedWhenInUse:
+                break
+            }
+        }
+        
         switch viewModelType {
         case .menu:
             switch menuFilterType {

@@ -42,6 +42,16 @@ struct MenuListView: View {
             }
         }
         .background(backgroundColor)
+        .alert("Error", isPresented: $viewModel.showDistanceAlert, actions: {
+            Button("취소") {}
+            Button("위치 설정으로 이동") {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }, message: {
+            Text("위치 정보를 가져올 수 없습니다. 거리 필터를 해제합니다.")
+        })
     }
 }
 
@@ -109,8 +119,9 @@ private extension MenuListView {
                     text: "영업 중",
                     isOn:viewModel.selectedFilters.isOpen ?? false,
                     isCheck: true
-                ).onTapGesture {
-                    if let hasReviewFilter = viewModel.selectedFilters.isOpen {
+                )
+                .onTapGesture {
+                    if let _ = viewModel.selectedFilters.isOpen {
                         viewModel.selectedFilters.isOpen?.toggle()
                     } else {
                         viewModel.selectedFilters.isOpen = true
@@ -122,8 +133,9 @@ private extension MenuListView {
                     text: "리뷰",
                     isOn:viewModel.selectedFilters.hasReview ?? false,
                     isCheck: true
-                ).onTapGesture {
-                    if let hasReviewFilter = viewModel.selectedFilters.hasReview {
+                )
+                .onTapGesture {
+                    if let _ = viewModel.selectedFilters.hasReview {
                         viewModel.selectedFilters.hasReview?.toggle()
                     } else {
                         viewModel.selectedFilters.hasReview = true
@@ -135,7 +147,8 @@ private extension MenuListView {
                     text:viewModel.minRatingLabel,
                     isOn:viewModel.selectedFilters.minimumRating != nil,
                     isCheck: false
-                ).onTapGesture {
+                )
+                .onTapGesture {
                     selectedFilterType = .minimumRating
                 }
                 
@@ -143,7 +156,8 @@ private extension MenuListView {
                     text: viewModel.categoryLabel,
                     isOn:viewModel.selectedFilters.categories != nil,
                     isCheck: false
-                ).onTapGesture {
+                )
+                .onTapGesture {
                     selectedFilterType = .category
                 }
             }

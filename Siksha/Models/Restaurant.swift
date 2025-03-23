@@ -9,6 +9,7 @@ import Foundation
 import SwiftyJSON
 import Realm
 import RealmSwift
+import CoreLocation
 
 class Restaurant: Object {
     enum OperatingHourType : Int {
@@ -41,6 +42,12 @@ class Restaurant: Object {
     @objc dynamic var lng: String = ""
     var operatingHours = List<String>()
     var menus = List<Meal>()
+    
+    var location: CLLocation? {
+        guard let latitude = Double(lat),
+              let longitude = Double(lng) else { return nil }
+        return CLLocation(latitude: latitude, longitude: longitude)
+    }
     
     convenience init(_ json: JSON) {
         self.init()

@@ -25,9 +25,9 @@ final class MenuRepository {
         formatter.dateFormat = "yyyy-MM-dd"
         
         // delete menus that have been passed already
-        try! realm.write{
-            realm.delete(realm.objects(DailyMenu.self).filter{ formatter.date(from: $0.date)?.timeIntervalSince(Date()) ?? -1 < -3600*24 })
-        }
+//        try! realm.write{
+//            realm.delete(realm.objects(DailyMenu.self).filter{ formatter.date(from: $0.date)?.timeIntervalSince(Date()) ?? -1 < -3600*24 })
+//        }
     }
     
     func fetchMenu(date: String) -> AnyPublisher<MenuStatus, Never> {

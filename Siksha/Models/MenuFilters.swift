@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MenuFilters:Codable {
+struct MenuFilters: Codable {
     var distance: Int? = nil               // Distance in meters (e.g., 400m); nil = all distances
     var priceRange: ClosedRange<Int>? = nil // Price range (e.g., 5000원 ~ 8000원); nil = all prices
     var isOpen: Bool? = nil                // Open status; true = open only, nil = open + closed
