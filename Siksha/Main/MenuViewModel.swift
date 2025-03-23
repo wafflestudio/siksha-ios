@@ -370,7 +370,14 @@ final class MenuViewModel: NSObject, ObservableObject {
             
             var meetsPrice = true
             if let priceRange = filter.priceRange {
-                meetsPrice = priceRange.contains(menu.price)
+                let lower = priceRange.lowerBound
+                let upper = priceRange.upperBound
+                
+                if upper < MAX_PRICE {
+                    meetsPrice = priceRange.contains(menu.price)
+                } else {
+                    meetsPrice = menu.price >= lower
+                }
             }
             
             var meetsReview = true
