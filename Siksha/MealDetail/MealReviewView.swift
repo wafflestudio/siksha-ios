@@ -205,7 +205,6 @@ private extension MealReviewView {
                 mealInfoViewModel.loadReviews()
                 mealInfoViewModel.loadImages()
                 mealInfoViewModel.loadDistribution()
-                favViewModel?.pageViewReload = true
                 menuViewModel?.pageViewReload = true
                 presentationMode.wrappedValue.dismiss()
             }
@@ -239,7 +238,6 @@ struct MealReviewView: View {
     private let fontColor = Color("DefaultFontColor")
     private let orangeColor = Color.init("main")
 
-    @Environment(\.favoriteViewModel) var favViewModel: FavoriteViewModel?
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>

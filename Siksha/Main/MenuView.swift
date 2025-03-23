@@ -8,8 +8,14 @@
 import SwiftUI
 
 struct MenuView: View {
-    @StateObject private var viewModel = MenuViewModel()
+    @StateObject private var viewModel: MenuViewModel
     @State private var selectedFilterType: MenuFilterType? = nil
+    
+    private let lightGrayColor = Color("LightGrayColor")
+    
+    init(isFavoriteTab: Bool = false) {
+        _viewModel = StateObject(wrappedValue: MenuViewModel(isFavoriteTab: isFavoriteTab))
+    }
     
     private var isFilterModalPresented: Binding<Bool> {
         Binding(
@@ -32,16 +38,25 @@ struct MenuView: View {
             if viewModel.isFestivalAvailable {
                 festivalBanner
             }
-            daySelectorView
             
-            ZStack(alignment: .top) {
-                MenuListView(
-                    viewModel: viewModel,
-                    selectedFilterType: $selectedFilterType
-                )
+            if viewModel.noFavorites {
+                Spacer()
+                Text("즐겨찾기에 추가된 식당이 없습니다.\n식당 탭에서 별을 눌러 추가해보세요.")
+                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .foregroundColor(lightGrayColor)
+                Spacer()
+            } else {
+                daySelectorView
                 
-                if viewModel.showCalendar {
-                    calendarOverlay
+                ZStack(alignment: .top) {
+                    MenuListView(
+                        viewModel: viewModel,
+                        selectedFilterType: $selectedFilterType
+                    )
+                    
+                    if viewModel.showCalendar {
+                        calendarOverlay
+                    }
                 }
             }
         }

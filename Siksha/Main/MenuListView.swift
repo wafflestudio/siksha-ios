@@ -152,14 +152,14 @@ private extension MenuListView {
                     selectedFilterType = .minimumRating
                 }
                 
-                FilterItem(
-                    text: viewModel.categoryLabel,
-                    isOn:viewModel.selectedFilters.categories != nil,
-                    isCheck: false
-                )
-                .onTapGesture {
-                    selectedFilterType = .category
-                }
+//                FilterItem(
+//                    text: viewModel.categoryLabel,
+//                    isOn:viewModel.selectedFilters.categories != nil,
+//                    isCheck: false
+//                )
+//                .onTapGesture {
+//                    selectedFilterType = .category
+//                }
             }
             .padding(EdgeInsets(top: 17, leading: 9, bottom: 15, trailing: 9))
         }

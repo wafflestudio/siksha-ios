@@ -45,8 +45,7 @@ private extension MealInfoView {
             if showSubmitButton {
                 NavigationLink(
                     destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel)
-                        .environment(\.menuViewModel, menuViewModel)
-                        .environment(\.favoriteViewModel, favViewModel),
+                        .environment(\.menuViewModel, menuViewModel),
                     label: {
                         Image("RateButton-new")
                             .resizable()
@@ -134,7 +133,7 @@ struct MealInfoView: View {
     private let darkFontColor = Color.init("DarkFontColor")
     private let lightGrayColor = Color.init("LightGrayColor")
     private let orangeColor = Color.init("main")
-    @Environment(\.favoriteViewModel) var favViewModel: FavoriteViewModel?
+    
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     

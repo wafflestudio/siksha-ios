@@ -322,21 +322,21 @@ struct FavoriteView: View {
             selectedModalHeight = newValue.modalSheetHeight
         }
         .sheet(isPresented:$isFilterModal){
-            // TODO: - 버전 16으로 올릴 경우 분기처리 필요 X
-            if #available(iOS 16.0, *) {
-                MenuFilterView(favoriteViewModel: viewModel, menuFilterType: selectedFilterType)
-                    .presentationDetents([.height(selectedModalHeight)])
-            } else {
-                GeometryReader { geometry in
-                    VStack {
-                        MenuFilterView(favoriteViewModel: viewModel, menuFilterType: selectedFilterType)
-                            .frame(height: min(selectedModalHeight, geometry.size.height * 0.9))
-                        Spacer()
-                    }
-                    .frame(width: geometry.size.width)
-                }
-                .edgesIgnoringSafeArea(.bottom)
-            }
+//            // TODO: - 버전 16으로 올릴 경우 분기처리 필요 X
+//            if #available(iOS 16.0, *) {
+//                MenuFilterView(favoriteViewModel: viewModel, menuFilterType: selectedFilterType)
+//                    .presentationDetents([.height(selectedModalHeight)])
+//            } else {
+//                GeometryReader { geometry in
+//                    VStack {
+//                        MenuFilterView(favoriteViewModel: viewModel, menuFilterType: selectedFilterType)
+//                            .frame(height: min(selectedModalHeight, geometry.size.height * 0.9))
+//                        Spacer()
+//                    }
+//                    .frame(width: geometry.size.width)
+//                }
+//                .edgesIgnoringSafeArea(.bottom)
+//            }
         }
     }
 }
