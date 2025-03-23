@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreLocation
 
 public enum MenuFilterType {
     case all
@@ -17,11 +18,11 @@ public enum MenuFilterType {
     var modalSheetHeight: CGFloat {
         switch self {
         case .all:
-            return 727
+            return 727 - 17
         case .distance, .price, .category:
-            return 259
+            return 259 - 17
         case .minimumRating:
-            return 211
+            return 211 - 17
         }
     }
 }
@@ -38,29 +39,21 @@ class MenuFilterViewModel: ObservableObject {
 
 struct MenuFilterView: View {
     @ObservedObject var menuViewModel: MenuViewModel
-    @ObservedObject var favoriteViewModel: FavoriteViewModel
     @ObservedObject var menuFilterViewModel = MenuFilterViewModel()
     @Environment(\.dismiss) var dismiss
+    @State var isDistanceAlertPresented = false
     let ratings = [3.5, 4.0, 4.5]
     let categories = ["한식", "중식", "분식", "일식", "양식", "아시안", "뷔페"]
     let maxPrice = 10000.0
     let minPrice = 2500.0
     let maxDistance = 1000.0
     
-    private var viewModelType: ViewModelType
-    enum ViewModelType {
-        case menu
-        case favorite
-    }
-    
-    @Binding var menuFilterType: MenuFilterType
+    var menuFilterType: MenuFilterType
     
     // menuViewModel 사용
-    init(menuViewModel: MenuViewModel, menuFilterType: Binding<MenuFilterType>) {
+    init(menuViewModel: MenuViewModel, menuFilterType: MenuFilterType) {
         self.menuViewModel = menuViewModel
-        self.favoriteViewModel = FavoriteViewModel()
-        self.viewModelType = .menu
-        self._menuFilterType = menuFilterType
+        self.menuFilterType = menuFilterType
         if let distanceValue = menuViewModel.selectedFilters.distance {
             menuFilterViewModel.distanceValue = Double(distanceValue)
         }
@@ -84,35 +77,6 @@ struct MenuFilterView: View {
         }
     }
     
-    // favoriteViewModel 사용
-    init(favoriteViewModel: FavoriteViewModel, menuFilterType: Binding<MenuFilterType>) {
-        self.favoriteViewModel = favoriteViewModel
-        self.menuViewModel = MenuViewModel()
-        self.viewModelType = .favorite
-        self._menuFilterType = menuFilterType
-        if let distanceValue = favoriteViewModel.selectedFilters.distance {
-            menuFilterViewModel.distanceValue = Double(distanceValue)
-        }
-        if let lowerPrice = favoriteViewModel.selectedFilters.priceRange?.lowerBound {
-            menuFilterViewModel.lowerPrice = lowerPrice == 0 ? minPrice : Double(lowerPrice)
-        }
-        if let upperPrice = favoriteViewModel.selectedFilters.priceRange?.upperBound {
-            menuFilterViewModel.upperPrice = Double(upperPrice)
-        }
-        if let isOpen = favoriteViewModel.selectedFilters.isOpen {
-            menuFilterViewModel.isOpen = isOpen
-        }
-        if let hasReivew = favoriteViewModel.selectedFilters.hasReview {
-            menuFilterViewModel.hasReview = hasReivew
-        }
-        if let minimumRating = favoriteViewModel.selectedFilters.minimumRating {
-            menuFilterViewModel.minimumRating = minimumRating
-        }
-        if let selectedCategories = menuViewModel.selectedFilters.categories {
-            menuFilterViewModel.selectedCategories = selectedCategories
-        }
-    }
-    
     var body: some View {
         VStack(spacing: 0) {
             switch menuFilterType {
@@ -127,7 +91,7 @@ struct MenuFilterView: View {
                     .font(.custom("NanumSquareOTFB", size: 14))
                     .padding(EdgeInsets(top: 1.32, leading: 0, bottom: 13.68, trailing: 0))
                 
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     VStack(spacing: 40) {
                         SectionHeader(title: "거리")
                         DistanceSliderView(targetValue: $menuFilterViewModel.distanceValue)
@@ -162,38 +126,52 @@ struct MenuFilterView: View {
                             )
                         }
                         
-                        VStack(spacing: 14.5) {
-                            SectionHeader(title: "카테고리")
-                            CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
-                        }
+//                        VStack(spacing: 14.5) {
+//                            SectionHeader(title: "카테고리")
+//                            CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
+//                        }
+                        
+                        // bottom padding
+                        Rectangle()
+                            .frame(height: 88)
+                            .opacity(0)
                     }
-                    Spacer(minLength: 88)
-                }.padding(.horizontal, 16)
+                }
+                .padding(.horizontal, 16)
             case .distance:
-                VStack(spacing: 56) {
+                VStack(spacing: 0) {
                     SectionHeader(title: "거리")
+                    Spacer()
                     DistanceSliderView(targetValue: $menuFilterViewModel.distanceValue)
-                }.padding(EdgeInsets(top: 16, leading: 16, bottom: 68, trailing: 16))
+                }
+                .padding(EdgeInsets(top: 16, leading: 16, bottom: 58, trailing: 16))
             case .price:
-                VStack(spacing: 56) {
+                VStack(spacing: 0) {
                     SectionHeader(title: "가격")
+                    Spacer()
                     PriceRangeSliderView(lowerValue: $menuFilterViewModel.lowerPrice, upperValue: $menuFilterViewModel.upperPrice)
-                }.padding(EdgeInsets(top: 16, leading: 16, bottom: 68, trailing: 16))
+                }
+                .padding(EdgeInsets(top: 16, leading: 16, bottom: 58, trailing: 16))
             case .minimumRating:
                 PickerFilterSection(title: "최소 평점") {
-                    SegmentedPicker(
-                        selectedOption: $menuFilterViewModel.minimumRating,
-                        options: [0, 3.5, 4.0, 4.5],
-                        format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
-                        isRateFilter: true
-                    )
+                    VStack(spacing: 0) {
+                        SegmentedPicker(
+                            selectedOption: $menuFilterViewModel.minimumRating,
+                            options: [0, 3.5, 4.0, 4.5],
+                            format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
+                            isRateFilter: true
+                        )
+                        Spacer()
+                    }
                 }
-                .padding(EdgeInsets(top: 16, leading: 16, bottom: 52, trailing: 16))
+                .padding(EdgeInsets(top: 16, leading: 16, bottom: 0, trailing: 16))
             case .category:
-                VStack(spacing: 20.5) {
+                VStack(spacing: 0) {
                     SectionHeader(title: "카테고리")
+                    Spacer()
                     CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
-                }.padding(EdgeInsets(top: 16, leading: 16, bottom: 68, trailing: 16))
+                }
+                .padding(EdgeInsets(top: 16, leading: 16, bottom: 36, trailing: 16))
             }
             
             ZStack {
@@ -237,6 +215,16 @@ struct MenuFilterView: View {
                 .zIndex(1)
             }
         }
+        .alert("위치 서비스 사용", isPresented: $isDistanceAlertPresented, actions: {
+            Button("취소") {}
+            Button("설정으로 이동") {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }, message: {
+            Text("거리 필터를 사용하기 위해 위치서비스 사용이 필요합니다.\n 설정에서 위치서비스를 켜주세요.")
+        })
     }
     
     func resetFilters() {
@@ -263,59 +251,51 @@ struct MenuFilterView: View {
     }
     
     func applyFilters() {
-        switch viewModelType {
-        case .menu:
-            switch menuFilterType {
-                /// 거리만, 가격만 필터 선택 시 다른 필터 바뀌는 거 방지
-            case .distance:
-                menuViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
-            case .price:
-                if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
-                    menuViewModel.selectedFilters.priceRange = nil
-                } else {
-                    let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
-                    menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
-                }
-            default:
-                menuViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
-                if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
-                    menuViewModel.selectedFilters.priceRange = nil
-                } else {
-                    let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
-                    menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
-                }
-                menuViewModel.selectedFilters.minimumRating = menuFilterViewModel.minimumRating > 0 ? menuFilterViewModel.minimumRating : nil
-                menuViewModel.selectedFilters.isOpen = menuFilterViewModel.isOpen ? true : nil
-                menuViewModel.selectedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
-                menuViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.isEmpty ? nil : menuFilterViewModel.selectedCategories
+        
+        // 거리 설정 시 위치 권한 확인
+        if menuFilterViewModel.distanceValue < maxDistance {
+            let locationManager = CLLocationManager()
+            
+            switch locationManager.authorizationStatus {
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+                return
+            case .restricted:
+                DispatchQueue.main.async { self.isDistanceAlertPresented = true }
+                return
+            case .denied:
+                DispatchQueue.main.async { self.isDistanceAlertPresented = true }
+                return
+            case .authorizedAlways, .authorizedWhenInUse:
+                break
             }
-            menuViewModel.saveFilters()
-        case .favorite:
-            switch menuFilterType {
-            case .distance:
-                favoriteViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
-            case .price:
-                if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
-                    favoriteViewModel.selectedFilters.priceRange = nil
-                } else {
-                    let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
-                    favoriteViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
-                }
-            default:
-                favoriteViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
-                if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
-                    favoriteViewModel.selectedFilters.priceRange = nil
-                } else {
-                    let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
-                    favoriteViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
-                }
-                favoriteViewModel.selectedFilters.minimumRating = menuFilterViewModel.minimumRating > 0 ? menuFilterViewModel.minimumRating : nil
-                favoriteViewModel.selectedFilters.isOpen = menuFilterViewModel.isOpen ? true : nil
-                favoriteViewModel.selectedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
-                favoriteViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.isEmpty ? nil : menuFilterViewModel.selectedCategories
-            }
-            favoriteViewModel.saveFilters()
         }
+        
+        switch menuFilterType {
+            /// 거리만, 가격만 필터 선택 시 다른 필터 바뀌는 거 방지
+        case .distance:
+            menuViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
+        case .price:
+            if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
+                menuViewModel.selectedFilters.priceRange = nil
+            } else {
+                let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
+                menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
+            }
+        default:
+            menuViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
+            if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
+                menuViewModel.selectedFilters.priceRange = nil
+            } else {
+                let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
+                menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
+            }
+            menuViewModel.selectedFilters.minimumRating = menuFilterViewModel.minimumRating > 0 ? menuFilterViewModel.minimumRating : nil
+            menuViewModel.selectedFilters.isOpen = menuFilterViewModel.isOpen ? true : nil
+            menuViewModel.selectedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
+            menuViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.isEmpty ? nil : menuFilterViewModel.selectedCategories
+        }
+        menuViewModel.saveFilters()
         
         dismiss()
         print("Filters applied!")
@@ -346,6 +326,7 @@ struct SectionHeader: View {
     var body: some View {
         Text(title)
             .font(.custom("NanumSquareOTFEB", size: 16))
+            .frame(height: 27.5)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
 }

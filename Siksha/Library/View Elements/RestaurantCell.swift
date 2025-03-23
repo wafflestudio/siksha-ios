@@ -20,7 +20,6 @@ struct RestaurantCell: View {
     @State var isFavorite: Bool = false
     @State var showRestaurant: Bool = false
     @StateObject private var kakaoShareManager = KakaoShareManager()
-    @Environment(\.favoriteViewModel) var favViewModel: FavoriteViewModel?
     @Environment(\.menuViewModel) var viewModel: MenuViewModel?
     
     init(_ restaurant: Restaurant) {
@@ -52,7 +51,9 @@ struct RestaurantCell: View {
                 Button(action: {
                     isFavorite.toggle()
                     UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                    favViewModel?.getMenuStatus = .needRerender
+                    if viewModel?.isFavoriteTab == true {
+                        viewModel?.getMenuStatus = .needRerender
+                    }
                 }, label: {
                     Image(isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
@@ -124,9 +125,7 @@ struct RestaurantCell: View {
                         NavigationLink(
                             destination: MealInfoView(viewModel: mealInfoViewModel)
                                 .environment(\.menuViewModel, viewModel)
-                                .environment(\.favoriteViewModel, favViewModel)
-                                .onAppear{
-                                    favViewModel?.reloadOnAppear = false
+                                .onAppear {
                                     viewModel?.reloadOnAppear = false
                                 },
                             label: {
