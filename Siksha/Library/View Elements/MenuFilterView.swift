@@ -126,10 +126,10 @@ struct MenuFilterView: View {
                             )
                         }
                         
-                        VStack(spacing: 14.5) {
-                            SectionHeader(title: "카테고리")
-                            CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
-                        }
+//                        VStack(spacing: 14.5) {
+//                            SectionHeader(title: "카테고리")
+//                            CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
+//                        }
                         
                         // bottom padding
                         Rectangle()
