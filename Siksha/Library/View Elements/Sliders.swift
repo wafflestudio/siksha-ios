@@ -13,6 +13,7 @@ struct DistanceSliderView: View {
     let maxValue: Double = 1000
     let step: Double = 50
     private let orangeColor = Color("main")
+    private let sliderBackgroundColor: Color = Color("Gray200")
     
     var body: some View {
         VStack {
@@ -22,7 +23,7 @@ struct DistanceSliderView: View {
                 
                 ZStack {
                     Capsule()
-                        .fill(Color("Grey4"))
+                        .fill(sliderBackgroundColor)
                         .frame(height: 4)
                     
                     Capsule()
@@ -81,6 +82,7 @@ struct PriceRangeSliderView: View {
     let maxValue: Double = 10000
     let step: Double = 500
     private let orangeColor = Color("main")
+    private let sliderBackgroundColor: Color = Color("Gray200")
     
     var body: some View {
         VStack {
@@ -92,7 +94,7 @@ struct PriceRangeSliderView: View {
                 
                 ZStack {
                     Capsule()
-                        .fill(Color("Grey4"))
+                        .fill(sliderBackgroundColor)
                         .frame(height: 4)
                     
                     Capsule()
@@ -177,16 +179,19 @@ struct SliderValueIndicator: View {
     let sliderWidth: CGFloat
     let pointerOffset: CGFloat
     
+    private let backgroundColor: Color = Color("Gray100")
+    private let fontColor: Color = Color("Gray700")
+    
     @State private var boxWidth: CGFloat = 0
     
     var body: some View {
         VStack(spacing: 0) {
             Text(text)
                 .font(.custom("NanumSquareOTFB", size: 12))
-                .foregroundStyle(Color(hex: 0x707070, opacity: 1))
+                .foregroundStyle(fontColor)
                 .padding(6)
                 .background(RoundedRectangle(cornerRadius: 2)
-                    .fill(Color("Grey0.5")))
+                    .fill(backgroundColor))
                 .background(GeometryReader { proxy in
                     Color.clear
                         .preference(key: BubbleWidthKey.self, value: proxy.size.width)
@@ -194,7 +199,7 @@ struct SliderValueIndicator: View {
                 .offset(x: adjustedXOffset)
             
             BubblePointer()
-                .fill(Color("Grey0.5"))
+                .fill(backgroundColor)
                 .frame(width: 10, height: 5)
                 .offset(x: pointerOffset)
         }

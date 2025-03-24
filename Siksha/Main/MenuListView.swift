@@ -12,7 +12,7 @@ struct MenuListView: View {
     @Binding var selectedFilterType: MenuFilterType?
     
     private let backgroundColor = Color("AppBackgroundColor")
-    private let lightGrayColor = Color("LightGrayColor")
+    private let lightGrayColor = Color("Gray600")
     private let orangeColor = Color("main")
     private let fontColor = Color("DefaultFontColor")
     private let typeInfos: [TypeInfo] = [

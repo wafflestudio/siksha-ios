@@ -19,12 +19,6 @@ struct ViewControllerKey: EnvironmentKey {
     }
 }
 
-struct FavoriteViewModelKey: EnvironmentKey {
-    static var defaultValue: FavoriteViewModel? {
-        return nil
-    }
-}
-
 struct MenuViewModelKey: EnvironmentKey {
     static var defaultValue: MenuViewModel? {
         return nil
@@ -48,11 +42,6 @@ extension EnvironmentValues {
     var viewController: UIViewController? {
         get { return self[ViewControllerKey.self].value }
         set { self[ViewControllerKey.self].value = newValue }
-    }
-    
-    var favoriteViewModel: FavoriteViewModel? {
-        get { return self[FavoriteViewModelKey.self] }
-        set { self[FavoriteViewModelKey.self] = newValue }
     }
     
     var menuViewModel: MenuViewModel? {

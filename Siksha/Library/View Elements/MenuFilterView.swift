@@ -82,7 +82,7 @@ struct MenuFilterView: View {
             switch menuFilterType {
             case .all:
                 Capsule()
-                    .fill(Color.secondary)
+                    .fill(Color("Gray200"))
                     .opacity(0.5)
                     .frame(width: 42, height: 4)
                     .padding(.vertical, 17)
@@ -198,7 +198,7 @@ struct MenuFilterView: View {
                         .foregroundStyle(.white)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color("Grey3"))
+                                .fill(Color("Gray500"))
                         )
                         .onTapGesture {
                             resetFilters()
@@ -343,18 +343,17 @@ struct SectionHeader: View {
 struct CategoryButton: View {
     let category: String
     let isSelected: Bool
-    private let selectedBackground = Color(hex: 0xFFE8CE)
     
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
-            .stroke(isSelected ? Color("main") : Color("Grey2"))
+            .stroke(isSelected ? Color("main") : Color("Gray200"))
             .frame(height: 34)
             .overlay(
                 Text(category)
                     .font(.custom("NanumSquareOTFB", size: 13))
                     .foregroundColor(.black)
             )
-            .background(isSelected ? selectedBackground : .clear, in: RoundedRectangle(cornerRadius: 30))
+            .background(isSelected ? Color("MainActiveColor") : .clear, in: RoundedRectangle(cornerRadius: 30))
     }
 }
 

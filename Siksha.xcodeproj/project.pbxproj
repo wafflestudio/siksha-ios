@@ -52,8 +52,6 @@
 		1ED44A3725CC6094001D916B /* MealReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A3625CC6094001D916B /* MealReviewView.swift */; };
 		1ED44A4125CC6135001D916B /* BottomModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A4025CC6135001D916B /* BottomModalView.swift */; };
 		1ED44A4625CC6579001D916B /* MealInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */; };
-		1ED44A6325CDB709001D916B /* FavoriteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A6225CDB709001D916B /* FavoriteView.swift */; };
-		1ED44A6B25CDB77A001D916B /* FavoriteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A6A25CDB77A001D916B /* FavoriteViewModel.swift */; };
 		2300D48C25FBD07F0037765D /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2300D48B25FBD07F0037765D /* config.plist */; };
 		2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303CF1D265A5E27002328F5 /* ImagePickerCoordinatorView.swift */; };
 		231C9C3E25F7FA7C0072C07A /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */; };
@@ -215,8 +213,6 @@
 		1ED44A3625CC6094001D916B /* MealReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealReviewView.swift; sourceTree = "<group>"; };
 		1ED44A4025CC6135001D916B /* BottomModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomModalView.swift; sourceTree = "<group>"; };
 		1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealInfoViewModel.swift; sourceTree = "<group>"; };
-		1ED44A6225CDB709001D916B /* FavoriteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteView.swift; sourceTree = "<group>"; };
-		1ED44A6A25CDB77A001D916B /* FavoriteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteViewModel.swift; sourceTree = "<group>"; };
 		2300D48B25FBD07F0037765D /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
 		2303CF1D265A5E27002328F5 /* ImagePickerCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerCoordinatorView.swift; sourceTree = "<group>"; tabWidth = 5; };
 		231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
@@ -376,7 +372,6 @@
 				231C9C9425F82EA80072C07A /* RestaurantInfo */,
 				1ECB254525F2970C00875E18 /* MealDetail */,
 				1E3A572825C6FDC000DBB3F4 /* Main */,
-				1ED44A6125CDB6F5001D916B /* Favorite */,
 				1E3A572F25C6FDEC00DBB3F4 /* Settings */,
 				1E3A573825C6FE1600DBB3F4 /* Library */,
 				1ECB251625F16FDB00875E18 /* Supporting Files */,
@@ -582,15 +577,6 @@
 				2360CD992663778B007E02DB /* ReviewListView.swift */,
 			);
 			path = MealDetail;
-			sourceTree = "<group>";
-		};
-		1ED44A6125CDB6F5001D916B /* Favorite */ = {
-			isa = PBXGroup;
-			children = (
-				1ED44A6225CDB709001D916B /* FavoriteView.swift */,
-				1ED44A6A25CDB77A001D916B /* FavoriteViewModel.swift */,
-			);
-			path = Favorite;
 			sourceTree = "<group>";
 		};
 		231C9C9425F82EA80072C07A /* RestaurantInfo */ = {
@@ -900,7 +886,6 @@
 			files = (
 				4E74167D2A9B63A10010769F /* CommentCell.swift in Sources */,
 				231C9C6825F7FAFB0072C07A /* InformationView.swift in Sources */,
-				1ED44A6B25CDB77A001D916B /* FavoriteViewModel.swift in Sources */,
 				4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */,
 				234DB0D9264156150049FE6B /* CalendarView.swift in Sources */,
 				4EC08B512C67ABF600AB2001 /* HexColor.swift in Sources */,
@@ -938,7 +923,6 @@
 				4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */,
 				1E3A57FB25C73FDD00DBB3F4 /* DailyMenu.swift in Sources */,
 				231C9C7825F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift in Sources */,
-				1ED44A6325CDB709001D916B /* FavoriteView.swift in Sources */,
 				4E3D4EEF2A750078005C7AB2 /* TopPosts.swift in Sources */,
 				231C9CF825F83A850072C07A /* RestaurantInformationView.swift in Sources */,
 				4E79A1862C80B6BE007CE49B /* AlertView.swift in Sources */,

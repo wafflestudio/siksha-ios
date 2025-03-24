@@ -34,7 +34,7 @@ struct FilterItem: View {
             .cornerRadius(30)
             .overlay(
                 RoundedRectangle(cornerRadius: 30)
-                    .stroke(isOn ? Color("MainThemeColor") : Color("FilterUnselectedBorderColor"), lineWidth: 1)
+                    .stroke(isOn ? Color("MainThemeColor") : Color("Gray200"), lineWidth: 1)
             )
     }
 }
