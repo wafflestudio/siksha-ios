@@ -13,7 +13,7 @@ struct MenuView: View {
     @StateObject private var viewModel: MenuViewModel
     @State private var selectedFilterType: MenuFilterType? = nil
     
-    private let lightGrayColor = Color("LightGrayColor")
+    private let lightGrayColor = Color("Gray600")
     
     init(isFavoriteTab: Bool = false) {
         _viewModel = StateObject(wrappedValue: MenuViewModel(isFavoriteTab: isFavoriteTab))
@@ -43,8 +43,8 @@ struct MenuView: View {
             
             if viewModel.noFavorites {
                 Spacer()
-                Text("즐겨찾기에 추가된 식당이 없습니다.\n식당 탭에서 별을 눌러 추가해보세요.")
-                    .font(.custom("NanumSquareOTFB", size: 14))
+                Text("즐겨찾기에 추가된 식당이 없습니다.")
+                    .font(.custom("NanumSquareOTFB", size: 15))
                     .foregroundColor(lightGrayColor)
                 Spacer()
             } else {

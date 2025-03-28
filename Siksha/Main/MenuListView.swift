@@ -169,7 +169,7 @@ private extension MenuListView {
     var emptyView: some View {
         VStack {
             Spacer()
-            Text("불러온 식단이 없습니다")
+            Text("식단 정보가 없습니다")
                 .font(.custom("NanumSquareOTFB", size: 15))
                 .foregroundColor(fontColor)
             Spacer()
