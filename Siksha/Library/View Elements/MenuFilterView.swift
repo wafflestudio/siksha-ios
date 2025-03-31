@@ -224,15 +224,15 @@ struct MenuFilterView: View {
         }
         .ignoresSafeArea()
         .filterCloseButton(filterType: menuFilterType, closeAction: dismiss)
-        .alert("위치 서비스 사용", isPresented: $isDistanceAlertPresented, actions: {
-            Button("취소") {}
-            Button("설정으로 이동") {
+        .alert("위치정보 이용에 대한 엑세스 권한이 없어요.", isPresented: $isDistanceAlertPresented, actions: {
+            Button("취소", action: {}).keyboardShortcut(.defaultAction)
+            Button("설정하기") {
                 if let url = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(url)
                 }
             }
         }, message: {
-            Text("거리 필터를 사용하기 위해 위치서비스 사용이 필요합니다.\n 설정에서 위치서비스를 켜주세요.")
+            Text("앱 설정으로 가서 위치권한을 수정할 수 있어요. 이동하시겠어요?")
         })
     }
     
