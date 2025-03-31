@@ -42,15 +42,15 @@ struct MenuListView: View {
             }
         }
         .background(backgroundColor)
-        .alert("Error", isPresented: $viewModel.showDistanceAlert, actions: {
-            Button("취소") {}
-            Button("위치 설정으로 이동") {
+        .alert("위치정보 이용에 대한 엑세스 권한이 없어요.", isPresented: $viewModel.showDistanceAlert, actions: {
+            Button("취소", action: {}).keyboardShortcut(.defaultAction)
+            Button("설정하기") {
                 if let url = URL(string: UIApplication.openSettingsURLString) {
                     UIApplication.shared.open(url)
                 }
             }
         }, message: {
-            Text("위치 정보를 가져올 수 없습니다. 거리 필터를 해제합니다.")
+            Text("앱 설정으로 가서 위치 권한을 수정할 수 있어요. 이동하시겠어요?")
         })
     }
 }

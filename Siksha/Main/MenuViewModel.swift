@@ -228,10 +228,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                     
                     let lu = Array(menu.getRestaurants(.lunch))
                         .filter {
-                            print("filter: \(self.isFavoriteTab)")
                             if self.isFavoriteTab {
-                                print($0.nameKr)
-                                print(UserDefaults.standard.bool(forKey: "fav\($0.id)"))
                                 return UserDefaults.standard.bool(forKey: "fav\($0.id)")
                             } else {
                                 return true
@@ -485,7 +482,5 @@ final class MenuViewModel: NSObject, ObservableObject {
 }
 
 extension MenuViewModel: CLLocationManagerDelegate {
-    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        checkLocationAuthorization()
-    }
+    
 }
