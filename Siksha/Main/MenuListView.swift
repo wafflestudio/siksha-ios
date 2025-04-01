@@ -89,80 +89,81 @@ private extension MenuListView {
     }
     
     var filterSelectorView: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 5) {
-                Image("Filter")
-                    .resizable()
-                    .frame(width: 34, height: 34)
+        HStack(spacing: 5) {
+            Image("Filter")
+                .resizable()
+                .frame(width: 34, height: 34)
+                .onTapGesture {
+                    selectedFilterType = .all
+                }
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 5) {
+                    FilterItem(
+                        text: viewModel.distanceLabel,
+                        isOn: viewModel.selectedFilters.distance != nil,
+                        isCheck: false
+                    ).onTapGesture {
+                        selectedFilterType = .distance
+                    }
+                    
+                    FilterItem(
+                        text: viewModel.priceLabel,
+                        isOn: viewModel.selectedFilters.priceRange != nil,
+                        isCheck: false
+                    )
                     .onTapGesture {
-                        selectedFilterType = .all
+                        selectedFilterType = .price
                     }
-                
-                FilterItem(
-                    text: viewModel.distanceLabel,
-                    isOn: viewModel.selectedFilters.distance != nil,
-                    isCheck: false
-                ).onTapGesture {
-                    selectedFilterType = .distance
-                }
-                
-                FilterItem(
-                    text: viewModel.priceLabel,
-                    isOn: viewModel.selectedFilters.priceRange != nil,
-                    isCheck: false
-                )
-                .onTapGesture {
-                    selectedFilterType = .price
-                }
-                
-                FilterItem(
-                    text: "영업 중",
-                    isOn:viewModel.selectedFilters.isOpen ?? false,
-                    isCheck: true
-                )
-                .onTapGesture {
-                    if let _ = viewModel.selectedFilters.isOpen {
-                        viewModel.selectedFilters.isOpen?.toggle()
-                    } else {
-                        viewModel.selectedFilters.isOpen = true
+                    
+                    FilterItem(
+                        text: "영업 중",
+                        isOn:viewModel.selectedFilters.isOpen ?? false,
+                        isCheck: true
+                    )
+                    .onTapGesture {
+                        if let _ = viewModel.selectedFilters.isOpen {
+                            viewModel.selectedFilters.isOpen?.toggle()
+                        } else {
+                            viewModel.selectedFilters.isOpen = true
+                        }
+                        viewModel.saveFilters()
                     }
-                    viewModel.saveFilters()
-                }
-                
-                FilterItem(
-                    text: "리뷰",
-                    isOn:viewModel.selectedFilters.hasReview ?? false,
-                    isCheck: true
-                )
-                .onTapGesture {
-                    if let _ = viewModel.selectedFilters.hasReview {
-                        viewModel.selectedFilters.hasReview?.toggle()
-                    } else {
-                        viewModel.selectedFilters.hasReview = true
+                    
+                    FilterItem(
+                        text: "리뷰",
+                        isOn:viewModel.selectedFilters.hasReview ?? false,
+                        isCheck: true
+                    )
+                    .onTapGesture {
+                        if let _ = viewModel.selectedFilters.hasReview {
+                            viewModel.selectedFilters.hasReview?.toggle()
+                        } else {
+                            viewModel.selectedFilters.hasReview = true
+                        }
+                        viewModel.saveFilters()
                     }
-                    viewModel.saveFilters()
+                    
+                    FilterItem(
+                        text:viewModel.minRatingLabel,
+                        isOn:viewModel.selectedFilters.minimumRating != nil,
+                        isCheck: false
+                    )
+                    .onTapGesture {
+                        selectedFilterType = .minimumRating
+                    }
+                    
+                    //                FilterItem(
+                    //                    text: viewModel.categoryLabel,
+                    //                    isOn:viewModel.selectedFilters.categories != nil,
+                    //                    isCheck: false
+                    //                )
+                    //                .onTapGesture {
+                    //                    selectedFilterType = .category
+                    //                }
                 }
-                
-                FilterItem(
-                    text:viewModel.minRatingLabel,
-                    isOn:viewModel.selectedFilters.minimumRating != nil,
-                    isCheck: false
-                )
-                .onTapGesture {
-                    selectedFilterType = .minimumRating
-                }
-                
-//                FilterItem(
-//                    text: viewModel.categoryLabel,
-//                    isOn:viewModel.selectedFilters.categories != nil,
-//                    isCheck: false
-//                )
-//                .onTapGesture {
-//                    selectedFilterType = .category
-//                }
             }
-            .padding(EdgeInsets(top: 17, leading: 9, bottom: 15, trailing: 9))
         }
+        .padding(EdgeInsets(top: 17, leading: 9, bottom: 15, trailing: 9))
 
     }
     
@@ -197,4 +198,17 @@ private extension MenuListView {
         }
     }
 
+}
+
+struct MenuListView_Previews: PreviewProvider {
+    struct ContainerView: View {
+        @State var selectedFilterType: MenuFilterType? = .all
+        var body: some View {
+            MenuListView(viewModel: MenuViewModel(isFavoriteTab: false), selectedFilterType: $selectedFilterType)
+        }
+    }
+    
+    static var previews: some View {
+        ContainerView()
+    }
 }
