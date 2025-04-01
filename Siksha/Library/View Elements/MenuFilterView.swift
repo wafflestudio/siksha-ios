@@ -83,8 +83,7 @@ struct MenuFilterView: View {
             case .all:
                 Capsule()
                     .fill(Color("Gray200"))
-                    .opacity(0.5)
-                    .frame(width: 42, height: 4)
+                    .frame(width: 46, height: 4)
                     .padding(.vertical, 17)
                 
                 Text("필터")
