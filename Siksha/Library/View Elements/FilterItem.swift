@@ -29,13 +29,15 @@ struct FilterItem: View {
                     .resizable()
                     .frame(width: 16, height: 16)
             }
-        }.padding(EdgeInsets(top: 9, leading: 10, bottom: 9, trailing: 10))
-            .background(isOn ? Color("MainActiveColor") : .white)
-            .cornerRadius(30)
-            .overlay(
-                RoundedRectangle(cornerRadius: 30)
-                    .stroke(isOn ? Color("MainThemeColor") : Color("Gray200"), lineWidth: 1)
-            )
+        }
+        .frame(height: 18)
+        .padding(EdgeInsets(top: 8, leading: 10, bottom: 8, trailing: 10))
+        .background(isOn ? Color("MainActiveColor") : .white)
+        .cornerRadius(30)
+        .overlay(
+            RoundedRectangle(cornerRadius: 30)
+                .strokeBorder(isOn ? Color("MainThemeColor") : Color("Gray200"), lineWidth: 1)
+        )
     }
 }
 
