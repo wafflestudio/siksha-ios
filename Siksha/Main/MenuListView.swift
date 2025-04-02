@@ -10,6 +10,7 @@ import SwiftUI
 struct MenuListView: View {
     @ObservedObject var viewModel: MenuViewModel
     @Binding var selectedFilterType: MenuFilterType?
+    @State private var isAtLeadingEdge: Bool = true
     
     private let backgroundColor = Color("AppBackgroundColor")
     private let lightGrayColor = Color("Gray600")
@@ -96,70 +97,93 @@ private extension MenuListView {
                 .onTapGesture {
                     selectedFilterType = .all
                 }
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 5) {
-                    FilterItem(
-                        text: viewModel.distanceLabel,
-                        isOn: viewModel.selectedFilters.distance != nil,
-                        isCheck: false
-                    ).onTapGesture {
-                        selectedFilterType = .distance
-                    }
-                    
-                    FilterItem(
-                        text: viewModel.priceLabel,
-                        isOn: viewModel.selectedFilters.priceRange != nil,
-                        isCheck: false
-                    )
-                    .onTapGesture {
-                        selectedFilterType = .price
-                    }
-                    
-                    FilterItem(
-                        text: "영업 중",
-                        isOn:viewModel.selectedFilters.isOpen ?? false,
-                        isCheck: true
-                    )
-                    .onTapGesture {
-                        if let _ = viewModel.selectedFilters.isOpen {
-                            viewModel.selectedFilters.isOpen?.toggle()
-                        } else {
-                            viewModel.selectedFilters.isOpen = true
+            ZStack(alignment: .leading) {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 5) {
+                        FilterItem(
+                            text: viewModel.distanceLabel,
+                            isOn: viewModel.selectedFilters.distance != nil,
+                            isCheck: false
+                        ).onTapGesture {
+                            selectedFilterType = .distance
                         }
-                        viewModel.saveFilters()
-                    }
-                    
-                    FilterItem(
-                        text: "리뷰",
-                        isOn:viewModel.selectedFilters.hasReview ?? false,
-                        isCheck: true
-                    )
-                    .onTapGesture {
-                        if let _ = viewModel.selectedFilters.hasReview {
-                            viewModel.selectedFilters.hasReview?.toggle()
-                        } else {
-                            viewModel.selectedFilters.hasReview = true
+                        
+                        FilterItem(
+                            text: viewModel.priceLabel,
+                            isOn: viewModel.selectedFilters.priceRange != nil,
+                            isCheck: false
+                        )
+                        .onTapGesture {
+                            selectedFilterType = .price
                         }
-                        viewModel.saveFilters()
+                        
+                        FilterItem(
+                            text: "영업 중",
+                            isOn:viewModel.selectedFilters.isOpen ?? false,
+                            isCheck: true
+                        )
+                        .onTapGesture {
+                            if let _ = viewModel.selectedFilters.isOpen {
+                                viewModel.selectedFilters.isOpen?.toggle()
+                            } else {
+                                viewModel.selectedFilters.isOpen = true
+                            }
+                            viewModel.saveFilters()
+                        }
+                        
+                        FilterItem(
+                            text: "리뷰",
+                            isOn:viewModel.selectedFilters.hasReview ?? false,
+                            isCheck: true
+                        )
+                        .onTapGesture {
+                            if let _ = viewModel.selectedFilters.hasReview {
+                                viewModel.selectedFilters.hasReview?.toggle()
+                            } else {
+                                viewModel.selectedFilters.hasReview = true
+                            }
+                            viewModel.saveFilters()
+                        }
+                        
+                        FilterItem(
+                            text:viewModel.minRatingLabel,
+                            isOn:viewModel.selectedFilters.minimumRating != nil,
+                            isCheck: false
+                        )
+                        .onTapGesture {
+                            selectedFilterType = .minimumRating
+                        }
+                        
+                        //                FilterItem(
+                        //                    text: viewModel.categoryLabel,
+                        //                    isOn:viewModel.selectedFilters.categories != nil,
+                        //                    isCheck: false
+                        //                )
+                        //                .onTapGesture {
+                        //                    selectedFilterType = .category
+                        //                }
                     }
-                    
-                    FilterItem(
-                        text:viewModel.minRatingLabel,
-                        isOn:viewModel.selectedFilters.minimumRating != nil,
-                        isCheck: false
+                    .background(
+                        GeometryReader {
+                            Color.clear.preference(key: HorizontalOffsetKey.self,
+                                                value: $0.frame(in: .named("filterScroll")).origin.x)
+                        }
                     )
-                    .onTapGesture {
-                        selectedFilterType = .minimumRating
+                    .onPreferenceChange(HorizontalOffsetKey.self) { offset in
+                        withAnimation {
+                            isAtLeadingEdge = offset >= 0
+                        }
                     }
-                    
-                    //                FilterItem(
-                    //                    text: viewModel.categoryLabel,
-                    //                    isOn:viewModel.selectedFilters.categories != nil,
-                    //                    isCheck: false
-                    //                )
-                    //                .onTapGesture {
-                    //                    selectedFilterType = .category
-                    //                }
+                }
+                .coordinateSpace(name: "filterScroll")
+                
+                if !isAtLeadingEdge {
+                    Rectangle()
+                        .foregroundStyle(.clear)
+                        .background(
+                            LinearGradient(colors: [Color("Gray50"), Color("Gray50").opacity(0)], startPoint: .leading, endPoint: .trailing)
+                        )
+                        .frame(width: 16, height: 36)
                 }
             }
         }
@@ -198,6 +222,13 @@ private extension MenuListView {
         }
     }
 
+}
+
+struct HorizontalOffsetKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value += nextValue()
+    }
 }
 
 struct MenuListView_Previews: PreviewProvider {
