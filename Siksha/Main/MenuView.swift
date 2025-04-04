@@ -78,21 +78,8 @@ struct MenuView: View {
 //            viewModel.getMenu(date: viewModel.selectedDate)
 //        }
         .sheet(isPresented: isFilterModalPresented){
-            // TODO: - 버전 16으로 올릴 경우 분기처리 필요 X
-            if #available(iOS 16.0, *) {
-                MenuFilterView(menuViewModel: viewModel, menuFilterType: selectedFilterType ?? .all)
-                    .presentationDetents([.height(selectedModalHeight - safeAreaInsets.bottom)])
-            } else {
-                GeometryReader { geometry in
-                    VStack {
-                        MenuFilterView(menuViewModel: viewModel, menuFilterType: selectedFilterType ?? .all)
-                        .frame(height: min(selectedModalHeight, geometry.size.height * 0.9))
-                        Spacer()
-                    }
-                    .frame(width: geometry.size.width)
-                }
-                .edgesIgnoringSafeArea(.bottom)
-            }
+            MenuFilterView(menuViewModel: viewModel, menuFilterType: selectedFilterType ?? .all)
+                .presentationDetents([.height(selectedModalHeight - safeAreaInsets.bottom)])
         }
     }
 }

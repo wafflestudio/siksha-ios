@@ -69,8 +69,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         .offset(x: -15,y: 15)
                         .zIndex(1)
                     
-                    
-                    if #available(iOS 15.0, *) {
                         TabView(selection:$imageIndex) {
                             ForEach(Array(imageURLs.enumerated()), id: \.0) { index,imageURLString in
                                 AsyncImage(url: URL(string: imageURLString)) { image in
@@ -89,16 +87,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                         }
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                         .frame(width: UIScreen.main.bounds.width * 0.9, height: 300)
-                    } else {
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack {
-                                ForEach(imageURLs, id: \.self) {
-                                    imageURLString in
-                                    ThumbnailImage(imageURLString)
-                                }
-                            }
-                        }
-                    }
                 }
             } else {
                 EmptyView()

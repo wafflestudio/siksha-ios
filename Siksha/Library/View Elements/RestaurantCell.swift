@@ -61,35 +61,19 @@ struct RestaurantCell: View {
                         .frame(width: 18, height: 17)
                 })
                 
-                if #available(iOS 15.0, *) {
-                    Button(action: {
-                        kakaoShareManager.shareKakao(restaurant: restaurant, selectedDateString: viewModel?.selectedDate ?? "오늘")
-                    }) {
-                        Image(.kakaoShare)
-                            .resizable()
-                            .renderingMode(.original)
-                            .frame(width: 17, height: 17)
-                            .foregroundColor(orangeColor)
-                    }.sheet(isPresented: $kakaoShareManager.showWebView) {
-                        if let urlString = kakaoShareManager.urlToLoad {
-                            KakaoShareWebView(urlString: urlString, showWebView: $kakaoShareManager.showWebView, restaurant: restaurant, selectedDate: viewModel?.selectedDate ?? "오늘")
-                        }
-                    }.interactiveDismissDisabled(false)
-                } else {
-                    Button(action: {
-                        kakaoShareManager.shareKakao(restaurant: restaurant, selectedDateString: viewModel?.selectedDate ?? "오늘")
-                    }) {
-                        Image(systemName: "square.and.arrow.up")
-                            .resizable()
-                            .renderingMode(.original)
-                            .frame(width: 17, height: 17)
-                            .foregroundColor(orangeColor)
-                    }.sheet(isPresented: $kakaoShareManager.showWebView) {
-                        if let urlString = kakaoShareManager.urlToLoad {
-                            KakaoShareWebView(urlString: urlString, showWebView: $kakaoShareManager.showWebView, restaurant: restaurant, selectedDate: viewModel?.selectedDate ?? "오늘")
-                        }
+                Button(action: {
+                    kakaoShareManager.shareKakao(restaurant: restaurant, selectedDateString: viewModel?.selectedDate ?? "오늘")
+                }) {
+                    Image(.kakaoShare)
+                        .resizable()
+                        .renderingMode(.original)
+                        .frame(width: 17, height: 17)
+                        .foregroundColor(orangeColor)
+                }.sheet(isPresented: $kakaoShareManager.showWebView) {
+                    if let urlString = kakaoShareManager.urlToLoad {
+                        KakaoShareWebView(urlString: urlString, showWebView: $kakaoShareManager.showWebView, restaurant: restaurant, selectedDate: viewModel?.selectedDate ?? "오늘")
                     }
-                }
+                }.interactiveDismissDisabled(false)
                 
                 Spacer()
                 

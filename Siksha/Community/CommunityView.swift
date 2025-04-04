@@ -209,27 +209,20 @@ struct CommunityPostPreView: View {
                 Spacer()
                 
                 if let firstImageURL = info.imageURLs?.first, let url = URL(string: firstImageURL) {
-                    if #available(iOS 15.0, *) {
-                        AsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .scaledToFill()
-                        } placeholder: {
-                            ProgressView()
-                        }
-                        .frame(width: 61, height: 61)
-                        .clipped()
-                    } else {
-                        ThumbnailImage(firstImageURL)
-                            .frame(width: 61, height: 61)
+                    AsyncImage(url: url) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        ProgressView()
                     }
+                    .frame(width: 61, height: 61)
+                    .clipped()
                 }
-                
             }
             .padding(EdgeInsets(top: 15, leading: 20, bottom: 14, trailing: 20))
         }
     }
-    
 }
 
 struct ComunityView_Previews: PreviewProvider {
