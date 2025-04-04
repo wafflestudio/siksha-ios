@@ -183,7 +183,7 @@ private extension MenuListView {
                         .background(
                             LinearGradient(colors: [Color("Gray50"), Color("Gray50").opacity(0)], startPoint: .leading, endPoint: .trailing)
                         )
-                        .frame(width: 16, height: 36)
+                        .frame(width: 16, height: 34)
                 }
             }
         }
