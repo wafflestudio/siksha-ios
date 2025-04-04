@@ -12,6 +12,7 @@ struct MenuView: View {
     
     @StateObject private var viewModel: MenuViewModel
     @State private var selectedFilterType: MenuFilterType? = nil
+    @State private var viewHeight: CGFloat = 0
     
     private let lightGrayColor = Color("Gray600")
     
@@ -29,7 +30,17 @@ struct MenuView: View {
     }
     
     private var selectedModalHeight: CGFloat {
-        selectedFilterType?.modalSheetHeight ?? 0
+        guard let selectedFilterType else {
+            return 0
+        }
+        
+        if selectedFilterType == .all {
+            // viewHeight에 탭바 높이(50)와 추가 높이(3)를 더함
+            return viewHeight + 50 + 3
+        } else {
+            // safeAreaInsets.bottom을 제외한 모달 시트 높이로 설정
+            return selectedFilterType.modalSheetHeight - safeAreaInsets.bottom
+        }
     }
     
     private let dimBackgroundColor = Color(.sRGB, white: 0, opacity: 0.6)
@@ -62,6 +73,7 @@ struct MenuView: View {
                 }
             }
         }
+        .measureHeight($viewHeight)
         .customNavigationBar(title: "icon")
         .alert(isPresented: $viewModel.showNetworkAlert, content: {
             Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))
@@ -79,7 +91,8 @@ struct MenuView: View {
 //        }
         .sheet(isPresented: isFilterModalPresented){
             MenuFilterView(menuViewModel: viewModel, menuFilterType: selectedFilterType ?? .all)
-                .presentationDetents([.height(selectedModalHeight - safeAreaInsets.bottom)])
+                .presentationDetents([.height(selectedModalHeight)])
+                .presentationCornerRadius(15)
         }
     }
 }
