@@ -84,11 +84,27 @@ struct MenuFilterView: View {
                 Capsule()
                     .fill(Color("Gray200"))
                     .frame(width: 46, height: 4)
-                    .padding(.vertical, 17)
+                    .padding(.top, 15)
+                    .padding(.bottom, 10)
                 
-                Text("필터")
-                    .font(.custom("NanumSquareOTFB", size: 14))
-                    .padding(EdgeInsets(top: 1.32, leading: 0, bottom: 13.68, trailing: 0))
+                ZStack {
+                    Text("필터")
+                        .font(.custom("NanumSquareOTFB", size: 14))
+                    
+                    HStack {
+                        Spacer()
+                        
+                        Button(action: { dismiss() }) {
+                            Image("Close")
+                                .resizable()
+                                .frame(width: 32, height: 32)
+                                .foregroundStyle(Color("Gray900"))
+                        }
+                        .padding(.trailing, 16)
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.bottom, 4)
                 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 40) {
@@ -310,7 +326,7 @@ struct MenuFilterView: View {
     }
 }
 
-struct PickerFilterSection<Content: View>: View {
+fileprivate struct PickerFilterSection<Content: View>: View {
     let title: String
     let pickerView: Content
     
@@ -328,7 +344,7 @@ struct PickerFilterSection<Content: View>: View {
     }
 }
 
-struct SectionHeader: View {
+fileprivate struct SectionHeader: View {
     let title: String
     
     var body: some View {
@@ -339,7 +355,7 @@ struct SectionHeader: View {
     }
 }
 
-struct CategoryButton: View {
+fileprivate struct CategoryButton: View {
     let category: String
     let isSelected: Bool
     
@@ -356,7 +372,7 @@ struct CategoryButton: View {
     }
 }
 
-struct CategoriesFlowLayout: View {
+fileprivate struct CategoriesFlowLayout: View {
     let items: [String]
     @Binding var selected: [String]
     
@@ -391,7 +407,8 @@ struct CategoriesFlowLayout: View {
     }
 }
 
-struct MenuFilterViewCloseButtonModifier: ViewModifier {
+/// 개별 필터 뷰에 close button을 추가하는 modifier (전체 필터 뷰 제외)
+fileprivate struct MenuFilterViewCloseButtonModifier: ViewModifier {
     let filterType: MenuFilterType
     let closeAction: DismissAction
         
@@ -404,14 +421,16 @@ struct MenuFilterViewCloseButtonModifier: ViewModifier {
         ZStack(alignment: .topTrailing) {
             content
             
-            Button(action: { closeAction() }) {
-                Image("Close")
-                    .resizable()
-                    .frame(width: 32, height: 32)
-                    .foregroundStyle(Color("Gray900"))
+            if filterType != .all {
+                Button(action: { closeAction() }) {
+                    Image("Close")
+                        .resizable()
+                        .frame(width: 32, height: 32)
+                        .foregroundStyle(Color("Gray900"))
+                }
+                .padding(.top, 14)
+                .padding(.trailing, 16)
             }
-            .padding(.top, filterType == .all ? 28 : 14)
-            .padding(.trailing, filterType == .all ? 13 : 16)
         }
     }
 }
