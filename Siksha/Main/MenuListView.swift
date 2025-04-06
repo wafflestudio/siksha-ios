@@ -187,7 +187,7 @@ private extension MenuListView {
                 }
             }
         }
-        .padding(EdgeInsets(top: 17, leading: 9, bottom: 15, trailing: 9))
+        .padding(EdgeInsets(top: 17, leading: 9, bottom: 9, trailing: 9))
 
     }
     

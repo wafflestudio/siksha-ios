@@ -20,13 +20,14 @@ struct RestaurantsView: View {
     var body: some View {
         if restaurantsList.count > 0 {
             ScrollView(.vertical) {
-                ForEach(restaurantsList, id: \.id) { restaurant in
-                    RestaurantCell(restaurant)
-                        .padding([.leading, .trailing], 8)
-                        .padding([.top, .bottom], 4)
+                VStack(spacing: 18) {
+                    ForEach(restaurantsList, id: \.id) { restaurant in
+                        RestaurantCell(restaurant)
+                            .padding([.leading, .trailing], 8)
+                    }
                 }
+                .padding(.vertical, 8)
             }
-            .padding(.top, 2)
             .background(Color.init("AppBackgroundColor"))
         } else {
             VStack {
