@@ -33,10 +33,13 @@ struct MenuListView: View {
                 filterSelectorView
                 
                 if viewModel.restaurantsLists.count > 0 {
-                    PageView(
-                        currentPage: $viewModel.selectedPage,
-                        needReload: $viewModel.pageViewReload,
-                        viewModel.restaurantsLists.map { RestaurantsView($0).environment(\.menuViewModel, viewModel) })
+                    TabView(selection: $viewModel.selectedPage) {
+                        ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
+                            RestaurantsView(viewModel.restaurantsLists[index])
+                                .tag(index)
+                        }
+                    }
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                 } else {
                     emptyView
                 }
