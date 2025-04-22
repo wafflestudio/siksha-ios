@@ -8,26 +8,35 @@
 import SwiftUI
 
 struct FestivalSwitchStyle: ToggleStyle {
+    private let onColor = LinearGradient(colors: [Color("main"), Color(hex: 0xFF9DA4)], startPoint: .leading, endPoint: .trailing)
+    private let offColor = LinearGradient(colors: [Color("Gray500")], startPoint: .leading, endPoint: .trailing)
+    
     func makeBody(configuration: Configuration) -> some View {
-        RoundedRectangle(cornerSize: CGSize(width: 9.69, height: 9.69))
-            .fill(configuration.isOn ? Color("MainThemeColor") : Color("ReviewLowColor"))
-            .frame(width:45, height:19)
+        RoundedRectangle(cornerRadius: 25)
+            .fill(configuration.isOn ? onColor : offColor)
+            .frame(width:50, height:24)
             .overlay(
                 Circle()
                     .fill(Color.white)
-                    .frame(width:17, height: 17, alignment: .leading)
-                    .offset(x: configuration.isOn ? 26.19 : 1.6, y:0)
+                    .frame(width: 20, height: 20)
+                    .shadow(color: Color.black.opacity(0.06), radius: 0.7, x: 0, y: 2.11)
+                    .shadow(color: Color.black.opacity(0.15), radius: 5.61, x: 0, y: 2.11)
+                    .overlay(
+                        Circle()
+                            .stroke(Color.black.opacity(0.04), lineWidth: 0.7)
+                    )
+                    .offset(x: configuration.isOn ? 28 : 2)
                 , alignment: .leading
             )
             .overlay(
                 Text("축제")
                     .foregroundColor(Color.white)
-                    .font(.custom("NanumSquareOTFB", size: 9))
-                    .offset(x: configuration.isOn ? 6.5 : 21.83, y:0)
+                    .font(.custom("NanumSquareOTFB", size: 10))
+                    .offset(x: configuration.isOn ? 6 : 26, y:0)
                 , alignment: .leading
             )
             .onTapGesture {
-                withAnimation {
+                withAnimation(.easeOut(duration: 0.3)) {
                     configuration.$isOn.wrappedValue.toggle()
                 }
             }
