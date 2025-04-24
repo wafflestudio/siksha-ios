@@ -54,13 +54,12 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                             divider
                             postList
                         }
+                        .refreshable {
+                            await viewModel.asyncRefresh()
+                        }
                     }
                 }
                 .customNavigationBar(title: "icon")
-                .refreshable {
-                        await viewModel.asyncRefresh()
-                    
-                }
                 
                 Button {
                     self.tag = 1
