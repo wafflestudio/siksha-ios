@@ -185,7 +185,7 @@ extension CommunityViewModel {
             .store(in: &cancellables)
     }
     
-     func loadTrendingPosts() {
+    func loadTrendingPosts() {
         self.communityRepository.loadTrendingPosts(likes:Constants.trendingLikes, created_before: Constants.trendingCreatedBefore)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
@@ -199,32 +199,30 @@ extension CommunityViewModel {
             .store(in: &cancellables)
     }
     
-     func asyncRefresh() async{
-         let trendingPublisher = self.communityRepository.loadTrendingPosts(likes:Constants.trendingLikes, created_before: Constants.trendingCreatedBefore)
-         let postsPublisher =  self.communityRepository.loadPostsPage(boardId: selectedBoardId, page: Constants.initialPage, perPage: Constants.pageCount)
-         do{
-             for try await response in trendingPublisher.values{
-                 self.trendingPostList = response.result
-             }
-             
-         }
-         catch{
-             self.error = ErrorHelper.categorize(error)
-             return
-         }
-         do{
-             for try await postsPage in postsPublisher.values{
-                 self.currPostList = postsPage.posts
-                 self.currentPage = 1
-                 self.hasNext = postsPage.hasNext
-
-             }
-             
-         }
-         catch{
-             self.error = ErrorHelper.categorize(error)
-             return
-         }
+    @MainActor
+    func asyncRefresh() async {
+        let trendingPublisher = self.communityRepository.loadTrendingPosts(likes:Constants.trendingLikes, created_before: Constants.trendingCreatedBefore)
+        let postsPublisher =  self.communityRepository.loadPostsPage(boardId: selectedBoardId, page: Constants.initialPage, perPage: Constants.pageCount)
+        
+        do {
+            for try await response in trendingPublisher.values {
+                self.trendingPostList = response.result
+            }
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+            return
+        }
+        
+        do {
+            for try await postsPage in postsPublisher.values {
+                self.currPostList = postsPage.posts
+                self.currentPage = 1
+                self.hasNext = postsPage.hasNext
+            }
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+            return
+        }
     }
     
     func selectBoard(id: Int) {
