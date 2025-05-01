@@ -42,3 +42,22 @@ struct FestivalSwitchStyle: ToggleStyle {
             }
     }
 }
+
+struct FestivalSwitchStylePreviewWrapper: View {
+    @State private var isOn = false
+    
+    var body: some View {
+        Toggle(isOn: $isOn) {
+            EmptyView()
+        }
+        .toggleStyle(FestivalSwitchStyle())
+        .padding()
+        .previewLayout(.sizeThatFits)
+    }
+}
+
+struct FestivalSwitchStyle_Previews: PreviewProvider {
+    static var previews: some View {
+        FestivalSwitchStylePreviewWrapper()
+    }
+}

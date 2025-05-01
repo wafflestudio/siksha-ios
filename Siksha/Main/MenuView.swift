@@ -48,9 +48,9 @@ struct MenuView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            if viewModel.isFestivalAvailable {
-                festivalBanner
-            }
+//            if viewModel.isFestivalAvailable {
+//                festivalBanner
+//            }
             
             if viewModel.noFavorites {
                 Spacer()
