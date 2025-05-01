@@ -14,6 +14,7 @@ target 'Siksha' do
   pod 'Firebase'
   pod 'Firebase/AnalyticsWithoutAdIdSupport'
   pod 'Firebase/Crashlytics'
+  pod 'Firebase/RemoteConfig'
   pod 'Kingfisher', '~> 7.0'
 
 end

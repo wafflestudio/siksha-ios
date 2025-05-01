@@ -54,8 +54,6 @@
 		1ED44A4625CC6579001D916B /* MealInfoViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */; };
 		2300D48C25FBD07F0037765D /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2300D48B25FBD07F0037765D /* config.plist */; };
 		2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2303CF1D265A5E27002328F5 /* ImagePickerCoordinatorView.swift */; };
-		231C9C3E25F7FA7C0072C07A /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */; };
-		231C9C4325F7FA800072C07A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 231C9C4225F7FA800072C07A /* GoogleService-Info.plist */; };
 		231C9C6825F7FAFB0072C07A /* InformationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C6725F7FAFB0072C07A /* InformationView.swift */; };
 		231C9C7025F7FB720072C07A /* RestaurantOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C6F25F7FB720072C07A /* RestaurantOrderView.swift */; };
 		231C9C7825F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231C9C7725F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift */; };
@@ -77,6 +75,8 @@
 		330BAD1B2D4616CF003C4B8D /* MenuFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330BAD1A2D4616CF003C4B8D /* MenuFilterView.swift */; };
 		330C55112D4CCA480011345D /* SegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330C55102D4CCA3F0011345D /* SegmentedPicker.swift */; };
 		330C55132D4D047A0011345D /* Sliders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330C55122D4D04730011345D /* Sliders.swift */; };
+		33DDF0E42DC213AF00E202F1 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 33DDF0E32DC213AF00E202F1 /* GoogleService-Info-dev.plist */; };
+		33DDF0E62DC213B800E202F1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 33DDF0E52DC213B800E202F1 /* GoogleService-Info.plist */; };
 		45EF4169BF5F3B9E1C55FE7E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */; };
 		4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BDE232A7F75BC00046ADC /* CommunityView.swift */; };
 		4E23C5A62D17DCDA0088C1F6 /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */; };
@@ -216,8 +216,6 @@
 		1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealInfoViewModel.swift; sourceTree = "<group>"; };
 		2300D48B25FBD07F0037765D /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
 		2303CF1D265A5E27002328F5 /* ImagePickerCoordinatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePickerCoordinatorView.swift; sourceTree = "<group>"; tabWidth = 5; };
-		231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
-		231C9C4225F7FA800072C07A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		231C9C6725F7FAFB0072C07A /* InformationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationView.swift; sourceTree = "<group>"; };
 		231C9C6F25F7FB720072C07A /* RestaurantOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderView.swift; sourceTree = "<group>"; };
 		231C9C7725F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteRestaurantOrderView.swift; sourceTree = "<group>"; };
@@ -239,6 +237,9 @@
 		330BAD1A2D4616CF003C4B8D /* MenuFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuFilterView.swift; sourceTree = "<group>"; };
 		330C55102D4CCA3F0011345D /* SegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPicker.swift; sourceTree = "<group>"; };
 		330C55122D4D04730011345D /* Sliders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sliders.swift; sourceTree = "<group>"; };
+		33DDF0D92DC0B6E600E202F1 /* FirebaseRemoteConfig.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseRemoteConfig.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		33DDF0E32DC213AF00E202F1 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
+		33DDF0E52DC213B800E202F1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4E1BDE232A7F75BC00046ADC /* CommunityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
 		4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorAlert.swift; sourceTree = "<group>"; };
 		4E23C5A72D17E1DD0088C1F6 /* ErrorHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHelper.swift; sourceTree = "<group>"; };
@@ -562,9 +563,9 @@
 		1ECB251625F16FDB00875E18 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				231C9C3D25F7FA7C0072C07A /* GoogleService-Info-dev.plist */,
+				33DDF0E52DC213B800E202F1 /* GoogleService-Info.plist */,
+				33DDF0E32DC213AF00E202F1 /* GoogleService-Info-dev.plist */,
 				2300D48B25FBD07F0037765D /* config.plist */,
-				231C9C4225F7FA800072C07A /* GoogleService-Info.plist */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -646,6 +647,7 @@
 		F13574AFDA3E6DA3A2951FE3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				33DDF0D92DC0B6E600E202F1 /* FirebaseRemoteConfig.framework */,
 				A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */,
 			);
 			name = Frameworks;
@@ -665,6 +667,7 @@
 				BF624A132BB5543F0061602B /* ShellScript */,
 				0EC3576B0B2259A1938F259B /* [CP] Embed Pods Frameworks */,
 				B2772880FE00AB5531FFAD74 /* [CP] Copy Pods Resources */,
+				33DDF0E72DC2170B00E202F1 /* Firebase plist */,
 			);
 			buildRules = (
 			);
@@ -764,6 +767,7 @@
 			files = (
 				4E4E22EA2ABEC96300A81E47 /* Inter-SemiBold.ttf in Resources */,
 				231C9CCA25F8350F0072C07A /* Preview Assets.xcassets in Resources */,
+				33DDF0E42DC213AF00E202F1 /* GoogleService-Info-dev.plist in Resources */,
 				4E4E22E82ABEC96300A81E47 /* Inter-ExtraLight.ttf in Resources */,
 				231C9CB625F834D40072C07A /* Assets.xcassets in Resources */,
 				4E4E22EC2ABEC96300A81E47 /* Inter-Light.ttf in Resources */,
@@ -773,15 +777,14 @@
 				4E4E22EF2ABEC96300A81E47 /* Inter-Regular.ttf in Resources */,
 				1E3A56F725C6FCE800DBB3F4 /* LaunchScreen.storyboard in Resources */,
 				1E3A57CF25C71F2400DBB3F4 /* NanumSquareOTFLight.otf in Resources */,
-				231C9C4325F7FA800072C07A /* GoogleService-Info.plist in Resources */,
 				1E3A57CE25C71F2200DBB3F4 /* NanumSquareOTFExtraBold.otf in Resources */,
 				4E4E22F02ABEC96300A81E47 /* Inter-Medium.ttf in Resources */,
 				4E4E22EB2ABEC96300A81E47 /* Inter-Bold.ttf in Resources */,
 				1E3A57D325C71F2600DBB3F4 /* NanumSquareOTFRegular.otf in Resources */,
 				4E4E22E92ABEC96300A81E47 /* Inter-Thin.ttf in Resources */,
+				33DDF0E62DC213B800E202F1 /* GoogleService-Info.plist in Resources */,
 				4E4E22EE2ABEC96300A81E47 /* Inter-ExtraBold.ttf in Resources */,
 				1E3A57CA25C71F2000DBB3F4 /* NanumSquareOTFBold.otf in Resources */,
-				231C9C3E25F7FA7C0072C07A /* GoogleService-Info-dev.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -818,6 +821,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		33DDF0E72DC2170B00E202F1 /* Firebase plist */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Firebase plist";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nPATH_TO_GOOGLE_PLISTS=\"${PROJECT_DIR}/Siksha/Supporting Files\"\n\ncase \"${CONFIGURATION}\" in\n\n   \"Debug\" )\n        cp -r \"$PATH_TO_GOOGLE_PLISTS/GoogleService-Info-dev.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n\n   \"Release\" )\n        cp -r \"$PATH_TO_GOOGLE_PLISTS/GoogleService-Info.plist\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/GoogleService-Info.plist\" ;;\n\n    *)\n        ;;\nesac\n";
 		};
 		661D7D55C901ED3D5F53EC5E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -860,7 +881,7 @@
 		};
 		BF624A132BB5543F0061602B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 12;
 			files = (
 			);
 			inputFileListPaths = (
@@ -1171,8 +1192,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55CDCFB8585C558508960F06 /* Pods-Siksha.debug.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "FestivalAppIcon AppIcon";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				BUNDLE_NAME = "식샤-Debug";
 				CODE_SIGN_ENTITLEMENTS = Siksha/Siksha.entitlements;
 				CODE_SIGN_STYLE = Automatic;
@@ -1203,8 +1226,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = AFC91B43839C2E495B90E169 /* Pods-Siksha.release.xcconfig */;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_ALTERNATE_APPICON_NAMES = "FestivalAppIcon AppIcon";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				BUNDLE_NAME = "식샤";
 				CODE_SIGN_ENTITLEMENTS = Siksha/Siksha.entitlements;
 				CODE_SIGN_STYLE = Automatic;
