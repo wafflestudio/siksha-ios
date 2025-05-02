@@ -11,11 +11,14 @@ import Realm
 import RealmSwift
 import CoreLocation
 import SwiftyJSON
+import FirebaseRemoteConfig
 
 final class MenuViewModel: NSObject, ObservableObject {
     let isFavoriteTab: Bool
     
-    private let FESTIVAL_END: Date
+    private var remoteConfig = RemoteConfig.remoteConfig()
+    private var settings = RemoteConfigSettings()
+    
     private let MAX_PRICE = 10000
     private var cancellables = Set<AnyCancellable>()
     
@@ -94,14 +97,16 @@ final class MenuViewModel: NSObject, ObservableObject {
         
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
-        
-        FESTIVAL_END = Calendar(identifier: .gregorian).startOfDay(for: formatter.date(from: "2024-09-27")!)
-        
         selectedDate = formatter.string(from: Date())
         
-        isFestivalAvailable = Date() < FESTIVAL_END
+        isFestivalAvailable = false
         
         super.init()
+        self.setupRemoteConfigListener()
+        Task {
+            await activateRemoteConfig()
+        }
+        
         isFestival = isFestivalAvailable && UserDefaults.standard.bool(forKey: "isFestival")
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -120,6 +125,32 @@ final class MenuViewModel: NSObject, ObservableObject {
         subscribe()
     }
     
+    private func setupRemoteConfigListener() {
+        self.settings.minimumFetchInterval = 0
+        self.remoteConfig.configSettings = settings
+        remoteConfig.addOnConfigUpdateListener { configUpdate, error in
+            if let error {
+                print("Error: \(error)")
+                return
+            }
+            Task {
+                await self.activateRemoteConfig()
+            }
+        }
+    }
+    
+    private func activateRemoteConfig() async {
+        do {
+            try await remoteConfig.fetch()
+            try await remoteConfig.activate()
+            DispatchQueue.main.async {
+                self.isFestivalAvailable = self.remoteConfig["festivalFeatureEnabled"].boolValue
+            }
+        } catch {
+            print("Error: \(error)")
+        }
+    }
+    
     private func subscribe() {
         subscribeToIsFestivalAvailable()
         subscribeToIsFestival()
@@ -129,12 +160,27 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func subscribeToIsFestivalAvailable() {
-        $isFestivalAvailable.sink{ [weak self]
-            available in
-            if (!available) {
-                self?.isFestival = false
+        $isFestivalAvailable
+            .removeDuplicates()
+            .sink { [weak self] available in
+                guard let self = self else { return }
+                
+                let desiredIconName: String? = available ? "FestivalAppIcon" : nil
+                let currentIconName = UIApplication.shared.alternateIconName
+                
+                if currentIconName != desiredIconName {
+                    UIApplication.shared.setAlternateIconName(desiredIconName) { error in
+                        if let error = error {
+                            print("Failed to set app icon: \(error)")
+                        }
+                    }
+                }
+                
+                if !available {
+                    self.isFestival = false
+                }
             }
-        }.store(in: &cancellables)
+            .store(in: &cancellables)
     }
     
     private func subscribeToIsFestival() {
@@ -149,7 +195,6 @@ final class MenuViewModel: NSObject, ObservableObject {
             .removeDuplicates()
             .sink { [weak self] dateString in
                 guard let self = self else { return }
-                isFestivalAvailable = Date() < FESTIVAL_END
                 self.formatter.dateFormat = "yyyy-MM-dd"
                 let selected = self.formatter.date(from: dateString) ?? Date()
                 
