@@ -29,7 +29,7 @@ struct SegmentedPicker<T: Hashable>: View {
                                             .stroke(Color("MainThemeColor"), lineWidth: 1)
                                     )
                             }
-                            PickerContentView(text: format(option), needStarImage: isRateFilter && format(option) != "모두")
+                            PickerContentView(text: format(option), needStarImage: isRateFilter && format(option) != "전체")
                                 .frame(maxWidth: .infinity)
                                 .frame(height: 34)
                                 .contentShape(Rectangle())
@@ -87,7 +87,7 @@ struct CustomSegmentedPicker_Previews: PreviewProvider {
                 SegmentedPicker(
                     selectedOption: $minimumRating,
                     options: [0, 3.5, 4.0, 4.5],
-                    format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
+                    format: { $0 == 0 ? "전체" : String(format: "%.1f", $0) },
                     isRateFilter: true
                 )
             }
