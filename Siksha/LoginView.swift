@@ -103,8 +103,8 @@ struct LoginView: View {
     }
     
     func handleGoogleLogin() {
-        if GIDSignIn.sharedInstance()?.presentingViewController==nil {
-            GIDSignIn.sharedInstance()?.presentingViewController = UIApplication.shared.windows.last?.rootViewController
+        if let viewController = viewControllerHolder {
+            GIDSignIn.sharedInstance()?.presentingViewController = viewController
         }
         GIDSignIn.sharedInstance()?.delegate = viewModel
         GIDSignIn.sharedInstance()?.signIn()
