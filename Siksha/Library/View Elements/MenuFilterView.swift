@@ -136,7 +136,7 @@ struct MenuFilterView: View {
                             SegmentedPicker(
                                 selectedOption: $menuFilterViewModel.minimumRating,
                                 options: [0, 3.5, 4.0, 4.5],
-                                format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
+                                format: { $0 == 0 ? "전체" : String(format: "%.1f", $0) },
                                 isRateFilter: true
                             )
                         }
@@ -178,7 +178,7 @@ struct MenuFilterView: View {
                         SegmentedPicker(
                             selectedOption: $menuFilterViewModel.minimumRating,
                             options: [0, 3.5, 4.0, 4.5],
-                            format: { $0 == 0 ? "모두" : String(format: "%.1f", $0) },
+                            format: { $0 == 0 ? "전체" : String(format: "%.1f", $0) },
                             isRateFilter: true
                         )
                         Spacer()
