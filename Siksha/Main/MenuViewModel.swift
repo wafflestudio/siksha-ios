@@ -99,7 +99,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         formatter.dateFormat = "yyyy-MM-dd"
         selectedDate = formatter.string(from: Date())
         
-        isFestivalAvailable = false
+        isFestivalAvailable = UserDefaults.standard.bool(forKey: "isFestivalAvailable")
         
         super.init()
         self.setupRemoteConfigListener()
@@ -164,6 +164,7 @@ final class MenuViewModel: NSObject, ObservableObject {
             .removeDuplicates()
             .sink { [weak self] available in
                 guard let self = self else { return }
+                UserDefaults.standard.set(available, forKey: "isFestivalAvailable")
                 
                 let desiredIconName: String? = available ? "FestivalAppIcon" : nil
                 let currentIconName = UIApplication.shared.alternateIconName
