@@ -38,7 +38,7 @@ struct RestaurantInformationView: View {
             }
             .padding(EdgeInsets(top: 14, leading: 16, bottom: 10, trailing: 16))
 
-            if let position = position {
+            if position != nil {
                 Color.init("main")
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
@@ -100,9 +100,10 @@ struct RestaurantInformationView_Previews: PreviewProvider {
         rest.addr = "서울대학교 302동"
         rest.lat = "37.5666102"
         rest.lng = "126.9783881"
-        rest.operatingHours[0] = "오전 11:30 ~ 오후 1:30 \n오후 5:30 ~ 오후 7:30"
-        rest.operatingHours[1] = "오전 11:30 ~ 오후 1:30 \n오후 5:30 ~ 오후 6:30"
-        rest.operatingHours[2] = "오전 11:30 ~ 오후 1:30"
+        rest.operatingHours.append("11:30 - 13:30 \n17:30 - 19:30 ")
+        rest.operatingHours.append("11:30 - 13:30")
+        rest.operatingHours.append("")
+        
         return RestaurantInformationView(rest)
     }
 }
