@@ -189,8 +189,6 @@ enum SikshaAPI: URLRequestConvertible {
         case .unlikeComment:
             return .post
 
-        case .submitPost:
-            return .post
         case .reportPost:
             return .post
         case .reportComment:
