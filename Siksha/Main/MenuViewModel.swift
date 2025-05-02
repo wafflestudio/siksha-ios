@@ -178,6 +178,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 self.showCalendar = false
                 
                 let managedMenu = self.repository.getMenu(date: selectedDate)
+                
                 if managedMenu == nil {
                     self.selectedMenu = nil
                 } else {
@@ -296,9 +297,12 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     private func filterRestaurants(restaurants: List<Restaurant>, filter: MenuFilters) -> List<Restaurant> {
         let filteredArray: [Restaurant] = Array(restaurants).compactMap { (restaurant: Restaurant) -> Restaurant? in
+            
+            var isRestaurantEmpty = false
+            
             // 영업 중인지 체크 (휴일 등은 추후 처리)
             if filter.isOpen == true && !isRestaurantOpen(restaurant) {
-                return nil
+                isRestaurantEmpty = true
             }
             
             // 거리 필터 적용
@@ -312,11 +316,11 @@ final class MenuViewModel: NSObject, ObservableObject {
                     if let currentLocation = locationManager.location {
                         if let restaurantLocation = restaurant.location {
                             if currentLocation.distance(from: restaurantLocation) > Double(distance) {
-                                return nil
+                                isRestaurantEmpty = true
                             }
                         } else {
                             // 레스토랑 위치 정보가 없으면 거리 필터 적용시 해당 레스토랑 제거
-                            return nil
+                            isRestaurantEmpty = true
                         }
                     } else {
                         selectedFilters.distance = nil
@@ -325,9 +329,16 @@ final class MenuViewModel: NSObject, ObservableObject {
                 }
             }
             
-            // 메뉴 필터 적용
-            let filteredMenus = filterRestaurantMenus(restaurant.menus, filter: filter)
-            if filteredMenus.isEmpty { return nil }
+            let filteredMenus: [Meal]
+            
+            if isRestaurantEmpty {
+                filteredMenus = []
+            } else {
+                filteredMenus = filterRestaurantMenus(restaurant.menus, filter: filter)
+            }
+            
+            let noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide") // 메뉴가 없으면 레스토랑 hide
+            if noMenuHide && filteredMenus.isEmpty { return nil }
             
             // 새 메뉴 List에 필터링된 메뉴들을 추가
             let newMenus = List<Meal>()
@@ -449,7 +460,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         return isRestaurantOpen
     }
     
-    func getMenu(date: String) {
+    private func getMenu(date: String) {
         guard self.getMenuStatus != .loading else {
             return
         }

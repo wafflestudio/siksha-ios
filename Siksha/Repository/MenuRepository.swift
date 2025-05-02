@@ -31,7 +31,7 @@ final class MenuRepository {
     }
     
     func fetchMenu(date: String) -> AnyPublisher<MenuStatus, Never> {
-        Networking.shared.getMenus(startDate: date, endDate: date, noMenuHide: !UserDefaults.standard.bool(forKey: "notNoMenuHide"))
+        Networking.shared.getMenus(startDate: date, endDate: date, noMenuHide: false) // 메뉴가 없는 식당까지 모두 가져옴
             // Save menus to db
             .handleEvents(receiveOutput: { response in
                 guard let data = response.value,
