@@ -50,6 +50,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     @Published var isFestivalAvailable: Bool
     @Published var isFestival: Bool = false
+    @Published var isFestivalAppIconEnabled: Bool
     
     @Published var noFavorites: Bool = false
     
@@ -100,8 +101,10 @@ final class MenuViewModel: NSObject, ObservableObject {
         selectedDate = formatter.string(from: Date())
         
         isFestivalAvailable = UserDefaults.standard.bool(forKey: "isFestivalAvailable")
+        isFestivalAppIconEnabled = UserDefaults.standard.bool(forKey: "isFestivalAppIconEnabled")
         
         super.init()
+        
         self.setupRemoteConfigListener()
         Task {
             await activateRemoteConfig()
@@ -145,6 +148,7 @@ final class MenuViewModel: NSObject, ObservableObject {
             try await remoteConfig.activate()
             DispatchQueue.main.async {
                 self.isFestivalAvailable = self.remoteConfig["festivalFeatureEnabled"].boolValue
+                self.isFestivalAppIconEnabled = self.remoteConfig["festivalAppIconEnabled"].boolValue
             }
         } catch {
             print("Error: \(error)")
@@ -152,6 +156,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func subscribe() {
+        subscribeToIsFestivalAppIconEnabled()
         subscribeToIsFestivalAvailable()
         subscribeToIsFestival()
         subscribeToSelectedDate()
@@ -159,14 +164,13 @@ final class MenuViewModel: NSObject, ObservableObject {
         subscribeToSelectedMenu()
     }
     
-    private func subscribeToIsFestivalAvailable() {
-        $isFestivalAvailable
-            .removeDuplicates()
-            .sink { [weak self] available in
+    private func subscribeToIsFestivalAppIconEnabled() {
+        $isFestivalAppIconEnabled
+            .sink { [weak self] enabled in
                 guard let self = self else { return }
-                UserDefaults.standard.set(available, forKey: "isFestivalAvailable")
+                UserDefaults.standard.set(enabled, forKey: "isFestivalAppIconEnabled")
                 
-                let desiredIconName: String? = available ? "FestivalAppIcon" : nil
+                let desiredIconName: String? = enabled ? "FestivalAppIcon" : nil
                 let currentIconName = UIApplication.shared.alternateIconName
                 
                 if currentIconName != desiredIconName {
@@ -176,6 +180,16 @@ final class MenuViewModel: NSObject, ObservableObject {
                         }
                     }
                 }
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func subscribeToIsFestivalAvailable() {
+        $isFestivalAvailable
+            .removeDuplicates()
+            .sink { [weak self] available in
+                guard let self = self else { return }
+                UserDefaults.standard.set(available, forKey: "isFestivalAvailable")
                 
                 if !available {
                     self.isFestival = false
