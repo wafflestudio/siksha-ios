@@ -19,6 +19,8 @@ final class MenuViewModel: NSObject, ObservableObject {
     private var remoteConfig = RemoteConfig.remoteConfig()
     private var settings = RemoteConfigSettings()
     
+    private let festivalPeriod: FestivalPeriod = FestivalPeriod()
+    
     private let MAX_PRICE = 10000
     private var cancellables = Set<AnyCancellable>()
     
@@ -27,6 +29,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()
     
     @Published var showCalendar: Bool = false
+    @Published var showFestivalSwitch: Bool = false
     
     @Published var selectedDate: String
     @Published var nextDate: String = ""
@@ -193,6 +196,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 
                 if !available {
                     self.isFestival = false
+                    self.showFestivalSwitch = false
                 }
             }
             .store(in: &cancellables)
@@ -224,6 +228,8 @@ final class MenuViewModel: NSObject, ObservableObject {
                 self.selectedFormatted = self.formatter.string(from: selected)
                 
                 self.getMenu(date: dateString)
+                
+                self.showFestivalSwitch = self.isFestivalAvailable && festivalPeriod.contains(selected)
             }
             .store(in: &cancellables)
     }
@@ -550,8 +556,32 @@ final class MenuViewModel: NSObject, ObservableObject {
             UserDefaults.standard.setValue(filters, forKey: "menuFilters")
         }
     }
+    
+    func loadFestivalPeriod() {
+        // fetch festival info
+    }
 }
 
 extension MenuViewModel: CLLocationManagerDelegate {
     
+}
+
+struct FestivalPeriod {
+    private let formatter: DateFormatter = DateFormatter()
+
+    var startDate: Date?
+    var endDate: Date?
+    
+    init() {
+        formatter.locale = Locale(identifier: "ko_kr")
+        formatter.dateFormat = "yyyy-MM-dd"
+        startDate = formatter.date(from: "2025-05-13")!
+        endDate = formatter.date(from: "2025-05-15")!
+    }
+
+    func contains(_ date: Date) -> Bool {
+        guard let startDate = startDate else { return false }
+        guard let endDate = endDate else { return false }
+        return date >= startDate && date <= endDate
+    }
 }

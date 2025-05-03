@@ -78,7 +78,7 @@ private extension MenuListView {
             }
             .frame(alignment: .center)
             
-            if viewModel.isFestivalAvailable {
+            if viewModel.showFestivalSwitch {
                 HStack {
                     Spacer()
                     Toggle(isOn: $viewModel.isFestival) {
