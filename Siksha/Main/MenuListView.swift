@@ -24,25 +24,23 @@ struct MenuListView: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
+            mealSelectorView
+                .padding(.top, 15)
+            
+            filterSelectorView
+            
             if viewModel.getMenuStatus == .loading {
                 loadingView
-            } else {
-                mealSelectorView
-                    .padding(.top, 15)
-                
-                filterSelectorView
-                
-                if viewModel.restaurantsLists.count > 0 {
-                    TabView(selection: $viewModel.selectedPage) {
-                        ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
-                            RestaurantsView(viewModel.restaurantsLists[index])
-                                .tag(index)
-                        }
+            } else if viewModel.restaurantsLists.count > 0 {
+                TabView(selection: $viewModel.selectedPage) {
+                    ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
+                        RestaurantsView(viewModel.restaurantsLists[index])
+                            .tag(index)
                     }
-                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                } else {
-                    emptyView
                 }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+            } else {
+                emptyView
             }
         }
         .background(backgroundColor)
