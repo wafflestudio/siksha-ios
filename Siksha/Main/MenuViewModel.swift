@@ -230,6 +230,9 @@ final class MenuViewModel: NSObject, ObservableObject {
                 self.getMenu(date: dateString)
                 
                 self.showFestivalSwitch = self.isFestivalAvailable && festivalPeriod.contains(selected)
+                if !showFestivalSwitch {
+                    self.isFestival = false
+                }
             }
             .store(in: &cancellables)
     }
