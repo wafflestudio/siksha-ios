@@ -84,7 +84,7 @@ struct RestaurantInformationView: View {
                     .frame(maxWidth: .infinity)
                     .padding([.leading, .trailing], 16)
                 
-                OperatingHoursTable(hours: Array(restaurant.operatingHours))
+                OperatingHoursTable(hours: Array(restaurant.operatingHours), isFestivalRestaurant: restaurant.nameKr.contains("[축제]"))
                 
                 Spacer()
             }

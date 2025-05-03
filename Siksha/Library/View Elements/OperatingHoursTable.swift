@@ -11,7 +11,7 @@ struct OperatingHoursCell: View {
     private let type: String
     private var hours = [(String, String)]()
     
-    init(type: String, hours: [String]) {
+    init(type: String, hours: [String], isFestivalRestaurant: Bool) {
         self.type = type
         
         if hours.count == 3 {
@@ -19,8 +19,13 @@ struct OperatingHoursCell: View {
             self.hours.append(("점심", hours[1]))
             self.hours.append(("저녁", hours[2]))
         } else if hours.count == 2 {
-            self.hours.append(("점심", hours[0]))
-            self.hours.append(("저녁", hours[1]))
+            if isFestivalRestaurant {
+                self.hours.append(("5/13, 5/14", hours[0]))
+                self.hours.append(("5/15", hours[1]))
+            } else {
+                self.hours.append(("점심", hours[0]))
+                self.hours.append(("저녁", hours[1]))
+            }
         } else if hours.count == 1 {
             self.hours.append(("", hours[0]))
         }
@@ -36,7 +41,7 @@ struct OperatingHoursCell: View {
             Spacer()
             
             if hours.count > 0 {
-                VStack(spacing: 8) {
+                VStack(alignment: .trailing, spacing: 8) {
                     ForEach(hours, id: \.0) { hourType, hour in
                         HStack(spacing: 10) {
                             Text(hourType)
@@ -62,32 +67,34 @@ struct OperatingHoursTable: View {
     private let wdHours: [String]
     private let weHours: [String]
     private let hoHours: [String]
+    private let isFestivalRestaurant: Bool
     
     private let dividerColor = Color.init(red: 236/255, green: 236/255, blue: 236/255)
     
-    init(hours: [String]) {
+    init(hours: [String], isFestivalRestaurant: Bool) {
         self.wdHours = hours[0].split(separator: "\n").map { String($0) }
         self.weHours = hours[1].split(separator: "\n").map { String($0) }
         self.hoHours = hours[2].split(separator: "\n").map { String($0) }
+        self.isFestivalRestaurant = isFestivalRestaurant
     }
     
     var body: some View {
         VStack {
-            OperatingHoursCell(type: "주중", hours: wdHours)
+            OperatingHoursCell(type: "주중", hours: wdHours, isFestivalRestaurant: self.isFestivalRestaurant)
             
             dividerColor
                 .frame(height: 1)
                 .frame(maxWidth: .infinity)
                 .padding([.leading, .trailing], 16)
             
-            OperatingHoursCell(type: "토요일", hours: weHours)
+            OperatingHoursCell(type: "토요일", hours: weHours, isFestivalRestaurant: self.isFestivalRestaurant)
             
             dividerColor
                 .frame(height: 1)
                 .frame(maxWidth: .infinity)
                 .padding([.leading, .trailing], 16)
             
-            OperatingHoursCell(type: "휴일", hours: hoHours)
+            OperatingHoursCell(type: "휴일", hours: hoHours, isFestivalRestaurant: self.isFestivalRestaurant)
         }
     }
 }
@@ -99,6 +106,6 @@ struct OperatingHoursTable_Previews: PreviewProvider {
         operatingHours[1] = "11:30 - 13:30\n17:30 - 18:30"
 
         
-        return OperatingHoursTable(hours: operatingHours)
+        return OperatingHoursTable(hours: operatingHours, isFestivalRestaurant: false)
     }
 }
