@@ -35,3 +35,11 @@ struct MenuIdResponse: Codable{
     var is_liked: Bool
     var like_cnt: Int
 }
+
+struct FestivalDatesResponse: Codable {
+    var festivalDates: [String]
+    
+    enum CodingKeys: String, CodingKey {
+        case festivalDates = "festival_dates"
+    }
+}

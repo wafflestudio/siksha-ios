@@ -53,6 +53,7 @@ enum SikshaAPI: URLRequestConvertible {
     case getMenuFromId(menuId: Int)
     case likeMenu(menuId:Int)
     case unlikeMenu(menuId:Int)
+    case getFestivalDates
     case getRestaurants
     case getReviews(menuId: Int, page: Int, perPage: Int)
     case getScoreDistribution(menuId: Int)
@@ -98,6 +99,8 @@ enum SikshaAPI: URLRequestConvertible {
             return true
         case .getMenuFromId:
             return true
+        case .getFestivalDates:
+            return false
         case .getRestaurants:
             return false
         case .getReviews:
@@ -133,6 +136,8 @@ enum SikshaAPI: URLRequestConvertible {
         case .getMenus:
             return .get
         case .getMenuFromId:
+            return .get
+        case .getFestivalDates:
             return .get
         case .getRestaurants:
             return .get
@@ -216,6 +221,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/menus/\(menuId)/like"
         case let .unlikeMenu(menuId):
             return "/menus/\(menuId)/unlike"
+        case .getFestivalDates:
+            return "/menus/festival/dates"
         case .getRestaurants:
             return "/restaurants/"
         case .getReviews:

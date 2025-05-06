@@ -26,6 +26,11 @@ class Networking {
         
         return request.validate().publishData()
     }
+    
+    func getFestivalDates() -> DataResponsePublisher<FestivalDatesResponse> {
+        let request = AF.request(SikshaAPI.getFestivalDates)
+        return request.validate().publishDecodable(type: FestivalDatesResponse.self, decoder: JSONDecoder())
+    }
 
     func getMenus(startDate: String, endDate: String, noMenuHide: Bool) -> DataResponsePublisher<Data> {
         let request = AF.request(SikshaAPI.getMenus(startDate: startDate, endDate: endDate, noMenuHide: noMenuHide))
