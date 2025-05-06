@@ -30,6 +30,19 @@ final class MenuRepository {
 //        }
     }
     
+    func fetchFestivalDates() -> AnyPublisher<[Date], Never> {
+        Networking.shared.getFestivalDates()
+            .map { response in
+                guard let value = response.value else {
+                    return []
+                }
+                let formatter = DateFormatter()
+                formatter.dateFormat = "yyyy-MM-dd"
+                return value.festivalDates.compactMap { formatter.date(from: $0) }
+            }
+            .eraseToAnyPublisher()
+    }
+    
     func fetchMenu(date: String) -> AnyPublisher<MenuStatus, Never> {
         Networking.shared.getMenus(startDate: date, endDate: date, noMenuHide: false) // 메뉴가 없는 식당까지 모두 가져옴
             // Save menus to db

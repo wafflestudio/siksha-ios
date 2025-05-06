@@ -19,7 +19,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private var remoteConfig = RemoteConfig.remoteConfig()
     private var settings = RemoteConfigSettings()
     
-    private let festivalPeriod: FestivalPeriod = FestivalPeriod()
+    private var festivalDates: [Date] = []
     
     private let MAX_PRICE = 10000
     private var cancellables = Set<AnyCancellable>()
@@ -128,6 +128,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
         
         loadFilters()
+        loadFestivalDates()
         subscribe()
     }
     
@@ -229,10 +230,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 
                 self.getMenu(date: dateString)
                 
-                self.showFestivalSwitch = self.isFestivalAvailable && festivalPeriod.contains(selected)
-                if !showFestivalSwitch {
-                    self.isFestival = false
-                }
+                checkShowFestivalSwitch(selected)
             }
             .store(in: &cancellables)
     }
@@ -354,6 +352,13 @@ final class MenuViewModel: NSObject, ObservableObject {
                 self.noFavorites = !hasFavorite
             }
             .store(in: &cancellables)
+    }
+    
+    func checkShowFestivalSwitch(_ date: Date) {
+        self.showFestivalSwitch = self.isFestivalAvailable && self.festivalDates.contains(date)
+        if !showFestivalSwitch {
+            self.isFestival = false
+        }
     }
     
     private func filterMenus(_ menus: DailyMenu, filter: MenuFilters) -> DailyMenu {
@@ -560,31 +565,20 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
     }
     
-    func loadFestivalPeriod() {
-        // fetch festival info
+    func loadFestivalDates() {
+        repository.fetchFestivalDates()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] dates in
+                guard let self = self else { return }
+                self.festivalDates = dates
+                self.formatter.dateFormat = "yyyy-MM-dd"
+                let selected = self.formatter.date(from: selectedDate) ?? Date()
+                self.checkShowFestivalSwitch(selected)
+            }
+            .store(in: &cancellables)
     }
 }
 
 extension MenuViewModel: CLLocationManagerDelegate {
     
-}
-
-struct FestivalPeriod {
-    private let formatter: DateFormatter = DateFormatter()
-
-    var startDate: Date?
-    var endDate: Date?
-    
-    init() {
-        formatter.locale = Locale(identifier: "ko_kr")
-        formatter.dateFormat = "yyyy-MM-dd"
-        startDate = formatter.date(from: "2025-05-13")!
-        endDate = formatter.date(from: "2025-05-15")!
-    }
-
-    func contains(_ date: Date) -> Bool {
-        guard let startDate = startDate else { return false }
-        guard let endDate = endDate else { return false }
-        return date >= startDate && date <= endDate
-    }
 }
