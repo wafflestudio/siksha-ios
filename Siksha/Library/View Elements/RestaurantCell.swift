@@ -10,9 +10,8 @@ import SwiftUI
 // MARK: - Restaurant Cell
 
 struct RestaurantCell: View {
-    private let fontColor = Color("DefaultFontColor")
-    private let titleColor = Color("TitleFontColor")
-    private let lightGrayColor = Color("LightGrayColor")
+    private let fontColor = Color("Gray700")
+    private let lightGrayColor = Color("Gray600")
     private let orangeColor = Color.init("main")
     
     var restaurant: Restaurant

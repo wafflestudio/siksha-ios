@@ -169,7 +169,7 @@ private extension MealReviewView {
                         .frame(width: 343, height: 56)
                 } else {
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.init("LightGrayColor"))
+                        .fill(Color.init("Gray600"))
                         .frame(width: 343, height: 56)
                 }
                 
@@ -234,8 +234,8 @@ private extension MealReviewView {
 // MARK: - Rating View
 
 struct MealReviewView: View {
-    private let darkFontColor = Color("DarkFontColor")
-    private let fontColor = Color("DefaultFontColor")
+    private let darkFontColor = Color("BlackColor")
+    private let fontColor = Color("Gray700")
     private let orangeColor = Color.init("main")
 
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?

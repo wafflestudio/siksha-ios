@@ -125,7 +125,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     
     var customDivider: some View {
         HStack {
-            Color("DefaultImageColor")
+            Color("Gray100")
                 .frame(height: 0.5)
                 .frame(maxWidth: .infinity)
         }
@@ -169,7 +169,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }) {
                         ZStack {
                             RoundedRectangle(cornerRadius: cornerRadius)
-                                .foregroundColor(Color("DefaultImageColor"))
+                                .foregroundColor(Color("Gray100"))
                                 .frame(width: 106, height: 106)
 
                             Image(systemName: "plus")
@@ -325,7 +325,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                         if viewModel.content.isEmpty {
                             Text(placeholder)
                                 .font(.custom("Inter-ExtraLight", size: 12))
-                                .foregroundColor(Color.init("ReviewLowColor"))
+                                .foregroundColor(Color.init("Gray300"))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(EdgeInsets(top: 8, leading: 6, bottom: 0, trailing: 0))
                         }

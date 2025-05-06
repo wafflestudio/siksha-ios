@@ -62,7 +62,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 ZStack(alignment:.topTrailing){
                     Text("\(imageIndex + 1)/\(imageURLs.count)")
                         .frame(width:28,height: 17)
-                        .background(Color("LightFontColor"))
+                        .background(Color("Gray400"))
                         .foregroundColor(.white)
                         .cornerRadius(10)
                         .font(.custom("NanumSquareOTFR", size: 10))
@@ -120,7 +120,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     .font(Font.custom("NanumSquareOTFB", size: 11))
                 Text(relativeDate)
                     .font(Font.custom("NanumSquareOTFR", size: 10))
-                    .foregroundColor(Color("ReviewLowColor"))
+                    .foregroundColor(Color("Gray600"))
             }
             Spacer()
             /*Menu{
@@ -327,7 +327,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                         .frame(width: 4)
                                     Text(String(viewModel.postInfo.commentCount))
                                         .font(.custom("Inter-Regular", size: 10))
-                                        .foregroundColor(Color.init("ReviewMediumColor"))
+                                        .foregroundColor(Color.init("Gray700"))
                                         .frame(height: 11, alignment: .center)
                                 }
                                 

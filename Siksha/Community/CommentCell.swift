@@ -58,14 +58,14 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                         .frame(width:8.2)
                     Text(relativeDate)
                         .font(.custom("NanumSquareOTFR", size: 10))
-                        .foregroundColor(.init("ReviewLowColor"))
+                        .foregroundColor(.init("Gray600"))
                     
                 }
                 Spacer()
                     .frame(height:9.37)
                 Text(comment.content)
                     .font(.custom("NanumSquareOTFR", size: 12))
-                    .foregroundColor(.init("ReviewHighColor"))
+                    .foregroundColor(.init("Gray900"))
                 
                 
                 Image("etc")
@@ -95,7 +95,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                             .foregroundColor(.init("MainThemeColor"))
                     }
                     .padding(EdgeInsets(top: 12.5, leading: 11, bottom: 12.5, trailing: 11))
-                    .background(Color("CommentLikeBackgroundColor"))
+                    .background(Color("Gray50"))
                     .cornerRadius(6)
                     Spacer()
                         .frame(height: 10)

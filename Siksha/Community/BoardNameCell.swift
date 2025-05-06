@@ -9,10 +9,10 @@ import Foundation
 import SwiftUI
 struct BoardNameCell: View{
     let selectedBackgroundColor = Color.init("MainThemeColor")
-    let unSelectedBackgroundColor =  Color.init("UnselectedBoardColor")
+    let unSelectedBackgroundColor =  Color.init("Gray100")
 
     let selectedFontColor = Color.white
-    let unSelectedFontColor = Color.init("ReviewLowColor")
+    let unSelectedFontColor = Color.init("Gray500")
 
     var isSelected: Bool
     var boardName: String

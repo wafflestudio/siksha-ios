@@ -74,7 +74,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         RoundedRectangle(cornerRadius: 11)
             .strokeBorder(lineWidth: 1)
             .frame(width: 336, height: 49)
-            .foregroundColor(Color("TextFieldBorderColor"))
+            .foregroundColor(Color("Gray200"))
             .overlay(
                 ClearableTextField("닉네임", text: $viewModel.nickname)
                     .padding(.horizontal, 18)
@@ -133,12 +133,12 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 .foregroundColor(.white)
                 .overlay(
                     Circle()
-                    .stroke(Color("TextFieldBorderColor"), lineWidth: 1)
+                    .stroke(Color("Gray200"), lineWidth: 1)
                 )
             
             Image("Camera")
                 .frame(width: 22.5, height: 18)
-                .foregroundColor(Color("LightGrayColor"))
+                .foregroundColor(Color("Gray600"))
         }
     }
     
@@ -146,7 +146,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         Button(action: done) {
             ZStack(alignment: .center) {
                 RoundedRectangle(cornerRadius: 8.0)
-                    .fill(viewModel.enableDoneButton ? Color("MainThemeColor") : Color("LightGrayColor"))
+                    .fill(viewModel.enableDoneButton ? Color("MainThemeColor") : Color("Gray600"))
                 Text("완료")
                     .font(.custom("NanumSquareOTFB", size: 17))
             }
@@ -180,7 +180,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         }
         .frame(height: 42)
         .background(Color.white)
-        .border(Color("TextFieldBorderColor"), width: 1)
+        .border(Color("Gray200"), width: 1)
     }
     
     private func done() {
@@ -239,7 +239,7 @@ struct ClearableTextField: View {
             if (text != "") {
                 Image(systemName: "xmark.circle.fill")
                     .frame(width: 18, height: 18)
-                    .foregroundColor(Color("LightGrayColor"))
+                    .foregroundColor(Color("Gray600"))
                     .onTapGesture {
                         text = ""
                     }

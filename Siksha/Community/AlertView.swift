@@ -2,9 +2,9 @@ import SwiftUI
 
 
 struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: CommunityPostViewModelType {
-    private let fontColor = Color("DefaultFontColor")
+    private let fontColor = Color("Gray700")
     private let orangeColor = Color.init("main")
-    private let lightGrayColor = Color.init("LightGrayColor")
+    private let lightGrayColor = Color.init("Gray600")
     private var commentId:Int? = nil
     @EnvironmentObject var appState:AppState
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
