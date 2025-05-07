@@ -14,7 +14,7 @@ struct MenuListView: View {
     
     private let backgroundColor = Color("AppBackgroundColor")
     private let lightGrayColor = Color("Gray600")
-    private let orangeColor = Color("main")
+    private let orangeColor = Color("Orange500")
     private let fontColor = Color("Gray700")
     private let typeInfos: [TypeInfo] = [
         TypeInfo(type: .breakfast),

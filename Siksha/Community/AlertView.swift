@@ -3,7 +3,7 @@ import SwiftUI
 
 struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: CommunityPostViewModelType {
     private let fontColor = Color("Gray700")
-    private let orangeColor = Color.init("main")
+    private let orangeColor = Color.init("Orange500")
     private let lightGrayColor = Color.init("Gray600")
     private var commentId:Int? = nil
     @EnvironmentObject var appState:AppState

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RenewalVOCView: View {
     private let fontColor = Color("Gray700")
-    private let orangeColor = Color.init("main")
+    private let orangeColor = Color.init("Orange500")
     private let lightGrayColor = Color.init("Gray600")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>

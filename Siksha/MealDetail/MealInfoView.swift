@@ -132,7 +132,7 @@ private extension MealInfoView {
 struct MealInfoView: View {
     private let darkFontColor = Color.init("BlackColor")
     private let lightGrayColor = Color.init("Gray600")
-    private let orangeColor = Color.init("main")
+    private let orangeColor = Color.init("Orange500")
     
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>

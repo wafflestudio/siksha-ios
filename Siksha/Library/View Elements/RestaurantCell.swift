@@ -12,7 +12,7 @@ import SwiftUI
 struct RestaurantCell: View {
     private let fontColor = Color("Gray700")
     private let lightGrayColor = Color("Gray600")
-    private let orangeColor = Color.init("main")
+    private let orangeColor = Color.init("Orange500")
     
     var restaurant: Restaurant
     var meals: [Meal]
