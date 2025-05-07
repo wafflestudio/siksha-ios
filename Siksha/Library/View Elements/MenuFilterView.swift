@@ -368,7 +368,7 @@ fileprivate struct CategoryButton: View {
                     .font(.custom("NanumSquareOTFB", size: 13))
                     .foregroundColor(.black)
             )
-            .background(isSelected ? Color("MainActiveColor") : .clear, in: RoundedRectangle(cornerRadius: 30))
+            .background(isSelected ? Color("Orange100") : .clear, in: RoundedRectangle(cornerRadius: 30))
     }
 }
 

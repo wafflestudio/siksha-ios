@@ -66,7 +66,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 } label: {
                     Image("CircleWriteButton")
                         .frame(width:50, height:50)
-                        .background(Color.init("MainThemeColor"))
+                        .background(Color.init("Orange500"))
                         .clipShape(Circle())
                 }
                 .offset(x: -30, y: -22)
@@ -156,7 +156,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
 
 struct CommunityPostPreView: View {
     private let contentColor = Color("Gray900")
-    private let likeColor = Color("MainThemeColor")
+    private let likeColor = Color("Orange500")
     private let replyColor = Color("Gray700")
     private let defaultImageColor = Color("Gray100")
     

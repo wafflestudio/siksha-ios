@@ -92,7 +92,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                             .padding(.init(top: 0, leading: 0, bottom: 4, trailing: 0))
                         Text("\(comment.likeCnt)")
                             .font(.custom("Inter-Regular", size: 8))
-                            .foregroundColor(.init("MainThemeColor"))
+                            .foregroundColor(.init("Orange500"))
                     }
                     .padding(EdgeInsets(top: 12.5, leading: 11, bottom: 12.5, trailing: 11))
                     .background(Color("Gray50"))
@@ -134,7 +134,7 @@ struct EditCommentView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
-                Color("MainThemeColor")
+                Color("Orange500")
                     .edgesIgnoringSafeArea(.top)
                 
                 HStack {
@@ -155,7 +155,7 @@ struct EditCommentView: View {
                         .font(.custom("NanumSquareOTFR", size: 15))
                 }
                 .padding()
-                .background(Color("MainThemeColor").opacity(0))
+                .background(Color("Orange500").opacity(0))
             }
             .frame(height: 40)
             

@@ -48,7 +48,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
             VStack {
                 VStack(spacing:0){
                     ZStack{
-                        Color("MainThemeColor")
+                        Color("Orange500")
                             .ignoresSafeArea(.all)
                         HStack{
                             backButton

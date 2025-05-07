@@ -213,7 +213,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 Button(action:{showPostDeleteAlert = false},label:{Text("취소")
                         .font(.custom("Inter-Bold", size: 16))
                     .frame(maxWidth:.infinity)})
-                .foregroundColor(Color("MainThemeColor"))
+                .foregroundColor(Color("Orange500"))
                 .frame(maxWidth: .infinity,alignment: .center)
                 Divider()
                 Button(action:{
@@ -253,7 +253,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 },label:{Text("취소")
                         .font(.custom("Inter-Bold", size: 16))
                     .frame(maxWidth:.infinity)})
-                .foregroundColor(Color("MainThemeColor"))
+                .foregroundColor(Color("Orange500"))
                 .frame(maxWidth: .infinity,alignment: .center)
                 Divider()
                 Button(action:{
@@ -317,7 +317,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                         .frame(width: 4)
                                     Text(String(viewModel.postInfo.likeCount))
                                         .font(.custom("Inter-Regular", size: 10))
-                                        .foregroundColor(Color("MainThemeColor"))
+                                        .foregroundColor(Color("Orange500"))
                                 }
                                 
                                 HStack(alignment: .center) {

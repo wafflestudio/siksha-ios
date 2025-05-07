@@ -23,10 +23,10 @@ struct SegmentedPicker<T: Hashable>: View {
                         ZStack {
                             if self.selectedOption == option {
                                 RoundedRectangle(cornerRadius: 30)
-                                    .fill(Color("MainActiveColor"))
+                                    .fill(Color("Orange100"))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 30)
-                                            .stroke(Color("MainThemeColor"), lineWidth: 1)
+                                            .stroke(Color("Orange500"), lineWidth: 1)
                                     )
                             }
                             PickerContentView(text: format(option), needStarImage: isRateFilter && format(option) != "전체")

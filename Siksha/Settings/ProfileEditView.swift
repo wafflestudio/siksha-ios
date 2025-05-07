@@ -146,7 +146,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         Button(action: done) {
             ZStack(alignment: .center) {
                 RoundedRectangle(cornerRadius: 8.0)
-                    .fill(viewModel.enableDoneButton ? Color("MainThemeColor") : Color("Gray600"))
+                    .fill(viewModel.enableDoneButton ? Color("Orange500") : Color("Gray600"))
                 Text("완료")
                     .font(.custom("NanumSquareOTFB", size: 17))
             }
@@ -164,7 +164,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }) {
                 Text("취소")
                     .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(Color("MainThemeColor"))
+                    .foregroundColor(Color("Orange500"))
                     .padding(.leading, 20)
             }
             Spacer()
@@ -174,7 +174,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }) {
                 Text("OK")
                     .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(Color("MainThemeColor"))
+                    .foregroundColor(Color("Orange500"))
                     .padding(.trailing, 20)
             }
         }
@@ -206,7 +206,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 HStack(spacing: 0) {
                     Image("Error")
                         .frame(width: 14, height: 14)
-                        .foregroundColor(Color("MainThemeColor"))
+                        .foregroundColor(Color("Orange500"))
                         .padding(.trailing, 10)
                     Text("이미 존재하는 닉네임입니다.")
                         .font(.custom("NanumSquareOTFB", size: 12))

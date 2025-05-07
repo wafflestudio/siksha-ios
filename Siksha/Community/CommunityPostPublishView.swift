@@ -63,7 +63,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("MainThemeColor"))
+                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("Orange500"))
                         .frame(height: 60)
                     Text("완료")
                         .font(.custom("Inter-SemiBold", size: 14))
@@ -81,7 +81,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         }) {
             ZStack {
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("MainThemeColor"))
+                    .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("Orange500"))
                     .frame(height: 60)
                 Text("올리기")
                     .font(.custom("Inter-SemiBold", size: 17))
@@ -112,7 +112,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }
                 
                 configuration.label
-                    .foregroundColor(configuration.isOn ? Color("MainThemeColor") : Color(hex:0x575757))
+                    .foregroundColor(configuration.isOn ? Color("Orange500") : Color(hex:0x575757))
             }
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
             .contentShape(Rectangle())
@@ -236,9 +236,9 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                     Spacer()
                                     if viewModel.boardId == board.id {
                                         Text(board.name)
-                                            .foregroundColor(Color("MainThemeColor"))
+                                            .foregroundColor(Color("Orange500"))
                                         Image("CheckMark")
-                                            .foregroundColor(Color("MainThemeColor"))
+                                            .foregroundColor(Color("Orange500"))
                                     } else {
                                         Text(board.name)
                                             .foregroundColor(Color(hex: 0x575757))
@@ -284,7 +284,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             }) {
                 Text("OK")
                     .font(.custom("Inter-SemiBold", size: 16))
-                    .foregroundColor(Color("MainThemeColor"))
+                    .foregroundColor(Color("Orange500"))
                     .padding(.trailing, 20)
             }
         }
