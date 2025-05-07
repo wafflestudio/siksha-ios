@@ -37,7 +37,7 @@ struct TextView: UIViewRepresentable {
             uiView.textColor = .black
         } else {
             uiView.text = self.placeHolder
-            uiView.textColor = .gray600
+            uiView.textColor = UIColor(named: "Gray600")
         }
         
     }
