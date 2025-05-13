@@ -43,7 +43,7 @@
 			<string>dev</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>###</string>
+				<string>$(GOOGLE_URL)</string>
 			</array>
 		</dict>
 		<dict>
