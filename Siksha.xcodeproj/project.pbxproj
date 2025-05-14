@@ -106,6 +106,7 @@
 		4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED628352B11D51900ECE221 /* CommunityPostView.swift */; };
 		4EDDE7D32DD3A1A300178C52 /* GoogleService-Info-dev.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4EDDE7D22DD3A1A300178C52 /* GoogleService-Info-dev.plist */; };
 		4EDDE7D82DD3A28000178C52 /* bundle-dev.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 4EDDE7D72DD3A28000178C52 /* bundle-dev.xcconfig */; };
+		4EDDE7DD2DD42EE800178C52 /* bundle.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 4EDDE7DC2DD42EE800178C52 /* bundle.xcconfig */; };
 		4EE14E192A4810A9007B9312 /* RestaurantOrderViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */; };
 		4EE5729F2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */; };
 		4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */; };
@@ -269,6 +270,8 @@
 		4ED628352B11D51900ECE221 /* CommunityPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityPostView.swift; sourceTree = "<group>"; };
 		4EDDE7D22DD3A1A300178C52 /* GoogleService-Info-dev.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info-dev.plist"; sourceTree = "<group>"; };
 		4EDDE7D72DD3A28000178C52 /* bundle-dev.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "bundle-dev.xcconfig"; sourceTree = "<group>"; };
+		4EDDE7DB2DD42E9000178C52 /* bundle.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = bundle.xcconfig; sourceTree = "<group>"; };
+		4EDDE7DC2DD42EE800178C52 /* bundle.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = bundle.xcconfig; sourceTree = "<group>"; };
 		4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantOrderViewModel.swift; sourceTree = "<group>"; };
 		4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishViewModel.swift; sourceTree = "<group>"; };
 		4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostViewModel.swift; sourceTree = "<group>"; };
@@ -338,6 +341,7 @@
 		1E3A56DE25C6FCE600DBB3F4 = {
 			isa = PBXGroup;
 			children = (
+				4EDDE7DB2DD42E9000178C52 /* bundle.xcconfig */,
 				1E3A56E925C6FCE600DBB3F4 /* Siksha */,
 				1E3A570025C6FCE900DBB3F4 /* SikshaTests */,
 				1E3A570B25C6FCE900DBB3F4 /* SikshaUITests */,
@@ -565,6 +569,7 @@
 		1ECB251625F16FDB00875E18 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				4EDDE7DC2DD42EE800178C52 /* bundle.xcconfig */,
 				33DDF0E52DC213B800E202F1 /* GoogleService-Info.plist */,
 				2300D48B25FBD07F0037765D /* config.plist */,
 				4EDDE7D22DD3A1A300178C52 /* GoogleService-Info-dev.plist */,
@@ -784,6 +789,7 @@
 				1E3A57CE25C71F2200DBB3F4 /* NanumSquareOTFExtraBold.otf in Resources */,
 				4E4E22F02ABEC96300A81E47 /* Inter-Medium.ttf in Resources */,
 				4E4E22EB2ABEC96300A81E47 /* Inter-Bold.ttf in Resources */,
+				4EDDE7DD2DD42EE800178C52 /* bundle.xcconfig in Resources */,
 				1E3A57D325C71F2600DBB3F4 /* NanumSquareOTFRegular.otf in Resources */,
 				4E4E22E92ABEC96300A81E47 /* Inter-Thin.ttf in Resources */,
 				33DDF0E62DC213B800E202F1 /* GoogleService-Info.plist in Resources */,
@@ -1139,6 +1145,7 @@
 		};
 		1E3A571025C6FCE900DBB3F4 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4EDDE7DC2DD42EE800178C52 /* bundle.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -1175,6 +1182,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				"EXCLUDED_ARCHS[sdk=*]" = arm64;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1186,6 +1194,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
