@@ -33,7 +33,7 @@
 			<string>release</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>###</string>
+				<string>$(GOOGLE_URL)</string>
 			</array>
 		</dict>
 		<dict>
@@ -61,7 +61,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NMFClientId</key>
-	<string>###</string>
+	<string>$(NMFClientId)</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
