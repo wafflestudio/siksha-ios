@@ -94,3 +94,7 @@ config.plist
 GoogleService-Info.plist
 GoogleService-Info-dev.plist
 GoogleService-Info-rea.plist
+
+Siksha/Supporting Files/bundle.xcconfig
+
+Siksha/Supporting Files/bundle-dev.xcconfig
