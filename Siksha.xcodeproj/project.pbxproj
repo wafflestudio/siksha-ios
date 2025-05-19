@@ -75,6 +75,8 @@
 		330BAD1B2D4616CF003C4B8D /* MenuFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330BAD1A2D4616CF003C4B8D /* MenuFilterView.swift */; };
 		330C55112D4CCA480011345D /* SegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330C55102D4CCA3F0011345D /* SegmentedPicker.swift */; };
 		330C55132D4D047A0011345D /* Sliders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330C55122D4D04730011345D /* Sliders.swift */; };
+		33C4561F2DDB6CA600BEFAB2 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 33C4561E2DDB6CA600BEFAB2 /* GoogleSignIn */; };
+		33C456212DDB6CA600BEFAB2 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 33C456202DDB6CA600BEFAB2 /* GoogleSignInSwift */; };
 		33DDF0E62DC213B800E202F1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 33DDF0E52DC213B800E202F1 /* GoogleService-Info.plist */; };
 		45EF4169BF5F3B9E1C55FE7E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */; };
 		4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BDE232A7F75BC00046ADC /* CommunityView.swift */; };
@@ -314,9 +316,11 @@
 				741BE33A2CE3514D00A09881 /* KakaoSDKTemplate in Frameworks */,
 				45EF4169BF5F3B9E1C55FE7E /* Pods_Siksha.framework in Frameworks */,
 				741BE33C2CE3514D00A09881 /* KakaoSDKUser in Frameworks */,
+				33C456212DDB6CA600BEFAB2 /* GoogleSignInSwift in Frameworks */,
 				741BE3382CE3514D00A09881 /* KakaoSDKShare in Frameworks */,
 				741BE3342CE3514D00A09881 /* KakaoSDK in Frameworks */,
 				741BE3362CE3514D00A09881 /* KakaoSDKAuth in Frameworks */,
+				33C4561F2DDB6CA600BEFAB2 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -672,7 +676,6 @@
 				1E3A56E525C6FCE600DBB3F4 /* Resources */,
 				BF624A132BB5543F0061602B /* ShellScript */,
 				0EC3576B0B2259A1938F259B /* [CP] Embed Pods Frameworks */,
-				B2772880FE00AB5531FFAD74 /* [CP] Copy Pods Resources */,
 				33DDF0E72DC2170B00E202F1 /* Firebase plist */,
 			);
 			buildRules = (
@@ -754,6 +757,7 @@
 			mainGroup = 1E3A56DE25C6FCE600DBB3F4;
 			packageReferences = (
 				741BE3322CE3514D00A09881 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
+				33C4561D2DDB6CA600BEFAB2 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
 			);
 			productRefGroup = 1E3A56E825C6FCE600DBB3F4 /* Products */;
 			projectDirPath = "";
@@ -868,23 +872,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B2772880FE00AB5531FFAD74 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Siksha/Pods-Siksha-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BF624A132BB5543F0061602B /* ShellScript */ = {
@@ -1382,6 +1369,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		33C4561D2DDB6CA600BEFAB2 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.0;
+			};
+		};
 		741BE3322CE3514D00A09881 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -1393,6 +1388,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		33C4561E2DDB6CA600BEFAB2 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33C4561D2DDB6CA600BEFAB2 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		33C456202DDB6CA600BEFAB2 /* GoogleSignInSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33C4561D2DDB6CA600BEFAB2 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignInSwift;
+		};
 		741BE3332CE3514D00A09881 /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 741BE3322CE3514D00A09881 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
