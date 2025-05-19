@@ -8,7 +8,6 @@ target 'Siksha' do
   pod 'RealmSwift', '10.6.0'
   pod 'SwiftyJSON', '5.0.0'
   pod 'NMapsMap'
-  pod 'GoogleSignIn', '5.0.2'
   pod 'BSImagePicker', '3.3.1'
   pod 'JTAppleCalendar', '8.0.5'
   pod 'Firebase'
