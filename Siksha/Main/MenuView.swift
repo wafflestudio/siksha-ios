@@ -44,7 +44,7 @@ struct MenuView: View {
     }
     
     private let dimBackgroundColor = Color(.sRGB, white: 0, opacity: 0.6)
-    private let orangeColor = Color("main")
+    private let orangeColor = Color("Orange500")
     
     var body: some View {
         VStack(spacing: 0) {

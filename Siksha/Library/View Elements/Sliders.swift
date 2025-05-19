@@ -12,7 +12,7 @@ struct DistanceSliderView: View {
     let minValue: Double = 200
     let maxValue: Double = 1000
     let step: Double = 50
-    private let orangeColor = Color("main")
+    private let orangeColor = Color("Orange500")
     private let sliderBackgroundColor: Color = Color("Gray200")
     
     var body: some View {
@@ -81,7 +81,7 @@ struct PriceRangeSliderView: View {
     let minValue: Double = 2500
     let maxValue: Double = 10000
     let step: Double = 500
-    private let orangeColor = Color("main")
+    private let orangeColor = Color("Orange500")
     private let sliderBackgroundColor: Color = Color("Gray200")
     
     var body: some View {
