@@ -94,6 +94,7 @@
 		4E4E22EE2ABEC96300A81E47 /* Inter-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E52ABEC96300A81E47 /* Inter-ExtraBold.ttf */; };
 		4E4E22EF2ABEC96300A81E47 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E62ABEC96300A81E47 /* Inter-Regular.ttf */; };
 		4E4E22F02ABEC96300A81E47 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E72ABEC96300A81E47 /* Inter-Medium.ttf */; };
+		4E51987D2DDA2FD300F85388 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E51987C2DDA2FCE00F85388 /* Font.swift */; };
 		4E6465102B1D8DB200A4ABAD /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E64650F2B1D8DB200A4ABAD /* UserManager.swift */; };
 		4E6465122B1D8EEB00A4ABAD /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6465112B1D8EEB00A4ABAD /* User.swift */; };
 		4E74167D2A9B63A10010769F /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74167C2A9B63A00010769F /* CommentCell.swift */; };
@@ -258,6 +259,7 @@
 		4E4E22E52ABEC96300A81E47 /* Inter-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-ExtraBold.ttf"; sourceTree = "<group>"; };
 		4E4E22E62ABEC96300A81E47 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
 		4E4E22E72ABEC96300A81E47 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
+		4E51987C2DDA2FCE00F85388 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		4E64650F2B1D8DB200A4ABAD /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		4E6465112B1D8EEB00A4ABAD /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4E74167C2A9B63A00010769F /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
@@ -456,6 +458,7 @@
 		1E3A573825C6FE1600DBB3F4 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				4E51987C2DDA2FCE00F85388 /* Font.swift */,
 				BFA4759D2950B53500B41AA7 /* Extensions */,
 				1ECB250025F16D4D00875E18 /* UIRepresentable */,
 				1E3A573925C6FE2700DBB3F4 /* Extensions.swift */,
@@ -958,6 +961,7 @@
 				4E3D4EEF2A750078005C7AB2 /* TopPosts.swift in Sources */,
 				231C9CF825F83A850072C07A /* RestaurantInformationView.swift in Sources */,
 				4E79A1862C80B6BE007CE49B /* AlertView.swift in Sources */,
+				4E51987D2DDA2FD300F85388 /* Font.swift in Sources */,
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
 				BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
