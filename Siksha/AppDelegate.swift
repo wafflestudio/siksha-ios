@@ -36,8 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let naverMapClientId = configDict?.object(forKey: "naver_map_client_id") as! String
         
         NMFAuthManager.shared().clientId = naverMapClientId
-        
-        GIDSignIn.sharedInstance()?.clientID = googleClientId
+        GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: googleClientId)
+
         FirebaseApp.configure()
         
         KakaoSDK.initSDK(appKey: kakaoAppKey)
@@ -64,11 +64,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserManager.shared.loadUserInfo()
         
         return true
-    }
-    
-    @available(iOS 9.0, *)
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url)
     }
 
     // MARK: UISceneSession Lifecycle

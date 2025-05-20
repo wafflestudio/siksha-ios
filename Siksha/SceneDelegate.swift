@@ -9,15 +9,18 @@ import UIKit
 import SwiftUI
 import AuthenticationServices
 import KakaoSDKAuth
+import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
-
+    
     var window: UIWindow?
-        
+    
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {
             if (AuthApi.isKakaoTalkLoginUrl(url)) {
                 _ = AuthController.handleOpenUrl(url: url)
+            } else {
+                _ = GIDSignIn.sharedInstance.handle(url)
             }
         }
     }
@@ -43,15 +46,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     case .revoked, .notFound:
                         accessToken = nil
                         UserDefaults.standard.set(nil, forKey: "userToken")
-                        
-                        // TODO: - 없어도 잘 되는지 확인 필요
-//                        DispatchQueue.main.async {
-//                            let loginView = LoginView()
-//                            let loginController = UIHostingController(rootView: loginView)
-//                            
-//                            loginController.modalPresentationStyle = .fullScreen
-//                            UIApplication.shared.windows.first?.rootViewController?.present(loginController, animated: true, completion: nil)
-//                        }
                     default:
                         break
                     }
@@ -64,7 +58,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Navigation Bar 배경색 세팅
         UINavigationBar.changeBackgroundColor(color: UIColor(named: "main") ?? .clear)
-
+        
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
