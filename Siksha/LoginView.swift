@@ -1,5 +1,5 @@
 //
-//  SplashView.swift
+//  LoginView.swift
 //  Siksha
 //
 //  Created by 박종석 on 2021/02/21.
@@ -104,10 +104,15 @@ struct LoginView: View {
     
     func handleGoogleLogin() {
         if let viewController = viewControllerHolder {
-            GIDSignIn.sharedInstance()?.presentingViewController = viewController
+            GIDSignIn.sharedInstance.signIn(withPresenting: viewController) { signInResult, error in
+                guard let result = signInResult,
+                      let token = result.user.idToken?.tokenString else {
+                    viewModel.signInFailed = true
+                    return
+                }
+                viewModel.googleIdToken = token
+            }
         }
-        GIDSignIn.sharedInstance()?.delegate = viewModel
-        GIDSignIn.sharedInstance()?.signIn()
     }
     
     func presentMenu() {
