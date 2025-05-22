@@ -1,5 +1,5 @@
 {
-  "originHash" : "5133368ae904b02df740e616db8b1409fa25d54dca49ccd1cc6e9feaa4d0f3f1",
+  "originHash" : "f32229d8852b2cd30f64699611c876011b37d2c0dd825ef181d07b44b996fcee",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -116,6 +116,15 @@
       "state" : {
         "revision" : "040d087ac2267d2ddd4cca36c757d1c6a05fdbfe",
         "version" : "101.0.0"
+      }
+    },
+    {
+      "identity" : "jtapplecalendar",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/patchthecode/JTAppleCalendar",
+      "state" : {
+        "revision" : "718f0ab68ba0fcd2bc134f6e9d30edc1b9b038e1",
+        "version" : "8.0.5"
       }
     },
     {

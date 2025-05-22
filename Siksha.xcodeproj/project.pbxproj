@@ -85,6 +85,8 @@
 		33EA42002DDDAEC200A9ADD0 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 33EA41FF2DDDAEC200A9ADD0 /* FirebaseRemoteConfig */; };
 		33EA42032DDEFEC800A9ADD0 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 33EA42022DDEFEC800A9ADD0 /* RealmSwift */; };
 		33EA42062DDF037F00A9ADD0 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 33EA42022DDEFEC800A9ADD0 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		33EA42092DDF0DF100A9ADD0 /* JTAppleCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 33EA42082DDF0DF100A9ADD0 /* JTAppleCalendar */; };
+		33EA420B2DDF0E9C00A9ADD0 /* JTAppleCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 33EA420A2DDF0E9C00A9ADD0 /* JTAppleCalendar */; };
 		45EF4169BF5F3B9E1C55FE7E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */; };
 		4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BDE232A7F75BC00046ADC /* CommunityView.swift */; };
 		4E23C5A62D17DCDA0088C1F6 /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */; };
@@ -335,6 +337,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				741BE33A2CE3514D00A09881 /* KakaoSDKTemplate in Frameworks */,
+				33EA42092DDF0DF100A9ADD0 /* JTAppleCalendar in Frameworks */,
 				45EF4169BF5F3B9E1C55FE7E /* Pods_Siksha.framework in Frameworks */,
 				33EA42032DDEFEC800A9ADD0 /* RealmSwift in Frameworks */,
 				741BE33C2CE3514D00A09881 /* KakaoSDKUser in Frameworks */,
@@ -342,6 +345,7 @@
 				33EA41FC2DDDAEC200A9ADD0 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				33C456212DDB6CA600BEFAB2 /* GoogleSignInSwift in Frameworks */,
 				741BE3382CE3514D00A09881 /* KakaoSDKShare in Frameworks */,
+				33EA420B2DDF0E9C00A9ADD0 /* JTAppleCalendar in Frameworks */,
 				741BE3342CE3514D00A09881 /* KakaoSDK in Frameworks */,
 				741BE3362CE3514D00A09881 /* KakaoSDKAuth in Frameworks */,
 				33EA41FE2DDDAEC200A9ADD0 /* FirebaseCrashlytics in Frameworks */,
@@ -790,6 +794,7 @@
 				33EA41F72DDC6F1900A9ADD0 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
 				33EA41FA2DDDAEC200A9ADD0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				33EA42012DDEFEC800A9ADD0 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				33EA42072DDF0DF100A9ADD0 /* XCRemoteSwiftPackageReference "JTAppleCalendar" */,
 			);
 			productRefGroup = 1E3A56E825C6FCE600DBB3F4 /* Products */;
 			projectDirPath = "";
@@ -1247,8 +1252,6 @@
 					"-framework",
 					"\"BSImagePicker\"",
 					"-framework",
-					"\"JTAppleCalendar\"",
-					"-framework",
 					"\"NMapsGeometry\"",
 					"-framework",
 					"\"NMapsMap\"",
@@ -1298,8 +1301,6 @@
 					"-l\"z\"",
 					"-framework",
 					"\"BSImagePicker\"",
-					"-framework",
-					"\"JTAppleCalendar\"",
 					"-framework",
 					"\"NMapsGeometry\"",
 					"-framework",
@@ -1484,6 +1485,14 @@
 				minimumVersion = 20.0.2;
 			};
 		};
+		33EA42072DDF0DF100A9ADD0 /* XCRemoteSwiftPackageReference "JTAppleCalendar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/patchthecode/JTAppleCalendar";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.0.5;
+			};
+		};
 		741BE3322CE3514D00A09881 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -1534,6 +1543,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 33EA42012DDEFEC800A9ADD0 /* XCRemoteSwiftPackageReference "realm-swift" */;
 			productName = RealmSwift;
+		};
+		33EA42082DDF0DF100A9ADD0 /* JTAppleCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33EA42072DDF0DF100A9ADD0 /* XCRemoteSwiftPackageReference "JTAppleCalendar" */;
+			productName = JTAppleCalendar;
+		};
+		33EA420A2DDF0E9C00A9ADD0 /* JTAppleCalendar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33EA42072DDF0DF100A9ADD0 /* XCRemoteSwiftPackageReference "JTAppleCalendar" */;
+			productName = JTAppleCalendar;
 		};
 		741BE3332CE3514D00A09881 /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;

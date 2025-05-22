@@ -1,28 +1,24 @@
 PODS:
   - BSImagePicker (3.3.1)
-  - JTAppleCalendar (8.0.5)
   - NMapsGeometry (1.0.1)
   - NMapsMap (3.18.0):
     - NMapsGeometry
 
 DEPENDENCIES:
   - BSImagePicker (= 3.3.1)
-  - JTAppleCalendar (= 8.0.5)
   - NMapsMap
 
 SPEC REPOS:
   trunk:
     - BSImagePicker
-    - JTAppleCalendar
     - NMapsGeometry
     - NMapsMap
 
 SPEC CHECKSUMS:
   BSImagePicker: 0fe04b574d4d6b81093785d2af6c26227efc8428
-  JTAppleCalendar: 16c6501b22cb27520372c28b0a2e0b12c8d0cd73
   NMapsGeometry: 53c573ead66466681cf123f99f698dc8071a4b83
   NMapsMap: 36dc18a1f5f315121b33fccd2398c7a702bf0fc8
 
-PODFILE CHECKSUM: a6945ca33af946024987a55e1315a10cec7eb46d
+PODFILE CHECKSUM: 59510d405581bffb1c8ff1a80a71bcd2c81c7669
 
 COCOAPODS: 1.16.2
