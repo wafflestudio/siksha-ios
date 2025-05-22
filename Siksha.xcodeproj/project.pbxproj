@@ -378,7 +378,6 @@
 				1E3A570025C6FCE900DBB3F4 /* SikshaTests */,
 				1E3A570B25C6FCE900DBB3F4 /* SikshaUITests */,
 				1E3A56E825C6FCE600DBB3F4 /* Products */,
-				BB378484FB4B02EA3B0876A2 /* Pods */,
 				F13574AFDA3E6DA3A2951FE3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -651,13 +650,6 @@
 				4E79A1852C80B6BE007CE49B /* AlertView.swift */,
 			);
 			path = Community;
-			sourceTree = "<group>";
-		};
-		BB378484FB4B02EA3B0876A2 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
 			sourceTree = "<group>";
 		};
 		BF97DF512AAEFE2E0083FC6F /* Domain */ = {
