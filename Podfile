@@ -7,7 +7,6 @@ target 'Siksha' do
   # Pods for Siksha
   pod 'NMapsMap'
   pod 'BSImagePicker', '3.3.1'
-  pod 'JTAppleCalendar', '8.0.5'
 
 end
 
