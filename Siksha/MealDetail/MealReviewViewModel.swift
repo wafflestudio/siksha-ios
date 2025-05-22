@@ -6,8 +6,8 @@
 //
 
 import Foundation
+import UIKit
 import Combine
-import Realm
 import RealmSwift
 
 class MealReviewViewModel: ObservableObject {

@@ -78,6 +78,13 @@
 		33C4561F2DDB6CA600BEFAB2 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 33C4561E2DDB6CA600BEFAB2 /* GoogleSignIn */; };
 		33C456212DDB6CA600BEFAB2 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 33C456202DDB6CA600BEFAB2 /* GoogleSignInSwift */; };
 		33DDF0E62DC213B800E202F1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 33DDF0E52DC213B800E202F1 /* GoogleService-Info.plist */; };
+		33EA41F62DDC6CEC00A9ADD0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 33EA41F52DDC6CEC00A9ADD0 /* Kingfisher */; };
+		33EA41F92DDC6F1900A9ADD0 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 33EA41F82DDC6F1900A9ADD0 /* SwiftyJSON */; };
+		33EA41FC2DDDAEC200A9ADD0 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 33EA41FB2DDDAEC200A9ADD0 /* FirebaseAnalyticsWithoutAdIdSupport */; };
+		33EA41FE2DDDAEC200A9ADD0 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 33EA41FD2DDDAEC200A9ADD0 /* FirebaseCrashlytics */; };
+		33EA42002DDDAEC200A9ADD0 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 33EA41FF2DDDAEC200A9ADD0 /* FirebaseRemoteConfig */; };
+		33EA42032DDEFEC800A9ADD0 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 33EA42022DDEFEC800A9ADD0 /* RealmSwift */; };
+		33EA42062DDF037F00A9ADD0 /* RealmSwift in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 33EA42022DDEFEC800A9ADD0 /* RealmSwift */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		45EF4169BF5F3B9E1C55FE7E /* Pods_Siksha.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A020DC03047577BECDFF1D08 /* Pods_Siksha.framework */; };
 		4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E1BDE232A7F75BC00046ADC /* CommunityView.swift */; };
 		4E23C5A62D17DCDA0088C1F6 /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */; };
@@ -162,6 +169,20 @@
 			remoteInfo = Siksha;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		33EA42052DDF014000A9ADD0 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				33EA42062DDF037F00A9ADD0 /* RealmSwift in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1E3A56E725C6FCE600DBB3F4 /* Siksha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Siksha.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -315,11 +336,17 @@
 			files = (
 				741BE33A2CE3514D00A09881 /* KakaoSDKTemplate in Frameworks */,
 				45EF4169BF5F3B9E1C55FE7E /* Pods_Siksha.framework in Frameworks */,
+				33EA42032DDEFEC800A9ADD0 /* RealmSwift in Frameworks */,
 				741BE33C2CE3514D00A09881 /* KakaoSDKUser in Frameworks */,
+				33EA41F62DDC6CEC00A9ADD0 /* Kingfisher in Frameworks */,
+				33EA41FC2DDDAEC200A9ADD0 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				33C456212DDB6CA600BEFAB2 /* GoogleSignInSwift in Frameworks */,
 				741BE3382CE3514D00A09881 /* KakaoSDKShare in Frameworks */,
 				741BE3342CE3514D00A09881 /* KakaoSDK in Frameworks */,
 				741BE3362CE3514D00A09881 /* KakaoSDKAuth in Frameworks */,
+				33EA41FE2DDDAEC200A9ADD0 /* FirebaseCrashlytics in Frameworks */,
+				33EA42002DDDAEC200A9ADD0 /* FirebaseRemoteConfig in Frameworks */,
+				33EA41F92DDC6F1900A9ADD0 /* SwiftyJSON in Frameworks */,
 				33C4561F2DDB6CA600BEFAB2 /* GoogleSignIn in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -674,9 +701,10 @@
 				1E3A56E325C6FCE600DBB3F4 /* Sources */,
 				1E3A56E425C6FCE600DBB3F4 /* Frameworks */,
 				1E3A56E525C6FCE600DBB3F4 /* Resources */,
-				BF624A132BB5543F0061602B /* ShellScript */,
 				0EC3576B0B2259A1938F259B /* [CP] Embed Pods Frameworks */,
+				33EA42052DDF014000A9ADD0 /* Embed Frameworks */,
 				33DDF0E72DC2170B00E202F1 /* Firebase plist */,
+				BF624A132BB5543F0061602B /* Google Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -758,6 +786,10 @@
 			packageReferences = (
 				741BE3322CE3514D00A09881 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */,
 				33C4561D2DDB6CA600BEFAB2 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				33EA41F42DDC6CEC00A9ADD0 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				33EA41F72DDC6F1900A9ADD0 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				33EA41FA2DDDAEC200A9ADD0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				33EA42012DDEFEC800A9ADD0 /* XCRemoteSwiftPackageReference "realm-swift" */,
 			);
 			productRefGroup = 1E3A56E825C6FCE600DBB3F4 /* Products */;
 			projectDirPath = "";
@@ -874,7 +906,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BF624A132BB5543F0061602B /* ShellScript */ = {
+		BF624A132BB5543F0061602B /* Google Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
 			files = (
@@ -888,13 +920,14 @@
 				"$(TARGET_BUILD_DIR)/Siksha/Supporting Files/GoogleService-Info.plist",
 				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
 			);
+			name = "Google Crashlytics";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
+			shellScript = "${BUILD_DIR%Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1207,6 +1240,28 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 3.4.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"c++\"",
+					"-l\"z\"",
+					"-framework",
+					"\"BSImagePicker\"",
+					"-framework",
+					"\"JTAppleCalendar\"",
+					"-framework",
+					"\"NMapsGeometry\"",
+					"-framework",
+					"\"NMapsMap\"",
+					"-framework",
+					"\"Photos\"",
+					"-framework",
+					"\"RealmSwift\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"UIKit\"",
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1237,6 +1292,28 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 3.4.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-l\"c++\"",
+					"-l\"z\"",
+					"-framework",
+					"\"BSImagePicker\"",
+					"-framework",
+					"\"JTAppleCalendar\"",
+					"-framework",
+					"\"NMapsGeometry\"",
+					"-framework",
+					"\"NMapsMap\"",
+					"-framework",
+					"\"Photos\"",
+					"-framework",
+					"\"RealmSwift\"",
+					"-framework",
+					"\"Security\"",
+					"-framework",
+					"\"UIKit\"",
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -1375,6 +1452,38 @@
 				minimumVersion = 8.0.0;
 			};
 		};
+		33EA41F42DDC6CEC00A9ADD0 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.3.2;
+			};
+		};
+		33EA41F72DDC6F1900A9ADD0 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.2;
+			};
+		};
+		33EA41FA2DDDAEC200A9ADD0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.13.0;
+			};
+		};
+		33EA42012DDEFEC800A9ADD0 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 20.0.2;
+			};
+		};
 		741BE3322CE3514D00A09881 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kakao/kakao-ios-sdk";
@@ -1395,6 +1504,36 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 33C4561D2DDB6CA600BEFAB2 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		33EA41F52DDC6CEC00A9ADD0 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33EA41F42DDC6CEC00A9ADD0 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		33EA41F82DDC6F1900A9ADD0 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33EA41F72DDC6F1900A9ADD0 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+		33EA41FB2DDDAEC200A9ADD0 /* FirebaseAnalyticsWithoutAdIdSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33EA41FA2DDDAEC200A9ADD0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsWithoutAdIdSupport;
+		};
+		33EA41FD2DDDAEC200A9ADD0 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33EA41FA2DDDAEC200A9ADD0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		33EA41FF2DDDAEC200A9ADD0 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33EA41FA2DDDAEC200A9ADD0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+		33EA42022DDEFEC800A9ADD0 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33EA42012DDEFEC800A9ADD0 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
 		};
 		741BE3332CE3514D00A09881 /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;

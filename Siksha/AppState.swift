@@ -7,8 +7,6 @@
 //
 import Foundation
 import SwiftyJSON
-import Realm
-import RealmSwift
 import Combine
 
 public class AppState: ObservableObject {
