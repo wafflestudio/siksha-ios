@@ -1,5 +1,5 @@
 {
-  "originHash" : "f32229d8852b2cd30f64699611c876011b37d2c0dd825ef181d07b44b996fcee",
+  "originHash" : "7e72355ad8277da7b653e2208937173b3a1797dfe6c89158c29e7cd88cd94ecd",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -35,6 +35,15 @@
       "state" : {
         "revision" : "2781038865a80e2c425a1da12cc1327bcd56501f",
         "version" : "1.7.6"
+      }
+    },
+    {
+      "identity" : "bsimagepicker",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mikaoj/BSImagePicker",
+      "state" : {
+        "revision" : "87c300fac63538dfb26e17d491eaa2293e83b5e8",
+        "version" : "3.3.3"
       }
     },
     {
