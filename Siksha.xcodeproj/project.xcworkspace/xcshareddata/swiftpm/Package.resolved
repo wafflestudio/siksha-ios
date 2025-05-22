@@ -1,5 +1,5 @@
 {
-  "originHash" : "7e72355ad8277da7b653e2208937173b3a1797dfe6c89158c29e7cd88cd94ecd",
+  "originHash" : "5e0a7a63376d9c6d5d998b2407583a709307d41569face5ecc403974dd68c4a7",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Alamofire/Alamofire.git",
       "state" : {
-        "revision" : "e16d3481f5ed35f0472cb93350085853d754913f",
-        "version" : "5.10.1"
+        "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
+        "version" : "5.10.2"
       }
     },
     {
@@ -142,7 +142,7 @@
       "location" : "https://github.com/kakao/kakao-ios-sdk",
       "state" : {
         "branch" : "master",
-        "revision" : "ab4309c1950550add307046ad1e08024c7514603"
+        "revision" : "787763e335949dfad6b721aa04771e22d04e1493"
       }
     },
     {
@@ -197,6 +197,24 @@
       "state" : {
         "revision" : "f8d74e90eafa2ac0e760bc674b49f40b593b1483",
         "version" : "20.0.2"
+      }
+    },
+    {
+      "identity" : "spm-nmapsgeometry",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/navermaps/SPM-NMapsGeometry.git",
+      "state" : {
+        "revision" : "436d5e2e684f557faf5ef5862fd6633a42d7af11",
+        "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "spm-nmapsmap",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/navermaps/SPM-NMapsMap",
+      "state" : {
+        "revision" : "ad89e53fdfec3b8d8994280fb0414b5a7b1c3e8e",
+        "version" : "3.21.0"
       }
     },
     {
