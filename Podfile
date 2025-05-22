@@ -5,16 +5,9 @@ target 'Siksha' do
   use_frameworks!
 
   # Pods for Siksha
-  pod 'RealmSwift', '10.6.0'
-  pod 'SwiftyJSON', '5.0.0'
   pod 'NMapsMap'
   pod 'BSImagePicker', '3.3.1'
   pod 'JTAppleCalendar', '8.0.5'
-  pod 'Firebase'
-  pod 'Firebase/AnalyticsWithoutAdIdSupport'
-  pod 'Firebase/Crashlytics'
-  pod 'Firebase/RemoteConfig'
-  pod 'Kingfisher', '~> 7.0'
 
 end
 

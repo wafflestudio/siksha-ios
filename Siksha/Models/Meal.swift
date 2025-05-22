@@ -7,7 +7,6 @@
 
 import Foundation
 import SwiftyJSON
-import Realm
 import RealmSwift
 
 class Meal: Object {

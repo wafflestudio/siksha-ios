@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Realm
 import RealmSwift
 import Combine
 import SwiftyJSON
