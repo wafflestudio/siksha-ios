@@ -1,0 +1,5 @@
+git_url("git@github.com:wafflestudio/siksha-ios-private.git")
+
+storage_mode("git")
+
+username("apple@wafflestudio.com")
