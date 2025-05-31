@@ -89,7 +89,7 @@ enum SikshaAPI: URLRequestConvertible {
     case updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool)
     case deleteUser
 
-    static var baseURL = Config.shared.baseURL!
+    static var baseURL = Config.shared.baseURL
     
     var needToken: Bool {
         switch self {

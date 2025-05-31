@@ -17,8 +17,7 @@ class KakaoShareManager: ObservableObject {
     @Published var showWebView = false
     @Published var urlToLoad: String?
     
-    let kakaoAppKey = (UIApplication.shared.delegate as! AppDelegate).configDict?.object(forKey: "kakao_app_key") as! String
-    let templateId = Int64((UIApplication.shared.delegate as! AppDelegate).configDict?.object(forKey: "kakao_share_template_id") as! String) ?? 0
+    let templateId = Config.shared.kakaoShareTemplateId
     
     var kakaoShareInfo: [String: String] = [:]
     var maxMenus = 0
@@ -29,7 +28,7 @@ class KakaoShareManager: ObservableObject {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let today = dateFormatter.string(from: Date())
         kakaoShareInfo["date"] = selectedDateString == today ? "오늘" : selectedDateString
-
+        
         kakaoShareInfo["restaurant"] = restaurant.nameKr
         let maxMenus = min(restaurant.menus.count, 5)
         switch restaurant.menus.count <= 5 {
@@ -51,7 +50,7 @@ class KakaoShareManager: ObservableObject {
             }
         }
     }
-
+    
     func shareKakao(restaurant: Restaurant, selectedDateString: String) {
         setTempArgs(restaurant: restaurant, selectedDateString: selectedDateString)
         
