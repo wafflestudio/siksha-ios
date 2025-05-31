@@ -69,14 +69,14 @@ struct RenewalVOCView: View {
                 }, label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 8)
-                            .foregroundColor(viewModel.vocComment.count > 0 ? orangeColor : lightGrayColor)
+                            .foregroundColor(viewModel.vocComment.count > 0 && viewModel.postVOCStatus == .idle ? orangeColor : lightGrayColor)
                         
                         Text("전송하기")
                             .font(.custom("NanumSquareOTFB", size: 17))
                             .foregroundColor(.white)
                     }
                 })
-                .disabled(viewModel.vocComment.count == 0)
+                .disabled(viewModel.vocComment.count == 0 || viewModel.postVOCStatus != .idle)
                 .frame(height: 56)
                 .padding(16)
             }
@@ -90,8 +90,12 @@ struct RenewalVOCView: View {
                 Alert(title: Text("1:1 문의하기"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("확인"), action: {
                     if viewModel.postVOCStatus == .succeeded {
                         viewModel.vocComment = ""
+                        viewModel.postVOCStatus = .idle
+                        viewModel.showAlert = false
                         presentationMode.wrappedValue.dismiss()
                     } else {
+                        viewModel.postVOCStatus = .idle
+                        viewModel.showAlert = false
                         return
                     }
                 }))
