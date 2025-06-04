@@ -35,7 +35,7 @@ final class AlamofireNetworking: NetworkModuleProtocol {
 
         return request
             .validate()
-            .publishData(emptyResponseCodes:[201])
+            .publishData(emptyResponseCodes:[201,200])
             .tryMap { response in
                 if let error = response.error {
                     throw error

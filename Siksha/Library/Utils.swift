@@ -42,4 +42,13 @@ class Utils {
         
         return payload
     }
+    
+    func removeAllUserDefaultsExceptAccessToken(){
+        UserDefaults.standard.dictionaryRepresentation().keys.forEach{
+            key in
+            if key != "accessToken" {
+                UserDefaults.standard.removeObject(forKey: key)
+            }
+        }
+    }
 }
