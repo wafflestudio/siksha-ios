@@ -127,13 +127,12 @@ class RenewalSettingsViewModel: ObservableObject {
             removeAccountFailed = true
             return
         }
-        Utils.shared.removeAllUserDefaultsExceptAccessToken()
         repository.deleteUser()
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { [weak self] completionStatus in
                 switch completionStatus {
                 case .finished:
-                    UserDefaults.standard.removeObject(forKey: "accessToken")
+                    Utils.shared.removeAllUserDefaults()
                     completion(true)
                 case .failure(let error):
                     self?.error = ErrorHelper.categorize(error)
