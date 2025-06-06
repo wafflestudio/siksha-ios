@@ -132,7 +132,7 @@ class RenewalSettingsViewModel: ObservableObject {
             .sink(receiveCompletion: { [weak self] completionStatus in
                 switch completionStatus {
                 case .finished:
-                    UserDefaults.standard.set(nil, forKey: "accessToken")
+                    Utils.shared.removeAllUserDefaults()
                     completion(true)
                 case .failure(let error):
                     self?.error = ErrorHelper.categorize(error)

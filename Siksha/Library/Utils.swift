@@ -42,4 +42,11 @@ class Utils {
         
         return payload
     }
+    
+    func removeAllUserDefaults(){
+        UserDefaults.standard.dictionaryRepresentation().keys.forEach{
+            key in
+                UserDefaults.standard.removeObject(forKey: key)
+        }
+    }
 }
