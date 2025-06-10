@@ -119,7 +119,7 @@ class RenewalSettingsViewModel: ObservableObject {
     }
     
     func logOutAccount() {
-        UserDefaults.standard.set(nil, forKey: "accessToken")
+        UserDefaults.standard.removeObject(forKey: "accessToken")
     }
     
     func removeAccount(completion: @escaping (Bool) -> Void) {
