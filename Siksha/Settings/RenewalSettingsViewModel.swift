@@ -119,7 +119,7 @@ class RenewalSettingsViewModel: ObservableObject {
     }
     
     func logOutAccount() {
-        UserDefaults.standard.set(nil, forKey: "accessToken")
+        UserDefaults.standard.removeObject(forKey: "accessToken")
     }
     
     func removeAccount(completion: @escaping (Bool) -> Void) {
@@ -132,7 +132,7 @@ class RenewalSettingsViewModel: ObservableObject {
             .sink(receiveCompletion: { [weak self] completionStatus in
                 switch completionStatus {
                 case .finished:
-                    UserDefaults.standard.set(nil, forKey: "accessToken")
+                    Utils.shared.removeAllUserDefaults()
                     completion(true)
                 case .failure(let error):
                     self?.error = ErrorHelper.categorize(error)
