@@ -159,7 +159,7 @@ struct SettingsView: View {
                         message: Text("앱에서 로그아웃합니다."),
                         buttons: [
                             .destructive(Text("로그아웃"), action: {
-                                UserDefaults.standard.set(nil, forKey: "accessToken")
+                                UserDefaults.standard.removeObject(forKey: "accessToken")
                                 viewControllerHolder?.present(style: .fullScreen) {
                                     LoginView()
                                 }

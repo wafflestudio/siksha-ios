@@ -45,14 +45,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                         break // The Apple ID credential is valid.
                     case .revoked, .notFound:
                         accessToken = nil
-                        UserDefaults.standard.set(nil, forKey: "userToken")
+                        UserDefaults.standard.removeObject(forKey:  "userToken")
                     default:
                         break
                     }
                 }
             } else {
                 accessToken = nil
-                UserDefaults.standard.set(nil, forKey: "userToken")
+                UserDefaults.standard.removeObject(forKey:  "userToken")
             }
         }
 
