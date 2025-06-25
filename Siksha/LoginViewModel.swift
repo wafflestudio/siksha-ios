@@ -11,10 +11,12 @@ import GoogleSignIn
 import AuthenticationServices
 import Combine
 
-class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDelegate, GIDSignInDelegate {
+@MainActor
+class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDelegate {
     private var cancellables = Set<AnyCancellable>()
     
     @Published var kakaoIdToken: String? = nil
+    @Published var googleIdToken: String? = nil
     @Published var signInFailed: Bool = false
     
     var onSignedIn: () -> Void = {}
@@ -28,7 +30,17 @@ class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDeleg
                     return
                 }
                 
-                self.getTokenFromKakao(token: token)
+                self.authenticateWithKakao(token: token)
+            }
+            .store(in: &cancellables)
+        
+        $googleIdToken
+            .sink { [weak self] token in
+                guard let self = self, let token = token else {
+                    return
+                }
+                
+                self.authenticateWithGoogle(idToken: token)
             }
             .store(in: &cancellables)
     }
@@ -39,7 +51,6 @@ class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDeleg
         #endif
         
         Networking.shared.getAccessToken(token: token, endPoint: endPoint)
-            .receive(on: RunLoop.main)
             .sink { result in
                 guard let data = result.value,
                       let accessToken = try? JSON(data: data)["access_token"].stringValue,
@@ -63,24 +74,13 @@ class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDeleg
     
     // MARK: - Google Sign in
     
-    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        if let error = error {
-            if (error as NSError).code == GIDSignInErrorCode.hasNoAuthInKeychain.rawValue {
-                print("The user has not signed in before or they have since signed out.")
-            } else {
-                print("\(error.localizedDescription)")
-            }
-            return
-        }
-
-        let idToken = user.authentication.idToken ?? "" // Safe to send to the server
-        
+    func authenticateWithGoogle(idToken: String) {
         requestTokenToSikshaAPI(token: idToken, endPoint: "google")
     }
     
     // MARK: - Kakao Sign in
     
-    func getTokenFromKakao(token: String) {
+    func authenticateWithKakao(token: String) {
         requestTokenToSikshaAPI(token: token, endPoint: "kakao")
     }
     

@@ -14,30 +14,17 @@ import FirebaseCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    public var configDict: NSDictionary?
-    
+
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        #if DEBUG
-        let configKey = "debug"
-        Config.shared.baseURL = "https://siksha-api-dev.wafflestudio.com"
-        #else
-        let configKey = "release"
-        Config.shared.baseURL = "https://siksha-api.wafflestudio.com"
-        #endif
-        
-        let dictPath = Bundle.main.path(forResource: "config", ofType: "plist")
-        self.configDict = NSDictionary(contentsOfFile: dictPath!)!.object(forKey: configKey) as? NSDictionary
-        
-        
-        let googleClientId = configDict?.object(forKey: "google_client_id") as! String
-        let kakaoAppKey = configDict?.object(forKey: "kakao_app_key") as! String
-        let naverMapClientId = configDict?.object(forKey: "naver_map_client_id") as! String
+        let googleClientId = Config.shared.googleClientId
+        let naverMapClientId = Config.shared.naverMapClientId
+        let kakaoAppKey = Config.shared.kakaoAppKey
         
         NMFAuthManager.shared().clientId = naverMapClientId
-        
-        GIDSignIn.sharedInstance()?.clientID = googleClientId
+        GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: googleClientId)
+
         FirebaseApp.configure()
         
         KakaoSDK.initSDK(appKey: kakaoAppKey)
@@ -64,11 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserManager.shared.loadUserInfo()
         
         return true
-    }
-    
-    @available(iOS 9.0, *)
-    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
-        return GIDSignIn.sharedInstance().handle(url)
     }
 
     // MARK: UISceneSession Lifecycle

@@ -23,32 +23,16 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>kakao${kakao_app_key}</string>
+				<string>kakao$(KAKAO_APP_KEY)</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>release</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>$(GOOGLE_URL)</string>
 			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLName</key>
-			<string>dev</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>$(GOOGLE_URL)</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>None</string>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
@@ -61,7 +45,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NMFClientId</key>
-	<string>$(NMFClientId)</string>
+	<string>$(NAVER_MAP_CLIENT_ID)</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

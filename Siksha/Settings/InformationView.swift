@@ -124,7 +124,7 @@ struct InformationView: View {
                             return
                         }
                         
-                        UserDefaults.standard.set(nil, forKey: "accessToken")
+                        UserDefaults.standard.removeObject(forKey: "accessToken")
                         
                         viewControllerHolder?.present(style: .fullScreen) {
                             LoginView()
