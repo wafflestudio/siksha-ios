@@ -57,8 +57,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
 
         // Navigation Bar 배경색 세팅
-        UINavigationBar.changeBackgroundColor(color: UIColor(named: "main") ?? .clear)
-        
+        UINavigationBar.changeBackgroundColor(color: UIColor(named: "Orange500") ?? .clear)
+
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)

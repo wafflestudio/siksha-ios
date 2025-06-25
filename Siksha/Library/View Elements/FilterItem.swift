@@ -32,11 +32,11 @@ struct FilterItem: View {
         }
         .frame(height: 18)
         .padding(EdgeInsets(top: 8, leading: 10, bottom: 8, trailing: 10))
-        .background(isOn ? Color("MainActiveColor") : .white)
+        .background(isOn ? Color("Orange100") : .white)
         .cornerRadius(30)
         .overlay(
             RoundedRectangle(cornerRadius: 30)
-                .strokeBorder(isOn ? Color("MainThemeColor") : Color("Gray200"), lineWidth: 1)
+                .strokeBorder(isOn ? Color("Orange500") : Color("Gray200"), lineWidth: 1)
         )
     }
 }

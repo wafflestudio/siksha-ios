@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FestivalSwitchStyle: ToggleStyle {
-    private let onColor = LinearGradient(colors: [Color("main"), Color(hex: 0xFF9DA4)], startPoint: .leading, endPoint: .trailing)
+    private let onColor = LinearGradient(colors: [Color("Orange500"), Color(hex: 0xFF9DA4)], startPoint: .leading, endPoint: .trailing)
     private let offColor = LinearGradient(colors: [Color("Gray500")], startPoint: .leading, endPoint: .trailing)
     
     func makeBody(configuration: Configuration) -> some View {

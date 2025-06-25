@@ -226,7 +226,7 @@ struct MenuFilterView: View {
                         .foregroundStyle(.white)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color("main"))
+                                .fill(Color("Orange500"))
                         )
                         .onTapGesture {
                             applyFilters()
@@ -361,14 +361,14 @@ fileprivate struct CategoryButton: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
-            .stroke(isSelected ? Color("main") : Color("Gray200"))
+            .stroke(isSelected ? Color("Orange500") : Color("Gray200"))
             .frame(height: 34)
             .overlay(
                 Text(category)
                     .font(.custom("NanumSquareOTFB", size: 13))
                     .foregroundColor(.black)
             )
-            .background(isSelected ? Color("MainActiveColor") : .clear, in: RoundedRectangle(cornerRadius: 30))
+            .background(isSelected ? Color("Orange100") : .clear, in: RoundedRectangle(cornerRadius: 30))
     }
 }
 

@@ -39,7 +39,7 @@ struct RestaurantInformationView: View {
             .padding(EdgeInsets(top: 14, leading: 16, bottom: 10, trailing: 16))
 
             if position != nil {
-                Color.init("main")
+                Color.init("Orange500")
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
                     .padding([.leading, .trailing], 16)
@@ -58,7 +58,7 @@ struct RestaurantInformationView: View {
                             .frame(width: 16, height: 16)
                         Text(restaurant.addr)
                             .font(.custom("NanumSquareOTFR", size: 14))
-                            .foregroundColor(Color("LightFontColor"))
+                            .foregroundColor(Color("BlackColor"))
                     }
                     .padding(EdgeInsets(top: 16, leading: 16, bottom: 12, trailing: 16))
                     
@@ -66,7 +66,7 @@ struct RestaurantInformationView: View {
                         .cornerRadius(10.0)
                         .frame(height: 250)
                         .padding(EdgeInsets(top: 0, leading: 16, bottom: 24, trailing: 16))
-                    Color.init("DarkBackgroundColor")
+                    Color.init("Gray100")
                         .frame(height: 10)
                         .frame(maxWidth: .infinity)
                 }
@@ -79,7 +79,7 @@ struct RestaurantInformationView: View {
                 }
                 .padding(EdgeInsets(top: 24, leading: 16, bottom: 8, trailing: 16))
                 
-                Color.init("main")
+                Color.init("Orange500")
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
                     .padding([.leading, .trailing], 16)

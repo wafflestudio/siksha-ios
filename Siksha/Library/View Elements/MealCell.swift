@@ -10,10 +10,10 @@ import SwiftUI
 struct MealCell: View {
     @ObservedObject var viewModel: MealInfoViewModel
     private var vegetarian: Bool = false
-    private let orangeColor = Color.init("main")
-    private let grayColor = Color.init("ReviewHighColor")
-    private let lightGrayColor = Color.init("ReviewMediumColor")
-    private let lighterGrayColor = Color.init("ReviewLowColor")
+    private let orangeColor = Color.init("Orange500")
+    private let grayColor = Color.init("Gray900")
+    private let lightGrayColor = Color.init("Gray700")
+    private let blackColor = Color.init("BlackColor")
     var formattedPrice: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -33,7 +33,7 @@ struct MealCell: View {
             Text("\(viewModel.meal.nameKr)")
                 .multilineTextAlignment(.leading)
                 .font(.custom("NanumSquareOTFR", size: 15))
-                .foregroundColor(.black)
+                .foregroundColor(blackColor)
                 .padding(.top, 3)
             
             if vegetarian {
@@ -48,13 +48,13 @@ struct MealCell: View {
             
             Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
                 .font(.custom("NanumSquareOTFR", size: 14))
-                .foregroundColor(.black)
+                .foregroundColor(blackColor)
                 .frame(width: 50)
                 .padding(.top, 3)
 
             Text(viewModel.meal.reviewCnt > 0 ? String(format: "%.1f", viewModel.meal.score) : "-")
                 .font(.custom("NanumSquareOTFB", size: 15))
-                .foregroundColor(viewModel.meal.reviewCnt > 0 ? viewModel.meal.score > 4.0 ? grayColor : viewModel.meal.score <= 4.0 && viewModel.meal.score >= 3.0 ? lightGrayColor : lighterGrayColor : lighterGrayColor)
+                .foregroundColor(blackColor)
                 .frame(width: 35, height: 20)
                 .padding(.top, 0.5)
             

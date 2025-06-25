@@ -206,7 +206,7 @@ struct RenewalSettingsView: View {
             HStack(alignment: .center) {
                 Text("1:1 문의하기")
                     .font(.custom("NanumSquareOTFR", size: 15))
-                    .foregroundColor(Color("main"))
+                    .foregroundColor(Color("Orange500"))
                     .padding([.top, .bottom], 15)
                     .padding(.leading, 16)
                 
