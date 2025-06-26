@@ -11,6 +11,7 @@ import GoogleSignIn
 import NMapsMap
 import RealmSwift
 import FirebaseCore
+import Mixpanel
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -28,6 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         KakaoSDK.initSDK(appKey: kakaoAppKey)
+        setupMixpanel()
         
         let config = Realm.Configuration(
             schemaVersion: 2, // 새로운 스키마 버전 설정
@@ -51,6 +53,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserManager.shared.loadUserInfo()
         
         return true
+    }
+    
+    private func setupMixpanel() {
+        let mixpanelToken = Config.shared.mixpanelToken
+        
+        Mixpanel.initialize(
+            token: mixpanelToken,
+            trackAutomaticEvents: false
+        )
+        
+        #if DEBUG
+        Mixpanel.mainInstance().loggingEnabled = true
+        #endif
     }
 
     // MARK: UISceneSession Lifecycle
