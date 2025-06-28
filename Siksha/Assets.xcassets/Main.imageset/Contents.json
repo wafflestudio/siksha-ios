@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "MainOn_1x.png",
+      "filename" : "Meal-enabled.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "MainOn_2x.png",
+      "filename" : "Meal-enabled@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "MainOn_3x.png",
+      "filename" : "Meal-enabled@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

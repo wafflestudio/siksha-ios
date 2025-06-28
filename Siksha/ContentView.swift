@@ -18,7 +18,7 @@ private extension ContentView {
                     Image((self.selectedTab == item.id ? item.buttonImage[0] : item.buttonImage[1]))
                         .renderingMode(.original)
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 36, height: 46)
                 }
                 .padding(.bottom, geometry.safeAreaInsets.bottom)
                 .transaction { transaction in
