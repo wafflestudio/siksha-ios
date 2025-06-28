@@ -33,7 +33,7 @@
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="9kk-LO-ktx"/>
-                        <color key="backgroundColor" name="main"/>
+                        <color key="backgroundColor" name="Orange500"/>
                         <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="5ZA-cO-opA" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="MWc-I5-RgU"/>
@@ -51,7 +51,7 @@
     <resources>
         <image name="sikshaSplash" width="86" height="50"/>
         <image name="wafflestudioTextLogo" width="189.5" height="11"/>
-        <namedColor name="main">
+        <namedColor name="Orange500">
             <color red="1" green="0.58431372549019611" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
     </resources>

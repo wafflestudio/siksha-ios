@@ -1,5 +1,5 @@
 //
-//  SplashView.swift
+//  LoginView.swift
 //  Siksha
 //
 //  Created by 박종석 on 2021/02/21.
@@ -62,7 +62,7 @@ struct LoginView: View {
             }
             .frame(width: geometry.size.width, height: geometry.size.height + geometry.safeAreaInsets.bottom + geometry.safeAreaInsets.top)
             .padding(.top, -geometry.safeAreaInsets.top)
-            .background(Color("main"))
+            .background(Color("Orange500"))
             .alert(isPresented: $viewModel.signInFailed, content: {
                 Alert(title: Text("로그인"), message: Text("로그인을 실패했습니다. 다시 시도해주세요."), dismissButton: .default(Text("확인")))
             })
@@ -104,10 +104,15 @@ struct LoginView: View {
     
     func handleGoogleLogin() {
         if let viewController = viewControllerHolder {
-            GIDSignIn.sharedInstance()?.presentingViewController = viewController
+            GIDSignIn.sharedInstance.signIn(withPresenting: viewController) { signInResult, error in
+                guard let result = signInResult,
+                      let token = result.user.idToken?.tokenString else {
+                    viewModel.signInFailed = true
+                    return
+                }
+                viewModel.googleIdToken = token
+            }
         }
-        GIDSignIn.sharedInstance()?.delegate = viewModel
-        GIDSignIn.sharedInstance()?.signIn()
     }
     
     func presentMenu() {

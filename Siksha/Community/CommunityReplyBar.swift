@@ -37,7 +37,7 @@ struct CommunityReplyBar: View {
                         }){
                             Text("올리기")
                                 .padding(EdgeInsets(top: 6.5, leading: 11, bottom: 6.5, trailing: 11))
-                                .background(Color("main"))
+                                .background(Color("Orange500"))
                                 .font(.custom("NanumSquareOTFB", size: 12))
                                 .foregroundColor(.white)
                                 .cornerRadius(6)
@@ -55,7 +55,7 @@ struct CommunityReplyBar: View {
                     if isAnonymous {
                         ZStack {
                             RoundedRectangle(cornerRadius: 15.0)
-                                .fill(Color("MainThemeColor"))
+                                .fill(Color("Orange500"))
                                 .frame(width: 34, height: 25)
                             Text("익명")
                                 .font(.custom("Inter-SemiBold", size: 12))
@@ -64,11 +64,11 @@ struct CommunityReplyBar: View {
                     } else {
                         ZStack {
                             RoundedRectangle(cornerRadius: 15.0)
-                                .stroke(Color("MainThemeColor"))
+                                .stroke(Color("Orange500"))
                                 .frame(width: 34, height: 25)
                             Text("익명")
                                 .font(.custom("Inter-SemiBold", size: 12))
-                                .foregroundColor(Color("MainThemeColor"))
+                                .foregroundColor(Color("Orange500"))
                         }
                     }
                 }
@@ -95,7 +95,7 @@ struct CommunityReplyBar: View {
                     }
                 
                 configuration.label
-                    .foregroundColor(configuration.isOn ? Color("MainThemeColor") : Color(hex:0x575757))
+                    .foregroundColor(configuration.isOn ? Color("Orange500") : Color(hex:0x575757))
             }
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
             .contentShape(Rectangle())

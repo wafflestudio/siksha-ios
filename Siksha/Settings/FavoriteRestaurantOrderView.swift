@@ -44,7 +44,7 @@ struct FavoriteRestaurantOrderView: View {
                 Spacer()
                 Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
                     .font(.custom("NanumSquareOTFR", size: 14))
-                    .foregroundColor(.init("DefaultFontColor"))
+                    .foregroundColor(.init("Gray700"))
                 Spacer()
             }
             .padding(.top, 20)
@@ -67,7 +67,7 @@ struct FavoriteRestaurantOrderView: View {
                     
                     Text("즐겨찾기에 추가된 식당이 없습니다.")
                         .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(.init("DefaultFontColor"))
+                        .foregroundColor(.init("Gray700"))
                     
                     Spacer()
                 }

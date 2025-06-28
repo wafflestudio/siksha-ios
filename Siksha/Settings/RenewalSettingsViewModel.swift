@@ -79,15 +79,7 @@ class RenewalSettingsViewModel: ObservableObject {
             }
             .store(in: &cancellables)
          
-        $postVOCStatus
-            .dropFirst()
-            .sink { [weak self] status in
-                guard let self = self else { return }
-                
-                self.alertMessage = status == .failed ? "전송에 실패했습니다. 다시 시도해주세요." : "전송했습니다."
-                self.showAlert = true
-            }
-            .store(in: &cancellables)
+      
     }
     
     
@@ -105,14 +97,20 @@ class RenewalSettingsViewModel: ObservableObject {
     }
     
     func sendVOC() {
+        postVOCStatus = .loading
         repository.submitVOC(comment: vocComment, platform: "iOS")
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { [weak self] completionStatus in
                 switch completionStatus {
                 case .finished:
                     self?.postVOCStatus = .succeeded
+                    self?.alertMessage = "전송했습니다."
+                    self?.showAlert = true
                 case .failure(let error):
+                    self?.postVOCStatus = .failed
                     self?.error = ErrorHelper.categorize(error)
+                    self?.alertMessage = "전송에 실패했습니다. 다시 시도해주세요."
+                    self?.showAlert = true
                 }
             }, receiveValue: { value in
                 
@@ -121,7 +119,7 @@ class RenewalSettingsViewModel: ObservableObject {
     }
     
     func logOutAccount() {
-        UserDefaults.standard.set(nil, forKey: "accessToken")
+        UserDefaults.standard.removeObject(forKey: "accessToken")
     }
     
     func removeAccount(completion: @escaping (Bool) -> Void) {
@@ -134,7 +132,7 @@ class RenewalSettingsViewModel: ObservableObject {
             .sink(receiveCompletion: { [weak self] completionStatus in
                 switch completionStatus {
                 case .finished:
-                    UserDefaults.standard.set(nil, forKey: "accessToken")
+                    Utils.shared.removeAllUserDefaults()
                     completion(true)
                 case .failure(let error):
                     self?.error = ErrorHelper.categorize(error)

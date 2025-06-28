@@ -10,10 +10,10 @@ import SwiftUI
 struct MealCell: View {
     @ObservedObject var viewModel: MealInfoViewModel
     private var vegetarian: Bool = false
-    private let orangeColor = Color.init("main")
-    private let grayColor = Color.init("ReviewHighColor")
-    private let lightGrayColor = Color.init("ReviewMediumColor")
-    private let lighterGrayColor = Color.init("ReviewLowColor")
+    private let orangeColor = Color.init("Orange500")
+    private let grayColor = Color.init("Gray900")
+    private let lightGrayColor = Color.init("Gray700")
+    private let blackColor = Color.init("BlackColor")
     var formattedPrice: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -33,7 +33,7 @@ struct MealCell: View {
             Text("\(viewModel.meal.nameKr)")
                 .multilineTextAlignment(.leading)
                 .font(.custom("NanumSquareOTFR", size: 15))
-                .foregroundColor(.black)
+                .foregroundColor(blackColor)
             
             if vegetarian {
                 Image("Vegetarian")
@@ -46,23 +46,24 @@ struct MealCell: View {
             if viewModel.meal.price < 10000{
                 Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
                     .customFont(font: .text14(weight:.Regular))
-                    .foregroundColor(.black)
+                    .foregroundColor(blackColor)
                     .frame(width: 38)
             }
             else{
                 Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
                     .customFont(font: .text14(weight:.Regular))
-                    .foregroundColor(.black)
+                    .foregroundColor(blackColor)
             }
             Spacer()
                 .frame(width:16)
                 Text(viewModel.meal.reviewCnt > 0 ? String(format: "%.1f", viewModel.meal.score) : "-")
                     .customFont(font: .text14(weight: .Regular))
-                    .foregroundColor(.black)
+                    .foregroundColor(blackColor)
                     .frame(width:23)
                     
             Spacer()
                 .frame(width:16)
+
             Button(action: {
             viewModel.toggleLike()
             }){

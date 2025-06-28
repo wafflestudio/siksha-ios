@@ -125,7 +125,7 @@ struct SettingsView: View {
                             }) {
                                 Text("1:1 문의하기")
                                     .font(.custom("NanumSquareOTFR", size: 15))
-                                    .foregroundColor(Color("main"))
+                                    .foregroundColor(Color("Orange500"))
                             }
                             .padding(.bottom, 8)
                             
@@ -159,7 +159,7 @@ struct SettingsView: View {
                         message: Text("앱에서 로그아웃합니다."),
                         buttons: [
                             .destructive(Text("로그아웃"), action: {
-                                UserDefaults.standard.set(nil, forKey: "accessToken")
+                                UserDefaults.standard.removeObject(forKey: "accessToken")
                                 viewControllerHolder?.present(style: .fullScreen) {
                                     LoginView()
                                 }

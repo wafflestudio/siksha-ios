@@ -24,7 +24,7 @@ struct HorizontalGraph: View {
         }
     }
     
-    private let orangeColor = Color.init("main")
+    private let orangeColor = Color.init("Orange500")
     
     var body: some View {
                 
