@@ -15,16 +15,16 @@ struct OperatingHoursCell: View {
         self.type = type
         
         if hours.count == 3 {
-            self.hours.append(("아침", hours[0]))
-            self.hours.append(("점심", hours[1]))
-            self.hours.append(("저녁", hours[2]))
+            self.hours.append(("BreakFastTime", hours[0]))
+            self.hours.append(("LunchTime", hours[1]))
+            self.hours.append(("DinnerTime", hours[2]))
         } else if hours.count == 2 {
             if isFestivalRestaurant {
                 self.hours.append(("5/13, 5/14", hours[0]))
                 self.hours.append(("5/15", hours[1]))
             } else {
-                self.hours.append(("점심", hours[0]))
-                self.hours.append(("저녁", hours[1]))
+                self.hours.append(("LunchTime", hours[0]))
+                self.hours.append(("DinnerTime", hours[1]))
             }
         } else if hours.count == 1 {
             self.hours.append(("", hours[0]))
@@ -34,32 +34,29 @@ struct OperatingHoursCell: View {
     var body: some View {
         HStack(alignment: .top) {
             Text(type)
-                .font(.custom("NanumSquareOTFR", size: 14))
-                .padding(EdgeInsets(top: 0, leading: 3, bottom: 0, trailing: 0))
-
-            
+                .customFont(font: .text14(weight: .Bold))
             Spacer()
-            
+        
             if hours.count > 0 {
-                VStack(alignment: .trailing, spacing: 8) {
+                VStack(alignment: .trailing, spacing: 4) {
                     ForEach(hours, id: \.0) { hourType, hour in
-                        HStack(spacing: 10) {
-                            Text(hourType)
-                                .font(.custom("NanumSquareOTFR", size: 12))
-                                .foregroundColor(.init("Color/Foundation/Orange/500"))
-                            
+                        HStack(spacing: 0.5) {
+                            Image(hourType)
+                                .resizable()
+                                .frame(width:20,height:20)
                             Text(hour)
-                                .font(.custom("NanumSquareOTFR", size: 14))
-                                .frame(width: 90, alignment: .trailing)
+                                .customFont(font: .text14(weight: .Regular))
                         }
+                        .padding(.zero)
                     }
-                }
+                }.padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 6))
             } else {
                 Text("정보가 없습니다")
-                    .font(.custom("NanumSquareOTFR", size: 14))
+                    .customFont(font: .text14(weight: .Regular))
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 7))
             }
         }
-        .padding(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+        .padding(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
     }
 }
 
@@ -79,7 +76,7 @@ struct OperatingHoursTable: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing:0) {
             OperatingHoursCell(type: "주중", hours: wdHours, isFestivalRestaurant: self.isFestivalRestaurant)
             
             dividerColor
@@ -106,6 +103,13 @@ struct OperatingHoursTable_Previews: PreviewProvider {
         operatingHours[1] = "11:30 - 13:30\n17:30 - 18:30"
 
         
-        return OperatingHoursTable(hours: operatingHours, isFestivalRestaurant: false)
+        return
+        VStack(spacing:0){
+            Color(.black)
+                .frame(height:1)
+                .padding(.zero)
+            OperatingHoursTable(hours: operatingHours, isFestivalRestaurant: false)
+        }
+        .preferredColorScheme(.light)
     }
 }
