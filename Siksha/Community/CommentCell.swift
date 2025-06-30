@@ -58,14 +58,14 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                         .frame(width:8.2)
                     Text(relativeDate)
                         .font(.custom("NanumSquareOTFR", size: 10))
-                        .foregroundColor(.init("Gray600"))
+                        .foregroundColor(.init("Color/Foundation/Gray/600"))
                     
                 }
                 Spacer()
                     .frame(height:9.37)
                 Text(comment.content)
                     .font(.custom("NanumSquareOTFR", size: 12))
-                    .foregroundColor(.init("Gray900"))
+                    .foregroundColor(.init("Color/Foundation/Gray/900"))
                 
                 
                 Image("etc")
@@ -92,10 +92,10 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                             .padding(.init(top: 0, leading: 0, bottom: 4, trailing: 0))
                         Text("\(comment.likeCnt)")
                             .font(.custom("Inter-Regular", size: 8))
-                            .foregroundColor(.init("Orange500"))
+                            .foregroundColor(.init("Color/Foundation/Orange/500"))
                     }
                     .padding(EdgeInsets(top: 12.5, leading: 11, bottom: 12.5, trailing: 11))
-                    .background(Color("Gray50"))
+                    .background(Color("Color/Foundation/Gray/50"))
                     .cornerRadius(6)
                     Spacer()
                         .frame(height: 10)
@@ -134,7 +134,7 @@ struct EditCommentView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
-                Color("Orange500")
+                Color("Color/Foundation/Orange/500")
                     .edgesIgnoringSafeArea(.top)
                 
                 HStack {
@@ -155,7 +155,7 @@ struct EditCommentView: View {
                         .font(.custom("NanumSquareOTFR", size: 15))
                 }
                 .padding()
-                .background(Color("Orange500").opacity(0))
+                .background(Color("Color/Foundation/Orange/500").opacity(0))
             }
             .frame(height: 40)
             

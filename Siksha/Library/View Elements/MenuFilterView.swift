@@ -98,7 +98,7 @@ struct MenuFilterView: View {
                             Image("Close")
                                 .resizable()
                                 .frame(width: 32, height: 32)
-                                .foregroundStyle(Color("Gray900"))
+                                .foregroundStyle(Color("Color/Foundation/Gray/900"))
                         }
                         .padding(.trailing, 16)
                     }
@@ -213,7 +213,7 @@ struct MenuFilterView: View {
                         .foregroundStyle(.white)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color("Gray500"))
+                                .fill(Color("Color/Foundation/Gray/500"))
                         )
                         .onTapGesture {
                             resetFilters()
@@ -226,7 +226,7 @@ struct MenuFilterView: View {
                         .foregroundStyle(.white)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color("Orange500"))
+                                .fill(Color("Color/Foundation/Orange/500"))
                         )
                         .onTapGesture {
                             applyFilters()
@@ -361,7 +361,7 @@ fileprivate struct CategoryButton: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
-            .stroke(isSelected ? Color("Orange500") : Color("Gray200"))
+            .stroke(isSelected ? Color("Color/Foundation/Orange/500") : Color("Gray200"))
             .frame(height: 34)
             .overlay(
                 Text(category)
@@ -426,7 +426,7 @@ fileprivate struct MenuFilterViewCloseButtonModifier: ViewModifier {
                     Image("Close")
                         .resizable()
                         .frame(width: 32, height: 32)
-                        .foregroundStyle(Color("Gray900"))
+                        .foregroundStyle(Color("Color/Foundation/Gray/900"))
                 }
                 .padding(.top, 14)
                 .padding(.trailing, 16)

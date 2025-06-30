@@ -44,7 +44,7 @@ struct RestaurantOrderView: View {
                 Spacer()
                 Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
                     .font(.custom("NanumSquareOTFR", size: 14))
-                    .foregroundColor(.init("Gray700"))
+                    .foregroundColor(.init("Color/Foundation/Gray/700"))
                 Spacer()
             }
             .padding(.top, 20)

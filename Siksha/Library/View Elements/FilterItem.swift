@@ -36,7 +36,7 @@ struct FilterItem: View {
         .cornerRadius(30)
         .overlay(
             RoundedRectangle(cornerRadius: 30)
-                .strokeBorder(isOn ? Color("Orange500") : Color("Gray200"), lineWidth: 1)
+                .strokeBorder(isOn ? Color("Color/Foundation/Orange/500") : Color("Gray200"), lineWidth: 1)
         )
     }
 }

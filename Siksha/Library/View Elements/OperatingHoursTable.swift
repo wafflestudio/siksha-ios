@@ -46,7 +46,7 @@ struct OperatingHoursCell: View {
                         HStack(spacing: 10) {
                             Text(hourType)
                                 .font(.custom("NanumSquareOTFR", size: 12))
-                                .foregroundColor(.init("Orange500"))
+                                .foregroundColor(.init("Color/Foundation/Orange/500"))
                             
                             Text(hour)
                                 .font(.custom("NanumSquareOTFR", size: 14))

@@ -165,11 +165,11 @@ private extension MealReviewView {
             ZStack(alignment: .top) {
                 if viewModel.canSubmit {
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.init("Orange500"))
+                        .fill(Color.init("Color/Foundation/Orange/500"))
                         .frame(width: 343, height: 56)
                 } else {
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.init("Gray600"))
+                        .fill(Color.init("Color/Foundation/Gray/600"))
                         .frame(width: 343, height: 56)
                 }
                 
@@ -234,9 +234,9 @@ private extension MealReviewView {
 // MARK: - Rating View
 
 struct MealReviewView: View {
-    private let darkFontColor = Color("BlackColor")
-    private let fontColor = Color("Gray700")
-    private let orangeColor = Color.init("Orange500")
+    private let darkFontColor = Color("Color/Foundation/Base/BlackColor")
+    private let fontColor = Color("Color/Foundation/Gray/700")
+    private let orangeColor = Color.init("Color/Foundation/Orange/500")
 
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?

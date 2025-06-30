@@ -14,7 +14,7 @@ struct MenuView: View {
     @State private var selectedFilterType: MenuFilterType? = nil
     @State private var viewHeight: CGFloat = 0
     
-    private let lightGrayColor = Color("Gray600")
+    private let lightGrayColor = Color("Color/Foundation/Gray/600")
     
     init(isFavoriteTab: Bool = false) {
         _viewModel = StateObject(wrappedValue: MenuViewModel(isFavoriteTab: isFavoriteTab))
@@ -44,7 +44,7 @@ struct MenuView: View {
     }
     
     private let dimBackgroundColor = Color(.sRGB, white: 0, opacity: 0.6)
-    private let orangeColor = Color("Orange500")
+    private let orangeColor = Color("Color/Foundation/Orange/500")
     
     var body: some View {
         VStack(spacing: 0) {

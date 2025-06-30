@@ -26,7 +26,7 @@ struct SegmentedPicker<T: Hashable>: View {
                                     .fill(Color("Orange100"))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 30)
-                                            .stroke(Color("Orange500"), lineWidth: 1)
+                                            .stroke(Color("Color/Foundation/Orange/500"), lineWidth: 1)
                                     )
                             }
                             PickerContentView(text: format(option), needStarImage: isRateFilter && format(option) != "전체")

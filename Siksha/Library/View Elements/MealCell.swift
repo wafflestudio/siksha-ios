@@ -10,10 +10,10 @@ import SwiftUI
 struct MealCell: View {
     @ObservedObject var viewModel: MealInfoViewModel
     private var vegetarian: Bool = false
-    private let orangeColor = Color.init("Orange500")
-    private let grayColor = Color.init("Gray900")
-    private let lightGrayColor = Color.init("Gray700")
-    private let blackColor = Color.init("BlackColor")
+    private let orangeColor = Color.init("Color/Foundation/Orange/500")
+    private let grayColor = Color.init("Color/Foundation/Gray/900")
+    private let lightGrayColor = Color.init("Color/Foundation/Gray/700")
+    private let blackColor = Color.init("Color/Foundation/Base/BlackColor")
     var formattedPrice: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
