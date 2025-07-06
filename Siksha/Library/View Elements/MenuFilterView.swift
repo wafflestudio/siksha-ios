@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreLocation
+import Mixpanel
 
 public enum MenuFilterType {
     case all
@@ -23,6 +24,21 @@ public enum MenuFilterType {
             return 259
         case .minimumRating:
             return 220
+        }
+    }
+    
+    var mixpanelEntryPoint: String {
+        switch self {
+        case .all:
+            "main_filter"
+        case .distance:
+            "distance_filter"
+        case .price:
+            "price_filter"
+        case .minimumRating:
+            "rating_filter"
+        case .category:
+            "category_filter"
         }
     }
 }
@@ -217,6 +233,14 @@ struct MenuFilterView: View {
                         )
                         .onTapGesture {
                             resetFilters()
+                            
+                            Mixpanel.mainInstance().track(
+                                event: "filter_reset",
+                                properties: [
+                                    "entry_point": menuFilterType.mixpanelEntryPoint,
+                                    "page_name": menuViewModel.mixpanelPageName
+                                ]
+                            )
                         }
                     
                     Text("적용")
@@ -321,8 +345,86 @@ struct MenuFilterView: View {
         }
         menuViewModel.saveFilters()
         
+        Mixpanel
+            .mainInstance()
+            .track(
+                event: "filter_modal_applied",
+                properties: [
+                    "entry_point": menuFilterType.mixpanelEntryPoint,
+                    "applied_filter_options": getObject(from: menuViewModel.selectedFilters),
+                    "page_name": menuViewModel.mixpanelPageName
+                ]
+            )
+        
         dismiss()
-        print("Filters applied!")
+    }
+    
+    func getObject(from selectedFilters: MenuFilters) -> [String: Any] {
+        let distanceKm: Double?
+        let priceMax: Int?
+        
+        if let distance = menuViewModel.selectedFilters.distance {
+            distanceKm = Double(distance) / 1000.0
+        } else {
+            distanceKm = nil
+        }
+        
+        if let priceRange = menuViewModel.selectedFilters.priceRange {
+            priceMax = priceRange.upperBound == Int(maxPrice) ? nil : priceRange.upperBound
+        } else {
+            priceMax = nil
+        }
+        
+        switch menuFilterType {
+        case .all:
+            return [
+                Mixpanel.FilterOptions.minPrice.objectKey: menuViewModel.selectedFilters.priceRange?.lowerBound as Any,
+                Mixpanel.FilterOptions.maxPrice.objectKey: priceMax as Any,
+                Mixpanel.FilterOptions.minRating.objectKey: menuViewModel.selectedFilters.minimumRating as Any,
+                Mixpanel.FilterOptions.isOpenNow.objectKey: menuViewModel.selectedFilters.isOpen ?? false,
+                Mixpanel.FilterOptions.hasReviews.objectKey: menuViewModel.selectedFilters.hasReview ?? false,
+                Mixpanel.FilterOptions.maxDistanceKm.objectKey: distanceKm as Any
+            ]
+        case .distance:
+            return [Mixpanel.FilterOptions.maxDistanceKm.objectKey: distanceKm as Any]
+        case .price:
+            return [
+                Mixpanel.FilterOptions.minPrice.objectKey: menuViewModel.selectedFilters.priceRange?.lowerBound as Any,
+                Mixpanel.FilterOptions.maxPrice.objectKey: priceMax as Any
+            ]
+        case .minimumRating:
+            return [Mixpanel.FilterOptions.minRating.objectKey: menuViewModel.selectedFilters.minimumRating as Any]
+        case .category:
+            return [:]
+        }
+    }
+}
+
+extension Mixpanel {
+    enum FilterOptions {
+        case minPrice
+        case maxPrice
+        case minRating
+        case isOpenNow
+        case hasReviews
+        case maxDistanceKm
+        
+        var objectKey: String {
+            switch self {
+            case .minPrice:
+                "price_min"
+            case .maxPrice:
+                "price_max"
+            case .minRating:
+                "min_rating"
+            case .isOpenNow:
+                "is_open_now"
+            case .hasReviews:
+                "has_reviews"
+            case .maxDistanceKm:
+                "max_distance_km"
+            }
+        }
     }
 }
 

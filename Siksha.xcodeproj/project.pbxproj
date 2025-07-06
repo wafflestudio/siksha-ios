@@ -131,6 +131,7 @@
 		749AA1222CE3618E00AD61E5 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749AA1212CE3617B00AD61E5 /* WebView.swift */; };
 		A615B4DC2D86AAA60095865F /* MenuFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A615B4DB2D86AAA60095865F /* MenuFilters.swift */; };
 		A615B4DE2D86B91C0095865F /* MenuListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A615B4DD2D86B91C0095865F /* MenuListView.swift */; };
+		A62E8CB22E0D91A300052DAE /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = A62E8CB12E0D91A300052DAE /* Mixpanel */; };
 		A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */; };
 		A6ACE1112DA050AF00057585 /* MeasureFrameModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6ACE1102DA050AF00057585 /* MeasureFrameModifier.swift */; };
 		A6CBB8672C8204CB0067723D /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */; };
@@ -340,6 +341,7 @@
 				741BE33C2CE3514D00A09881 /* KakaoSDKUser in Frameworks */,
 				33EA41F62DDC6CEC00A9ADD0 /* Kingfisher in Frameworks */,
 				33EA41FC2DDDAEC200A9ADD0 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
+				A62E8CB22E0D91A300052DAE /* Mixpanel in Frameworks */,
 				33C456212DDB6CA600BEFAB2 /* GoogleSignInSwift in Frameworks */,
 				741BE3382CE3514D00A09881 /* KakaoSDKShare in Frameworks */,
 				33EA420E2DDF130E00A9ADD0 /* BSImagePicker in Frameworks */,
@@ -783,6 +785,7 @@
 				33EA42072DDF0DF100A9ADD0 /* XCRemoteSwiftPackageReference "JTAppleCalendar" */,
 				33EA420C2DDF130E00A9ADD0 /* XCRemoteSwiftPackageReference "BSImagePicker" */,
 				33EA420F2DDF158600A9ADD0 /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */,
+				A62E8CB02E0D91A300052DAE /* XCRemoteSwiftPackageReference "mixpanel-swift" */,
 			);
 			productRefGroup = 1E3A56E825C6FCE600DBB3F4 /* Products */;
 			projectDirPath = "";
@@ -1439,6 +1442,14 @@
 				kind = branch;
 			};
 		};
+		A62E8CB02E0D91A300052DAE /* XCRemoteSwiftPackageReference "mixpanel-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mixpanel/mixpanel-swift";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1526,6 +1537,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 741BE3322CE3514D00A09881 /* XCRemoteSwiftPackageReference "kakao-ios-sdk" */;
 			productName = KakaoSDKUser;
+		};
+		A62E8CB12E0D91A300052DAE /* Mixpanel */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A62E8CB02E0D91A300052DAE /* XCRemoteSwiftPackageReference "mixpanel-swift" */;
+			productName = Mixpanel;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
