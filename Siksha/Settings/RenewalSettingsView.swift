@@ -20,8 +20,11 @@ struct RenewalSettingsView: View {
         self.viewModel = viewModel
     }
     
-    private let fontColor = Color.init(white: 185/255)
-    private let borderColor = Color.init(white: 232/255)
+    private let borderColor = Color("Color/Foundation/Gray/200")
+    private let partitionColor = Color("SemanticColor/Border/Primary")
+    private let blackColor = Color("Color/Foundation/Base/BlackColor")
+    private let gray500 = Color("Color/Foundation/Gray/500")
+    private let gray900 = Color("Color/Foundation/Gray/900")
     
     var body: some View {
             VStack(alignment: .center, spacing: 0) {
@@ -74,7 +77,7 @@ struct RenewalSettingsView: View {
                 
                 Text(userModel.nickname ?? "무명의 미식가")
                     .font(.custom("NanumSquareOTFB", size: 16))
-                    .foregroundColor(.black)
+                    .foregroundColor(gray900)
                 
                 Spacer()
                 
@@ -83,16 +86,19 @@ struct RenewalSettingsView: View {
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(borderColor, lineWidth: 1)
+                    .background(Color("SemanticColor/Background/Secondary"))
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             )
         }
     }
     
     var arrow: some View {
-        Image("RenewalArrow")
+        Image("ArrowSmall")
             .resizable()
-            .renderingMode(.original)
-            .frame(width: 8, height: 11)
-            .padding(.trailing, 11)
+            .renderingMode(.template)
+            .foregroundColor(Color("Color/Foundation/Gray/500"))
+            .frame(width: 16, height: 16)
+            .padding(.trailing, 12)
     }
     
     var myWritings: some View {
@@ -100,7 +106,7 @@ struct RenewalSettingsView: View {
             HStack(alignment: .center) {
                 Text("내가 쓴 글")
                     .font(.custom("NanumSquareOTF", size: 16))
-                    .foregroundColor(.black)
+                    .foregroundColor(blackColor)
                     .padding([.top, .bottom], 19)
                     .padding(.leading, 16)
                 
@@ -111,14 +117,17 @@ struct RenewalSettingsView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(borderColor, lineWidth: 1)
+                .strokeBorder(borderColor, lineWidth: 1)
+                .background(Color("SemanticColor/Background/Secondary"))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
         )
     }
     
     var partitionBar: some View {
-        borderColor
+        partitionColor
             .frame(height: 1)
-            .padding([.leading, .trailing], 8)
+            .padding(.leading, 7)
+            .padding(.trailing, 9)
     }
     
     var additionalSettings: some View {
@@ -127,7 +136,7 @@ struct RenewalSettingsView: View {
                 HStack(alignment: .center) {
                     Text("식당 순서 변경")
                         .font(.custom("NanumSquareOTFR", size: 15))
-                        .foregroundColor(.black)
+                        .foregroundColor(blackColor)
                         .padding([.top, .bottom], 12)
                         .padding(.leading, 16)
                     
@@ -143,7 +152,7 @@ struct RenewalSettingsView: View {
                 HStack(alignment: .center) {
                     Text("즐겨찾기 식당 순서 변경")
                         .font(.custom("NanumSquareOTFR", size: 15))
-                        .foregroundColor(.black)
+                        .foregroundColor(blackColor)
                         .padding([.top, .bottom], 12)
                         .padding(.leading, 16)
                     
@@ -162,17 +171,18 @@ struct RenewalSettingsView: View {
                 HStack(alignment: .center) {
                     Text("메뉴 없는 식당 숨기기")
                         .font(.custom("NanumSquareOTFR", size: 15))
-                        .foregroundColor(.black)
+                        .foregroundColor(blackColor)
                         .padding([.top, .bottom], 12)
                         .padding(.leading, 16)
                     
                     Spacer()
                     
-                    Image(viewModel.noMenuHide ? "Checked" : "NotChecked")
+                    Image(viewModel.noMenuHide ? "CheckCircle" : "CheckCircle")
                         .resizable()
-                        .renderingMode(.original)
+                        .renderingMode(.template)
                         .frame(width: 20, height: 20)
-                        .padding(.trailing, 11)
+                        .foregroundStyle(Color(viewModel.noMenuHide ? "Color/Foundation/Orange/500" :"Color/Foundation/Gray/500"))
+                        .padding(.trailing, 14)
                 }
             }
             
@@ -182,7 +192,7 @@ struct RenewalSettingsView: View {
                 HStack(alignment: .center) {
                     Text("계정 관리")
                         .font(.custom("NanumSquareOTFR", size: 15))
-                        .foregroundColor(.black)
+                        .foregroundColor(blackColor)
                         .padding([.top, .bottom], 12)
                         .padding(.leading, 16)
                     
@@ -194,7 +204,9 @@ struct RenewalSettingsView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(borderColor, lineWidth: 1)
+                .strokeBorder(borderColor, lineWidth: 1)
+                .background(Color("SemanticColor/Background/Secondary"))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
         )
     }
     
@@ -205,8 +217,8 @@ struct RenewalSettingsView: View {
         }) {
             HStack(alignment: .center) {
                 Text("1:1 문의하기")
-                    .font(.custom("NanumSquareOTFR", size: 15))
-                    .foregroundColor(Color("Orange500"))
+                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .foregroundColor(Color("Color/Foundation/Orange/500"))
                     .padding([.top, .bottom], 15)
                     .padding(.leading, 16)
                 
@@ -217,19 +229,21 @@ struct RenewalSettingsView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(borderColor, lineWidth: 1)
+                .strokeBorder(borderColor, lineWidth: 1)
+                .background(Color("SemanticColor/Background/Secondary"))
+                .clipShape(RoundedRectangle(cornerRadius: 8))
         )
     }
     
     var versionInfo: some View {
         VStack {
-            Text(viewModel.isUpdateAvailable ? "업데이트가 가능합니다" : "최신버전을 이용중입니다.")
-                .font(.custom("NanumSquareOTFB", size: 13))
-                .foregroundColor(fontColor)
-                .padding(.top, 20)
             Text("siksha-\(viewModel.version)")
-                .font(.custom("NanumSquareOTFB", size: 13))
-                .foregroundColor(fontColor)
+                .font(.custom("NanumSquareOTF", size: 12))
+                .foregroundColor(gray500)
+                .padding(.top, 20)
+            Text(viewModel.isUpdateAvailable ? "업데이트가 가능합니다" : "최신버전을 이용중입니다.")
+                .font(.custom("NanumSquareOTF", size: 12))
+                .foregroundColor(gray500)
         }
     }
 }
