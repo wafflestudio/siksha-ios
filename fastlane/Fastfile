@@ -21,7 +21,7 @@ platform :ios do
     setup_ci
     match(
       type: "appstore", 
-      app_identifier:ENV["BUNDLE_IDENTIFIER"]
+      app_identifier:ENV["BUNDLE_IDENTIFIER"],
       readonly: true
     )
     app_store_connect_api_key(
