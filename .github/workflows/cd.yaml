@@ -68,6 +68,7 @@ jobs:
           GOOGLE_SERVICE_INFO: ${{ secrets.GOOGLE_SERVICE_INFO }}
           GOOGLE_SERVICE_INFO_DEV: ${{ secrets.GOOGLE_SERVICE_INFO_DEV }}
         run: |
+          mkdir "Siksha/Supporting Files"
           echo "$BUNDLE" > Siksha/Supporting Files/bundle.xcconfig
           echo "$BUNDLE_DEV" > Siksha/Supporting Files/bundle-dev.xcconfig
           echo "$CONFIG" > Siksha/Supporting Files/config.plist
