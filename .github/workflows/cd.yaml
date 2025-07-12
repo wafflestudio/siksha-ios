@@ -69,11 +69,11 @@ jobs:
           GOOGLE_SERVICE_INFO_DEV: ${{ secrets.GOOGLE_SERVICE_INFO_DEV }}
         run: |
           mkdir "Siksha/Supporting Files"
-          echo "$BUNDLE" > Siksha/Supporting Files/bundle.xcconfig
-          echo "$BUNDLE_DEV" > Siksha/Supporting Files/bundle-dev.xcconfig
-          echo "$CONFIG" > Siksha/Supporting Files/config.plist
-          echo "$GOOGLE_SERVICE_INFO" > Siksha/Supporting Files/GoogleService-Info.plist
-          echo "$GOOGLE_SERVICE_INFO_DEV" > Siksha/Supporting Files/GoogleService-Info-dev.xcconfig
+          echo "$BUNDLE" > "Siksha/Supporting Files/bundle.xcconfig"
+          echo "$BUNDLE_DEV" > "Siksha/Supporting Files/bundle-dev.xcconfig"
+          echo "$CONFIG" > "Siksha/Supporting Files/config.plist"
+          echo "$GOOGLE_SERVICE_INFO" > "Siksha/Supporting Files/GoogleService-Info.plist"
+          echo "$GOOGLE_SERVICE_INFO_DEV" > "Siksha/Supporting Files/GoogleService-Info-dev.xcconfig"
 
 
       - name: Upload prod app to TestFlight
