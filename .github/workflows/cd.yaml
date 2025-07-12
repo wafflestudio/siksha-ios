@@ -17,6 +17,7 @@ jobs:
       APPSTORE_CONNECT_ISSUER_ID: ${{ secrets.APPSTORE_CONNECT_ISSUER_ID }}
       APPSTORE_CONNECT_KEY_CONTENT: ${{ secrets.APPSTORE_CONNECT_KEY_CONTENT }}
       PROFILE_NAME: ${{ secrets.PROFILE_NAME }}
+      TEAM_ID: ${{ secrets.TEAM_ID }}
       SLACK_URL: ${{ secrets.SLACK_WEBHOOK }}
       GIT_TAG_NAME: ${{ github.ref_name }}
       BUNDLE_IDENTIFIER: ${{ github.BUNDLE_IDENTIFIER }}
