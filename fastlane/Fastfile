@@ -33,11 +33,7 @@ platform :ios do
     update_code_signing_settings(
         use_automatic_signing: false,
         code_sign_identity: "iPhone Distribution",
-	profile_name:ENV["PROFILE_NAME"],
-	path:"Siksha.xcodeproj",
-	bundle_identifier:ENV["BUNDLE_IDENTIFIER"],
-	targets:"Siksha-Release",
-	team_id:ENV["TEAM_ID"]
+	profile_name:ENV["PROFILE_NAME"]
     )
     build_app(project:"Siksha.xcodeproj",scheme:"Siksha-Release",clean:true, silent:true,
       export_options: {
