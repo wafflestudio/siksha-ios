@@ -1,0 +1,81 @@
+name: Siksha-CD
+
+on:
+  push:
+    tags:
+      - testflight/v[0-9]+.[0-9]+.[0-9]+-*.[0-9]+
+      - appstore/v[0-9]+.[0-9]+.[0-9]+-*.[0-9]+
+
+jobs:
+  deploy:
+    name: Execute fastlane for testflight / appstore
+
+    env:
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      SSH_KEY: ${{ secrets.SSH_KEY }}
+      APP_STORE_CONNECT_KEY_ID: ${{ secrets.APP_STORE_CONNECT_KEY_ID }}
+      APP_STORE_CONNECT_ISSUER_ID: ${{ secrets.APP_STORE_CONNECT_ISSUER_ID }}
+      APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
+      SLACK_URL: ${{ secrets.SLACK_WEBHOOK }}
+      GIT_TAG_NAME: ${{ github.ref_name }}
+      XCODE_VERSION: "16.2"
+
+    runs-on: macos-15
+
+    steps:
+      - name: Parse tag name
+        uses: actions-ecosystem/action-regex-match@v2
+        id: regex
+        with:
+          text: ${{ github.ref_name }}
+          regex: '^(testflight|appstore)\/v(\d+)\.(\d+)\.(\d+)-(release|debug)\.(\d+)$'
+
+      - if: ${{ steps.regex.outputs.group1 == 'appstore' && steps.regex.outputs.group5 == 'debug' }}
+        run: |
+          echo "you can't upload debug build to appstore!"
+          exit 1
+
+      - uses: actions/checkout@v3
+
+      - run: |
+          sudo xcode-select -s /Applications/Xcode_${XCODE_VERSION}.app/Contents/Developer
+          ls
+
+      - name: Set version number and build number
+        run: |
+          echo "VERSION_NUMBER=${{ steps.regex.outputs.group2 }}.${{ steps.regex.outputs.group3 }}.${{ steps.regex.outputs.group4 }}" >> $GITHUB_ENV
+          echo "BUILD_NUMBER=${{ steps.regex.outputs.group6 }}" >> $GITHUB_ENV
+
+      - name: Install Ruby Dependencies
+        run: |
+          bundle install
+          bundle update fastlane
+
+      - name: Setup match repo ssh
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+
+
+      - name: Inject secret file dependencies
+        env:
+          BUNDLE: ${{ secrets.BUNDLE }}
+          BUNDLE_DEV: ${{secrets.BUNDLE_DEV}}
+          CONFIG: ${{ secrets.CONFIG }}
+          GOOGLE_SERVICE_INFO: ${{ secrets.GOOGLE_SERVICE_INFO }}
+          GOOGLE_SERVICE_INFO_DEV: ${{ secrets.GOOGLE_SERVICE_INFO_DEV }}
+        run: |
+          echo "$BUNDLE" > Siksha/Supporting Files/bundle.xcconfig
+          echo "$BUNDLE_DEV" > Siksha/Supporting Files/bundle-dev.xcconfig
+          echo "$CONFIG" > Siksha/Supporting Files/config.plist
+          echo "$GOOGLE_SERVICE_INFO" > Siksha/Supporting Files/GoogleService-Info.plist
+          echo "$GOOGLE_SERVICE_INFO_DEV" > Siksha/Supporting Files/GoogleService-Info-dev.xcconfig
+
+
+      - name: Upload prod app to TestFlight
+        if: ${{ steps.regex.outputs.group1 == 'testflight' && steps.regex.outputs.group5 == 'release' }}
+        run: |
+          bundle exec fastlane beta --env prod
+
