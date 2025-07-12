@@ -20,8 +20,6 @@ platform :ios do
   lane :beta do
     setup_ci
     match(
-      git_url:"https://github.com/wafflestudio/siksha-ios-private",
-      storage_mode: "git",
       type: "appstore",
       readonly: true
     )
