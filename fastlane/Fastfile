@@ -24,7 +24,9 @@ platform :ios do
       type: "appstore", 
       app_identifier:ENV["BUNDLE_IDENTIFIER"],
       readonly: true,
-      force: true
+      force: true,
+      verbose: true
+
     )
     app_store_connect_api_key(
       key_id:ENV["APPSTORE_CONNECT_KEY_ID"],
