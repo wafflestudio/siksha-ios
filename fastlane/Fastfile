@@ -23,7 +23,8 @@ platform :ios do
     match(
       type: "appstore", 
       app_identifier:ENV["BUNDLE_IDENTIFIER"],
-      readonly: true
+      readonly: true,
+      force: true
     )
     app_store_connect_api_key(
       key_id:ENV["APPSTORE_CONNECT_KEY_ID"],
