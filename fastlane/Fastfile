@@ -29,7 +29,7 @@ platform :ios do
       issuer_id:ENV["APPSTORE_CONNECT_ISSUER_ID"],
       key_content:ENV["APPSTORE_CONNECT_KEY_CONTENT"]
     )
-
+    build_app(project:"Siksha.xcodeproj",scheme:"Siksha-Release",clean:true, silent:true)
     increment_build_number(build_number:ENV["BUILD_NUMBER"],xcodeproj:"Siksha.xcodeproj")
     increment_version_number(version_number:ENV["VERSION_NUMBER"],xcodeproj:"Siksha.xcodeproj")
     upload_to_testflight(app_version:ENV["VERSION_NUMBER"])
