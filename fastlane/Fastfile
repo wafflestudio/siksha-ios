@@ -18,6 +18,7 @@ default_platform(:ios)
 platform :ios do
   desc "Upload app to testflight"
   lane :beta do
+    ENV["FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT"] = "120" 
     setup_ci
     match(
       type: "appstore", 
