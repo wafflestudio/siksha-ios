@@ -39,7 +39,14 @@ platform :ios do
 	targets:"Siksha-Release",
 	team_id:ENV["TEAM_ID"]
     )
-    build_app(project:"Siksha.xcodeproj",scheme:"Siksha-Release",clean:true, silent:true)
+    build_app(project:"Siksha.xcodeproj",scheme:"Siksha-Release",clean:true, silent:true,
+      export_options: {
+        method: "app-store",
+        signingStyle: "manual",
+        provisioningProfiles: {
+          ENV["BUILD_IDENTIFIER"] => ENV["PROFILE_NAME"]
+        }
+      })
     increment_build_number(build_number:ENV["BUILD_NUMBER"],xcodeproj:"Siksha.xcodeproj")
     increment_version_number(version_number:ENV["VERSION_NUMBER"],xcodeproj:"Siksha.xcodeproj")
     upload_to_testflight(app_version:ENV["VERSION_NUMBER"])
