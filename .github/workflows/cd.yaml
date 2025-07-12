@@ -18,6 +18,7 @@ jobs:
       APP_STORE_CONNECT_KEY_CONTENT: ${{ secrets.APP_STORE_CONNECT_KEY_CONTENT }}
       SLACK_URL: ${{ secrets.SLACK_WEBHOOK }}
       GIT_TAG_NAME: ${{ github.ref_name }}
+      BUNDLE_IDENTIFIER: ${{ github.BUNDLE_IDENTIFIER }}
       XCODE_VERSION: "16.2"
 
     runs-on: macos-15

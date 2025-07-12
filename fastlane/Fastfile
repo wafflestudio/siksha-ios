@@ -20,7 +20,8 @@ platform :ios do
   lane :beta do
     setup_ci
     match(
-      type: "appstore",
+      type: "appstore", 
+      app_identifier:ENV["BUNDLE_IDENTIFIER"]
       readonly: true
     )
     app_store_connect_api_key(
