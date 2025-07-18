@@ -82,14 +82,14 @@ struct MenuFilterView: View {
             switch menuFilterType {
             case .all:
                 Capsule()
-                    .fill(Color("Gray200"))
+                    .fill(Color("Color/Foundation/Gray/200"))
                     .frame(width: 46, height: 4)
                     .padding(.top, 15)
                     .padding(.bottom, 10)
                 
                 ZStack {
                     Text("필터")
-                        .font(.custom("NanumSquareOTFB", size: 14))
+                        .customFont(font: .text14(weight: .Bold))
                     
                     HStack {
                         Spacer()
@@ -199,15 +199,15 @@ struct MenuFilterView: View {
             ZStack {
                 if menuFilterType == .all {
                     Rectangle()
-                        .fill(Color.white)
+                        .fill(Color("Color/Foundation/Base/WhiteColor"))
                         .frame(height: 111)
-                        .shadow(color: Color.black.opacity(0.05), radius: 3, y: -1)
-                        .zIndex(0)                    
+                        .shadow(color: Color("Color/Foundation/Base/BlackColor").opacity(0.05), radius: 3, y: -1)
+                        .zIndex(0)
                 }
                 
                 HStack {
                     Text("초기화")
-                        .font(.custom("NanumSquareOTFB", size: 16))
+                        .customFont(font: .text16(weight: .Bold))
                         .frame(maxWidth: .infinity)
                         .frame(height: 38)
                         .foregroundStyle(.white)
@@ -220,7 +220,7 @@ struct MenuFilterView: View {
                         }
                     
                     Text("적용")
-                        .font(.custom("NanumSquareOTFB", size: 16))
+                        .customFont(font: .text16(weight: .Bold))
                         .frame(maxWidth: .infinity)
                         .frame(height: 38)
                         .foregroundStyle(.white)
@@ -233,7 +233,7 @@ struct MenuFilterView: View {
                         }
                 }
                 .padding(EdgeInsets(top: menuFilterType == .all ? 19 : 0, leading: 16, bottom: menuFilterType == .all ? 54 : 45, trailing: 16))
-                .background(Color.white)
+                .background(Color("Color/Foundation/Base/WhiteColor"))
                 .zIndex(1)
             }
         }
@@ -349,7 +349,7 @@ fileprivate struct SectionHeader: View {
     
     var body: some View {
         Text(title)
-            .font(.custom("NanumSquareOTFEB", size: 16))
+            .customFont(font: .text16(weight: .ExtraBold))
             .frame(height: 27.5)
             .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -361,14 +361,14 @@ fileprivate struct CategoryButton: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
-            .stroke(isSelected ? Color("Color/Foundation/Orange/500") : Color("Gray200"))
+            .stroke(isSelected ? Color("Color/Foundation/Orange/500") : Color("Color/Foundation/Gray/200"))
             .frame(height: 34)
             .overlay(
                 Text(category)
-                    .font(.custom("NanumSquareOTFB", size: 13))
-                    .foregroundColor(.black)
+                    .customFont(font: .text13(weight: .Bold))
+                    .foregroundColor(Color("Color/Foundation/Base/BlackColor"))
             )
-            .background(isSelected ? Color("Orange100") : .clear, in: RoundedRectangle(cornerRadius: 30))
+            .background(isSelected ? Color("Color/Foundation/Orange/100") : .clear, in: RoundedRectangle(cornerRadius: 30))
     }
 }
 

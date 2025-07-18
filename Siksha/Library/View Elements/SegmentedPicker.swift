@@ -15,7 +15,7 @@ struct SegmentedPicker<T: Hashable>: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
-            .stroke(Color("Gray200"))
+            .stroke(Color("Color/Foundation/Gray/200"))
             .frame(height: 34)
             .overlay(
                 HStack(alignment: .center, spacing: 1) {
@@ -23,7 +23,7 @@ struct SegmentedPicker<T: Hashable>: View {
                         ZStack {
                             if self.selectedOption == option {
                                 RoundedRectangle(cornerRadius: 30)
-                                    .fill(Color("Orange100"))
+                                    .fill(Color("Color/Foundation/Orange/100"))
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 30)
                                             .stroke(Color("Color/Foundation/Orange/500"), lineWidth: 1)
@@ -50,7 +50,7 @@ struct PickerContentView: View {
     var body: some View {
         HStack {
             Text(text)
-                .font(.custom("NanumSquareOTFB", size: 14))
+                .customFont(font: .text14(weight: .Bold))
             if needStarImage {
                 Image("RateStar")
             }
