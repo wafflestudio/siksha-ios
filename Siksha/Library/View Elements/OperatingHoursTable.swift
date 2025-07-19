@@ -15,7 +15,7 @@ struct OperatingHoursCell: View {
         self.type = type
         
         if hours.count == 3 {
-            self.hours.append(("BreakFastTime", hours[0]))
+            self.hours.append(("BreakfastTime", hours[0]))
             self.hours.append(("LunchTime", hours[1]))
             self.hours.append(("DinnerTime", hours[2]))
         } else if hours.count == 2 {
