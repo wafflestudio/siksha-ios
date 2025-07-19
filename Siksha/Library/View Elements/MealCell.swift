@@ -32,7 +32,7 @@ struct MealCell: View {
         HStack(alignment: .top) {
             Text("\(viewModel.meal.nameKr)")
                 .multilineTextAlignment(.leading)
-                .font(.custom("NanumSquareOTFR", size: 15))
+                .customFont(font: .text15(weight: .Regular))
                 .foregroundColor(blackColor)
             
             if vegetarian {
