@@ -74,7 +74,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         RoundedRectangle(cornerRadius: 11)
             .strokeBorder(lineWidth: 1)
             .frame(width: 336, height: 49)
-            .foregroundColor(Color("TextFieldBorderColor"))
+            .foregroundColor(Color("Color/Foundation/Gray/200"))
             .overlay(
                 ClearableTextField("닉네임", text: $viewModel.nickname)
                     .padding(.horizontal, 18)
@@ -133,12 +133,12 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 .foregroundColor(.white)
                 .overlay(
                     Circle()
-                    .stroke(Color("TextFieldBorderColor"), lineWidth: 1)
+                    .stroke(Color("Color/Foundation/Gray/200"), lineWidth: 1)
                 )
             
             Image("Camera")
                 .frame(width: 22.5, height: 18)
-                .foregroundColor(Color("LightGrayColor"))
+                .foregroundColor(Color("Color/Foundation/Gray/600"))
         }
     }
     
@@ -146,7 +146,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         Button(action: done) {
             ZStack(alignment: .center) {
                 RoundedRectangle(cornerRadius: 8.0)
-                    .fill(viewModel.enableDoneButton ? Color("MainThemeColor") : Color("LightGrayColor"))
+                    .fill(viewModel.enableDoneButton ? Color("Color/Foundation/Orange/500") : Color("Color/Foundation/Gray/600"))
                 Text("완료")
                     .font(.custom("NanumSquareOTFB", size: 17))
             }
@@ -164,7 +164,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }) {
                 Text("취소")
                     .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(Color("MainThemeColor"))
+                    .foregroundColor(Color("Color/Foundation/Orange/500"))
                     .padding(.leading, 20)
             }
             Spacer()
@@ -174,13 +174,13 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }) {
                 Text("OK")
                     .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(Color("MainThemeColor"))
+                    .foregroundColor(Color("Color/Foundation/Orange/500"))
                     .padding(.trailing, 20)
             }
         }
         .frame(height: 42)
         .background(Color.white)
-        .border(Color("TextFieldBorderColor"), width: 1)
+        .border(Color("Color/Foundation/Gray/200"), width: 1)
     }
     
     private func done() {
@@ -206,7 +206,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 HStack(spacing: 0) {
                     Image("Error")
                         .frame(width: 14, height: 14)
-                        .foregroundColor(Color("MainThemeColor"))
+                        .foregroundColor(Color("Color/Foundation/Orange/500"))
                         .padding(.trailing, 10)
                     Text("이미 존재하는 닉네임입니다.")
                         .font(.custom("NanumSquareOTFB", size: 12))
@@ -239,7 +239,7 @@ struct ClearableTextField: View {
             if (text != "") {
                 Image(systemName: "xmark.circle.fill")
                     .frame(width: 18, height: 18)
-                    .foregroundColor(Color("LightGrayColor"))
+                    .foregroundColor(Color("Color/Foundation/Gray/600"))
                     .onTapGesture {
                         text = ""
                     }

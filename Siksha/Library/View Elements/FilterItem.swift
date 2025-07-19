@@ -19,10 +19,10 @@ struct FilterItem: View {
             }
             if (isOn) {
                 Text(text)
-                    .font(.custom("NanumSquareOTFB", size: 13))
+                    .customFont(font: .text13(weight: .Bold))
             } else {
                 Text(text)
-                    .font(.custom("NanumSquareOTF", size: 13))
+                    .customFont(font: .text13(weight: .Regular))
             }
             if (!isCheck) {
                 Image("select")
@@ -32,11 +32,11 @@ struct FilterItem: View {
         }
         .frame(height: 18)
         .padding(EdgeInsets(top: 8, leading: 10, bottom: 8, trailing: 10))
-        .background(isOn ? Color("MainActiveColor") : .white)
+        .background(isOn ? Color("Color/Foundation/Orange/100") : .white)
         .cornerRadius(30)
         .overlay(
             RoundedRectangle(cornerRadius: 30)
-                .strokeBorder(isOn ? Color("MainThemeColor") : Color("Gray200"), lineWidth: 1)
+                .strokeBorder(isOn ? Color("Color/Foundation/Orange/500") : Color("Color/Foundation/Gray/200"), lineWidth: 1)
         )
     }
 }

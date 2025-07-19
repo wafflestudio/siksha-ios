@@ -10,10 +10,9 @@ import SwiftUI
 // MARK: - Restaurant Cell
 
 struct RestaurantCell: View {
-    private let fontColor = Color("DefaultFontColor")
-    private let titleColor = Color("TitleFontColor")
-    private let lightGrayColor = Color("LightGrayColor")
-    private let orangeColor = Color.init("main")
+    private let fontColor = Color("Color/Foundation/Gray/700")
+    private let lightGrayColor = Color("Color/Foundation/Gray/600")
+    private let orangeColor = Color.init("Color/Foundation/Orange/500")
     
     var restaurant: Restaurant
     var meals: [Meal]
@@ -33,21 +32,23 @@ struct RestaurantCell: View {
             // Restaurant Name
             HStack(alignment: .center) {
                 Text(restaurant.nameKr)
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(orangeColor)
-                
+                    .customFont(font: .text16(weight: .ExtraBold))
+                    .foregroundColor(.black)
+                Spacer()
+                    .frame(width:6)
                 Button(action: {
                     self.showRestaurant = true
                 }) {
                     Image("Info")
                         .resizable()
                         .renderingMode(.original)
-                        .frame(width: 17, height: 17)
+                        .frame(width: 20, height: 20)
                 }
                 .sheet(isPresented: $showRestaurant, content: {
                     RestaurantInformationView(restaurant)
                 })
-                
+                Spacer()
+                    .frame(width:4)
                 Button(action: {
                     isFavorite.toggle()
                     UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
@@ -58,24 +59,26 @@ struct RestaurantCell: View {
                     Image(isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
                         .renderingMode(.original)
-                        .frame(width: 18, height: 17)
+                        .frame(width: 20, height: 20)
                 })
-                
+                Spacer()
+                    .frame(width:4)
                 Button(action: {
                     kakaoShareManager.shareKakao(restaurant: restaurant, selectedDateString: viewModel?.selectedDate ?? "오늘")
+                
                 }) {
                     Image(.kakaoShare)
                         .resizable()
                         .renderingMode(.original)
-                        .frame(width: 17, height: 17)
+                        .frame(width: 20, height: 20)
                         .foregroundColor(orangeColor)
                 }.sheet(isPresented: $kakaoShareManager.showWebView) {
                     if let urlString = kakaoShareManager.urlToLoad {
                         KakaoShareWebView(urlString: urlString, showWebView: $kakaoShareManager.showWebView, restaurant: restaurant, selectedDate: viewModel?.selectedDate ?? "오늘")
                     }
                 }.interactiveDismissDisabled(false)
-                
                 Spacer()
+                /*Spacer()
                 
                 Text("Price")
                     .font(.custom("NanumSquareOTF", size: 12))
@@ -90,19 +93,54 @@ struct RestaurantCell: View {
                 Text("Like")
                     .font(.custom("NanumSquareOTF", size: 12))
                     .foregroundColor(orangeColor)
-                    .frame(width: 35)
+                    .frame(width: 35)*/
             }
-            .padding(EdgeInsets(top: 16, leading: 16, bottom: 10, trailing: 16))
-            
-            HStack {
+            .padding(EdgeInsets(top: 17, leading: 13,bottom: 11.5,trailing: 0))
+            HStack(alignment: .center){
+                Image("Lunch")
+                    .resizable()
+                    .renderingMode(.original)
+                    .frame(width: 16, height: 16)
+                Spacer()
+                    .frame(width:4)
+                Text("11:00 - 13:00")
+                    .customFont(font: .text12(weight: .Bold))
+                    .foregroundColor(lightGrayColor)
+                Spacer()
+                Text("Price")
+                    .customFont(font: .text12(weight: .Regular))
+                    .multilineTextAlignment(.center)
+                    .frame(width:28)
+                    .foregroundColor(orangeColor)
+                Spacer()
+                    .frame(width:16)
+                Text("Rate")
+                    .customFont(font: .text12(weight: .Regular))
+                    .multilineTextAlignment(.center)
+                    .frame(width:26)
+                    .foregroundColor(orangeColor)
+                Spacer()
+                    .frame(width:16)
+                Text("Like")
+                    .customFont(font: .text12(weight: .Regular))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(orangeColor)
+                    .frame(width:25)
+
+            }.padding([.leading,.trailing],13)
+            .padding([.bottom],6.5)
+
+            /*HStack {
                 orangeColor
-                    .frame(height: 1)
-                    .frame(maxWidth: .infinity)
-            }
-            .padding([.leading, .trailing], 12)
-            
-            
-            VStack(spacing: 20) {
+                    .frame(maxWidth:.infinity)
+                    .overlay(RoundedRectangle(cornerRadius: 1.5).stroke(orangeColor,lineWidth:1.5 ))
+            }*/
+            Capsule()
+                .frame(height:1.5)
+                .foregroundColor(orangeColor)
+                .padding([.trailing], 14.5)
+                .padding([.leading],11.5)
+            VStack(spacing: 13) {
                 if meals.count > 0 {
                     ForEach(meals, id: \.id) { meal in
                         let mealInfoViewModel = MealInfoViewModel(meal: meal)
@@ -126,8 +164,9 @@ struct RestaurantCell: View {
                     .padding([.top, .bottom], 12)
                 }
             }
-            .padding(EdgeInsets(top: 14, leading: 16, bottom: 16, trailing: 16))
+            .padding(EdgeInsets(top: 13, leading: 13, bottom: 17, trailing: 13))
         }
+        .padding(.zero)
         .background(Color.white)
         .cornerRadius(8)
         .overlay(

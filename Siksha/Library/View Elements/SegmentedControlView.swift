@@ -31,13 +31,13 @@ struct SegmentedControlView: View {
                             .font(.custom("NanumSquareOTFR", size: 12))
                     }
                 }
-                .foregroundColor(self.selected == segment.id ? .white : Color.init("main"))
-                .background(self.selected == segment.id ? Color.init("main") : .white)
-                .border(Color.init("main"))
+                .foregroundColor(self.selected == segment.id ? .white : Color.init("Color/Foundation/Orange/500"))
+                .background(self.selected == segment.id ? Color.init("Color/Foundation/Orange/500") : .white)
+                .border(Color.init("Color/Foundation/Orange/500"))
             }
         }
         .overlay(RoundedRectangle(cornerRadius: 25)
-                    .stroke(Color.init("main"), lineWidth: 1)
+                    .stroke(Color.init("Color/Foundation/Orange/500"), lineWidth: 1)
                     .padding(0.5))
         .cornerRadius(25.0)
         

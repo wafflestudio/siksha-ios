@@ -26,7 +26,7 @@ struct BackButton: View {
                 
                 Text("설정")
                     .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(.init("LightGrayColor"))
+                    .foregroundColor(.init("Color/Foundation/Gray/600"))
             }
         }
         .frame(width: 100, alignment: .leading)

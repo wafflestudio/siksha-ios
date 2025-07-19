@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct RestaurantsView: View {
-    private let fontColor = Color("Gray600")
+    private let fontColor = Color("Color/Foundation/Gray/600")
     
     var restaurantsList: [Restaurant]
         

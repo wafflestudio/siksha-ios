@@ -25,7 +25,7 @@ struct BottomModalView<Content: View>: View {
         GeometryReader { geometry in
             VStack {
                 RoundedRectangle(cornerRadius: 25)
-                    .fill(Color.init("LightGrayColor"))
+                    .fill(Color.init("Color/Foundation/Gray/600"))
                     .frame(width: 50, height: 5)
                     .padding(.top, 10)
                 

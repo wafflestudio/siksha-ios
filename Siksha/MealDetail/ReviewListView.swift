@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ReviewListView: View {
-    private let lightGrayColor = Color.init("LightGrayColor")
+    private let lightGrayColor = Color.init("Color/Foundation/Gray/600")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var viewModel = ReviewListViewModel()

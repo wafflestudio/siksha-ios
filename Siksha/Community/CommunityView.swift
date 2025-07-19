@@ -10,7 +10,7 @@ import SwiftUI
 struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     @State var tag: Int? = nil
     @State var needRefresh = false
-    let dividerColor = Color("DividerColor")
+    let dividerColor = Color("Color/Foundation/Gray/100")
     
     let topPosts: [PostInfo] = (1..<5).map {
         return PostInfo(title: "name\($0)",
@@ -66,7 +66,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 } label: {
                     Image("CircleWriteButton")
                         .frame(width:50, height:50)
-                        .background(Color.init("MainThemeColor"))
+                        .background(Color.init("Color/Foundation/Orange/500"))
                         .clipShape(Circle())
                 }
                 .offset(x: -30, y: -22)
@@ -155,10 +155,10 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
 }
 
 struct CommunityPostPreView: View {
-    private let contentColor = Color("ReviewHighColor")
-    private let likeColor = Color("MainThemeColor")
-    private let replyColor = Color("ReviewMediumColor")
-    private let defaultImageColor = Color("DefaultImageColor")
+    private let contentColor = Color("Color/Foundation/Gray/900")
+    private let likeColor = Color("Color/Foundation/Orange/500")
+    private let replyColor = Color("Color/Foundation/Gray/700")
+    private let defaultImageColor = Color("Color/Foundation/Gray/100")
     
     let info: PostInfo
     let boardName: String
@@ -199,7 +199,7 @@ struct CommunityPostPreView: View {
                                 .frame(width: 4)
                             Text(String(info.commentCount))
                                 .font(.custom("NanumSquareOTFRegular", size: 10))
-                                .foregroundColor(Color.init("ReviewMediumColor"))
+                                .foregroundColor(Color.init("Color/Foundation/Gray/700"))
                                 .frame(height: 11, alignment: .center)
                             
                         }
