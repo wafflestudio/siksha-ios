@@ -466,17 +466,14 @@
 		1E3A572F25C6FDEC00DBB3F4 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				7418F4E82E2CCA7C00C24A92 /* PreCommunitySettings */,
 				C091FEE92C314FCC00D48F92 /* MyPostView.swift */,
 				C091FEEA2C314FCC00D48F92 /* MyPostViewModel.swift */,
 				C091FEE72C314FA100D48F92 /* AccountManageView.swift */,
 				C091FEE32C314F9600D48F92 /* RenewalSettingsView.swift */,
 				C091FEE22C314F9600D48F92 /* RenewalSettingsViewModel.swift */,
 				C091FEE12C314F9600D48F92 /* RenewalVOCView.swift */,
-				1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */,
-				1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */,
 				231C9C7725F7FB9E0072C07A /* FavoriteRestaurantOrderView.swift */,
-				1E9859A826629229003A483A /* VOCView.swift */,
-				231C9C6725F7FAFB0072C07A /* InformationView.swift */,
 				231C9C6F25F7FB720072C07A /* RestaurantOrderView.swift */,
 				4EE14E182A4810A9007B9312 /* RestaurantOrderViewModel.swift */,
 				A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */,
@@ -648,6 +645,17 @@
 				4E79A1852C80B6BE007CE49B /* AlertView.swift */,
 			);
 			path = Community;
+			sourceTree = "<group>";
+		};
+		7418F4E82E2CCA7C00C24A92 /* PreCommunitySettings */ = {
+			isa = PBXGroup;
+			children = (
+				1E9859A826629229003A483A /* VOCView.swift */,
+				231C9C6725F7FAFB0072C07A /* InformationView.swift */,
+				1E3A573025C6FE0900DBB3F4 /* SettingsView.swift */,
+				1E3A576125C6FF8100DBB3F4 /* SettingsViewModel.swift */,
+			);
+			path = PreCommunitySettings;
 			sourceTree = "<group>";
 		};
 		BF97DF512AAEFE2E0083FC6F /* Domain */ = {
