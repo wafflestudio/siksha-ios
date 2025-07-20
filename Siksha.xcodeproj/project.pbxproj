@@ -491,7 +491,6 @@
 			children = (
 				BFA4759D2950B53500B41AA7 /* Extensions */,
 				1ECB250025F16D4D00875E18 /* UIRepresentable */,
-				1E3A573925C6FE2700DBB3F4 /* Extensions.swift */,
 				1E9A6EA92674BDFD005CAEA1 /* NavigationBarModifier.swift */,
 				1ECB250125F16D7900875E18 /* View Elements */,
 				1EABA80A25EBE28000B79CB8 /* Utils.swift */,
@@ -670,6 +669,7 @@
 			children = (
 				BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */,
 				4EC08B502C67ABF600AB2001 /* HexColor.swift */,
+				1E3A573925C6FE2700DBB3F4 /* Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
