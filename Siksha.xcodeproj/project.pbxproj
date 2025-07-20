@@ -133,8 +133,6 @@
 		A615B4DE2D86B91C0095865F /* MenuListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A615B4DD2D86B91C0095865F /* MenuListView.swift */; };
 		A62E8CB22E0D91A300052DAE /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = A62E8CB12E0D91A300052DAE /* Mixpanel */; };
 		A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */; };
-		A68084FD2E2CD35D00A787C3 /* MixpanelKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68084FC2E2CD35D00A787C3 /* MixpanelKey.swift */; };
-		A68084FF2E2CD3B900A787C3 /* Mixpanel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A68084FE2E2CD3B900A787C3 /* Mixpanel+Extensions.swift */; };
 		A6ACE1112DA050AF00057585 /* MeasureFrameModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6ACE1102DA050AF00057585 /* MeasureFrameModifier.swift */; };
 		A6CBB8672C8204CB0067723D /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */; };
 		A6E8C9C52D86CEBB005FC8A8 /* FestivalSwitchStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E8C9C42D86CEBB005FC8A8 /* FestivalSwitchStyle.swift */; };
@@ -308,8 +306,6 @@
 		A615B4DB2D86AAA60095865F /* MenuFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuFilters.swift; sourceTree = "<group>"; };
 		A615B4DD2D86B91C0095865F /* MenuListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuListView.swift; sourceTree = "<group>"; };
 		A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewModel.swift; sourceTree = "<group>"; };
-		A68084FC2E2CD35D00A787C3 /* MixpanelKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixpanelKey.swift; sourceTree = "<group>"; };
-		A68084FE2E2CD3B900A787C3 /* Mixpanel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Mixpanel+Extensions.swift"; sourceTree = "<group>"; };
 		A6ACE1102DA050AF00057585 /* MeasureFrameModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureFrameModifier.swift; sourceTree = "<group>"; };
 		A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
 		A6E8C9C42D86CEBB005FC8A8 /* FestivalSwitchStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalSwitchStyle.swift; sourceTree = "<group>"; };
@@ -506,7 +502,6 @@
 				1ECB251C25F1739D00875E18 /* Config.swift */,
 				A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */,
 				A6ACE1102DA050AF00057585 /* MeasureFrameModifier.swift */,
-				A68084FC2E2CD35D00A787C3 /* MixpanelKey.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -677,7 +672,6 @@
 			children = (
 				BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */,
 				4EC08B502C67ABF600AB2001 /* HexColor.swift */,
-				A68084FE2E2CD3B900A787C3 /* Mixpanel+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -928,7 +922,6 @@
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
 				BF60ADE62AC1EABF0015C468 /* Errors.swift in Sources */,
 				2360CD9A2663778B007E02DB /* ReviewListView.swift in Sources */,
-				A68084FD2E2CD35D00A787C3 /* MixpanelKey.swift in Sources */,
 				C091FEEC2C314FCC00D48F92 /* MyPostViewModel.swift in Sources */,
 				1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */,
 				1EABA80B25EBE28000B79CB8 /* Utils.swift in Sources */,
@@ -964,7 +957,6 @@
 				1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */,
 				1E96F92F25DEC14F0074940C /* MenuRepository.swift in Sources */,
 				C091FEE82C314FA100D48F92 /* AccountManageView.swift in Sources */,
-				A68084FF2E2CD3B900A787C3 /* Mixpanel+Extensions.swift in Sources */,
 				1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */,
 				231C9C9025F82D660072C07A /* RestaurantOrderRow.swift in Sources */,
 				1E3A575325C6FF1400DBB3F4 /* Review.swift in Sources */,
