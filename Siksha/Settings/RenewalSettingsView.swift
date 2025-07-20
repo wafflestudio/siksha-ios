@@ -51,10 +51,6 @@ struct RenewalSettingsView: View {
             .padding([.leading, .trailing], 20)
         
         .customNavigationBar(title: "icon")
-
-        .sheet(isPresented: $viewModel.showVOC) {
-            RenewalVOCView(viewModel)
-        }
     }
     
     var profileState: some View {
@@ -211,10 +207,7 @@ struct RenewalSettingsView: View {
     }
     
     var contact: some View {
-        
-        Button(action: {
-            viewModel.showVOC = true
-        }) {
+        NavigationLink(destination: RenewalVOCView(viewModel)) {
             HStack(alignment: .center) {
                 Text("1:1 문의하기")
                     .font(.custom("NanumSquareOTFB", size: 15))
