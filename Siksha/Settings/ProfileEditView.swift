@@ -74,7 +74,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         RoundedRectangle(cornerRadius: 11)
             .strokeBorder(lineWidth: 1)
             .frame(width: 336, height: 49)
-            .foregroundColor(Color("Gray200"))
+            .foregroundColor(.gray200)
             .overlay(
                 ClearableTextField("닉네임", text: $viewModel.nickname)
                     .padding(.horizontal, 18)
@@ -130,15 +130,15 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         ZStack {
             Circle()
                 .frame(width: 41.61, height: 41.61)
-                .foregroundColor(.white)
+                .foregroundColor(.backgroundSecondary)
                 .overlay(
                     Circle()
-                    .stroke(Color("Gray200"), lineWidth: 1)
+                        .stroke(Color.gray200, lineWidth: 1)
                 )
             
             Image("Camera")
                 .frame(width: 22.5, height: 18)
-                .foregroundColor(Color("Gray600"))
+                .foregroundColor(.gray600)
         }
     }
     
@@ -146,14 +146,15 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         Button(action: done) {
             ZStack(alignment: .center) {
                 RoundedRectangle(cornerRadius: 8.0)
-                    .fill(viewModel.enableDoneButton ? Color("Orange500") : Color("Gray600"))
+                    .fill(viewModel.enableDoneButton ? Color.orange500 : Color.gray600)
                 Text("완료")
-                    .font(.custom("NanumSquareOTFB", size: 17))
+                    .font(.custom("NanumSquareOTFEB", size: 18))
+                    .foregroundStyle(Color.textButton)
             }
         }
         .disabled(!viewModel.enableDoneButton)
-        .frame(width: 343, height: 56)
-        .foregroundColor(Color.white)
+        .frame(height: 56)
+        .padding(.horizontal, 16)
     }
     
     var keyboardToolbar: some View {
@@ -164,7 +165,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }) {
                 Text("취소")
                     .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(Color("Orange500"))
+                    .foregroundColor(Color.orange500)
                     .padding(.leading, 20)
             }
             Spacer()
@@ -174,13 +175,13 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }) {
                 Text("OK")
                     .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(Color("Orange500"))
+                    .foregroundColor(.orange500)
                     .padding(.trailing, 20)
             }
         }
         .frame(height: 42)
-        .background(Color.white)
-        .border(Color("Gray200"), width: 1)
+        .background(Color.backgroundSecondary)
+        .border(Color.gray200, width: 1)
     }
     
     private func done() {
@@ -206,7 +207,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 HStack(spacing: 0) {
                     Image("Error")
                         .frame(width: 14, height: 14)
-                        .foregroundColor(Color("Orange500"))
+                        .foregroundColor(Color.orange500)
                         .padding(.trailing, 10)
                     Text("이미 존재하는 닉네임입니다.")
                         .font(.custom("NanumSquareOTFB", size: 12))
@@ -235,15 +236,20 @@ struct ClearableTextField: View {
             TextField(title, text: $text)
                 .multilineTextAlignment(.center)
                 .font(.custom("NanumSquareOTFB", size: 15))
+                .foregroundStyle(Color.blackColor)
                 .padding(.horizontal, 20)
             if (text != "") {
                 Image(systemName: "xmark.circle.fill")
                     .frame(width: 18, height: 18)
-                    .foregroundColor(Color("Gray600"))
+                    .foregroundColor(Color.iconCloseBg)
                     .onTapGesture {
                         text = ""
                     }
             }
         }
     }
+}
+
+#Preview {
+    ProfileEditView(viewModel: ProfileEditViewModel())
 }

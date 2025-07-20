@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "notChecked.svg",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
