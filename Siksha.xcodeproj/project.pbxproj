@@ -154,7 +154,6 @@
 		C091FEE82C314FA100D48F92 /* AccountManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091FEE72C314FA100D48F92 /* AccountManageView.swift */; };
 		C091FEEB2C314FCC00D48F92 /* MyPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091FEE92C314FCC00D48F92 /* MyPostView.swift */; };
 		C091FEEC2C314FCC00D48F92 /* MyPostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091FEEA2C314FCC00D48F92 /* MyPostViewModel.swift */; };
-		C091FEEE2C3150BD00D48F92 /* Dummy.swift in Sources */ = {isa = PBXBuildFile; fileRef = C091FEED2C3150BC00D48F92 /* Dummy.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -328,7 +327,6 @@
 		C091FEE72C314FA100D48F92 /* AccountManageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountManageView.swift; sourceTree = "<group>"; };
 		C091FEE92C314FCC00D48F92 /* MyPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPostView.swift; sourceTree = "<group>"; };
 		C091FEEA2C314FCC00D48F92 /* MyPostViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyPostViewModel.swift; sourceTree = "<group>"; };
-		C091FEED2C3150BC00D48F92 /* Dummy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dummy.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -468,7 +466,6 @@
 		1E3A572F25C6FDEC00DBB3F4 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
-				C091FEED2C3150BC00D48F92 /* Dummy.swift */,
 				C091FEE92C314FCC00D48F92 /* MyPostView.swift */,
 				C091FEEA2C314FCC00D48F92 /* MyPostViewModel.swift */,
 				C091FEE72C314FA100D48F92 /* AccountManageView.swift */,
@@ -966,7 +963,6 @@
 				C091FEEB2C314FCC00D48F92 /* MyPostView.swift in Sources */,
 				BF97DF5B2AAF12200083FC6F /* AlamofireNetworking.swift in Sources */,
 				A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */,
-				C091FEEE2C3150BD00D48F92 /* Dummy.swift in Sources */,
 				1E3A576225C6FF8100DBB3F4 /* SettingsViewModel.swift in Sources */,
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
 				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
