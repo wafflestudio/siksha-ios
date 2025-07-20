@@ -27,18 +27,18 @@ public enum MenuFilterType {
         }
     }
     
-    var mixpanelEntryPoint: String {
+    var mixpanelEntryPoint: MixpanelKey.EntryPoint {
         switch self {
         case .all:
-            "main_filter"
+                .main
         case .distance:
-            "distance_filter"
+                .distance
         case .price:
-            "price_filter"
+                .price
         case .minimumRating:
-            "rating_filter"
+                .rating
         case .category:
-            "category_filter"
+                .category
         }
     }
 }
@@ -233,14 +233,7 @@ struct MenuFilterView: View {
                         )
                         .onTapGesture {
                             resetFilters()
-                            
-                            Mixpanel.mainInstance().track(
-                                event: "filter_reset",
-                                properties: [
-                                    "entry_point": menuFilterType.mixpanelEntryPoint,
-                                    "page_name": menuViewModel.mixpanelPageName
-                                ]
-                            )
+                            Mixpanel.trackFilterReset(entryPoint: menuFilterType.mixpanelEntryPoint, pageName: menuViewModel.mixpanelPageName)
                         }
                     
                     Text("적용")
@@ -345,16 +338,7 @@ struct MenuFilterView: View {
         }
         menuViewModel.saveFilters()
         
-        Mixpanel
-            .mainInstance()
-            .track(
-                event: "filter_modal_applied",
-                properties: [
-                    "entry_point": menuFilterType.mixpanelEntryPoint,
-                    "applied_filter_options": getObject(from: menuViewModel.selectedFilters),
-                    "page_name": menuViewModel.mixpanelPageName
-                ]
-            )
+        Mixpanel.trackFilterModalApplied(entryPoint: menuFilterType.mixpanelEntryPoint, appliedFilterOptions: getObject(from: menuViewModel.selectedFilters), pageName: menuViewModel.mixpanelPageName)
         
         dismiss()
     }
@@ -396,34 +380,6 @@ struct MenuFilterView: View {
             return [Mixpanel.FilterOptions.minRating.objectKey: menuViewModel.selectedFilters.minimumRating as Any]
         case .category:
             return [:]
-        }
-    }
-}
-
-extension Mixpanel {
-    enum FilterOptions {
-        case minPrice
-        case maxPrice
-        case minRating
-        case isOpenNow
-        case hasReviews
-        case maxDistanceKm
-        
-        var objectKey: String {
-            switch self {
-            case .minPrice:
-                "price_min"
-            case .maxPrice:
-                "price_max"
-            case .minRating:
-                "min_rating"
-            case .isOpenNow:
-                "is_open_now"
-            case .hasReviews:
-                "has_reviews"
-            case .maxDistanceKm:
-                "max_distance_km"
-            }
         }
     }
 }

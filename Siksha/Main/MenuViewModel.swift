@@ -62,8 +62,8 @@ final class MenuViewModel: NSObject, ObservableObject {
         return formatter.string(from: Date())
     }
     
-    var mixpanelPageName: String {
-        isFavoriteTab ? "favorites_list_page" : "store_list_page"
+    var mixpanelPageName: MixpanelKey.PageName {
+        isFavoriteTab ? .favorite : .default
     }
     
     var priceLabel:String{
