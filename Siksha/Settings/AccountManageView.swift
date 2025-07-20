@@ -28,7 +28,7 @@ struct AccountManageView: View {
     }
     
     var partitionBar: some View {
-        Color("SemanticColor/Border/Primary")
+        Color.borderPrimary
             .frame(height: 1)
             .padding([.leading, .trailing], 8)
     }
@@ -42,7 +42,7 @@ struct AccountManageView: View {
                     HStack(alignment: .center) {
                         Text("로그아웃")
                             .font(.custom("NanumSquareOTFR", size: 15))
-                            .foregroundColor(Color("Color/Foundation/Base/BlackColor"))
+                            .foregroundColor(Color.blackColor)
                             .padding([.top, .bottom], 12)
                             .padding(.leading, 16)
                         
@@ -73,7 +73,7 @@ struct AccountManageView: View {
                     HStack(alignment: .center) {
                         Text("회원탈퇴")
                             .font(.custom("NanumSquareOTFR", size: 15))
-                            .foregroundColor(Color("Color/Accent/like"))
+                            .foregroundColor(.gray800)
                             .padding([.top, .bottom], 12)
                             .padding(.leading, 16)
                         
@@ -100,8 +100,8 @@ struct AccountManageView: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .strokeBorder(Color("Color/Foundation/Gray/200"), lineWidth: 1)
-                    .background(Color("SemanticColor/Background/Secondary"))
+                    .strokeBorder(Color.gray200, lineWidth: 1)
+                    .background(Color.backgroundSecondary)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
             )
             .padding(.top, 24)

@@ -20,11 +20,11 @@ struct RenewalSettingsView: View {
         self.viewModel = viewModel
     }
     
-    private let borderColor = Color("Color/Foundation/Gray/200")
-    private let partitionColor = Color("SemanticColor/Border/Primary")
-    private let blackColor = Color("Color/Foundation/Base/BlackColor")
-    private let gray500 = Color("Color/Foundation/Gray/500")
-    private let gray900 = Color("Color/Foundation/Gray/900")
+    private let borderColor = Color.gray200
+    private let partitionColor = Color.borderPrimary
+    private let blackColor = Color.blackColor
+    private let gray500 = Color.gray500
+    private let gray900 = Color.gray900
     
     var body: some View {
             VStack(alignment: .center, spacing: 0) {
@@ -86,7 +86,7 @@ struct RenewalSettingsView: View {
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(borderColor, lineWidth: 1)
-                    .background(Color("SemanticColor/Background/Secondary"))
+                    .background(Color.backgroundSecondary)
                     .clipShape(RoundedRectangle(cornerRadius: 8))
             )
         }
@@ -96,7 +96,7 @@ struct RenewalSettingsView: View {
         Image("ArrowSmall")
             .resizable()
             .renderingMode(.template)
-            .foregroundColor(Color("Color/Foundation/Gray/500"))
+            .foregroundColor(Color.gray500)
             .frame(width: 16, height: 16)
             .padding(.trailing, 12)
     }
@@ -118,7 +118,7 @@ struct RenewalSettingsView: View {
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .strokeBorder(borderColor, lineWidth: 1)
-                .background(Color("SemanticColor/Background/Secondary"))
+                .background(Color.backgroundSecondary)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         )
     }
@@ -205,7 +205,7 @@ struct RenewalSettingsView: View {
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .strokeBorder(borderColor, lineWidth: 1)
-                .background(Color("SemanticColor/Background/Secondary"))
+                .background(Color.backgroundSecondary)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         )
     }
@@ -218,7 +218,7 @@ struct RenewalSettingsView: View {
             HStack(alignment: .center) {
                 Text("1:1 문의하기")
                     .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(Color("Color/Foundation/Orange/500"))
+                    .foregroundColor(.orange500)
                     .padding([.top, .bottom], 15)
                     .padding(.leading, 16)
                 
@@ -230,7 +230,7 @@ struct RenewalSettingsView: View {
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .strokeBorder(borderColor, lineWidth: 1)
-                .background(Color("SemanticColor/Background/Secondary"))
+                .background(Color.backgroundSecondary)
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         )
     }
