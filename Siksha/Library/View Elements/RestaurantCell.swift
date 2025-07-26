@@ -16,13 +16,17 @@ struct RestaurantCell: View {
     
     var restaurant: Restaurant
     var meals: [Meal]
+    var selectedPage:Int
+    var dayType:Int
     @State var isFavorite: Bool = false
     @State var showRestaurant: Bool = false
     @StateObject private var kakaoShareManager = KakaoShareManager()
     @Environment(\.menuViewModel) var viewModel: MenuViewModel?
     
-    init(_ restaurant: Restaurant) {
+    init(_ restaurant: Restaurant,_ selectedPage:Int,_ dayType:Int) {
         self.restaurant = restaurant
+        self.selectedPage = selectedPage
+        self.dayType = dayType
         self.meals = Array(restaurant.menus)
         self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
     }
@@ -97,13 +101,13 @@ struct RestaurantCell: View {
             }
             .padding(EdgeInsets(top: 17, leading: 13,bottom: 11.5,trailing: 0))
             HStack(alignment: .center){
-                Image("Lunch")
+                Image(TypeInfo(type:TypeSelection(rawValue: (selectedPage))!).icon)
                     .resizable()
                     .renderingMode(.original)
-                    .frame(width: 16, height: 16)
+                    .frame(width: TypeInfo(type:TypeSelection(rawValue: (selectedPage))!).width, height: TypeInfo(type:TypeSelection(rawValue: (selectedPage))!).height)
                 Spacer()
                     .frame(width:4)
-                Text("11:00 - 13:00")
+                Text(MenuViewModel.getOperatingHours(restaurant: restaurant,dayType: dayType,selectedPage: selectedPage))
                     .customFont(font: .text12(weight: .Bold))
                     .foregroundColor(lightGrayColor)
                 Spacer()
@@ -198,6 +202,6 @@ struct RestaurantCell_Previews: PreviewProvider {
         nonEmptyRes.menus.append(menu)
         nonEmptyRes.menus.append(menu2)
 
-        return RestaurantCell(nonEmptyRes)
+        return RestaurantCell(nonEmptyRes,0,0)
     }
 }

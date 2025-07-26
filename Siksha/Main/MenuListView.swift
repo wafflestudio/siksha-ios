@@ -34,7 +34,7 @@ struct MenuListView: View {
             } else if viewModel.restaurantsLists.count > 0 {
                 TabView(selection: $viewModel.selectedPage) {
                     ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
-                        RestaurantsView(viewModel.restaurantsLists[index])
+                        RestaurantsView(viewModel.restaurantsLists[index],viewModel.selectedPage,viewModel.selectedMenu?.dateType ?? 0)
                             .tag(index)
                     }
                 }
@@ -196,7 +196,7 @@ private extension MenuListView {
         VStack {
             Spacer()
             Text("식단 정보가 없습니다")
-                .font(.custom("NanumSquareOTFB", size: 15))
+                .customFont(font: .text15(weight: .Bold))
                 .foregroundColor(fontColor)
             Spacer()
         }
