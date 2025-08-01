@@ -20,7 +20,7 @@ jobs:
       TEAM_ID: ${{ secrets.TEAM_ID }}
       SLACK_URL: ${{ secrets.SLACK_WEBHOOK }}
       GIT_TAG_NAME: ${{ github.ref_name }}
-      BUNDLE_IDENTIFIER: ${{ github.BUNDLE_IDENTIFIER }}
+      BUNDLE_IDENTIFIER: ${{ secrets.BUNDLE_IDENTIFIER }}
       XCODE_VERSION: "16.2"
 
     runs-on: macos-15
