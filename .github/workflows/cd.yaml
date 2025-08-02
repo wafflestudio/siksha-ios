@@ -76,7 +76,7 @@ jobs:
           echo "$BUNDLE_DEV" > "Siksha/Supporting Files/bundle-dev.xcconfig"
           echo "$CONFIG" > "Siksha/Supporting Files/config.plist"
           echo "$GOOGLE_SERVICE_INFO" > "Siksha/Supporting Files/GoogleService-Info.plist"
-          echo "$GOOGLE_SERVICE_INFO_DEV" > "Siksha/Supporting Files/GoogleService-Info-dev.xcconfig"
+          echo "$GOOGLE_SERVICE_INFO_DEV" > "Siksha/Supporting Files/GoogleService-Info-dev.plist"
 
 
       - name: Upload prod app to TestFlight
