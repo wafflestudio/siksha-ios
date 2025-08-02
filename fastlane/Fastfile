@@ -29,10 +29,7 @@ platform :ios do
     match(
       type: "appstore", 
       app_identifier:ENV["BUNDLE_IDENTIFIER"],
-      readonly: true,
-      force: true,
-      verbose: true
-
+      readonly: true
     )
 
     update_code_signing_settings(
