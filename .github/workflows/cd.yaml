@@ -83,7 +83,3 @@ jobs:
         if: ${{ steps.regex.outputs.group1 == 'testflight' && steps.regex.outputs.group5 == 'release' }}
         run: |
           bundle exec fastlane beta 
-      - name: Upload dev app to TestFlight
-        if: ${{ steps.regex.outputs.group1 == 'testflight' && steps.regex.outputs.group5 == 'debug' }}
-        run: |
-          bundle exec fastlane beta_debug
