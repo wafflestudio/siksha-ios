@@ -81,5 +81,7 @@ jobs:
       - name: Upload prod app to TestFlight
         if: ${{ steps.regex.outputs.group1 == 'testflight' && steps.regex.outputs.group5 == 'release' }}
         run: |
-          bundle exec fastlane beta --env prod
-
+          bundle exec fastlane beta 
+        if: ${{ steps.regex.outputs.group1 == 'testflight' && steps.regex.outputs.group5 == 'debug' }}
+        run: |
+          bundle exec fastlane beta_debug
