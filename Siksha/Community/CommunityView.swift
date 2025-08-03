@@ -28,9 +28,9 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 VStack(spacing: 0) {
                     Spacer().frame(height: 18)
                     BoardList(viewModel: viewModel)
-                    Spacer().frame(height: 13)
                     
                     if !viewModel.trendingPostsListPublisher.isEmpty {
+                        Spacer().frame(height: 13)
                         TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh)
                     }
                     Spacer().frame(height: 18)
@@ -164,7 +164,7 @@ struct CommunityPostPreView: View {
                         .customFont(font: .text13(weight: .Regular))
                         .foregroundColor(.gray900)
                         .lineLimit(1)
-                        .frame(maxWidth: .infinity)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                     
                     HStack(spacing: 4) {
                         Image("PostLike-default")

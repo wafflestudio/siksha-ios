@@ -122,7 +122,9 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             Spacer()
             Image("etc")
                 .resizable()
-                .frame(width:33,height:33)
+                .scaledToFit()
+                .frame(width: 16, height: 16)
+                .padding(17)
                 .onTapGesture {
                     showActionSheet = .post(post:viewModel.postInfo)
                 }
@@ -258,6 +260,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     VStack(spacing: 0) {
                         postHeader
                             .padding(.bottom, 18)
+                            .padding(.horizontal, 19.5)
+                            .padding(.top, 16.5)
                         
                         VStack(alignment: .leading, spacing: 0) {
                             Text(viewModel.postInfo.title)
@@ -268,6 +272,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                             Text(viewModel.postInfo.content)
                                 .customFont(font: .text13(weight: .Regular))
                                 .foregroundStyle(Color.gray900)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                             
                             if viewModel.postInfo.imageURLs?.isEmpty == false {
                                 Spacer()
@@ -301,7 +306,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                             likeButton
                         }
                         .padding(.horizontal, 19.5)
-                        .padding(.top, 16.5)
                         .padding(.bottom, 12)
                         
                         divider

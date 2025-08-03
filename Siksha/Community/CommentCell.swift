@@ -58,12 +58,12 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                 Text(comment.content)
                     .customFont(font: .text13(weight: .Regular))
                     .foregroundStyle(Color.gray900)
-                    .frame(maxWidth: .infinity)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Image("etc")
                     .resizable()
-                    .frame(width: 16,height: 16)
                     .scaledToFit()
+                    .frame(width: 16,height: 16)
                     .padding(.vertical, 5)
                     .padding(.horizontal, 8.5)
                     .onTapGesture {
