@@ -71,6 +71,7 @@ extension Color {
     
     // MARK: - Text Colors
     static let textAccent = Color("SemanticColor/Text/Accent")
+    static let textBubble = Color("SemanticColor/Text/Bubble")
     static let textButton = Color("SemanticColor/Text/Button")
     static let textDim = Color("SemanticColor/Text/Dim")
     static let textGNB = Color("SemanticColor/Text/GNB")
