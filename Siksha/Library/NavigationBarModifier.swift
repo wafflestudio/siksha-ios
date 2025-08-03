@@ -32,7 +32,7 @@ struct NavigationBarModifier: ViewModifier {
                     }
                 }
             }
-            .toolbarBackground(Color.orange500, for: .navigationBar)
+            .toolbarBackground(Color.backgroundGNB, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationViewStyle(StackNavigationViewStyle())
     }
