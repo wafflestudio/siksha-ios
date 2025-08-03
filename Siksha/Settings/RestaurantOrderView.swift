@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct RestaurantOrderView: View {
-    private let backgroundColor = Color.init("AppBackgroundColor")
+    private let backgroundColor = Color.backgroundMain
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel: RestaurantOrderViewModel
@@ -44,7 +44,7 @@ struct RestaurantOrderView: View {
                 Spacer()
                 Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
                     .font(.custom("NanumSquareOTFR", size: 14))
-                    .foregroundColor(.init("Gray700"))
+                    .foregroundColor(.gray700)
                 Spacer()
             }
             .padding(.top, 20)
