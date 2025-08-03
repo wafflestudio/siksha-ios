@@ -202,7 +202,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         VStack {
             ZStack(alignment: .center) {
                 RoundedRectangle(cornerRadius: 8.0)
-                    .fill(Color.black.opacity(0.5))
+                    .fill(Color.backgroundToast)
                 
                 HStack(spacing: 0) {
                     Image("Error")
