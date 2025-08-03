@@ -24,7 +24,7 @@ struct TopPosts: View {
     
     var body: some View {
         TabView(selection: $select) {
-            ForEach(appendedInfos.enumerated(), id: \.offset) { index, info in
+            ForEach(Array(zip(appendedInfos.indices, appendedInfos)), id: \.0) { index, info in
                 TopPostCell(post: info, needRefresh: needRefresh)
                     .frame(width: .infinity, height: .infinity)
                     .padding(.horizontal, 20)
