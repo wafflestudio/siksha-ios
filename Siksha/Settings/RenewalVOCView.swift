@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RenewalVOCView: View {
-    private let fontColor = Color.gray700
+    private let fontColor = Color.blackColor
     private let orangeColor = Color.orange500
     private let lightGrayColor = Color.gray600
     
@@ -22,6 +22,7 @@ struct RenewalVOCView: View {
     var backButton: some View {
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
+            viewModel.vocComment = ""
         }) {
             Image("NavigationBack")
                 .resizable()
@@ -53,6 +54,7 @@ struct RenewalVOCView: View {
                     
                     Text("ID \(viewModel.userId)")
                         .font(.custom("NanumSquareOTFB", size: 12))
+                        .foregroundColor(Color.blackColor)
                     
                     Spacer()
                 }
@@ -60,7 +62,7 @@ struct RenewalVOCView: View {
                 .padding(.bottom, 8)
                 
                 ZStack(alignment: .bottom) {
-                    TextView(text: $viewModel.vocComment, placeHolder: .constant(""))
+                    TextView(text: $viewModel.vocComment, placeHolder: .constant("내용을 입력해주세요."))
                         .frame(height: 280)
                     
                     HStack {
@@ -92,7 +94,7 @@ struct RenewalVOCView: View {
                 .padding(16)
             }
     //        .edgesIgnoringSafeArea(.all)
-            .background(Color.white.onTapGesture {
+            .background(Color.backgroundPrimary.onTapGesture {
                 UIApplication.shared.endEditing()
             })
     //        .navigationBarTitle("", displayMode: .inline)
