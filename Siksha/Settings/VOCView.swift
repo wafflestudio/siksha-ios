@@ -9,9 +9,9 @@ import SwiftUI
 
 
 struct VOCView: View {
-    private let fontColor = Color("DefaultFontColor")
-    private let orangeColor = Color.init("main")
-    private let lightGrayColor = Color.init("LightGrayColor")
+    private let fontColor = Color("Color/Foundation/Gray/700")
+    private let orangeColor = Color.init("Color/Foundation/Orange/500")
+    private let lightGrayColor = Color.init("Color/Foundation/Gray/600")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel: SettingsViewModel

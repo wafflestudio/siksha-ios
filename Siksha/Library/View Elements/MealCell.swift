@@ -10,10 +10,10 @@ import SwiftUI
 struct MealCell: View {
     @ObservedObject var viewModel: MealInfoViewModel
     private var vegetarian: Bool = false
-    private let orangeColor = Color.init("main")
-    private let grayColor = Color.init("ReviewHighColor")
-    private let lightGrayColor = Color.init("ReviewMediumColor")
-    private let lighterGrayColor = Color.init("ReviewLowColor")
+    private let orangeColor = Color.init("Color/Foundation/Orange/500")
+    private let grayColor = Color.init("Color/Foundation/Gray/900")
+    private let lightGrayColor = Color.init("Color/Foundation/Gray/700")
+    private let blackColor = Color.init("Color/Foundation/Base/BlackColor")
     var formattedPrice: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -32,39 +32,47 @@ struct MealCell: View {
         HStack(alignment: .top) {
             Text("\(viewModel.meal.nameKr)")
                 .multilineTextAlignment(.leading)
-                .font(.custom("NanumSquareOTFR", size: 15))
-                .foregroundColor(.black)
-                .padding(.top, 3)
+                .frame(maxWidth: 168,alignment: .leading)
+                .customFont(font: .text15(weight: .Regular))
+                .foregroundColor(blackColor)
             
             if vegetarian {
                 Image("Vegetarian")
                     .resizable()
                     .renderingMode(.original)
                     .frame(width: 18, height: 18)
-                    .padding(.top, 3)
             }
 
             Spacer()
-            
-            Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
-                .font(.custom("NanumSquareOTFR", size: 14))
-                .foregroundColor(.black)
-                .frame(width: 50)
-                .padding(.top, 3)
+            if viewModel.meal.price < 10000{
+                Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
+                    .customFont(font: .text14(weight:.Regular))
+                    .foregroundColor(blackColor)
+                    .frame(width: 38)
+            }
+            else{
+                Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
+                    .customFont(font: .text14(weight:.Regular))
+                    .foregroundColor(blackColor)
+            }
+            Spacer()
+                .frame(width:16)
+                Text(viewModel.meal.reviewCnt > 0 ? String(format: "%.1f", viewModel.meal.score) : "-")
+                    .customFont(font: .text14(weight: .Regular))
+                    .foregroundColor(blackColor)
+                    .frame(width:23)
+                    
+            Spacer()
+                .frame(width:16)
 
-            Text(viewModel.meal.reviewCnt > 0 ? String(format: "%.1f", viewModel.meal.score) : "-")
-                .font(.custom("NanumSquareOTFB", size: 15))
-                .foregroundColor(viewModel.meal.reviewCnt > 0 ? viewModel.meal.score > 4.0 ? grayColor : viewModel.meal.score <= 4.0 && viewModel.meal.score >= 3.0 ? lightGrayColor : lighterGrayColor : lighterGrayColor)
-                .frame(width: 35, height: 20)
-                .padding(.top, 0.5)
-            
             Button(action: {
             viewModel.toggleLike()
             }){
                 Image(viewModel.meal.isLiked ? "Heart-selected" : "Heart-default")
-                    .frame(width: 35, height: 20)
+                    .frame(width: 24, height: 24)
             }
         }
+        .padding(.zero)
         .background(Color.white)
     }
 }

@@ -62,7 +62,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 ZStack(alignment:.topTrailing){
                     Text("\(imageIndex + 1)/\(imageURLs.count)")
                         .frame(width:28,height: 17)
-                        .background(Color("LightFontColor"))
+                        .background(Color("Color/Foundation/Gray/400"))
                         .foregroundColor(.white)
                         .cornerRadius(10)
                         .font(.custom("NanumSquareOTFR", size: 10))
@@ -120,7 +120,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     .font(Font.custom("NanumSquareOTFB", size: 11))
                 Text(relativeDate)
                     .font(Font.custom("NanumSquareOTFR", size: 10))
-                    .foregroundColor(Color("ReviewLowColor"))
+                    .foregroundColor(Color("Color/Foundation/Gray/600"))
             }
             Spacer()
             /*Menu{
@@ -213,7 +213,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 Button(action:{showPostDeleteAlert = false},label:{Text("취소")
                         .font(.custom("Inter-Bold", size: 16))
                     .frame(maxWidth:.infinity)})
-                .foregroundColor(Color("MainThemeColor"))
+                .foregroundColor(Color("Color/Foundation/Orange/500"))
                 .frame(maxWidth: .infinity,alignment: .center)
                 Divider()
                 Button(action:{
@@ -253,7 +253,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 },label:{Text("취소")
                         .font(.custom("Inter-Bold", size: 16))
                     .frame(maxWidth:.infinity)})
-                .foregroundColor(Color("MainThemeColor"))
+                .foregroundColor(Color("Color/Foundation/Orange/500"))
                 .frame(maxWidth: .infinity,alignment: .center)
                 Divider()
                 Button(action:{
@@ -317,7 +317,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                         .frame(width: 4)
                                     Text(String(viewModel.postInfo.likeCount))
                                         .font(.custom("Inter-Regular", size: 10))
-                                        .foregroundColor(Color("MainThemeColor"))
+                                        .foregroundColor(Color("Color/Foundation/Orange/500"))
                                 }
                                 
                                 HStack(alignment: .center) {
@@ -327,7 +327,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                         .frame(width: 4)
                                     Text(String(viewModel.postInfo.commentCount))
                                         .font(.custom("Inter-Regular", size: 10))
-                                        .foregroundColor(Color.init("ReviewMediumColor"))
+                                        .foregroundColor(Color.init("Color/Foundation/Gray/700"))
                                         .frame(height: 11, alignment: .center)
                                 }
                                 
