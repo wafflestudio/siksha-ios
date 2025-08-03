@@ -93,7 +93,7 @@
 		4E23C5A62D17DCDA0088C1F6 /* ErrorAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */; };
 		4E23C5A82D17E1E10088C1F6 /* ErrorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E23C5A72D17E1DD0088C1F6 /* ErrorHelper.swift */; };
 		4E3D4EE72A74E02A005C7AB2 /* BoardNameCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE62A74E02A005C7AB2 /* BoardNameCell.swift */; };
-		4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */; };
+		4E3D4EE92A74E82B005C7AB2 /* BoardList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EE82A74E82B005C7AB2 /* BoardList.swift */; };
 		4E3D4EEB2A74F743005C7AB2 /* TopPostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */; };
 		4E3D4EEF2A750078005C7AB2 /* TopPosts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */; };
 		4E4E22DE2ABEC4C500A81E47 /* CommunityReplyBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E4E22DD2ABEC4C500A81E47 /* CommunityReplyBar.swift */; };
@@ -272,7 +272,7 @@
 		4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorAlert.swift; sourceTree = "<group>"; };
 		4E23C5A72D17E1DD0088C1F6 /* ErrorHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorHelper.swift; sourceTree = "<group>"; };
 		4E3D4EE62A74E02A005C7AB2 /* BoardNameCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardNameCell.swift; sourceTree = "<group>"; };
-		4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardSelect.swift; sourceTree = "<group>"; };
+		4E3D4EE82A74E82B005C7AB2 /* BoardList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardList.swift; sourceTree = "<group>"; };
 		4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPostCell.swift; sourceTree = "<group>"; };
 		4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopPosts.swift; sourceTree = "<group>"; };
 		4E4E22DD2ABEC4C500A81E47 /* CommunityReplyBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityReplyBar.swift; sourceTree = "<group>"; };
@@ -634,7 +634,7 @@
 				4E4E22DD2ABEC4C500A81E47 /* CommunityReplyBar.swift */,
 				4E3D4EE62A74E02A005C7AB2 /* BoardNameCell.swift */,
 				4E74167C2A9B63A00010769F /* CommentCell.swift */,
-				4E3D4EE82A74E82B005C7AB2 /* BoardSelect.swift */,
+				4E3D4EE82A74E82B005C7AB2 /* BoardList.swift */,
 				4E3D4EEA2A74F743005C7AB2 /* TopPostCell.swift */,
 				4E3D4EEE2A750078005C7AB2 /* TopPosts.swift */,
 				4E1BDE232A7F75BC00046ADC /* CommunityView.swift */,
@@ -996,7 +996,7 @@
 				4E6465122B1D8EEB00A4ABAD /* User.swift in Sources */,
 				1E9859A926629229003A483A /* VOCView.swift in Sources */,
 				4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */,
-				4E3D4EE92A74E82B005C7AB2 /* BoardSelect.swift in Sources */,
+				4E3D4EE92A74E82B005C7AB2 /* BoardList.swift in Sources */,
 				1E7226F825FBDE72008C272E /* MealCell.swift in Sources */,
 				7418F4E72E2CBF6700C24A92 /* Color+.swift in Sources */,
 				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,

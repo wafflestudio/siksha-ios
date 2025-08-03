@@ -22,7 +22,8 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 7, height: 15)
+                .frame(width: 24, height: 24)
+                .scaledToFit()
                 .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
         }
         .contentShape(Rectangle())
@@ -48,7 +49,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
             VStack {
                 VStack(spacing:0){
                     ZStack{
-                        Color("Orange500")
+                        Color.backgroundGNB
                             .ignoresSafeArea(.all)
                         HStack{
                             backButton
@@ -56,20 +57,28 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                         }.padding(.zero)
                         HStack{
                             Text("신고하기")
-                                .foregroundColor(.white)
+                                .foregroundColor(.textGNB)
                                 .frame(alignment: .center)
-                                .font(.custom("Inter-Bold", size: 16))
+                                .customFont(font: .text18(weight: .ExtraBold))
                         }.padding(.zero)
                         
                     }.frame(height:44)
                     HStack {
-                        Image("Comment-new")
-                            .renderingMode(.original)
-                            .resizable()
-                            .frame(width: 17, height: 16)
+                        Group {
+                            Image("Comment-new")
+                                .renderingMode(.original)
+                                .resizable()
+                                .frame(width: 18, height: 18)
+                                .scaledToFit()
+                            
+                            Color.gray700
+                                .blendMode(.destinationOut)
+                        }
+                        .compositingGroup()
                         
                         Text("어떤 이유로 신고하시나요?")
-                            .font(.custom("NanumSquareOTFB", size: 20))
+                            .customFont(font: .text18(weight: .ExtraBold))
+                            .foregroundStyle(Color.blackColor)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(EdgeInsets(top: 44, leading: 16, bottom: 20, trailing: 16))
@@ -81,7 +90,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                             .frame(width: 24, height: 24)
                         
                         Text("ID \(settingsViewModel.userId)")
-                            .font(.custom("NanumSquareOTFB", size: 12))
+                            .customFont(font: .text12(weight: .Bold))
                         
                         Spacer()
                     }
@@ -94,8 +103,8 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                         HStack {
                             Spacer()
                             Text("\(reportReason.count)자 / 200자")
-                                .font(.custom("NanumSquareOTFL", size: 11))
-                                .foregroundColor(fontColor)
+                                .customFont(font: .text11(weight: .Regular))
+                                .foregroundColor(.gray700)
                         }
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 8))
                     }
@@ -134,11 +143,11 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                     }, label: {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 8)
-                                    .foregroundColor(reportReason.count > 0 ? orangeColor : lightGrayColor)
+                                    .foregroundColor(reportReason.count > 0 ? .orange500 : .gray600)
                                 
-                                Text("전송하기")
-                                    .font(.custom("NanumSquareOTFB", size: 17))
-                                    .foregroundColor(.white)
+                                Text("올리기")
+                                    .customFont(font: .text18(weight: .ExtraBold))
+                                    .foregroundColor(.textButton)
                             }
                         })
                     .disabled(reportReason.count == 0)
@@ -146,7 +155,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                     .padding(16)
                 }
                 //        .edgesIgnoringSafeArea(.all)
-                .background(Color.white.onTapGesture {
+                .background(Color.backgroundPrimary.onTapGesture {
                     UIApplication.shared.endEditing()
                 })
                 .alert(isPresented: $reportCompleteAlertIsShown, content: {

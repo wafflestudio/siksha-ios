@@ -34,7 +34,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
         
             ZStack(alignment: .bottomTrailing) {
                 VStack(spacing:0){
-                    BoardSelect(viewModel: viewModel)
+                    BoardList(viewModel: viewModel)
                     if !viewModel.trendingPostsListPublisher.isEmpty {
                         Divider()
                             .foregroundColor(dividerColor)
