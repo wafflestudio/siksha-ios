@@ -49,7 +49,7 @@ struct MyPostPreView: View {
                                 .frame(width: 4)
                             Text(String(info.commentCount))
                                 .font(.custom("Inter-Regular", size: 9))
-                                .foregroundColor(Color.init("Gray700"))
+                                .foregroundColor(Color.init("Color/Foundation/Gray/700"))
                                 .frame(height: 11, alignment: .center)
                             
                         }
@@ -70,7 +70,7 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     
     @State var tag: Int? = nil
     @State var needRefresh = false
-    let dividerColor = Color("Gray100")
+    let dividerColor = Color("Color/Foundation/Gray/100")
     
     @ObservedObject private var viewModel: ViewModel
     

@@ -2,9 +2,9 @@ import SwiftUI
 
 
 struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: CommunityPostViewModelType {
-    private let fontColor = Color("Gray700")
-    private let orangeColor = Color.init("Orange500")
-    private let lightGrayColor = Color.init("Gray600")
+    private let fontColor = Color("Color/Foundation/Gray/700")
+    private let orangeColor = Color.init("Color/Foundation/Orange/500")
+    private let lightGrayColor = Color.init("Color/Foundation/Gray/600")
     private var commentId:Int? = nil
     @EnvironmentObject var appState:AppState
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -48,7 +48,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
             VStack {
                 VStack(spacing:0){
                     ZStack{
-                        Color("Orange500")
+                        Color("Color/Foundation/Orange/500")
                             .ignoresSafeArea(.all)
                         HStack{
                             backButton
