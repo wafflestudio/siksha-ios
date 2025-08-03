@@ -16,7 +16,7 @@ struct RestaurantOrderRow: View {
             Text(text)
                 .padding(.leading, 15)
                 .font(.custom("NanumSquareOTFB", size: 15))
-                .foregroundColor(.init("Color/Foundation/Gray/700"))
+                .foregroundColor(.init("DefaultFontColor"))
         }
         .frame(height: 40)
     }

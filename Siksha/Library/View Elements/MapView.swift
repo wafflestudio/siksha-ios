@@ -32,11 +32,9 @@ struct MapView: UIViewRepresentable {
         view.moveCamera(cameraUpdate)
         let marker = NMFMarker(position: coordinate, iconImage: .init(name: "mapMarker"))
         marker.captionText = markerText
-        marker.captionColor = UIColor(named: "Color/Foundation/Gray/900") ?? .black
+        marker.captionColor = UIColor(named: "DefaultFontColor") ?? .black
         marker.captionAligns = [.top]
         marker.captionOffset = -18
-        marker.captionTextSize = 14
-        // TODO: APPLY NEW MARKER IMAGE
         marker.mapView = view
     }
     
