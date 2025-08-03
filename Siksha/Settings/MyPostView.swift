@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct MyPostPreView: View {
-    private let contentColor = Color("Color/Foundation/Orange/900")
-    private let likeColor = Color("Color/Foundation/Orange/500")
-    private let replyColor = Color("Color/Foundation/Gray/700")
-    private let defaultImageColor = Color("Color/Foundation/Gray/199")
+    private let contentColor = Color.gray900
+    private let likeColor = Color.orange500
+    private let replyColor = Color.gray700
+    private let defaultImageColor = Color.gray100
     
     let info: PostInfo
     let boardName: String
