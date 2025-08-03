@@ -12,22 +12,21 @@ struct CommunityReplyBar: View {
     @State var isAnonymous: Bool = UserDefaults.standard.bool(forKey: "isAnonymous")
     var onCommentSubmit: (String,Bool) -> Void
     
-    let dividerColor = Color(red: 183/255, green: 183/255, blue: 183/255, opacity: 1)
-    let replyColor = Color(red: 248/255, green: 248/255, blue: 248/255, opacity: 1)
-    
     var body: some View {
-        ZStack{
+        ZStack {
             Rectangle()
-                .fill(Color.white)
-                .frame(height: 40)
+                .fill(Color.backgroundPrimary)
+                .frame(height: 52)
             
-            RoundedRectangle(cornerRadius: 12)
-                .fill(replyColor)
-                .frame(maxWidth: .infinity, maxHeight: 37)
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.gray50)
+                .frame(height: 40)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, 8.5)
                 .overlay(
-                    HStack {
+                    HStack(spacing: 0) {
                         anonymousButton
-                            .padding(EdgeInsets(top: 5, leading: 12, bottom: 5, trailing: 6))
+                            .padding(EdgeInsets(top: 12, leading: 12, bottom: 7, trailing: 8))
                         TextField("댓글을 입력하세요", text: $commentText)
                         Button(action: {
                             if(commentText != "") {
@@ -37,46 +36,22 @@ struct CommunityReplyBar: View {
                         }){
                             Text("올리기")
                                 .padding(EdgeInsets(top: 6.5, leading: 11, bottom: 6.5, trailing: 11))
-                                .background(Color("Orange500"))
-                                .font(.custom("NanumSquareOTFB", size: 12))
-                                .foregroundColor(.white)
+                                .background(Color.orange500)
+                                .customFont(font: .text13(weight: .Bold))
+                                .foregroundColor(.backgroundPrimary)
                                 .cornerRadius(6)
                         }
-                        .padding(EdgeInsets(top: 5, leading: 6.5, bottom: 5, trailing: 6.5))
+                        .padding(6.5)
                     }
                 )
-                .padding(EdgeInsets(top: 0, leading: 8.5, bottom: 5, trailing: 8.5))
         }
     }
-    /*var anonymousButton: some View {
-        Button(action: {
-            isAnonymous.toggle()
-                }) {
-                    if isAnonymous {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 15.0)
-                                .fill(Color("Orange500"))
-                                .frame(width: 34, height: 25)
-                            Text("익명")
-                                .font(.custom("Inter-SemiBold", size: 12))
-                                .foregroundColor(Color.white)
-                        }
-                    } else {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 15.0)
-                                .stroke(Color("Orange500"))
-                                .frame(width: 34, height: 25)
-                            Text("익명")
-                                .font(.custom("Inter-SemiBold", size: 12))
-                                .foregroundColor(Color("Orange500"))
-                        }
-                    }
-                }
-    }*/
+
     var anonymousButton: some View {
         Toggle(isOn: $isAnonymous) {
             Text("익명")
-                .font(.custom("Inter-Regular", size: 14))
+                .customFont(font: .text12(weight: .ExtraBold))
+                .foregroundStyle(Color.orange500)
         }
         .toggleStyle(CustomCheckboxStyle())
         .onChange(of: isAnonymous) { newValue in
@@ -95,7 +70,7 @@ struct CommunityReplyBar: View {
                     }
                 
                 configuration.label
-                    .foregroundColor(configuration.isOn ? Color("Orange500") : Color(hex:0x575757))
+                    .foregroundColor(.orange500)
             }
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
             .contentShape(Rectangle())

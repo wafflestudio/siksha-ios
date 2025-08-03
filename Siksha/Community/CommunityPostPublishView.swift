@@ -48,11 +48,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color(hex: 0xADADAD))
+                        .fill(Color.gray100)
                         .frame(height: 60)
                     Text("취소")
-                        .font(.custom("Inter-SemiBold", size: 14))
-                        .foregroundColor(Color.white)
+                        .customFont(font: .text16(weight: .Bold))
+                        .foregroundStyle(Color.gray600)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -63,11 +63,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("Orange500"))
+                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray600 : Color.orange500)
                         .frame(height: 60)
                     Text("완료")
-                        .font(.custom("Inter-SemiBold", size: 14))
-                        .foregroundColor(Color.white)
+                        .customFont(font: .text16(weight: .Bold))
+                        .foregroundStyle(Color.textButton)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -81,11 +81,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         }) {
             ZStack {
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("Orange500"))
+                    .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray600 : Color.orange500)
                     .frame(height: 60)
                 Text("올리기")
-                    .font(.custom("Inter-SemiBold", size: 17))
-                    .foregroundColor(Color.white)
+                    .customFont(font: .text16(weight: .Bold))
+                    .foregroundStyle(Color.textButton)
             }
         }
         .frame(maxWidth: .infinity)
@@ -95,7 +95,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     var anonymousButton: some View {
         Toggle(isOn: $viewModel.isAnonymous) {
             Text("익명")
-                .font(.custom("Inter-Regular", size: 14))
+                .customFont(font: .text12(weight: .Bold))
+                .foregroundStyle(Color.gray600)
         }
         .toggleStyle(CustomCheckboxStyle())
     }
@@ -112,9 +113,10 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }
                 
                 configuration.label
-                    .foregroundColor(configuration.isOn ? Color("Orange500") : Color(hex:0x575757))
+                    .foregroundColor(configuration.isOn ? .orange500 : .gray600)
             }
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+            .foregroundColor(configuration.isOn ? .orange500 : .gray600)
             .contentShape(Rectangle())
             .onTapGesture {
                 configuration.isOn.toggle()
@@ -125,8 +127,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     
     var customDivider: some View {
         HStack {
-            Color("Gray100")
-                .frame(height: 0.5)
+            Color.borderPrimary
+                .frame(height: 2)
                 .frame(maxWidth: .infinity)
         }
     }
@@ -150,12 +152,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                             }) {
                                 ZStack {
                                     Circle()
-                                        .foregroundColor(Color(hex:0x575757))
+                                        .foregroundColor(.gray700)
                                         .frame(width: 24, height: 24)
                                     
                                     Image(systemName: "xmark")
                                         .resizable()
-                                        .foregroundColor(Color(hex:0xDFDFDF))
+                                        .foregroundColor(.whiteColor)
                                         .frame(width: 10, height: 10)
                                 }
                                 .offset(x: 8, y: -8)
@@ -169,12 +171,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }) {
                         ZStack {
                             RoundedRectangle(cornerRadius: cornerRadius)
-                                .foregroundColor(Color("Gray100"))
+                                .foregroundColor(.gray100)
                                 .frame(width: 106, height: 106)
 
                             Image(systemName: "plus")
                                 .resizable()
-                                .foregroundColor(Color.white)
+                                .foregroundColor(.gray600)
                                 .frame(width: 40, height: 40)
                         }
                     }
@@ -209,16 +211,16 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 HStack {
                     Spacer()
                     Text(viewModel.boardsList.first { $0.id == viewModel.boardId }?.name ?? "게시판 선택")
-                        .foregroundColor(Color(hex: 0x575757))
+                        .foregroundColor(.gray800)
                     Image("DownArrow")
-                        .foregroundColor(Color(hex: 0x919191))
+                        .foregroundColor(.gray600)
                     Spacer()
                 }
                 .padding()
                 .frame(height: 35)
                 .background(
                     RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(Color(hex: 0xDFDFDF))
+                        .stroke(Color.gray200)
                 )
             }
             
@@ -236,15 +238,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                     Spacer()
                                     if viewModel.boardId == board.id {
                                         Text(board.name)
-                                            .foregroundColor(Color("Orange500"))
+                                            .foregroundColor(.orange500)
                                         Image("CheckMark")
-                                            .foregroundColor(Color("Orange500"))
+                                            .foregroundColor(.orange500)
                                     } else {
                                         Text(board.name)
-                                            .foregroundColor(Color(hex: 0x575757))
-                                        Image("CheckMark")
-                                            .renderingMode(.template)
-                                            .foregroundColor(Color.clear) // Placeholder to align text
+                                            .foregroundColor(.gray800)
                                     }
                                     Spacer()
                                 }
@@ -254,17 +253,17 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                             
                             if board.id != viewModel.boardsList.last?.id {
                                 Divider()
-                                    .background(Color(hex: 0xEEEEEE))
+                                    .background(Color.borderPrimary)
                             }
                         }
                     }
                 }
                 .background(
                     RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(Color(hex: 0xDFDFDF))
+                        .stroke(Color.gray200)
                         .background(
                             RoundedRectangle(cornerRadius: cornerRadius)
-                                .fill(Color.white)
+                                .fill(Color.backgroundSecondary)
                         )
                 )
                 .offset(y: 40)
@@ -284,12 +283,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             }) {
                 Text("OK")
                     .font(.custom("Inter-SemiBold", size: 16))
-                    .foregroundColor(Color("Orange500"))
+                    .foregroundColor(.orange)
                     .padding(.trailing, 20)
             }
         }
         .frame(height: 44)
-        .background(Color.white)
+        .background(Color.backgroundSecondary)
     }
 
 
@@ -303,29 +302,29 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 
                 VStack {
                     ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .fill(Color(hex: 0xF8F8F8))
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.gray50)
                             .frame(height: 35)
                         TextField("제목", text: $viewModel.title)
-                            .font(.custom("Inter-Bold", size: 14))
-                            .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                            .customFont(font: .text14(weight: .Bold))
+                            .foregroundStyle(Color.blackColor)
+                            .padding(EdgeInsets(top: 7, leading: 12, bottom: 7, trailing: 12))
                     }
                     .frame(maxWidth: .infinity)
-                    
                     
                     ZStack(alignment: .topLeading) {
                         let placeholder: String = "내용을 입력하세요."
                         
                         TextEditor(text: $viewModel.content)
                             .frame(minHeight: 120, maxHeight: max(120, availableHeight - 350))
-                            .font(.custom("Inter-ExtraLight", size: 12))
-                            .foregroundColor(.primary)
+                            .customFont(font: .text14(weight: .Regular))
+                            .foregroundColor(.blackColor)
                             .fixedSize(horizontal: false, vertical: true)
 
                         if viewModel.content.isEmpty {
                             Text(placeholder)
-                                .font(.custom("Inter-ExtraLight", size: 12))
-                                .foregroundColor(Color.init("Gray300"))
+                                .customFont(font: .text14(weight: .Regular))
+                                .foregroundColor(Color.gray300)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(EdgeInsets(top: 8, leading: 6, bottom: 0, trailing: 0))
                         }
