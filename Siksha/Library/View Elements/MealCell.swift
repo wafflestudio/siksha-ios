@@ -13,7 +13,6 @@ struct MealCell: View {
     private let orangeColor = Color.init("Color/Foundation/Orange/500")
     private let grayColor = Color.init("Color/Foundation/Gray/900")
     private let lightGrayColor = Color.init("Color/Foundation/Gray/700")
-    private let blackColor = Color.init("Color/Foundation/Base/BlackColor")
     var formattedPrice: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -34,7 +33,7 @@ struct MealCell: View {
                 .multilineTextAlignment(.leading)
                 .frame(maxWidth: 168,alignment: .leading)
                 .customFont(font: .text15(weight: .Regular))
-                .foregroundColor(blackColor)
+                .foregroundColor(.blackColor)
             
             if vegetarian {
                 Image("Vegetarian")
@@ -47,19 +46,19 @@ struct MealCell: View {
             if viewModel.meal.price < 10000{
                 Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
                     .customFont(font: .text14(weight:.Regular))
-                    .foregroundColor(blackColor)
+                    .foregroundColor(.blackColor)
                     .frame(width: 38)
             }
             else{
                 Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
                     .customFont(font: .text14(weight:.Regular))
-                    .foregroundColor(blackColor)
+                    .foregroundColor(.blackColor)
             }
             Spacer()
                 .frame(width:16)
                 Text(viewModel.meal.reviewCnt > 0 ? String(format: "%.1f", viewModel.meal.score) : "-")
                     .customFont(font: .text14(weight: .Regular))
-                    .foregroundColor(blackColor)
+                    .foregroundColor(.blackColor)
                     .frame(width:23)
                     
             Spacer()
@@ -73,7 +72,7 @@ struct MealCell: View {
             }
         }
         .padding(.zero)
-        .background(Color.white)
+        .background(Color.backgroundSecondary)
     }
 }
 
