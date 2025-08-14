@@ -44,7 +44,7 @@ extension Color {
     static let orange700 = Color("Color/Foundation/Orange/700")
     static let orange800 = Color("Color/Foundation/Orange/800")
     static let orange900 = Color("Color/Foundation/Orange/900")
-    
+    static let orangeTint = Color("Color/Foundation/Orange/Tint")
     
     // MARK: - Semantic Colors
     

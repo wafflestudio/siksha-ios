@@ -12,8 +12,8 @@ struct DistanceSliderView: View {
     let minValue: Double = 200
     let maxValue: Double = 1000
     let step: Double = 50
-    private let orangeColor = Color("Color/Foundation/Orange/500")
-    private let sliderBackgroundColor: Color = Color("Color/Foundation/Gray/200")
+    private let orangeColor = Color.orange500
+    private let sliderBackgroundColor: Color = Color.elementControl
     
     var body: some View {
         VStack {
@@ -179,8 +179,8 @@ struct SliderValueIndicator: View {
     let sliderWidth: CGFloat
     let pointerOffset: CGFloat
     
-    private let backgroundColor: Color = Color("Color/Foundation/Gray/100")
-    private let fontColor: Color = Color("Color/Foundation/Gray/700")
+    private let backgroundColor: Color = Color.elementTooltip
+    private let fontColor: Color = Color.gray700
     
     @State private var boxWidth: CGFloat = 0
     
