@@ -12,10 +12,10 @@ struct MenuListView: View {
     @Binding var selectedFilterType: MenuFilterType?
     @State private var isAtLeadingEdge: Bool = true
     
-    private let backgroundColor = Color("AppBackgroundColor")
-    private let lightGrayColor = Color("Color/Foundation/Gray/600")
-    private let orangeColor = Color("Color/Foundation/Orange/500")
-    private let fontColor = Color("Color/Foundation/Gray/700")
+    private let backgroundColor = Color.backgroundMain
+    private let lightGrayColor = Color.gray600
+    private let orangeColor = Color.orange500
+    private let fontColor = Color.gray700
     private let typeInfos: [TypeInfo] = [
         TypeInfo(type: .breakfast),
         TypeInfo(type: .lunch),
@@ -182,7 +182,7 @@ private extension MenuListView {
                     Rectangle()
                         .foregroundStyle(.clear)
                         .background(
-                            LinearGradient(colors: [Color("Color/Foundation/Gray/50"), Color("Color/Foundation/Gray/50").opacity(0)], startPoint: .leading, endPoint: .trailing)
+                            LinearGradient(colors: [Color.gray50, Color.gray50.opacity(0)], startPoint: .leading, endPoint: .trailing)
                         )
                         .frame(width: 16, height: 34)
                 }
