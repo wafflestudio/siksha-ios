@@ -167,7 +167,7 @@ private extension MenuView {
             CalendarView(selectedDate: $viewModel.selectedDate)
                 .frame(height: 300)
                 .padding(EdgeInsets(top: 4, leading: 10, bottom: 15, trailing: 10))
-                .background(Color.white)
+                .background(Color.backgroundSecondary)
                 .transition(.opacity.animation(.easeInOut(duration: 0.3)))
                 .zIndex(2)
         }
