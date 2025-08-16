@@ -46,6 +46,7 @@ struct OperatingHoursCell: View {
                                 .frame(width:20,height:20)
                             Text(hour)
                                 .customFont(font: .text14(weight: .Regular))
+                                .foregroundStyle(Color.gray900)
                         }
                         .padding(.zero)
                     }
@@ -66,7 +67,7 @@ struct OperatingHoursTable: View {
     private let hoHours: [String]
     private let isFestivalRestaurant: Bool
     
-    private let dividerColor = Color.init(red: 236/255, green: 236/255, blue: 236/255)
+    private let dividerColor = Color.borderPrimary
     
     init(hours: [String], isFestivalRestaurant: Bool) {
         self.wdHours = hours[0].split(separator: "\n").map { String($0) }
