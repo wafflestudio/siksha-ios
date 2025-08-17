@@ -5,60 +5,52 @@
 //  Created by 박정헌 on 2023/07/29.
 //
 
-import Foundation
 import SwiftUI
 
-struct TopPosts:View{
+// TODO: TopPost 제대로 작동 + 레이아웃
+
+struct TopPosts: View {
     var infos: [PostInfo]
-    let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
-    let needRefresh:Binding<Bool>
+    let needRefresh: Binding<Bool>
+    
+    private let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
+    private let flippingAngle = Angle(degrees: 0)
     @State private var counter = 0
     @State private var select = 0
-    var body:some View{
-        let appendedInfos = infos.count > 0 ? infos + [infos[0]] : []
-        let flippingAngle = Angle(degrees: 0)
-        GeometryReader { proxy in
-            TabView(selection: $select) {
-                ForEach(Array(zip(appendedInfos.indices, appendedInfos)), id: \.0) { index,info in
-                    TopPostCell(post: info, needRefresh:needRefresh )
     
-                        .frame(width: proxy.size.width, height: proxy.size.height)
-                        .rotationEffect(.degrees(-90))
-                        .rotation3DEffect(flippingAngle, axis: (x: 1, y: 0, z: 0))
-                        .gesture(DragGesture())
-                     
-                    
-                }
-
+    private var appendedInfos: [PostInfo] {
+        infos.count > 0 ? infos + [infos[0]] : []
+    }
+    
+    var body: some View {
+        TabView(selection: $select) {
+            ForEach(Array(zip(appendedInfos.indices, appendedInfos)), id: \.0) { index, info in
+                TopPostCell(post: info, needRefresh: needRefresh)
+                    .frame(width: .infinity)
+                    .padding(.horizontal, 20)
+                    .gesture(DragGesture())
             }
-
-                .background(Color.init(red:1,green:149/255,blue:34/255,opacity: 0.2))
-                .cornerRadius(12)
-            .frame(width: proxy.size.height, height: proxy.size.width)
-            .rotation3DEffect(flippingAngle, axis: (x: 1, y: 0, z: 0))
-            .rotationEffect(.degrees(90), anchor: .topLeading)
-            .offset(x: proxy.size.width)
-
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-        }  
-        .frame(height:35)
-        .onReceive(timer){ _ in
-            if(select == appendedInfos.count - 1){
+        }
+        .frame(height: 35)
+        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+        .onReceive(timer) { _ in
+            if select == appendedInfos.count - 1 {
                 select = 0
-                withAnimation{
+                withAnimation {
                     select = 1
                 }
-            }
-            else{
-                withAnimation{
+            } else {
+                withAnimation {
                     select += 1
                 }
             }
         }
-        
-
+        .onDisappear {
+            timer.upstream.connect().cancel()
+        }
     }
 }
+
 /*struct TopPosts_Preview:PreviewProvider{
     static var previews: some View{
         TopPosts(infos: (1..<5).map {

@@ -5,30 +5,33 @@
 //  Created by 박정헌 on 2023/07/29.
 //
 
-import Foundation
 import SwiftUI
+
 struct BoardNameCell: View{
-    let selectedBackgroundColor = Color.init("Color/Foundation/Orange/500")
-    let unSelectedBackgroundColor =  Color.init("Color/Foundation/Gray/100")
-
-    let selectedFontColor = Color.white
-    let unSelectedFontColor = Color.init("Color/Foundation/Gray/500")
-
     var isSelected: Bool
     var boardName: String
     
+    private var backgroundColor: Color {
+        isSelected ? .orange500 : .gray100
+    }
+    
+    private var nameColor: Color {
+        isSelected ? .textButton : .textBubble
+    }
+    
     var body: some View{
         Text(boardName)
-            .font(.custom("NanumSquareOTFB", size: 15))
-            .padding(EdgeInsets(top: 9, leading: 12, bottom: 9, trailing: 12))
-            .background(isSelected ? selectedBackgroundColor : unSelectedBackgroundColor)
-            .foregroundColor(isSelected ? selectedFontColor : unSelectedFontColor)
+            .customFont(font: .text15(weight: .Bold))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(backgroundColor)
+            .foregroundColor(nameColor)
             .cornerRadius(12)
     }
     
 }
-struct BoardNameCell_Previews: PreviewProvider {
-    static var previews: some View {
-        BoardNameCell(isSelected: true, boardName: "자유게시판")
-    }
+
+#Preview {
+    BoardNameCell(isSelected: true, boardName: "자유 게시판")
+    BoardNameCell(isSelected: false, boardName: "리뷰 게시판")
 }

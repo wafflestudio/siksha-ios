@@ -5,40 +5,49 @@
 //  Created by 박정헌 on 2023/07/29.
 //
 
-import Foundation
 import SwiftUI
-struct TopPostCell:View{
-    var post:PostInfo
-    let needRefresh:Binding<Bool>
-    var body:some View{
-        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: post.id), needPostViewRefresh:needRefresh)){
-            HStack(alignment: .center){
+
+struct TopPostCell: View{
+    var post: PostInfo
+    let needRefresh: Binding<Bool>
+    
+    var body: some View {
+        NavigationLink {
+            CommunityPostView(
+                viewModel: CommunityPostViewModel(
+                    communityRepository: DomainManager.shared.domain.communityRepository,
+                    postId: post.id
+                ),
+                needPostViewRefresh:needRefresh
+            )
+        } label: {
+            HStack(spacing: 0) {
                 Text(post.title)
-                    .font(.custom("NanumSquareOTFR", size: 12))
-                    .foregroundColor(.black)
-                    .lineLimit(1)
-                    .highPriorityGesture(DragGesture())
+                    .customFont(font: .text13(weight: .Regular))
+                    .foregroundColor(.blackColor)
                 
                 Spacer()
-                    .highPriorityGesture(DragGesture())
                 
-                Image("like").padding(EdgeInsets(top: 0, leading: 0, bottom: 2, trailing: 0))
-                    .highPriorityGesture(DragGesture())
-                
-                Text("\(post.likeCount)").foregroundColor(Color.init(red:1,green:149/255,blue:34/255))
-                    .font(.custom("NanumSquareOTFRegular",size:10))
-                    .highPriorityGesture(DragGesture())
+                HStack(spacing: 4) {
+                    Image("like")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 11.5, height: 11)
+                        .foregroundStyle(Color.orange500)
+                    
+                    Text("\(post.likeCount)")
+                        .foregroundColor(Color.orange500)
+                        .customFont(font: .text11(weight: .Bold))
+                }
+                .lineLimit(1)
             }
-            
-            .padding(EdgeInsets(top: 0, leading: 15, bottom: 0, trailing: 15))
+            .padding(EdgeInsets(top: 9, leading: 15, bottom: 8, trailing: 13))
+            .background(Color.orangeTint)
+            .clipShape(
+                RoundedRectangle(cornerRadius: 12)
+            )
             .highPriorityGesture(DragGesture())
-            
         }
         .highPriorityGesture(DragGesture())
     }
 }
-/*struct TopPostCell_Preview:PreviewProvider{
-    static var previews:some View{
-        TopPostCell(post: <#PostInfo#>, title: "제목", content: "본문 본문 본문", like: 3)
-    }
-}*/

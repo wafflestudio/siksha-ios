@@ -12,23 +12,27 @@ struct CommunityReplyBar: View {
     @State var isAnonymous: Bool = UserDefaults.standard.bool(forKey: "isAnonymous")
     var onCommentSubmit: (String,Bool) -> Void
     
-    let dividerColor = Color(red: 183/255, green: 183/255, blue: 183/255, opacity: 1)
-    let replyColor = Color(red: 248/255, green: 248/255, blue: 248/255, opacity: 1)
-    
     var body: some View {
-        ZStack{
+        ZStack {
             Rectangle()
-                .fill(Color.white)
-                .frame(height: 40)
+                .fill(Color.backgroundPrimary)
+                .frame(height: 52)
             
-            RoundedRectangle(cornerRadius: 12)
-                .fill(replyColor)
-                .frame(maxWidth: .infinity, maxHeight: 37)
+            RoundedRectangle(cornerRadius: 8)
+                .fill(Color.gray50)
+                .frame(height: 40)
+                .frame(maxWidth: .infinity)
                 .overlay(
-                    HStack {
+                    HStack(spacing: 0) {
                         anonymousButton
-                            .padding(EdgeInsets(top: 5, leading: 12, bottom: 5, trailing: 6))
-                        TextField("댓글을 입력하세요", text: $commentText)
+                            .padding(EdgeInsets(top: 11.5, leading: 12, bottom: 7.5, trailing: 8))
+                        TextField(
+                            "댓글을 입력하세요.",
+                            text: $commentText,
+                            prompt: Text("댓글을 입력하세요.").foregroundColor(.gray500)
+                        )
+                            .customFont(font: .text13(weight: .Bold))
+                            .padding(.top, 3)
                         Button(action: {
                             if(commentText != "") {
                                 onCommentSubmit(commentText,isAnonymous)
@@ -36,47 +40,22 @@ struct CommunityReplyBar: View {
                             }
                         }){
                             Text("올리기")
-                                .padding(EdgeInsets(top: 6.5, leading: 11, bottom: 6.5, trailing: 11))
-                                .background(Color("Color/Foundation/Orange/500"))
-                                .font(.custom("NanumSquareOTFB", size: 12))
-                                .foregroundColor(.white)
-                                .cornerRadius(6)
+                                .padding(EdgeInsets(top: 4.5, leading: 10, bottom: 4.5, trailing: 10))
+                                .customFont(font: .text13(weight: .Bold))
+                                .foregroundColor(.backgroundPrimary)
+                                .background(Color.orange500)
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                                .padding(6.5)
                         }
-                        .padding(EdgeInsets(top: 5, leading: 6.5, bottom: 5, trailing: 6.5))
                     }
                 )
-                .padding(EdgeInsets(top: 0, leading: 8.5, bottom: 5, trailing: 8.5))
+                .padding(.horizontal, 8.5)
         }
     }
-    /*var anonymousButton: some View {
-        Button(action: {
-            isAnonymous.toggle()
-                }) {
-                    if isAnonymous {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 15.0)
-                                .fill(Color("Orange500"))
-                                .frame(width: 34, height: 25)
-                            Text("익명")
-                                .font(.custom("Inter-SemiBold", size: 12))
-                                .foregroundColor(Color.white)
-                        }
-                    } else {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 15.0)
-                                .stroke(Color("Orange500"))
-                                .frame(width: 34, height: 25)
-                            Text("익명")
-                                .font(.custom("Inter-SemiBold", size: 12))
-                                .foregroundColor(Color("Orange500"))
-                        }
-                    }
-                }
-    }*/
+
     var anonymousButton: some View {
         Toggle(isOn: $isAnonymous) {
             Text("익명")
-                .font(.custom("Inter-Regular", size: 14))
         }
         .toggleStyle(CustomCheckboxStyle())
         .onChange(of: isAnonymous) { newValue in
@@ -86,18 +65,25 @@ struct CommunityReplyBar: View {
     struct CustomCheckboxStyle: ToggleStyle {
         func makeBody(configuration: Configuration) -> some View {
             HStack(spacing: 5) {
-                    if configuration.isOn {
-                        Image("CheckboxTicked")
-                            .frame(width: 13, height: 13)
-                    } else {
-                        Image("Checkbox")
-                            .frame(width: 13, height: 13)
-                    }
+                if configuration.isOn {
+                    Image("CheckboxTicked")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 13, height: 13)
+                        .foregroundStyle(Color.orange500)
+                } else {
+                    Image("Checkbox")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 13, height: 13)
+                        .foregroundStyle(Color.gray600)
+                }
                 
                 configuration.label
-                    .foregroundColor(configuration.isOn ? Color("Color/Foundation/Orange/500") : Color(hex:0x575757))
+                    .customFont(font: .text12(weight: .ExtraBold))
+                    .foregroundColor(configuration.isOn ? .orange500 : .gray600)
             }
-            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+            .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
             .contentShape(Rectangle())
             .onTapGesture {
                 configuration.isOn.toggle()

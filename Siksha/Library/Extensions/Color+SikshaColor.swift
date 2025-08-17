@@ -44,6 +44,7 @@ extension Color {
     static let orange700 = Color("Color/Foundation/Orange/700")
     static let orange800 = Color("Color/Foundation/Orange/800")
     static let orange900 = Color("Color/Foundation/Orange/900")
+    static let orangeTint = Color("Color/Foundation/Orange/Tint")
     
     
     // MARK: - Semantic Colors
@@ -71,8 +72,8 @@ extension Color {
     
     // MARK: - Text Colors
     static let textAccent = Color("SemanticColor/Text/Accent")
-    static let textBubble = Color("SemanticColor/Text/Bubble")
     static let textButton = Color("SemanticColor/Text/Button")
+    static let textBubble = Color("SemanticColor/Text/Bubble")
     static let textDim = Color("SemanticColor/Text/Dim")
     static let textGNB = Color("SemanticColor/Text/GNB")
 
