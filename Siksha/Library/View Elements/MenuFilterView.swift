@@ -7,9 +7,8 @@
 
 import SwiftUI
 import CoreLocation
-import Mixpanel
 
-public enum MenuFilterType {
+enum MenuFilterType {
     case all
     case distance
     case price
@@ -26,20 +25,21 @@ public enum MenuFilterType {
             return 220
         }
     }
-    
-    var mixpanelEntryPoint: String {
+}
+
+extension MenuFilterType {
+    var entryPoint: EntryPoint {
         switch self {
-        case .all:
-            "main_filter"
-        case .distance:
-            "distance_filter"
-        case .price:
-            "price_filter"
-        case .minimumRating:
-            "rating_filter"
-        case .category:
-            "category_filter"
+        case .all:            return .mainFilter
+        case .distance:       return .distanceFilter
+        case .price:          return .priceFilter
+        case .minimumRating:  return .ratingFilter
+        case .category:       return .categoryFilter
         }
+    }
+    
+    var entryPointString: String {
+        entryPoint.rawValue
     }
 }
 
@@ -233,14 +233,7 @@ struct MenuFilterView: View {
                         )
                         .onTapGesture {
                             resetFilters()
-                            
-                            Mixpanel.mainInstance().track(
-                                event: "filter_reset",
-                                properties: [
-                                    "entry_point": menuFilterType.mixpanelEntryPoint,
-                                    "page_name": menuViewModel.mixpanelPageName
-                                ]
-                            )
+                            menuViewModel.analytics.track(.filterReset(entryPoint: menuFilterType.entryPointString, pageName: menuViewModel.pageName))
                         }
                     
                     Text("적용")
@@ -345,86 +338,26 @@ struct MenuFilterView: View {
         }
         menuViewModel.saveFilters()
         
-        Mixpanel
-            .mainInstance()
-            .track(
-                event: "filter_modal_applied",
-                properties: [
-                    "entry_point": menuFilterType.mixpanelEntryPoint,
-                    "applied_filter_options": getObject(from: menuViewModel.selectedFilters),
-                    "page_name": menuViewModel.mixpanelPageName
-                ]
-            )
+        let applied = AppliedFilterOptions(
+            priceMin: menuViewModel.selectedFilters.priceRange?.lowerBound,
+            priceMax: {
+                if let range = menuViewModel.selectedFilters.priceRange,
+                   range.upperBound != Int(maxPrice) { return range.upperBound }
+                return nil
+            }(),
+            minRating: menuViewModel.selectedFilters.minimumRating,
+            isOpenNow: menuViewModel.selectedFilters.isOpen,
+            hasReviews: menuViewModel.selectedFilters.hasReview,
+            maxDistanceKm: {
+                if let m = menuViewModel.selectedFilters.distance {
+                    return Double(m) / 1000.0
+                }
+                return nil
+            }()
+        )
+        menuViewModel.analytics.track(.filterModalApplied(entryPoint: menuFilterType.entryPointString, applied: applied.asDictionary, pageName: menuViewModel.pageName))
         
         dismiss()
-    }
-    
-    func getObject(from selectedFilters: MenuFilters) -> [String: Any] {
-        let distanceKm: Double?
-        let priceMax: Int?
-        
-        if let distance = menuViewModel.selectedFilters.distance {
-            distanceKm = Double(distance) / 1000.0
-        } else {
-            distanceKm = nil
-        }
-        
-        if let priceRange = menuViewModel.selectedFilters.priceRange {
-            priceMax = priceRange.upperBound == Int(maxPrice) ? nil : priceRange.upperBound
-        } else {
-            priceMax = nil
-        }
-        
-        switch menuFilterType {
-        case .all:
-            return [
-                Mixpanel.FilterOptions.minPrice.objectKey: menuViewModel.selectedFilters.priceRange?.lowerBound as Any,
-                Mixpanel.FilterOptions.maxPrice.objectKey: priceMax as Any,
-                Mixpanel.FilterOptions.minRating.objectKey: menuViewModel.selectedFilters.minimumRating as Any,
-                Mixpanel.FilterOptions.isOpenNow.objectKey: menuViewModel.selectedFilters.isOpen ?? false,
-                Mixpanel.FilterOptions.hasReviews.objectKey: menuViewModel.selectedFilters.hasReview ?? false,
-                Mixpanel.FilterOptions.maxDistanceKm.objectKey: distanceKm as Any
-            ]
-        case .distance:
-            return [Mixpanel.FilterOptions.maxDistanceKm.objectKey: distanceKm as Any]
-        case .price:
-            return [
-                Mixpanel.FilterOptions.minPrice.objectKey: menuViewModel.selectedFilters.priceRange?.lowerBound as Any,
-                Mixpanel.FilterOptions.maxPrice.objectKey: priceMax as Any
-            ]
-        case .minimumRating:
-            return [Mixpanel.FilterOptions.minRating.objectKey: menuViewModel.selectedFilters.minimumRating as Any]
-        case .category:
-            return [:]
-        }
-    }
-}
-
-extension Mixpanel {
-    enum FilterOptions {
-        case minPrice
-        case maxPrice
-        case minRating
-        case isOpenNow
-        case hasReviews
-        case maxDistanceKm
-        
-        var objectKey: String {
-            switch self {
-            case .minPrice:
-                "price_min"
-            case .maxPrice:
-                "price_max"
-            case .minRating:
-                "min_rating"
-            case .isOpenNow:
-                "is_open_now"
-            case .hasReviews:
-                "has_reviews"
-            case .maxDistanceKm:
-                "max_distance_km"
-            }
-        }
     }
 }
 

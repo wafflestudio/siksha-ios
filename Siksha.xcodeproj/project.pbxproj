@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07491E412E51BFBF00889C67 /* MixpanelAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */; };
+		07491E432E51C00500889C67 /* AnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E422E51C00500889C67 /* AnalyticsEvent.swift */; };
+		07491E452E51C02D00889C67 /* AnalyticsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E442E51C02D00889C67 /* AnalyticsKey.swift */; };
 		1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */; };
 		1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */; };
 		1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EE25C6FCE600DBB3F4 /* ContentView.swift */; };
@@ -189,6 +192,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixpanelAnalytics.swift; sourceTree = "<group>"; };
+		07491E422E51C00500889C67 /* AnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEvent.swift; sourceTree = "<group>"; };
+		07491E442E51C02D00889C67 /* AnalyticsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsKey.swift; sourceTree = "<group>"; };
 		1E3A56E725C6FCE600DBB3F4 /* Siksha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Siksha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -373,6 +379,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		07491E3F2E51BF8900889C67 /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */,
+				07491E422E51C00500889C67 /* AnalyticsEvent.swift */,
+				07491E442E51C02D00889C67 /* AnalyticsKey.swift */,
+			);
+			path = Analytics;
+			sourceTree = "<group>";
+		};
 		1E3A56DE25C6FCE600DBB3F4 = {
 			isa = PBXGroup;
 			children = (
@@ -397,6 +413,7 @@
 		1E3A56E925C6FCE600DBB3F4 /* Siksha */ = {
 			isa = PBXGroup;
 			children = (
+				07491E3F2E51BF8900889C67 /* Analytics */,
 				4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */,
 				4E23C5A72D17E1DD0088C1F6 /* ErrorHelper.swift */,
 				4EB660B82A74DBC100E52314 /* Community */,
@@ -915,6 +932,7 @@
 				4E6465102B1D8DB200A4ABAD /* UserManager.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
 				BF97DF532AAEFE380083FC6F /* Domain.swift in Sources */,
+				07491E412E51BFBF00889C67 /* MixpanelAnalytics.swift in Sources */,
 				4E4E22DE2ABEC4C500A81E47 /* CommunityReplyBar.swift in Sources */,
 				231C9D1425F8568C0072C07A /* MapView.swift in Sources */,
 				A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */,
@@ -973,6 +991,7 @@
 				C091FEE62C314F9600D48F92 /* RenewalSettingsView.swift in Sources */,
 				BF97DF592AAF00B30083FC6F /* DomainManager.swift in Sources */,
 				231DEB3B266BC5C900AA32C0 /* ReviewListViewModel.swift in Sources */,
+				07491E432E51C00500889C67 /* AnalyticsEvent.swift in Sources */,
 				A6ACE1112DA050AF00057585 /* MeasureFrameModifier.swift in Sources */,
 				231C9C7025F7FB720072C07A /* RestaurantOrderView.swift in Sources */,
 				A6E8C9C52D86CEBB005FC8A8 /* FestivalSwitchStyle.swift in Sources */,
@@ -985,6 +1004,7 @@
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
 				BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
+				07491E452E51C02D00889C67 /* AnalyticsKey.swift in Sources */,
 				4E6465122B1D8EEB00A4ABAD /* User.swift in Sources */,
 				1E9859A926629229003A483A /* VOCView.swift in Sources */,
 				4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */,

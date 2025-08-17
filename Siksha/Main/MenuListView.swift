@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Mixpanel
 
 struct MenuListView: View {
     @ObservedObject var viewModel: MenuViewModel
@@ -131,13 +130,8 @@ private extension MenuListView {
                                 viewModel.selectedFilters.isOpen = true
                             }
                             viewModel.saveFilters()
-                            Mixpanel.mainInstance().track(
-                                event: "instant_filter_toggled",
-                                properties: [
-                                    "filter_type": "is_open_now",
-                                    "filter_value": viewModel.selectedFilters.isOpen ?? true,
-                                    "page_name": viewModel.mixpanelPageName
-                                ]
+                            viewModel.analytics.track(
+                                .instantFilterToggled(filter: .isOpenNow, value: viewModel.selectedFilters.isOpen ?? true, pageName: viewModel.pageName)
                             )
                         }
                         
@@ -153,14 +147,7 @@ private extension MenuListView {
                                 viewModel.selectedFilters.hasReview = true
                             }
                             viewModel.saveFilters()
-                            Mixpanel.mainInstance().track(
-                                event: "instant_filter_toggled",
-                                properties: [
-                                    "filter_type": "has_reviews",
-                                    "filter_value": viewModel.selectedFilters.hasReview ?? true,
-                                    "page_name": viewModel.mixpanelPageName
-                                ]
-                            )
+                            viewModel.analytics.track(.instantFilterToggled(filter: .hasReviews, value: viewModel.selectedFilters.hasReview ?? true, pageName: viewModel.pageName))
                         }
                         
                         FilterItem(
@@ -171,15 +158,6 @@ private extension MenuListView {
                         .onTapGesture {
                             selectedFilterType = .minimumRating
                         }
-                        
-                        //                FilterItem(
-                        //                    text: viewModel.categoryLabel,
-                        //                    isOn:viewModel.selectedFilters.categories != nil,
-                        //                    isCheck: false
-                        //                )
-                        //                .onTapGesture {
-                        //                    selectedFilterType = .category
-                        //                }
                     }
                     .background(
                         GeometryReader {
@@ -208,17 +186,9 @@ private extension MenuListView {
         .padding(EdgeInsets(top: 17, leading: 9, bottom: 9, trailing: 9))
         .onChange(of: selectedFilterType) { newType in
             if let newType {
-                Mixpanel.mainInstance()
-                    .track(
-                        event: "filter_modal_opened",
-                        properties: [
-                            "entry_point": newType.mixpanelEntryPoint,
-                            "page_name": viewModel.mixpanelPageName
-                        ]
-                    )
+                viewModel.analytics.track(.filterModalOpened(entryPoint: newType.entryPointString, pageName: viewModel.pageName))
             }
         }
-
     }
     
     var emptyView: some View {
