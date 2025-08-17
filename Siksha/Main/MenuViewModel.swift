@@ -577,6 +577,24 @@ final class MenuViewModel: NSObject, ObservableObject {
             }
             .store(in: &cancellables)
     }
+    static func getOperatingHours(restaurant:Restaurant,dayType:Int,selectedPage:Int)->String{
+      
+        let operatingHours = restaurant.operatingHours[dayType].split(separator: "\n").map { String($0) }
+        if operatingHours.count == 3{
+            return operatingHours[selectedPage]
+        }
+        if operatingHours.count == 2{
+            if selectedPage == TypeSelection.breakfast.rawValue{
+                return "정보 없음"
+            }
+            return operatingHours[selectedPage-1]
+        }
+        if operatingHours.count == 1{
+            return operatingHours[0]
+        }
+        return "정보 없음"
+        
+    }
 }
 
 extension MenuViewModel: CLLocationManagerDelegate {

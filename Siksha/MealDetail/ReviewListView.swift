@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ReviewListView: View {
-    private let lightGrayColor = Color.init("Gray600")
+    private let lightGrayColor = Color.init("Color/Foundation/Gray/600")
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var viewModel = ReviewListViewModel()
@@ -27,7 +27,10 @@ struct ReviewListView: View {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 10, height: 16)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .foregroundColor(.white)
         }
     }
     

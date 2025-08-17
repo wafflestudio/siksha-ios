@@ -22,12 +22,17 @@ struct CommunityReplyBar: View {
                 .fill(Color.gray50)
                 .frame(height: 40)
                 .frame(maxWidth: .infinity)
-                .padding(.horizontal, 8.5)
                 .overlay(
                     HStack(spacing: 0) {
                         anonymousButton
-                            .padding(EdgeInsets(top: 12, leading: 12, bottom: 7, trailing: 8))
-                        TextField("댓글을 입력하세요", text: $commentText)
+                            .padding(EdgeInsets(top: 11.5, leading: 12, bottom: 7.5, trailing: 8))
+                        TextField(
+                            "댓글을 입력하세요.",
+                            text: $commentText,
+                            prompt: Text("댓글을 입력하세요.").foregroundColor(.gray500)
+                        )
+                            .customFont(font: .text13(weight: .Bold))
+                            .padding(.top, 3)
                         Button(action: {
                             if(commentText != "") {
                                 onCommentSubmit(commentText,isAnonymous)
@@ -35,23 +40,22 @@ struct CommunityReplyBar: View {
                             }
                         }){
                             Text("올리기")
-                                .padding(EdgeInsets(top: 6.5, leading: 11, bottom: 6.5, trailing: 11))
-                                .background(Color.orange500)
+                                .padding(EdgeInsets(top: 4.5, leading: 10, bottom: 4.5, trailing: 10))
                                 .customFont(font: .text13(weight: .Bold))
                                 .foregroundColor(.backgroundPrimary)
-                                .cornerRadius(6)
+                                .background(Color.orange500)
+                                .clipShape(RoundedRectangle(cornerRadius: 6))
+                                .padding(6.5)
                         }
-                        .padding(6.5)
                     }
                 )
+                .padding(.horizontal, 8.5)
         }
     }
 
     var anonymousButton: some View {
         Toggle(isOn: $isAnonymous) {
             Text("익명")
-                .customFont(font: .text12(weight: .ExtraBold))
-                .foregroundStyle(Color.orange500)
         }
         .toggleStyle(CustomCheckboxStyle())
         .onChange(of: isAnonymous) { newValue in
@@ -61,18 +65,25 @@ struct CommunityReplyBar: View {
     struct CustomCheckboxStyle: ToggleStyle {
         func makeBody(configuration: Configuration) -> some View {
             HStack(spacing: 5) {
-                    if configuration.isOn {
-                        Image("CheckboxTicked")
-                            .frame(width: 13, height: 13)
-                    } else {
-                        Image("Checkbox")
-                            .frame(width: 13, height: 13)
-                    }
+                if configuration.isOn {
+                    Image("CheckboxTicked")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 13, height: 13)
+                        .foregroundStyle(Color.orange500)
+                } else {
+                    Image("Checkbox")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 13, height: 13)
+                        .foregroundStyle(Color.gray600)
+                }
                 
                 configuration.label
-                    .foregroundColor(.orange500)
+                    .customFont(font: .text12(weight: .ExtraBold))
+                    .foregroundColor(configuration.isOn ? .orange500 : .gray600)
             }
-            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+            .padding(EdgeInsets(top: 2, leading: 0, bottom: 2, trailing: 0))
             .contentShape(Rectangle())
             .onTapGesture {
                 configuration.isOn.toggle()

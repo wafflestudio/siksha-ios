@@ -61,11 +61,13 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Image("etc")
+                    .renderingMode(.template)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 16,height: 16)
                     .padding(.vertical, 5)
-                    .padding(.horizontal, 8.5)
+                    .padding(.horizontal, 3.5)
+                    .foregroundStyle(Color.gray700)
                     .onTapGesture {
                         onMenuPressed()
                     }
@@ -118,7 +120,7 @@ struct EditCommentView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
-                Color("Orange500")
+                Color("Color/Foundation/Orange/500")
                     .edgesIgnoringSafeArea(.top)
                 
                 HStack {
@@ -139,7 +141,7 @@ struct EditCommentView: View {
                         .font(.custom("NanumSquareOTFR", size: 15))
                 }
                 .padding()
-                .background(Color("Orange500").opacity(0))
+                .background(Color("Color/Foundation/Orange/500").opacity(0))
             }
             .frame(height: 40)
             

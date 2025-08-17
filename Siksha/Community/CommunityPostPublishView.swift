@@ -47,9 +47,9 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: cornerRadius)
+                    RoundedRectangle(cornerRadius: 8)
                         .fill(Color.gray100)
-                        .frame(height: 60)
+                        .frame(height: 44)
                     Text("취소")
                         .customFont(font: .text16(weight: .Bold))
                         .foregroundStyle(Color.gray600)
@@ -62,9 +62,9 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 viewModel.submitPost()
             }) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: cornerRadius)
+                    RoundedRectangle(cornerRadius: 8)
                         .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray600 : Color.orange500)
-                        .frame(height: 60)
+                        .frame(height: 44)
                     Text("완료")
                         .customFont(font: .text16(weight: .Bold))
                         .foregroundStyle(Color.textButton)
@@ -80,11 +80,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             viewModel.submitPost()
         }) {
             ZStack {
-                RoundedRectangle(cornerRadius: cornerRadius)
+                RoundedRectangle(cornerRadius: 8)
                     .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray600 : Color.orange500)
-                    .frame(height: 60)
+                    .frame(height: 56)
                 Text("올리기")
-                    .customFont(font: .text16(weight: .Bold))
+                    .customFont(font: .text18(weight: .ExtraBold))
                     .foregroundStyle(Color.textButton)
             }
         }
@@ -96,7 +96,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         Toggle(isOn: $viewModel.isAnonymous) {
             Text("익명")
                 .customFont(font: .text12(weight: .Bold))
-                .foregroundStyle(Color.gray600)
+                .foregroundStyle(viewModel.isAnonymous ? Color.orange500 : Color.gray600)
         }
         .toggleStyle(CustomCheckboxStyle())
     }
@@ -106,16 +106,21 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             HStack(spacing: 5) {
                     if configuration.isOn {
                         Image("CheckboxTicked")
+                            .resizable()
+                            .scaledToFill()
                             .frame(width: 13, height: 13)
+                            .foregroundStyle(Color.orange500)
                     } else {
                         Image("Checkbox")
+                            .resizable()
+                            .scaledToFill()
                             .frame(width: 13, height: 13)
+                            .foregroundStyle(Color.gray600)
                     }
                 
                 configuration.label
                     .foregroundColor(configuration.isOn ? .orange500 : .gray600)
             }
-            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
             .foregroundColor(configuration.isOn ? .orange500 : .gray600)
             .contentShape(Rectangle())
             .onTapGesture {
@@ -136,9 +141,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     var imageSection: some View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
+                HStack(spacing: 8) {
                     ForEach(viewModel.images, id: \.self) { image in
-                        ZStack(alignment: .topTrailing) {
                             Image(uiImage: image)
                                 .resizable()
                                 .renderingMode(.original)
@@ -146,24 +150,23 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                 .frame(width: 106, height: 106)
                                 .clipped()
                                 .cornerRadius(cornerRadius)
-                            
-                            Button(action: {
-                                viewModel.removeImage(image)
-                            }) {
-                                ZStack {
-                                    Circle()
-                                        .foregroundColor(.gray700)
-                                        .frame(width: 24, height: 24)
-                                    
-                                    Image(systemName: "xmark")
-                                        .resizable()
-                                        .foregroundColor(.whiteColor)
-                                        .frame(width: 10, height: 10)
+                                .overlay(alignment: .topTrailing) {
+                                    Button(action: {
+                                        viewModel.removeImage(image)
+                                    }) {
+                                        ZStack {
+                                            Circle()
+                                                .foregroundColor(.gray700)
+                                                .frame(width: 18, height: 18)
+                                            
+                                            Image(systemName: "xmark")
+                                                .font(.system(size: 10, weight: .semibold))
+                                                .foregroundColor(.white)
+                                        }
+                                        .offset(x: 4, y: -4)
+                                    }
                                 }
-                                .offset(x: 8, y: -8)
-                            }
-                        }
-                        .frame(width:115, height: 130)
+                                .padding(.top, 7)
                     }
                     
                     Button(action: {
@@ -177,7 +180,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                             Image(systemName: "plus")
                                 .resizable()
                                 .foregroundColor(.gray600)
-                                .frame(width: 40, height: 40)
+                                .frame(width: 28, height: 28)
                         }
                     }
                     .sheet(isPresented: $isShowingPhotoLibrary) {
@@ -208,19 +211,28 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     isExpanded.toggle()
                 }
             }) {
-                HStack {
+                HStack(spacing: 6.5) {
                     Spacer()
                     Text(viewModel.boardsList.first { $0.id == viewModel.boardId }?.name ?? "게시판 선택")
+                        .customFont(font: .text13(weight: .Regular))
                         .foregroundColor(.gray800)
                     Image("DownArrow")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 10, height: 6)
                         .foregroundColor(.gray600)
                     Spacer()
                 }
-                .padding()
                 .frame(height: 35)
                 .background(
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(Color.gray200)
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.backgroundSecondary)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .inset(by: 1)
+                        .stroke(Color.gray200, lineWidth: 1)
                 )
             }
             
@@ -234,20 +246,24 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                     isExpanded = false
                                 }
                             }) {
-                                HStack {
+                                HStack(spacing: 4) {
                                     Spacer()
                                     if viewModel.boardId == board.id {
                                         Text(board.name)
                                             .foregroundColor(.orange500)
-                                        Image("CheckMark")
+                                            .customFont(font: .text13(weight: .Bold))
+                                        Image("Check")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 16, height: 16)
                                             .foregroundColor(.orange500)
                                     } else {
                                         Text(board.name)
                                             .foregroundColor(.gray800)
+                                            .customFont(font: .text13(weight: .Regular))
                                     }
                                     Spacer()
                                 }
-                                .padding()
                             }
                             .frame(height: 35)
                             
@@ -266,7 +282,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                 .fill(Color.backgroundSecondary)
                         )
                 )
-                .offset(y: 40)
+                .offset(y: 38)
             }
         }
         .zIndex(1)
@@ -298,19 +314,22 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             
             ZStack(alignment: .top) {
                 boardPicker
-                    .padding(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
+                    .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
                 
-                VStack {
+                VStack(spacing: 0) {
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 6)
                             .fill(Color.gray50)
                             .frame(height: 35)
-                        TextField("제목", text: $viewModel.title)
+                        
+                        TextField("제목", text: $viewModel.title, prompt: Text("제목").foregroundColor(.gray500))
                             .customFont(font: .text14(weight: .Bold))
                             .foregroundStyle(Color.blackColor)
-                            .padding(EdgeInsets(top: 7, leading: 12, bottom: 7, trailing: 12))
+                            .padding(.horizontal, 12)
                     }
                     .frame(maxWidth: .infinity)
+                    
+                    Spacer().frame(height: 6)
                     
                     ZStack(alignment: .topLeading) {
                         let placeholder: String = "내용을 입력하세요."
@@ -335,9 +354,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                             anonymousButton
                             Spacer()
                         }
+                        .padding(.vertical, 11)
                     }
                     
                     customDivider
+                    
+                    Spacer().frame(height: 13)
                     
                     imageSection
                     
@@ -352,7 +374,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }
 
                 }
-                .padding(EdgeInsets(top: 60, leading: 20, bottom: 0, trailing: 20))
+                .padding(EdgeInsets(top: 56, leading: 20, bottom: 0, trailing: 20))
                 .customNavigationBar(title: "글쓰기")
                 .navigationBarItems(leading: backButton)
                 .alert(isPresented: $viewModel.isErrorAlert, content: {
@@ -396,9 +418,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
 }
 
 
-/*struct CommunityPostPublishView_Previews: PreviewProvider {
+struct CommunityPostPublishView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityPostPublishView(viewModel: CommunitySubmitPostViewModel(boardId : 1,communityRepository: DomainManager.shared.domain.communityRepository))
+        CommunityPostPublishView(needRefresh: .constant(false), viewModel: CommunityPostPublishViewModel(boardId: 1, communityRepository: DomainManager.shared.domain.communityRepository, postInfo: .init(title: "title", content: "content", isLiked: false, likeCount: 5, commentCount: 4, imageURLs: [
+            "https://images.unsplash.com/photo-1751193978006-4c19abfb5f3f?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://images.unsplash.com/photo-1754404053324-8f910c2b7e2d?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://plus.unsplash.com/premium_photo-1754067486503-e3f98909b13a?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ], isAnonymous: true, isMine: true)))
     }
 }
-*/

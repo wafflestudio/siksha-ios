@@ -102,6 +102,7 @@
 		4E4E22EE2ABEC96300A81E47 /* Inter-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E52ABEC96300A81E47 /* Inter-ExtraBold.ttf */; };
 		4E4E22EF2ABEC96300A81E47 /* Inter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E62ABEC96300A81E47 /* Inter-Regular.ttf */; };
 		4E4E22F02ABEC96300A81E47 /* Inter-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4E4E22E72ABEC96300A81E47 /* Inter-Medium.ttf */; };
+		4E51987D2DDA2FD300F85388 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E51987C2DDA2FCE00F85388 /* Font.swift */; };
 		4E6465102B1D8DB200A4ABAD /* UserManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E64650F2B1D8DB200A4ABAD /* UserManager.swift */; };
 		4E6465122B1D8EEB00A4ABAD /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6465112B1D8EEB00A4ABAD /* User.swift */; };
 		4E74167D2A9B63A10010769F /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74167C2A9B63A00010769F /* CommentCell.swift */; };
@@ -129,7 +130,6 @@
 		A615B4DC2D86AAA60095865F /* MenuFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A615B4DB2D86AAA60095865F /* MenuFilters.swift */; };
 		A615B4DE2D86B91C0095865F /* MenuListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A615B4DD2D86B91C0095865F /* MenuListView.swift */; };
 		A66B51A82BF09542007E5329 /* ProfileEditViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */; };
-		A6AB51782E3C6F4E007A0DCB /* TempDesign.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6AB51772E3C6F4E007A0DCB /* TempDesign.swift */; };
 		A6ACE1112DA050AF00057585 /* MeasureFrameModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6ACE1102DA050AF00057585 /* MeasureFrameModifier.swift */; };
 		A6CBB8672C8204CB0067723D /* KeyboardResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */; };
 		A6E8C9C52D86CEBB005FC8A8 /* FestivalSwitchStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6E8C9C42D86CEBB005FC8A8 /* FestivalSwitchStyle.swift */; };
@@ -276,6 +276,7 @@
 		4E4E22E52ABEC96300A81E47 /* Inter-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-ExtraBold.ttf"; sourceTree = "<group>"; };
 		4E4E22E62ABEC96300A81E47 /* Inter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Regular.ttf"; sourceTree = "<group>"; };
 		4E4E22E72ABEC96300A81E47 /* Inter-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Inter-Medium.ttf"; sourceTree = "<group>"; };
+		4E51987C2DDA2FCE00F85388 /* Font.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
 		4E64650F2B1D8DB200A4ABAD /* UserManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserManager.swift; sourceTree = "<group>"; };
 		4E6465112B1D8EEB00A4ABAD /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4E74167C2A9B63A00010769F /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
@@ -298,7 +299,6 @@
 		A615B4DB2D86AAA60095865F /* MenuFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuFilters.swift; sourceTree = "<group>"; };
 		A615B4DD2D86B91C0095865F /* MenuListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuListView.swift; sourceTree = "<group>"; };
 		A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewModel.swift; sourceTree = "<group>"; };
-		A6AB51772E3C6F4E007A0DCB /* TempDesign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TempDesign.swift; sourceTree = "<group>"; };
 		A6ACE1102DA050AF00057585 /* MeasureFrameModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MeasureFrameModifier.swift; sourceTree = "<group>"; };
 		A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardResponder.swift; sourceTree = "<group>"; };
 		A6E8C9C42D86CEBB005FC8A8 /* FestivalSwitchStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FestivalSwitchStyle.swift; sourceTree = "<group>"; };
@@ -412,7 +412,6 @@
 				1E3A577425C7012F00DBB3F4 /* Font */,
 				1E3A56F825C6FCE800DBB3F4 /* Info.plist */,
 				1E3A56F225C6FCE800DBB3F4 /* Preview Content */,
-				A6AB51772E3C6F4E007A0DCB /* TempDesign.swift */,
 			);
 			path = Siksha;
 			sourceTree = "<group>";
@@ -476,6 +475,7 @@
 		1E3A573825C6FE1600DBB3F4 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				4E51987C2DDA2FCE00F85388 /* Font.swift */,
 				BFA4759D2950B53500B41AA7 /* Extensions */,
 				1ECB250025F16D4D00875E18 /* UIRepresentable */,
 				1E9A6EA92674BDFD005CAEA1 /* NavigationBarModifier.swift */,
@@ -919,6 +919,7 @@
 				4E3D4EEF2A750078005C7AB2 /* TopPosts.swift in Sources */,
 				231C9CF825F83A850072C07A /* RestaurantInformationView.swift in Sources */,
 				4E79A1862C80B6BE007CE49B /* AlertView.swift in Sources */,
+				4E51987D2DDA2FD300F85388 /* Font.swift in Sources */,
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
 				BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
@@ -952,7 +953,6 @@
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
 				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
 				C091FEE62C314F9600D48F92 /* RenewalSettingsView.swift in Sources */,
-				A6AB51782E3C6F4E007A0DCB /* TempDesign.swift in Sources */,
 				BF97DF592AAF00B30083FC6F /* DomainManager.swift in Sources */,
 				231DEB3B266BC5C900AA32C0 /* ReviewListViewModel.swift in Sources */,
 				A6ACE1112DA050AF00057585 /* MeasureFrameModifier.swift in Sources */,

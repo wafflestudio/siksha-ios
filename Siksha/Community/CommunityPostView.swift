@@ -47,8 +47,10 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 7, height: 15)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 30))
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .foregroundColor(.white)
         }
         .contentShape(Rectangle())
     }
@@ -62,7 +64,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                 AsyncImage(url: URL(string: imageURLString)) { image in
                                     image
                                         .resizable()
-                                        .aspectRatio(contentMode: .fit)
+                                        .aspectRatio(contentMode: .fill)
                                 } placeholder: {
                                     Color.white
                                 }
@@ -70,11 +72,11 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                 .onTapGesture {
                                     showImages = true
                                 }
-                                .frame(width: UIScreen.main.bounds.width - 39, height: UIScreen.main.bounds.height - 39)
+                                .frame(width: UIScreen.main.bounds.width - 39, height: UIScreen.main.bounds.width - 39)
                             }
                         }
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                        .frame(width: UIScreen.main.bounds.width - 39, height: UIScreen.main.bounds.height - 39)
+                        .frame(width: UIScreen.main.bounds.width - 39, height: UIScreen.main.bounds.width - 39)
                     
                     Text("\(imageIndex + 1)/\(imageURLs.count)")
                         .customFont(font: .text11(weight: .Bold))
@@ -135,8 +137,23 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         Button(action: {
             viewModel.togglePostLike()
         }) {
-                Image(viewModel.postInfo.isLiked ? "LikeButton-liked" : "LikeButton-default")
-          
+            HStack(spacing: 5) {
+                Image("like")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 11.5, height: 11)
+                    .foregroundStyle(Color.orange500)
+                
+                Text("공감")
+                    .customFont(font: .text11(weight: .Bold))
+            }
+            .foregroundStyle(Color.orange500)
+            .padding(.vertical, 3.5)
+            .padding(.horizontal, 6.5)
+            .overlay(
+                RoundedRectangle(cornerRadius: 6)
+                    .stroke(Color.orange500, lineWidth: 1)
+            )
         }
     }
     var commentList: some View {
@@ -285,10 +302,12 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                 .frame(height: 15)
                             
                             HStack(spacing: 4) {
-                                Image("PostLike-default")
+                                Image("like")
                                     .resizable()
+                                    .scaledToFill()
                                     .frame(width: 11.5, height: 11)
-                                    .scaledToFit()
+                                    .foregroundStyle(Color.orange500)
+                                
                                 Text(String(viewModel.postInfo.likeCount))
                                     .customFont(font: .text11(weight: .Bold))
                                     .foregroundColor(.orange500)
@@ -370,40 +389,44 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 .actionSheet(item:$showActionSheet){item in
                     switch(item){
                     case .post(let post):
-                        let editButton = ActionSheet.Button.default(Text("수정"), action: {
-                                    isEditingPost = true
-                                    showPostMenu = false
-                                })
-                                let deleteButton = ActionSheet.Button.default(Text("삭제"), action: {
-                                    showPostMenu = false
-                                        showPostDeleteAlert = true
-                                })
-                                let reportButton = ActionSheet.Button.default(Text("신고"), action: {
-                                    showPostMenu = false
-                                    showAlert = item
-                                })
-                                if(viewModel.postInfo.isMine){
-                                    return ActionSheet(title: Text("게시글 메뉴"), buttons: [
-                                       editButton,deleteButton,
-                                        .cancel(Text("취소"))
-                                    ])
-                                }
-                                else{
-                                    return ActionSheet(title: Text("게시글 메뉴"), buttons: [
-                                       reportButton,
-                                        .cancel(Text("취소"))
-                                    ])
-                                }
+                        let editButton = ActionSheet.Button.default(Text("수정하기"), action: {
+                            isEditingPost = true
+                            showPostMenu = false
+                        })
+                        let deleteButton = ActionSheet.Button.default(Text("삭제하기"), action: {
+                            showPostMenu = false
+                            showPostDeleteAlert = true
+                        })
+                        let reportButton = ActionSheet.Button.default(Text("신고하기"), action: {
+                            showPostMenu = false
+                            showAlert = item
+                        })
+                        let copyURLButton = ActionSheet.Button.default(Text("URL 복사하기"), action: {
+                            showPostMenu = false
+                            UIPasteboard.general.string = ""
+                        })
+                        if(viewModel.postInfo.isMine){
+                            return ActionSheet(title: Text("게시글 메뉴"), buttons: [
+                                editButton,deleteButton, reportButton, copyURLButton,
+                                .cancel(Text("취소"))
+                            ])
+                        }
+                        else{
+                            return ActionSheet(title: Text("게시글 메뉴"), buttons: [
+                                reportButton, copyURLButton,
+                                .cancel(Text("취소"))
+                            ])
+                        }
                     case .comment(let comment):
-                        let editButton = ActionSheet.Button.default(Text("수정"), action: {
+                        let editButton = ActionSheet.Button.default(Text("수정하기"), action: {
                                     editComment = comment
                                     showActionSheet = nil
                                 })
-                                let deleteButton = ActionSheet.Button.default(Text("삭제"), action: {
+                                let deleteButton = ActionSheet.Button.default(Text("삭제하기"), action: {
                                     deleteCommentId = comment.id
                                     showActionSheet = nil
                                 })
-                                let reportButton = ActionSheet.Button.default(Text("신고"), action: {
+                                let reportButton = ActionSheet.Button.default(Text("신고하기"), action: {
                                     showAlert = item
 
                                 })
@@ -470,12 +493,10 @@ extension View {
 }
 
 
-/*struct CommunityPostView_Previews: PreviewProvider {
- static var previews: some View {
- CommunityPostView(viewModel: StubCommunityPostViewModel(), boardName: StubCommunityViewModel().getSelectedBoardName(), needPostViewRefresh:)
- }
- }*/
-
+#Preview {
+    CommunityPostView(viewModel: StubCommunityPostViewModel(), needPostViewRefresh: .constant(false))
+}
+    
 class StubCommunityPostViewModel: CommunityPostViewModelType {
     var error: AppError?
     
@@ -520,9 +541,9 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
             isLiked: false,
             likeCount: 1,
             commentCount: 2,
-            imageURLs: nil,
-            isAnonymous: false,
-            isMine: false
+            imageURLs: ["https://images.unsplash.com/photo-1755148500082-8f39dea5dc0a?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
+            isAnonymous: true,
+            isMine: true
         )
     }
     

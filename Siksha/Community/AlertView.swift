@@ -2,9 +2,9 @@ import SwiftUI
 
 
 struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: CommunityPostViewModelType {
-    private let fontColor = Color("Gray700")
-    private let orangeColor = Color.init("Orange500")
-    private let lightGrayColor = Color.init("Gray600")
+    private let fontColor = Color("Color/Foundation/Gray/700")
+    private let orangeColor = Color.init("Color/Foundation/Orange/500")
+    private let lightGrayColor = Color.init("Color/Foundation/Gray/600")
     private var commentId:Int? = nil
     @EnvironmentObject var appState:AppState
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -22,9 +22,11 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 24, height: 24)
                 .scaledToFit()
-                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .foregroundColor(.white)
+            
         }
         .contentShape(Rectangle())
     }
@@ -63,22 +65,20 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                         }.padding(.zero)
                         
                     }.frame(height:44)
-                    HStack {
-                        Group {
-                            Image("Comment-new")
-                                .renderingMode(.original)
-                                .resizable()
-                                .frame(width: 18, height: 18)
-                                .scaledToFit()
-                            
-                            Color.gray700
-                                .blendMode(.destinationOut)
-                        }
-                        .compositingGroup()
+                    HStack(spacing: 10) {
+                        Image("Comment-new")
+                            .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                            .foregroundStyle(Color.gray700)
+                            .frame(width: 18, height: 18)
+                        
                         
                         Text("어떤 이유로 신고하시나요?")
                             .customFont(font: .text18(weight: .ExtraBold))
                             .foregroundStyle(Color.blackColor)
+                            .lineLimit(1)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(EdgeInsets(top: 44, leading: 16, bottom: 20, trailing: 16))
@@ -97,12 +97,13 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                     .padding(EdgeInsets(top: 0, leading: 28, bottom: 8, trailing: 28))
                     
                     ZStack(alignment: .bottom) {
-                        TextView(text: $reportReason, placeHolder: .constant(""), maxCount: 200)
+                        TextView(text: $reportReason, placeHolder: .constant(""), maxCount: 500)
                             .frame(height: 280)
+                            .customFont(font: .text13(weight: .Regular))
                         
                         HStack {
                             Spacer()
-                            Text("\(reportReason.count)자 / 200자")
+                            Text("\(reportReason.count)자 / 500자")
                                 .customFont(font: .text11(weight: .Regular))
                                 .foregroundColor(.gray700)
                         }
@@ -179,4 +180,8 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
     }
     
     
+}
+
+#Preview {
+    AlertView(RenewalSettingsViewModel(), CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: 1))
 }

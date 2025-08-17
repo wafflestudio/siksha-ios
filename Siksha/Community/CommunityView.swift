@@ -45,13 +45,14 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                             await viewModel.asyncRefresh()
                         }
                     }
+                    
+                    Spacer(minLength: 0)
                 }
                 .customNavigationBar(title: "icon")
                 
                 Button {
                     tag = 1
                 } label: {
-                    // TODO: 사이즈 및 동작 확인 필요
                     NavigationLink(
                         destination: CommunityPostPublishView(
                             needRefresh: $needRefresh,
@@ -63,10 +64,13 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                         tag: 1,
                         selection: self.$tag
                     ){
-                        Image("CircleWriteButton")
-                        .frame(width: 50, height: 50)
-                        .background(Color.orange500)
-                        .clipShape(Circle())
+                        Image("Pencil")
+                            .resizable()
+                            .frame(width: 28, height: 28)
+                            .foregroundColor(.white)
+                            .frame(width: 50, height: 50)
+                            .background(Color.orange500)
+                            .clipShape(Circle())
                     }
                 }
                 .disabled(selectedBoardId == nil)
@@ -174,6 +178,7 @@ struct CommunityPostPreView: View {
                         Text(String(info.likeCount))
                             .customFont(font: .text11(weight: .Bold))
                             .foregroundColor(.orange500)
+                            .padding(.trailing, 7)
                         Image("Comment")
                             .resizable()
                             .frame(width: 12, height: 11)
@@ -218,10 +223,31 @@ class StubCommunityViewModel: CommunityViewModelType {
         
     }
     
-    var trendingPostsListPublisher: [PostInfo] = []
+    var trendingPostsListPublisher: [PostInfo] = [
+        .init(
+            title: "제목",
+            content: "내용",
+            isLiked: true,
+            likeCount: 12,
+            commentCount: 2,
+            imageURLs: nil,
+            isAnonymous: true,
+            isMine: false
+        ),
+        .init(
+            title: "제목22222",
+            content: "내용",
+            isLiked: true,
+            likeCount: 12,
+            commentCount: 2,
+            imageURLs: nil,
+            isAnonymous: true,
+            isMine: false
+        )
+    ]
     
     var hasNextPublisher: Bool {
-        return true
+        return false
     }
     
     var postsListPublisher: [PostInfo] = (1..<5).map {

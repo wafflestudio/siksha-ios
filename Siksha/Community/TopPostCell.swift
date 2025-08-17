@@ -31,8 +31,9 @@ struct TopPostCell: View{
                 HStack(spacing: 4) {
                     Image("like")
                         .resizable()
-                        .frame(width: 11, height: 11)
-                        .scaledToFit()
+                        .scaledToFill()
+                        .frame(width: 11.5, height: 11)
+                        .foregroundStyle(Color.orange500)
                     
                     Text("\(post.likeCount)")
                         .foregroundColor(Color.orange500)

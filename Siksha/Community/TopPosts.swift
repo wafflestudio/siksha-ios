@@ -26,13 +26,12 @@ struct TopPosts: View {
         TabView(selection: $select) {
             ForEach(Array(zip(appendedInfos.indices, appendedInfos)), id: \.0) { index, info in
                 TopPostCell(post: info, needRefresh: needRefresh)
-                    .frame(width: .infinity, height: .infinity)
+                    .frame(width: .infinity)
                     .padding(.horizontal, 20)
-                    .rotationEffect(.degrees(-90))
-                    .rotation3DEffect(flippingAngle, axis: (x: 1, y: 0, z: 0))
                     .gesture(DragGesture())
             }
         }
+        .frame(height: 35)
         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
         .onReceive(timer) { _ in
             if select == appendedInfos.count - 1 {

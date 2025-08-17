@@ -124,15 +124,18 @@ private extension MealInfoView {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 10, height: 16)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .foregroundColor(.white)
         }
     }
 }
 
 struct MealInfoView: View {
-    private let darkFontColor = Color.init("BlackColor")
-    private let lightGrayColor = Color.init("Gray600")
-    private let orangeColor = Color.init("Orange500")
+    private let darkFontColor = Color.init("Color/Foundation/Base/BlackColor")
+    private let lightGrayColor = Color.init("Color/Foundation/Gray/600")
+    private let orangeColor = Color.init("Color/Foundation/Orange/500")
     
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -176,7 +179,7 @@ struct MealInfoView: View {
                     
                     scoreSummary
                     
-                    Color.init("Gray100")
+                    Color.init("Color/Foundation/Gray/100")
                         .frame(height: 10)
                         .frame(maxWidth: .infinity)
                         .padding(.top, 10)
