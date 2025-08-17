@@ -89,3 +89,84 @@ enum ReviewErrorCode: Int {
         }
     }
 }
+enum FontType{
+    enum FontWeight: String{
+        case Light = "NanumSquareOTFL"
+        case Regular = "NanumSquareOTFR"
+        case Bold = "NanumSquareOTFB"
+        case ExtraBold = "NanumSquareOTFEB"
+    }
+    case text11(weight:FontWeight)
+    case text12(weight:FontWeight)
+    case text13(weight:FontWeight)
+    case text14(weight:FontWeight)
+    case text15(weight:FontWeight)
+    case text16(weight:FontWeight)
+    case text18(weight:FontWeight)
+    case text20(weight:FontWeight)
+    case text24(weight:FontWeight)
+    case text28(weight:FontWeight)
+    case text32(weight:FontWeight)
+    var fontSize:Int{
+        switch self{
+        case .text11:
+            return 11
+        case .text12:
+            return 12
+        case .text13:
+            return 13
+        case .text14:
+            return 14
+        case .text15:
+            return 15
+        case .text16:
+            return 16
+        case .text18:
+            return 18
+        case .text20:
+            return 20
+        case .text24:
+            return 24
+        case .text28:
+            return 28
+        case .text32:
+            return 32
+        }
+    }
+    var lineHeight:Int{
+        switch self{
+        case .text14:
+            return 150
+        case .text15:
+            return 150
+        default:
+            return 140
+        }
+    }
+    var fontName:String{
+        switch self{
+        case .text11(let weight):
+            return weight.rawValue
+        case .text12(let weight):
+            return weight.rawValue
+        case .text13(let weight):
+            return weight.rawValue
+        case .text14(let weight):
+            return weight.rawValue
+        case .text15(let weight):
+            return weight.rawValue
+        case .text16(let weight):
+            return weight.rawValue
+        case .text18(let weight):
+            return weight.rawValue
+        case .text20(let weight):
+            return weight.rawValue
+        case .text24(let weight):
+            return weight.rawValue
+        case .text28(let weight):
+            return weight.rawValue
+        case .text32(let weight):
+            return weight.rawValue
+        }
+    }
+}

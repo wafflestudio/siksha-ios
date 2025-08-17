@@ -8,15 +8,26 @@
 import SwiftUI
 
 struct RenewalVOCView: View {
-    private let fontColor = Color("Gray700")
-    private let orangeColor = Color.init("Orange500")
-    private let lightGrayColor = Color.init("Gray600")
+    private let fontColor = Color.blackColor
+    private let orangeColor = Color.orange500
+    private let lightGrayColor = Color.gray600
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel: RenewalSettingsViewModel
     
     init(_ viewModel: RenewalSettingsViewModel) {
         self.viewModel = viewModel
+    }
+
+    var backButton: some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+            viewModel.vocComment = ""
+        }) {
+            Image("NavigationBack")
+                .resizable()
+                .frame(width: 7, height: 15)
+        }
     }
     
     var body: some View {
@@ -26,10 +37,11 @@ struct RenewalVOCView: View {
                     Image("Comment-new")
                         .renderingMode(.original)
                         .resizable()
-                        .frame(width: 17, height: 16)
+                        .frame(width: 18, height: 18)
                     
                     Text("문의할 내용을 남겨주세요.")
-                        .font(.custom("NanumSquareOTFB", size: 20))
+                        .font(.custom("NanumSquareOTFB", size: 18))
+                        .foregroundStyle(Color.blackColor)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(EdgeInsets(top: 44, leading: 16, bottom: 20, trailing: 16))
@@ -42,14 +54,15 @@ struct RenewalVOCView: View {
                     
                     Text("ID \(viewModel.userId)")
                         .font(.custom("NanumSquareOTFB", size: 12))
+                        .foregroundColor(Color.blackColor)
                     
                     Spacer()
                 }
-                .padding([.leading, .trailing], 20)
+                .padding([.leading, .trailing], 28)
                 .padding(.bottom, 8)
                 
                 ZStack(alignment: .bottom) {
-                    TextView(text: $viewModel.vocComment, placeHolder: .constant(""))
+                    TextView(text: $viewModel.vocComment, placeHolder: .constant("내용을 입력해주세요."))
                         .frame(height: 280)
                     
                     HStack {
@@ -71,9 +84,9 @@ struct RenewalVOCView: View {
                         RoundedRectangle(cornerRadius: 8)
                             .foregroundColor(viewModel.vocComment.count > 0 && viewModel.postVOCStatus == .idle ? orangeColor : lightGrayColor)
                         
-                        Text("전송하기")
-                            .font(.custom("NanumSquareOTFB", size: 17))
-                            .foregroundColor(.white)
+                        Text("완료")
+                            .font(.custom("NanumSquareOTFB", size: 18))
+                            .foregroundColor(.textButton)
                     }
                 })
                 .disabled(viewModel.vocComment.count == 0 || viewModel.postVOCStatus != .idle)
@@ -81,7 +94,7 @@ struct RenewalVOCView: View {
                 .padding(16)
             }
     //        .edgesIgnoringSafeArea(.all)
-            .background(Color.white.onTapGesture {
+            .background(Color.backgroundPrimary.onTapGesture {
                 UIApplication.shared.endEditing()
             })
     //        .navigationBarTitle("", displayMode: .inline)
@@ -100,6 +113,8 @@ struct RenewalVOCView: View {
                     }
                 }))
             })
+            .customNavigationBar(title: "1:1 문의하기")
+                        .navigationBarItems(leading: backButton)
         }
         .ignoresSafeArea(.keyboard)
     }

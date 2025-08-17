@@ -63,17 +63,17 @@ class CalendarDelegate: NSObject, JTACMonthViewDelegate, JTACMonthViewDataSource
         
         formatter.dateFormat = "yyyy-MM-dd"
         let todayString = formatter.string(from: Date())
-        let todayColor = UIColor(white: 223/255, alpha: 1)
-        let textColor = UIColor(white: 102/255, alpha: 1)
-        let selectedColor = UIColor(red: 254/255, green: 140/255, blue: 89/255, alpha: 1)
+        let todayColor = UIColor(named: "Color/Foundation/Gray/200")
+        let textColor = UIColor(named: "Color/Foundation/Gray/700")
+        let selectedColor = UIColor(named: "Color/Foundation/Orange/500")
         
         if cellState.isSelected {
-            cell.background.layer.backgroundColor = selectedColor.cgColor
+            cell.background.layer.backgroundColor = selectedColor!.cgColor
             cell.dateLabel.font = UIFont(name: "NanumSquareOTFB", size: 14)
             cell.dateLabel.textColor = .white
         } else {
             if formatter.string(from: cellState.date) == todayString {
-                cell.background.layer.backgroundColor = todayColor.cgColor
+                cell.background.layer.backgroundColor = todayColor!.cgColor
                 cell.dateLabel.font = UIFont(name: "NanumSquareOTFB", size: 14)
                 cell.dateLabel.textColor = textColor
             } else {

@@ -32,8 +32,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupMixpanel()
         
         let config = Realm.Configuration(
-            schemaVersion: 2, // 새로운 스키마 버전 설정
+            schemaVersion: 3, // 새로운 스키마 버전 설정
             migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 3{
+                    migration.enumerateObjects(ofType: DailyMenu.className()){
+                        oldObject,newObject in
+                        newObject!["dateType"] = 0
+                    }
+                }
                 if oldSchemaVersion < 2 {
                     // 1-1. 마이그레이션 수행
                     migration.enumerateObjects(ofType: Meal.className()) { oldObject, newObject in
@@ -41,15 +47,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         newObject!["likeCnt"] = 0 // Provide a default value for 'likeCnt'
                     }
                 }
+                
             }
         )
                 
         // 2. Realm이 새로운 Object를 쓸 수 있도록 설정
         Realm.Configuration.defaultConfiguration = config
 
-        // Feature Flag
-        FeatureFlag.shared.enable(feature: .community)
-        
         UserManager.shared.loadUserInfo()
         
         return true

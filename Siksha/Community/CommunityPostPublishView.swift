@@ -63,7 +63,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("Orange500"))
+                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("Color/Foundation/Orange/500"))
                         .frame(height: 60)
                     Text("완료")
                         .font(.custom("Inter-SemiBold", size: 14))
@@ -81,7 +81,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         }) {
             ZStack {
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("Orange500"))
+                    .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("Color/Foundation/Orange/500"))
                     .frame(height: 60)
                 Text("올리기")
                     .font(.custom("Inter-SemiBold", size: 17))
@@ -112,7 +112,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }
                 
                 configuration.label
-                    .foregroundColor(configuration.isOn ? Color("Orange500") : Color(hex:0x575757))
+                    .foregroundColor(configuration.isOn ? Color("Color/Foundation/Orange/500") : Color(hex:0x575757))
             }
             .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
             .contentShape(Rectangle())
@@ -125,7 +125,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     
     var customDivider: some View {
         HStack {
-            Color("Gray100")
+            Color("Color/Foundation/Gray/100")
                 .frame(height: 0.5)
                 .frame(maxWidth: .infinity)
         }
@@ -169,7 +169,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }) {
                         ZStack {
                             RoundedRectangle(cornerRadius: cornerRadius)
-                                .foregroundColor(Color("Gray100"))
+                                .foregroundColor(Color("Color/Foundation/Gray/100"))
                                 .frame(width: 106, height: 106)
 
                             Image(systemName: "plus")
@@ -236,9 +236,9 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                     Spacer()
                                     if viewModel.boardId == board.id {
                                         Text(board.name)
-                                            .foregroundColor(Color("Orange500"))
+                                            .foregroundColor(Color("Color/Foundation/Orange/500"))
                                         Image("CheckMark")
-                                            .foregroundColor(Color("Orange500"))
+                                            .foregroundColor(Color("Color/Foundation/Orange/500"))
                                     } else {
                                         Text(board.name)
                                             .foregroundColor(Color(hex: 0x575757))
@@ -284,7 +284,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             }) {
                 Text("OK")
                     .font(.custom("Inter-SemiBold", size: 16))
-                    .foregroundColor(Color("Orange500"))
+                    .foregroundColor(Color("Color/Foundation/Orange/500"))
                     .padding(.trailing, 20)
             }
         }
@@ -325,7 +325,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                         if viewModel.content.isEmpty {
                             Text(placeholder)
                                 .font(.custom("Inter-ExtraLight", size: 12))
-                                .foregroundColor(Color.init("Gray300"))
+                                .foregroundColor(Color.init("Color/Foundation/Gray/300"))
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(EdgeInsets(top: 8, leading: 6, bottom: 0, trailing: 0))
                         }

@@ -94,7 +94,7 @@ class Networking {
         let request = AF.request(SikshaAPI.getReviewImages(menuId: menuId, page: page, perPage: perPage, comment: comment, etc: etc))
         let decoder = JSONDecoder()
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         decoder.dateDecodingStrategy = .formatted(formatter)
         return request.validate().publishDecodable(type: ReviewResponse.self, decoder: decoder)
     }
