@@ -85,7 +85,10 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 7, height: 15)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .foregroundColor(.white)
         }
     }
 

@@ -47,12 +47,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 self.presentationMode.wrappedValue.dismiss()
             }) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color(hex: 0xADADAD))
-                        .frame(height: 60)
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.gray100)
+                        .frame(height: 44)
                     Text("취소")
-                        .font(.custom("Inter-SemiBold", size: 14))
-                        .foregroundColor(Color.white)
+                        .customFont(font: .text16(weight: .Bold))
+                        .foregroundStyle(Color.gray600)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -62,12 +62,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 viewModel.submitPost()
             }) {
                 ZStack {
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("Color/Foundation/Orange/500"))
-                        .frame(height: 60)
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray600 : Color.orange500)
+                        .frame(height: 44)
                     Text("완료")
-                        .font(.custom("Inter-SemiBold", size: 14))
-                        .foregroundColor(Color.white)
+                        .customFont(font: .text16(weight: .Bold))
+                        .foregroundStyle(Color.textButton)
                 }
             }
             .frame(maxWidth: .infinity)
@@ -80,12 +80,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             viewModel.submitPost()
         }) {
             ZStack {
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray : Color("Color/Foundation/Orange/500"))
-                    .frame(height: 60)
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray600 : Color.orange500)
+                    .frame(height: 56)
                 Text("올리기")
-                    .font(.custom("Inter-SemiBold", size: 17))
-                    .foregroundColor(Color.white)
+                    .customFont(font: .text18(weight: .ExtraBold))
+                    .foregroundStyle(Color.textButton)
             }
         }
         .frame(maxWidth: .infinity)
@@ -95,7 +95,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     var anonymousButton: some View {
         Toggle(isOn: $viewModel.isAnonymous) {
             Text("익명")
-                .font(.custom("Inter-Regular", size: 14))
+                .customFont(font: .text12(weight: .Bold))
+                .foregroundStyle(viewModel.isAnonymous ? Color.orange500 : Color.gray600)
         }
         .toggleStyle(CustomCheckboxStyle())
     }
@@ -105,16 +106,22 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             HStack(spacing: 5) {
                     if configuration.isOn {
                         Image("CheckboxTicked")
+                            .resizable()
+                            .scaledToFill()
                             .frame(width: 13, height: 13)
+                            .foregroundStyle(Color.orange500)
                     } else {
                         Image("Checkbox")
+                            .resizable()
+                            .scaledToFill()
                             .frame(width: 13, height: 13)
+                            .foregroundStyle(Color.gray600)
                     }
                 
                 configuration.label
-                    .foregroundColor(configuration.isOn ? Color("Color/Foundation/Orange/500") : Color(hex:0x575757))
+                    .foregroundColor(configuration.isOn ? .orange500 : .gray600)
             }
-            .padding(EdgeInsets(top: 5, leading: 0, bottom: 5, trailing: 0))
+            .foregroundColor(configuration.isOn ? .orange500 : .gray600)
             .contentShape(Rectangle())
             .onTapGesture {
                 configuration.isOn.toggle()
@@ -125,8 +132,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     
     var customDivider: some View {
         HStack {
-            Color("Color/Foundation/Gray/100")
-                .frame(height: 0.5)
+            Color.borderPrimary
+                .frame(height: 2)
                 .frame(maxWidth: .infinity)
         }
     }
@@ -134,9 +141,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     var imageSection: some View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack {
+                HStack(spacing: 8) {
                     ForEach(viewModel.images, id: \.self) { image in
-                        ZStack(alignment: .topTrailing) {
                             Image(uiImage: image)
                                 .resizable()
                                 .renderingMode(.original)
@@ -144,24 +150,23 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                 .frame(width: 106, height: 106)
                                 .clipped()
                                 .cornerRadius(cornerRadius)
-                            
-                            Button(action: {
-                                viewModel.removeImage(image)
-                            }) {
-                                ZStack {
-                                    Circle()
-                                        .foregroundColor(Color(hex:0x575757))
-                                        .frame(width: 24, height: 24)
-                                    
-                                    Image(systemName: "xmark")
-                                        .resizable()
-                                        .foregroundColor(Color(hex:0xDFDFDF))
-                                        .frame(width: 10, height: 10)
+                                .overlay(alignment: .topTrailing) {
+                                    Button(action: {
+                                        viewModel.removeImage(image)
+                                    }) {
+                                        ZStack {
+                                            Circle()
+                                                .foregroundColor(.gray700)
+                                                .frame(width: 18, height: 18)
+                                            
+                                            Image(systemName: "xmark")
+                                                .font(.system(size: 10, weight: .semibold))
+                                                .foregroundColor(.white)
+                                        }
+                                        .offset(x: 4, y: -4)
+                                    }
                                 }
-                                .offset(x: 8, y: -8)
-                            }
-                        }
-                        .frame(width:115, height: 130)
+                                .padding(.top, 7)
                     }
                     
                     Button(action: {
@@ -169,13 +174,13 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }) {
                         ZStack {
                             RoundedRectangle(cornerRadius: cornerRadius)
-                                .foregroundColor(Color("Color/Foundation/Gray/100"))
+                                .foregroundColor(.gray100)
                                 .frame(width: 106, height: 106)
 
                             Image(systemName: "plus")
                                 .resizable()
-                                .foregroundColor(Color.white)
-                                .frame(width: 40, height: 40)
+                                .foregroundColor(.gray600)
+                                .frame(width: 28, height: 28)
                         }
                     }
                     .sheet(isPresented: $isShowingPhotoLibrary) {
@@ -206,19 +211,28 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     isExpanded.toggle()
                 }
             }) {
-                HStack {
+                HStack(spacing: 6.5) {
                     Spacer()
                     Text(viewModel.boardsList.first { $0.id == viewModel.boardId }?.name ?? "게시판 선택")
-                        .foregroundColor(Color(hex: 0x575757))
+                        .customFont(font: .text13(weight: .Regular))
+                        .foregroundColor(.gray800)
                     Image("DownArrow")
-                        .foregroundColor(Color(hex: 0x919191))
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 10, height: 6)
+                        .foregroundColor(.gray600)
                     Spacer()
                 }
-                .padding()
                 .frame(height: 35)
                 .background(
-                    RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(Color(hex: 0xDFDFDF))
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(Color.backgroundSecondary)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .inset(by: 1)
+                        .stroke(Color.gray200, lineWidth: 1)
                 )
             }
             
@@ -232,42 +246,43 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                     isExpanded = false
                                 }
                             }) {
-                                HStack {
+                                HStack(spacing: 4) {
                                     Spacer()
                                     if viewModel.boardId == board.id {
                                         Text(board.name)
-                                            .foregroundColor(Color("Color/Foundation/Orange/500"))
-                                        Image("CheckMark")
-                                            .foregroundColor(Color("Color/Foundation/Orange/500"))
+                                            .foregroundColor(.orange500)
+                                            .customFont(font: .text13(weight: .Bold))
+                                        Image("Check")
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(width: 16, height: 16)
+                                            .foregroundColor(.orange500)
                                     } else {
                                         Text(board.name)
-                                            .foregroundColor(Color(hex: 0x575757))
-                                        Image("CheckMark")
-                                            .renderingMode(.template)
-                                            .foregroundColor(Color.clear) // Placeholder to align text
+                                            .foregroundColor(.gray800)
+                                            .customFont(font: .text13(weight: .Regular))
                                     }
                                     Spacer()
                                 }
-                                .padding()
                             }
                             .frame(height: 35)
                             
                             if board.id != viewModel.boardsList.last?.id {
                                 Divider()
-                                    .background(Color(hex: 0xEEEEEE))
+                                    .background(Color.borderPrimary)
                             }
                         }
                     }
                 }
                 .background(
                     RoundedRectangle(cornerRadius: cornerRadius)
-                        .stroke(Color(hex: 0xDFDFDF))
+                        .stroke(Color.gray200)
                         .background(
                             RoundedRectangle(cornerRadius: cornerRadius)
-                                .fill(Color.white)
+                                .fill(Color.backgroundSecondary)
                         )
                 )
-                .offset(y: 40)
+                .offset(y: 38)
             }
         }
         .zIndex(1)
@@ -284,12 +299,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             }) {
                 Text("OK")
                     .font(.custom("Inter-SemiBold", size: 16))
-                    .foregroundColor(Color("Color/Foundation/Orange/500"))
+                    .foregroundColor(.orange)
                     .padding(.trailing, 20)
             }
         }
         .frame(height: 44)
-        .background(Color.white)
+        .background(Color.backgroundSecondary)
     }
 
 
@@ -299,33 +314,36 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             
             ZStack(alignment: .top) {
                 boardPicker
-                    .padding(EdgeInsets(top: 10, leading: 20, bottom: 0, trailing: 20))
+                    .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
                 
-                VStack {
+                VStack(spacing: 0) {
                     ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .fill(Color(hex: 0xF8F8F8))
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.gray50)
                             .frame(height: 35)
-                        TextField("제목", text: $viewModel.title)
-                            .font(.custom("Inter-Bold", size: 14))
-                            .padding(EdgeInsets(top: 8, leading: 12, bottom: 8, trailing: 12))
+                        
+                        TextField("제목", text: $viewModel.title, prompt: Text("제목").foregroundColor(.gray500))
+                            .customFont(font: .text14(weight: .Bold))
+                            .foregroundStyle(Color.blackColor)
+                            .padding(.horizontal, 12)
                     }
                     .frame(maxWidth: .infinity)
                     
+                    Spacer().frame(height: 6)
                     
                     ZStack(alignment: .topLeading) {
                         let placeholder: String = "내용을 입력하세요."
                         
                         TextEditor(text: $viewModel.content)
                             .frame(minHeight: 120, maxHeight: max(120, availableHeight - 350))
-                            .font(.custom("Inter-ExtraLight", size: 12))
-                            .foregroundColor(.primary)
+                            .customFont(font: .text14(weight: .Regular))
+                            .foregroundColor(.blackColor)
                             .fixedSize(horizontal: false, vertical: true)
 
                         if viewModel.content.isEmpty {
                             Text(placeholder)
-                                .font(.custom("Inter-ExtraLight", size: 12))
-                                .foregroundColor(Color.init("Color/Foundation/Gray/300"))
+                                .customFont(font: .text14(weight: .Regular))
+                                .foregroundColor(Color.gray300)
                                 .frame(maxWidth: .infinity, alignment: .leading)
                                 .padding(EdgeInsets(top: 8, leading: 6, bottom: 0, trailing: 0))
                         }
@@ -336,9 +354,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                             anonymousButton
                             Spacer()
                         }
+                        .padding(.vertical, 11)
                     }
                     
                     customDivider
+                    
+                    Spacer().frame(height: 13)
                     
                     imageSection
                     
@@ -353,7 +374,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }
 
                 }
-                .padding(EdgeInsets(top: 60, leading: 20, bottom: 0, trailing: 20))
+                .padding(EdgeInsets(top: 56, leading: 20, bottom: 0, trailing: 20))
                 .customNavigationBar(title: "글쓰기")
                 .navigationBarItems(leading: backButton)
                 .alert(isPresented: $viewModel.isErrorAlert, content: {
@@ -397,9 +418,12 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
 }
 
 
-/*struct CommunityPostPublishView_Previews: PreviewProvider {
+struct CommunityPostPublishView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityPostPublishView(viewModel: CommunitySubmitPostViewModel(boardId : 1,communityRepository: DomainManager.shared.domain.communityRepository))
+        CommunityPostPublishView(needRefresh: .constant(false), viewModel: CommunityPostPublishViewModel(boardId: 1, communityRepository: DomainManager.shared.domain.communityRepository, postInfo: .init(title: "title", content: "content", isLiked: false, likeCount: 5, commentCount: 4, imageURLs: [
+            "https://images.unsplash.com/photo-1751193978006-4c19abfb5f3f?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://images.unsplash.com/photo-1754404053324-8f910c2b7e2d?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://plus.unsplash.com/premium_photo-1754067486503-e3f98909b13a?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        ], isAnonymous: true, isMine: true)))
     }
 }
-*/
