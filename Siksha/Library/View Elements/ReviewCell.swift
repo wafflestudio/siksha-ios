@@ -47,20 +47,20 @@ struct ReviewCell: View {
             HStack(alignment: .top, spacing: 0) {
                 Image("SpeechTail")
                     .resizable()
-                    .renderingMode(.original)
-                    .frame(width: 13.5, height: 17)
-                    .padding(.top, 7)
+                    .scaledToFill()
+                    .frame(width: 13.5, height: 17,alignment: .leading)
+                    .clipped()
                     .zIndex(1)
                     .shadow(color: .init(white: 0, opacity: 0.08), radius: 1.5, x: -1.5)
                 
                 Text(review.comment ?? "")
                     .font(.custom("NanumSquareOTFR", size: 12))
-                    .foregroundColor(.init(white: 79/255))
+                    .foregroundColor(.blackColor)
                     .padding(10)
                     .frame(maxWidth: .infinity, minHeight: 75, alignment: .topLeading)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .foregroundColor(.white)
+                            .foregroundColor(.backgroundSecondary)
                             .shadow(color: .init(white: 0, opacity: 0.15), radius: 1.5)
                     )
             }

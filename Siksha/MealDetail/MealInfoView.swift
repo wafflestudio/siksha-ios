@@ -77,7 +77,7 @@ private extension MealInfoView {
                                     .font(.custom("NanumSquareOTFB", size: 12))
                                     .multilineTextAlignment(.center)
                             }
-                            .background(Color.black)
+                            .background(Color.backgroundPrimary)
                             .opacity(0.5)
                             .cornerRadius(8)
                         })
@@ -94,7 +94,7 @@ private extension MealInfoView {
                 ReviewCell(review, false)
                     .padding(EdgeInsets(top: 12, leading: 8, bottom: 0, trailing: 0))
                     .listRowInsets(EdgeInsets())
-                    .background(Color.whiteColor)
+                    .background(Color.backgroundPrimary)
             }
             if viewModel.hasMorePages {
                 NavigationLink(destination: ReviewListView(viewModel.meal, false)) {
@@ -171,7 +171,7 @@ struct MealInfoView: View {
                     }.padding(EdgeInsets(top: 5, leading: 0, bottom: 15, trailing: 0))
                     
                     HStack {
-                        orangeColor
+                        Color.borderPrimary
                             .frame(height: 1)
                             .frame(maxWidth: .infinity)
                     }
@@ -233,6 +233,7 @@ struct MealInfoView: View {
                 }
             }
         }
+        .background(Color.backgroundPrimary)
         .customNavigationBar(title: viewModel.meal.nameKr)
         .navigationBarItems(leading: backButton)
         .onAppear {
