@@ -82,7 +82,7 @@ struct MenuFilterView: View {
             switch menuFilterType {
             case .all:
                 Capsule()
-                    .fill(Color("Color/Foundation/Gray/200"))
+                    .fill(Color.elementControl)
                     .frame(width: 46, height: 4)
                     .padding(.top, 15)
                     .padding(.bottom, 10)
@@ -90,6 +90,7 @@ struct MenuFilterView: View {
                 ZStack {
                     Text("필터")
                         .customFont(font: .text14(weight: .Bold))
+                        .foregroundStyle(Color.blackColor)
                     
                     HStack {
                         Spacer()
@@ -98,7 +99,7 @@ struct MenuFilterView: View {
                             Image("Close")
                                 .resizable()
                                 .frame(width: 32, height: 32)
-                                .foregroundStyle(Color("Color/Foundation/Gray/900"))
+                                .foregroundStyle(Color.gray900)
                         }
                         .padding(.trailing, 16)
                     }
@@ -199,9 +200,9 @@ struct MenuFilterView: View {
             ZStack {
                 if menuFilterType == .all {
                     Rectangle()
-                        .fill(Color("Color/Foundation/Base/WhiteColor"))
+                        .fill(Color.backgroundSecondary)
                         .frame(height: 111)
-                        .shadow(color: Color("Color/Foundation/Base/BlackColor").opacity(0.05), radius: 3, y: -1)
+                        .shadow(color: Color.black.opacity(0.05), radius: 3, y: -1)
                         .zIndex(0)
                 }
                 
@@ -210,10 +211,10 @@ struct MenuFilterView: View {
                         .customFont(font: .text16(weight: .Bold))
                         .frame(maxWidth: .infinity)
                         .frame(height: 38)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.textButton)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color("Color/Foundation/Gray/500"))
+                                .fill(Color.gray500)
                         )
                         .onTapGesture {
                             resetFilters()
@@ -223,17 +224,17 @@ struct MenuFilterView: View {
                         .customFont(font: .text16(weight: .Bold))
                         .frame(maxWidth: .infinity)
                         .frame(height: 38)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.textButton)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color("Color/Foundation/Orange/500"))
+                                .fill(Color.orange500)
                         )
                         .onTapGesture {
                             applyFilters()
                         }
                 }
                 .padding(EdgeInsets(top: menuFilterType == .all ? 19 : 0, leading: 16, bottom: menuFilterType == .all ? 54 : 45, trailing: 16))
-                .background(Color("Color/Foundation/Base/WhiteColor"))
+                .background(Color.backgroundSecondary)
                 .zIndex(1)
             }
         }
@@ -352,6 +353,7 @@ fileprivate struct SectionHeader: View {
             .customFont(font: .text16(weight: .ExtraBold))
             .frame(height: 27.5)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundStyle(Color.blackColor)
     }
 }
 
@@ -361,14 +363,14 @@ fileprivate struct CategoryButton: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
-            .stroke(isSelected ? Color("Color/Foundation/Orange/500") : Color("Color/Foundation/Gray/200"))
+            .stroke(isSelected ? Color.orange500 : Color.gray200)
             .frame(height: 34)
             .overlay(
                 Text(category)
                     .customFont(font: .text13(weight: .Bold))
-                    .foregroundColor(Color("Color/Foundation/Base/BlackColor"))
+                    .foregroundColor(Color.blackColor)
             )
-            .background(isSelected ? Color("Color/Foundation/Orange/100") : .clear, in: RoundedRectangle(cornerRadius: 30))
+            .background(isSelected ? Color.orangeTint : .clear, in: RoundedRectangle(cornerRadius: 30))
     }
 }
 
@@ -426,7 +428,7 @@ fileprivate struct MenuFilterViewCloseButtonModifier: ViewModifier {
                     Image("Close")
                         .resizable()
                         .frame(width: 32, height: 32)
-                        .foregroundStyle(Color("Color/Foundation/Gray/900"))
+                        .foregroundStyle(Color.gray900)
                 }
                 .padding(.top, 14)
                 .padding(.trailing, 16)

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ReviewListView: View {
-    private let lightGrayColor = Color.init("Color/Foundation/Gray/600")
+    private let lightGrayColor = Color.gray600
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var viewModel = ReviewListViewModel()
@@ -42,7 +42,7 @@ struct ReviewListView: View {
                         ReviewCell(review, true)
                             .padding(EdgeInsets(top: 16, leading: 8, bottom: 4, trailing: 0))
                             .listRowInsets(EdgeInsets())
-                            .background(Color.white)
+                            .background(Color.backgroundPrimary)
                             .onAppear {
                                 viewModel.loadMoreReviewsIfNeeded(currentItem: review, showOnlyImageReviews)
                             }
@@ -78,6 +78,7 @@ struct ReviewListView: View {
             }
         }
         .customNavigationBar(title: showOnlyImageReviews ? "사진 리뷰 모아보기" : "리뷰")
+        .background(Color.backgroundPrimary)
         .navigationBarItems(leading: backButton)
         .onAppear {
             viewModel.meal = meal
@@ -85,6 +86,7 @@ struct ReviewListView: View {
             viewModel.currentPage = 1
             viewModel.loadMoreReviewsIfNeeded(currentItem: nil, showOnlyImageReviews)
         }
+
     }
 }
 

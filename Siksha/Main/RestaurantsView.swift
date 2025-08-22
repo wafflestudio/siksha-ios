@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 struct RestaurantsView: View {
-    private let fontColor = Color("Color/Foundation/Gray/600")
+    private let fontColor = Color.gray600
     
     var restaurantsList: [Restaurant]
     var selectedPage:Int
@@ -31,7 +31,7 @@ struct RestaurantsView: View {
                 }
                 .padding(.vertical, 8)
             }
-            .background(Color.init("AppBackgroundColor"))
+            .background(Color.backgroundMain)
         } else {
             VStack {
                 HStack{
@@ -42,7 +42,7 @@ struct RestaurantsView: View {
                 .frame(maxHeight: .infinity)
             }
             .frame(maxWidth: .infinity)
-            .background(Color.init("AppBackgroundColor"))
+            .background(Color.backgroundMain)
         }
     }
 }

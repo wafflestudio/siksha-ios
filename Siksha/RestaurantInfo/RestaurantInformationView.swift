@@ -33,13 +33,13 @@ struct RestaurantInformationView: View {
                 Spacer()
                 Text(restaurant.nameKr)
                     .customFont(font: .text20(weight: .ExtraBold))
-                    .foregroundColor(Color("Color/Foundation/Gray/900"))
+                    .foregroundColor(Color.gray900)
                 Spacer()
             }
             .padding(EdgeInsets(top: 23, leading: 0, bottom: 10.73, trailing: 0))
             
             if position != nil {
-                Color.init("Color/Foundation/Gray/200") //TODO: FIX COLOR
+                Color.borderPrimary
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
             }
@@ -54,7 +54,7 @@ struct RestaurantInformationView: View {
                             
                             Text("식당 위치")
                                 .customFont(font: .text16(weight: .Bold))
-                                .foregroundColor(.black)
+                                .foregroundColor(Color.blackColor)
                             Spacer()
                         }
                         .padding(EdgeInsets(top: 13, leading: 16, bottom: 8, trailing: 16))
@@ -63,7 +63,7 @@ struct RestaurantInformationView: View {
                             .cornerRadius(10.0)
                             .frame(height: 250)
                             .padding(EdgeInsets(top: 0, leading: 16, bottom: 31, trailing: 16))
-                        Color.init("Color/Foundation/Gray/200") // TODO: FIX COLOR
+                        Color.borderPrimary
                             .frame(height: 10)
                             .frame(maxWidth: .infinity)
                     }
@@ -77,11 +77,12 @@ struct RestaurantInformationView: View {
                             .frame(width:4)
                         Text("영업 시간")
                             .customFont(font: .text16(weight: .Bold))
+                            .foregroundStyle(Color.blackColor)
                         Spacer()
                     }
                     .padding(EdgeInsets(top: 24, leading: 16, bottom: 8, trailing: 16))
                     
-                    Color.init("Color/Foundation/Orange/500")
+                    Color.orange500
                         .frame(height: 1)
                     
                     OperatingHoursTable(hours: Array(restaurant.operatingHours), isFestivalRestaurant: restaurant.nameKr.contains("[축제]"))

@@ -30,7 +30,7 @@ private extension ContentView {
             }
         }
         .frame(width: geometry.size.width, height: 50 + geometry.safeAreaInsets.bottom)
-        .background(Color.white.shadow(color: .init(white: 0.5), radius: 0, x: 0, y: -0.3))
+        .background(Color.backgroundSecondary.shadow(color:Color(red: 0, green: 0, blue: 0,opacity: 0.05), radius: 0, x: 0, y: -0.3))
         .padding(.top, -8)
         .padding(.bottom, -geometry.safeAreaInsets.bottom)
     }

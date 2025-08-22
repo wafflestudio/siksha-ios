@@ -10,9 +10,8 @@ import SwiftUI
 // MARK: - Restaurant Cell
 
 struct RestaurantCell: View {
-    private let fontColor = Color("Color/Foundation/Gray/700")
-    private let lightGrayColor = Color("Color/Foundation/Gray/600")
-    private let orangeColor = Color.init("Color/Foundation/Orange/500")
+    private let lightGrayColor = Color.gray600
+    private let orangeColor = Color.orange500
     
     var restaurant: Restaurant
     var meals: [Meal]
@@ -37,7 +36,7 @@ struct RestaurantCell: View {
             HStack(alignment: .center) {
                 Text(restaurant.nameKr)
                     .customFont(font: .text16(weight: .ExtraBold))
-                    .foregroundColor(.black)
+                    .foregroundColor(.blackColor)
                 Spacer()
                     .frame(width:6)
                 Button(action: {
@@ -171,11 +170,11 @@ struct RestaurantCell: View {
             .padding(EdgeInsets(top: 13, leading: 13, bottom: 17, trailing: 13))
         }
         .padding(.zero)
-        .background(Color.white)
+        .background(Color.backgroundSecondary)
         .cornerRadius(8)
         .overlay(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.init(white: 232/255), lineWidth: 1)
+                .stroke(Color.gray200, lineWidth: 1)
         )
     }
 }

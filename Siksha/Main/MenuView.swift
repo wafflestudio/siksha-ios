@@ -14,7 +14,7 @@ struct MenuView: View {
     @State private var selectedFilterType: MenuFilterType? = nil
     @State private var viewHeight: CGFloat = 0
     
-    private let lightGrayColor = Color("Color/Foundation/Gray/600")
+    private let lightGrayColor = Color.gray600
     
     init(isFavoriteTab: Bool = false) {
         _viewModel = StateObject(wrappedValue: MenuViewModel(isFavoriteTab: isFavoriteTab))
@@ -114,46 +114,45 @@ private extension MenuView {
     
     var daySelectorView: some View {
         HStack(alignment: .center) {
-            Button(action: {
-                viewModel.selectedDate = viewModel.prevDate
-            }, label: {
-                Image(viewModel.showCalendar ? "PrevDate-disabled" : "PrevDate")
-                    .resizable()
-                    .frame(width: 10, height: 16)
-            })
-            .disabled(viewModel.showCalendar)
-            .padding(.leading, 16)
-            
+            if !viewModel.showCalendar{
+                Button(action: {
+                    viewModel.selectedDate = viewModel.prevDate
+                }, label: {
+                    Image("PrevDate")
+                        .resizable()
+                        .frame(width: 10, height: 16)
+                })
+                .disabled(viewModel.showCalendar)
+                .padding(.leading, 16)
+            }
             Spacer()
             
             Button(action: {
                 viewModel.showCalendar.toggle()
             }, label: {
                 HStack(alignment: .center, spacing: 0) {
-                    Image("Calendar")
-                        .renderingMode(.original)
-                        .frame(width: 20, height: 22)
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 2, trailing: 4))
+                
                     Text(viewModel.selectedFormatted)
-                        .font(.custom("NanumSquareOTFEB", size: 15))
-                        .foregroundColor(orangeColor)
+                        .customFont(font: .text15(weight: .ExtraBold))
+                        .foregroundColor(Color.textAccent)
                 }
             })
             
             Spacer()
-            
-            Button(action: {
-                viewModel.selectedDate = viewModel.nextDate
-            }, label: {
-                Image(viewModel.showCalendar ? "NextDate-disabled" : "NextDate")
-                    .resizable()
-                    .frame(width: 10, height: 16)
-            })
-            .disabled(viewModel.showCalendar)
-            .padding(.trailing, 16)
+            if !viewModel.showCalendar{
+                Button(action: {
+                    viewModel.selectedDate = viewModel.nextDate
+                }, label: {
+                    Image("NextDate")
+                        .resizable()
+                        .frame(width: 10, height: 16)
+                })
+                .padding(.trailing, 16)
+            }
             
         }
         .frame(height: 50)
+        .background(Color.backgroundSecondary)
     }
     
     var calendarOverlay: some View {
@@ -168,7 +167,7 @@ private extension MenuView {
             CalendarView(selectedDate: $viewModel.selectedDate)
                 .frame(height: 300)
                 .padding(EdgeInsets(top: 4, leading: 10, bottom: 15, trailing: 10))
-                .background(Color.white)
+                .background(Color.backgroundSecondary)
                 .transition(.opacity.animation(.easeInOut(duration: 0.3)))
                 .zIndex(2)
         }
