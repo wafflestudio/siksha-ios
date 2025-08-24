@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreLocation
 
-public enum MenuFilterType {
+enum MenuFilterType {
     case all
     case distance
     case price
@@ -24,6 +24,22 @@ public enum MenuFilterType {
         case .minimumRating:
             return 220
         }
+    }
+}
+
+extension MenuFilterType {
+    var entryPoint: EntryPoint {
+        switch self {
+        case .all:            return .mainFilter
+        case .distance:       return .distanceFilter
+        case .price:          return .priceFilter
+        case .minimumRating:  return .ratingFilter
+        case .category:       return .categoryFilter
+        }
+    }
+    
+    var entryPointString: String {
+        entryPoint.rawValue
     }
 }
 
@@ -218,6 +234,7 @@ struct MenuFilterView: View {
                         )
                         .onTapGesture {
                             resetFilters()
+                            menuViewModel.analytics.track(.filterReset(entryPoint: menuFilterType.entryPointString, pageName: menuViewModel.pageName))
                         }
                     
                     Text("적용")
@@ -322,8 +339,26 @@ struct MenuFilterView: View {
         }
         menuViewModel.saveFilters()
         
+        let applied = AppliedFilterOptions(
+            priceMin: menuViewModel.selectedFilters.priceRange?.lowerBound,
+            priceMax: {
+                if let range = menuViewModel.selectedFilters.priceRange,
+                   range.upperBound != Int(maxPrice) { return range.upperBound }
+                return nil
+            }(),
+            minRating: menuViewModel.selectedFilters.minimumRating,
+            isOpenNow: menuViewModel.selectedFilters.isOpen,
+            hasReviews: menuViewModel.selectedFilters.hasReview,
+            maxDistanceKm: {
+                if let m = menuViewModel.selectedFilters.distance {
+                    return Double(m) / 1000.0
+                }
+                return nil
+            }()
+        )
+        menuViewModel.analytics.track(.filterModalApplied(entryPoint: menuFilterType.entryPointString, applied: applied.asDictionary, pageName: menuViewModel.pageName))
+        
         dismiss()
-        print("Filters applied!")
     }
 }
 

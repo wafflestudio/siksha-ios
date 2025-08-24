@@ -15,6 +15,7 @@ import FirebaseRemoteConfig
 
 final class MenuViewModel: NSObject, ObservableObject {
     let isFavoriteTab: Bool
+    let analytics: AnalyticsService
     
     private var remoteConfig = RemoteConfig.remoteConfig()
     private var settings = RemoteConfigSettings()
@@ -96,8 +97,9 @@ final class MenuViewModel: NSObject, ObservableObject {
         return "카테고리"
     }
     
-    init(isFavoriteTab: Bool = false) {
+    init(isFavoriteTab: Bool = false, analytics: AnalyticsService = MixpanelAnalytics()) {
         self.isFavoriteTab = isFavoriteTab
+        self.analytics = analytics
         
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
@@ -599,4 +601,8 @@ final class MenuViewModel: NSObject, ObservableObject {
 
 extension MenuViewModel: CLLocationManagerDelegate {
     
+}
+
+extension MenuViewModel {
+    var pageName: String { isFavoriteTab ? PageName.favoritesList.rawValue : PageName.storeList.rawValue }
 }

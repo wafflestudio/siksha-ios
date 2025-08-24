@@ -130,6 +130,9 @@ private extension MenuListView {
                                 viewModel.selectedFilters.isOpen = true
                             }
                             viewModel.saveFilters()
+                            viewModel.analytics.track(
+                                .instantFilterToggled(filter: .isOpenNow, value: viewModel.selectedFilters.isOpen ?? true, pageName: viewModel.pageName)
+                            )
                         }
                         
                         FilterItem(
@@ -144,6 +147,7 @@ private extension MenuListView {
                                 viewModel.selectedFilters.hasReview = true
                             }
                             viewModel.saveFilters()
+                            viewModel.analytics.track(.instantFilterToggled(filter: .hasReviews, value: viewModel.selectedFilters.hasReview ?? true, pageName: viewModel.pageName))
                         }
                         
                         FilterItem(
@@ -154,15 +158,6 @@ private extension MenuListView {
                         .onTapGesture {
                             selectedFilterType = .minimumRating
                         }
-                        
-                        //                FilterItem(
-                        //                    text: viewModel.categoryLabel,
-                        //                    isOn:viewModel.selectedFilters.categories != nil,
-                        //                    isCheck: false
-                        //                )
-                        //                .onTapGesture {
-                        //                    selectedFilterType = .category
-                        //                }
                     }
                     .background(
                         GeometryReader {
@@ -189,7 +184,11 @@ private extension MenuListView {
             }
         }
         .padding(EdgeInsets(top: 17, leading: 9, bottom: 9, trailing: 9))
-
+        .onChange(of: selectedFilterType) { newType in
+            if let newType {
+                viewModel.analytics.track(.filterModalOpened(entryPoint: newType.entryPointString, pageName: viewModel.pageName))
+            }
+        }
     }
     
     var emptyView: some View {
