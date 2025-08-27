@@ -116,6 +116,7 @@
 		4EA4F08C2E51BDCE0056438B /* MyLikedMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA4F08B2E51BDCE0056438B /* MyLikedMenuView.swift */; };
 		4EAB93E22BCBD2AF007341D7 /* TextFieldAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAB93E12BCBD2AF007341D7 /* TextFieldAlert.swift */; };
 		4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */; };
+		4EBD27AE2E5F030400E227D4 /* MyLikedMenuModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27AD2E5F030400E227D4 /* MyLikedMenuModal.swift */; };
 		4EC08B512C67ABF600AB2001 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC08B502C67ABF600AB2001 /* HexColor.swift */; };
 		4ED177EB2D33C39C00374D0C /* FilterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED177EA2D33C39700374D0C /* FilterItem.swift */; };
 		4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED628352B11D51900ECE221 /* CommunityPostView.swift */; };
@@ -297,6 +298,7 @@
 		4EA4F08B2E51BDCE0056438B /* MyLikedMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLikedMenuView.swift; sourceTree = "<group>"; wrapsLines = 0; };
 		4EAB93E12BCBD2AF007341D7 /* TextFieldAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlert.swift; sourceTree = "<group>"; };
 		4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishView.swift; sourceTree = "<group>"; };
+		4EBD27AD2E5F030400E227D4 /* MyLikedMenuModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLikedMenuModal.swift; sourceTree = "<group>"; };
 		4EC08B502C67ABF600AB2001 /* HexColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
 		4ED177EA2D33C39700374D0C /* FilterItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterItem.swift; sourceTree = "<group>"; };
 		4ED628352B11D51900ECE221 /* CommunityPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityPostView.swift; sourceTree = "<group>"; };
@@ -607,6 +609,7 @@
 				330BAD1A2D4616CF003C4B8D /* MenuFilterView.swift */,
 				4EA4F0872E4DFBB80056438B /* MapMarker.swift */,
 				4EA4F0892E51A61C0056438B /* LikedMenuRestaurantCell.swift */,
+				4EBD27AD2E5F030400E227D4 /* MyLikedMenuModal.swift */,
 			);
 			path = "View Elements";
 			sourceTree = "<group>";
@@ -957,6 +960,7 @@
 				749AA1222CE3618E00AD61E5 /* WebView.swift in Sources */,
 				1ED44A4625CC6579001D916B /* MealInfoViewModel.swift in Sources */,
 				1ECB254D25F2975A00875E18 /* MealInfoView.swift in Sources */,
+				4EBD27AE2E5F030400E227D4 /* MyLikedMenuModal.swift in Sources */,
 				1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */,
 				1EB5F43F264467B80012201A /* SikshaAPI.swift in Sources */,
 				4EAB93E22BCBD2AF007341D7 /* TextFieldAlert.swift in Sources */,

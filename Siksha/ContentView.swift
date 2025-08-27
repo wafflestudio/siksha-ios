@@ -37,17 +37,19 @@ private extension ContentView {
 }
 
 // MARK: - Content View
-class PopUpObject:ObservableObject{
+class ContentViewModel:ObservableObject{
     @Published var showPopUp = false
     @Published var popUpOpacity = 0.0
-    static var popUpObject = PopUpObject()
+    @Published var showModal = true
+    static var contentViewModel = ContentViewModel()
+    
 }
 struct ContentView: View {
     @State var selectedTab = 1
     @EnvironmentObject var appState: AppState
     @State var showPopup = false
     @State var popUpOpacity = 0.0
-    @ObservedObject var popUpObject = PopUpObject.popUpObject
+    @ObservedObject var contentViewModel = ContentViewModel.contentViewModel
     struct TabItem: Identifiable {
         var id: Int
         
@@ -82,25 +84,39 @@ struct ContentView: View {
                         
                     }
                     .navigationViewStyle(StackNavigationViewStyle())
-                    if popUpObject.showPopUp{
+                    if contentViewModel.showModal{
+                        ZStack{
+                            MyLikedMenuModal()
+                                .environmentObject(ContentViewModel.contentViewModel)
+                                .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
+                              
+                        }
+                        .ignoresSafeArea()
+                        .frame(maxWidth:.infinity,maxHeight:.infinity)
+                        .background(Color.backgroundDim)
+                    }
+                    if contentViewModel.showPopUp{
                         ZStack(alignment: .topTrailing) {
                             Image("notificationPopup")
                                .offset(y: -(UIScreen.main.bounds.height/2-97))
                                .offset(x: UIScreen.main.bounds.width/2-80)
-                               .opacity(popUpObject.popUpOpacity)
+                               .opacity(contentViewModel.popUpOpacity)
                         }
                         .onAppear{
                             print("onappear")
                             withAnimation(.easeInOut(duration: 1.0).delay(0.5)) {
-                                popUpObject.popUpOpacity = 1.0
+                                contentViewModel.popUpOpacity = 1.0
                             }
                             
                             withAnimation(.easeInOut(duration: 1.0).delay(5.0)) {
-                               popUpObject.popUpOpacity = 0.0
+                               contentViewModel.popUpOpacity = 0.0
                             }
                          
                         }
                     }
+                    
+                }
+                .onAppear{
                     
                 }
             }

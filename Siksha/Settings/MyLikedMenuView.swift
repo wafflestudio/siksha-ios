@@ -12,7 +12,7 @@ struct MyLikedMenuView: View {
         Binding<PresentationMode>
     var backButton: some View {
         Button(action: {
-            PopUpObject.popUpObject.showPopUp = false
+            ContentViewModel.contentViewModel.showPopUp = false
             self.presentationMode.wrappedValue.dismiss()
         }) {
             Image("NavigationBack")
@@ -36,7 +36,7 @@ struct MyLikedMenuView: View {
             trailing: Image("notification").padding(
                 EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5)))
         .onAppear{
-            PopUpObject.popUpObject.showPopUp = true
+            ContentViewModel.contentViewModel.showPopUp = true
             print("appeared")
         }
     }
