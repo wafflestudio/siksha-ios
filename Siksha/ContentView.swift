@@ -37,11 +37,17 @@ private extension ContentView {
 }
 
 // MARK: - Content View
-
+class PopUpObject:ObservableObject{
+    @Published var showPopUp = false
+    @Published var popUpOpacity = 0.0
+    static var popUpObject = PopUpObject()
+}
 struct ContentView: View {
     @State var selectedTab = 1
     @EnvironmentObject var appState: AppState
-    
+    @State var showPopup = false
+    @State var popUpOpacity = 0.0
+    @ObservedObject var popUpObject = PopUpObject.popUpObject
     struct TabItem: Identifiable {
         var id: Int
         
@@ -53,27 +59,50 @@ struct ContentView: View {
         [TabItem(id: 0, content: AnyView(MenuView(isFavoriteTab: true).id("favorite")), buttonImage: ["Favorite", "Favorite-disabled"]),
         TabItem(id: 1, content: AnyView(MenuView().id("main")), buttonImage: ["Main", "Main-disabled"]),
         TabItem(id: 2, content: AnyView(CommunityView(viewModel: CommunityViewModel(communityRepository: DomainManager.shared.domain.communityRepository))), buttonImage: ["Community", "Community-disabled"]),
-        TabItem(id: 3, content: AnyView(RenewalSettingsView(viewModel: RenewalSettingsViewModel())), buttonImage: ["Settings", "Settings-disabled"])
+         TabItem(id: 3, content: AnyView(RenewalSettingsView(viewModel: RenewalSettingsViewModel())), buttonImage: ["Settings", "Settings-disabled"])
         ]
     
   
     var body: some View {
+    
             GeometryReader { geometry in
-                NavigationView {
-                    VStack {
+                ZStack{
+                    NavigationView {
+                        VStack {
                             
                             tabItems[selectedTab].content
                             
                             Spacer()
                             tabBar(geometry)
                             
+                            
+                        }
+                        .ignoresSafeArea(.keyboard, edges: .bottom)
+                        
                         
                     }
-                      .ignoresSafeArea(.keyboard, edges: .bottom)
+                    .navigationViewStyle(StackNavigationViewStyle())
+                    if popUpObject.showPopUp{
+                        ZStack(alignment: .topTrailing) {
+                            Image("notificationPopup")
+                               .offset(y: -(UIScreen.main.bounds.height/2-97))
+                               .offset(x: UIScreen.main.bounds.width/2-80)
+                               .opacity(popUpObject.popUpOpacity)
+                        }
+                        .onAppear{
+                            print("onappear")
+                            withAnimation(.easeInOut(duration: 1.0).delay(0.5)) {
+                                popUpObject.popUpOpacity = 1.0
+                            }
+                            
+                            withAnimation(.easeInOut(duration: 1.0).delay(5.0)) {
+                               popUpObject.popUpOpacity = 0.0
+                            }
+                         
+                        }
+                    }
                     
-                   
                 }
-                .navigationViewStyle(StackNavigationViewStyle())
             }
         
         

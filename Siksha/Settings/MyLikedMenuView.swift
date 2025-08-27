@@ -1,0 +1,48 @@
+//
+//  MyLikedMenuView.swift
+//  Siksha
+//
+//  Created by 박정헌 on 8/17/25.
+//
+
+import SwiftUI
+
+struct MyLikedMenuView: View {
+    @Environment(\.presentationMode) var presentationMode:
+        Binding<PresentationMode>
+    var backButton: some View {
+        Button(action: {
+            PopUpObject.popUpObject.showPopUp = false
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            Image("NavigationBack")
+                .resizable()
+                .frame(width: 10, height: 16)
+        }
+    }
+    var body: some View {
+        ZStack(alignment: .topTrailing) {
+
+            ScrollView {
+
+            }
+        }
+     
+        .padding(.zero)
+
+        .customNavigationBar(title: "내가 찜한 메뉴")
+        .navigationBarItems(leading: backButton)
+        .navigationBarItems(
+            trailing: Image("notification").padding(
+                EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5)))
+        .onAppear{
+            PopUpObject.popUpObject.showPopUp = true
+            print("appeared")
+        }
+    }
+
+}
+
+#Preview {
+    MyLikedMenuView()
+}

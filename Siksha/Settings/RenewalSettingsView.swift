@@ -10,7 +10,6 @@ import UIKit
 
 struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
-    
     @ObservedObject var userModel = UserManager.shared
     @ObservedObject var viewModel: RenewalSettingsViewModel
     @ObservedObject var orderViewModel = RestaurantOrderViewModel()
@@ -98,18 +97,36 @@ struct RenewalSettingsView: View {
     }
     
     var myWritings: some View {
-        NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository))) {
-            HStack(alignment: .center) {
-                Text("내가 쓴 글")
-                    .font(.custom("NanumSquareOTF", size: 16))
-                    .foregroundColor(blackColor)
-                    .padding([.top, .bottom], 19)
-                    .padding(.leading, 16)
-                
-                Spacer()
-                
-                arrow
+        VStack(spacing: 0) {
+            NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository))) {
+                HStack(alignment: .center) {
+                    Text("내가 쓴 글")
+                        .font(.custom("NanumSquareOTF", size: 16))
+                        .foregroundColor(blackColor)
+                        .padding([.top, .bottom], 12)
+                        .padding(.leading, 16)
+                    
+                    Spacer()
+                    
+                    arrow
+                }
             }
+      
+            partitionBar
+            NavigationLink(destination: MyLikedMenuView()) {
+                HStack(alignment: .center) {
+                    Text("내가 찜한 메뉴")
+                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .foregroundColor(blackColor)
+                        .padding([.top, .bottom], 12)
+                        .padding(.leading, 16)
+                    
+                    Spacer()
+                    
+                    arrow
+                }
+            }
+            
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
