@@ -33,8 +33,9 @@ struct MyLikedMenuView: View {
         .customNavigationBar(title: "내가 찜한 메뉴")
         .navigationBarItems(leading: backButton)
         .navigationBarItems(
-            trailing: Image("notification").padding(
-                EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5)))
+            trailing: NavigationLink(destination:AlarmView(menus: SAMPLE_ALARM_MENU)){Image("notification").padding(
+                EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
+            })
         .onAppear{
             ContentViewModel.contentViewModel.showPopUp = true
             print("appeared")

@@ -118,6 +118,8 @@
 		4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */; };
 		4EBD27AE2E5F030400E227D4 /* MyLikedMenuModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27AD2E5F030400E227D4 /* MyLikedMenuModal.swift */; };
 		4EBD27B02E6089F100E227D4 /* AlarmRestaurantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27AF2E6089F100E227D4 /* AlarmRestaurantCell.swift */; };
+		4EBD27B22E629A5800E227D4 /* AlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27B12E629A5800E227D4 /* AlarmView.swift */; };
+		4EBD27B42E629CD100E227D4 /* AlarmSwitchStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27B32E629CD100E227D4 /* AlarmSwitchStyle.swift */; };
 		4EC08B512C67ABF600AB2001 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC08B502C67ABF600AB2001 /* HexColor.swift */; };
 		4ED177EB2D33C39C00374D0C /* FilterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED177EA2D33C39700374D0C /* FilterItem.swift */; };
 		4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED628352B11D51900ECE221 /* CommunityPostView.swift */; };
@@ -301,6 +303,8 @@
 		4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishView.swift; sourceTree = "<group>"; };
 		4EBD27AD2E5F030400E227D4 /* MyLikedMenuModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLikedMenuModal.swift; sourceTree = "<group>"; };
 		4EBD27AF2E6089F100E227D4 /* AlarmRestaurantCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmRestaurantCell.swift; sourceTree = "<group>"; };
+		4EBD27B12E629A5800E227D4 /* AlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmView.swift; sourceTree = "<group>"; };
+		4EBD27B32E629CD100E227D4 /* AlarmSwitchStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmSwitchStyle.swift; sourceTree = "<group>"; };
 		4EC08B502C67ABF600AB2001 /* HexColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
 		4ED177EA2D33C39700374D0C /* FilterItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterItem.swift; sourceTree = "<group>"; };
 		4ED628352B11D51900ECE221 /* CommunityPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityPostView.swift; sourceTree = "<group>"; };
@@ -498,6 +502,8 @@
 				A6F81E0A2BCBCEAE00263D70 /* ProfileEditView.swift */,
 				A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */,
 				4EA4F08B2E51BDCE0056438B /* MyLikedMenuView.swift */,
+				4EBD27B12E629A5800E227D4 /* AlarmView.swift */,
+				4EBD27B32E629CD100E227D4 /* AlarmSwitchStyle.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -963,6 +969,7 @@
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
 				749AA1222CE3618E00AD61E5 /* WebView.swift in Sources */,
 				1ED44A4625CC6579001D916B /* MealInfoViewModel.swift in Sources */,
+				4EBD27B42E629CD100E227D4 /* AlarmSwitchStyle.swift in Sources */,
 				1ECB254D25F2975A00875E18 /* MealInfoView.swift in Sources */,
 				4EBD27AE2E5F030400E227D4 /* MyLikedMenuModal.swift in Sources */,
 				1E3A57F025C73EC700DBB3F4 /* Meal.swift in Sources */,
@@ -975,6 +982,7 @@
 				BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
 				4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */,
+				4EBD27B22E629A5800E227D4 /* AlarmView.swift in Sources */,
 				1E9A6EAA2674BDFD005CAEA1 /* NavigationBarModifier.swift in Sources */,
 				4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */,
 				23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */,
