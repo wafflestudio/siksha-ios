@@ -117,6 +117,7 @@
 		4EAB93E22BCBD2AF007341D7 /* TextFieldAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EAB93E12BCBD2AF007341D7 /* TextFieldAlert.swift */; };
 		4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */; };
 		4EBD27AE2E5F030400E227D4 /* MyLikedMenuModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27AD2E5F030400E227D4 /* MyLikedMenuModal.swift */; };
+		4EBD27B02E6089F100E227D4 /* AlarmRestaurantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27AF2E6089F100E227D4 /* AlarmRestaurantCell.swift */; };
 		4EC08B512C67ABF600AB2001 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC08B502C67ABF600AB2001 /* HexColor.swift */; };
 		4ED177EB2D33C39C00374D0C /* FilterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED177EA2D33C39700374D0C /* FilterItem.swift */; };
 		4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED628352B11D51900ECE221 /* CommunityPostView.swift */; };
@@ -299,6 +300,7 @@
 		4EAB93E12BCBD2AF007341D7 /* TextFieldAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldAlert.swift; sourceTree = "<group>"; };
 		4EB660BB2A74DEAA00E52314 /* CommunityPostPublishView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishView.swift; sourceTree = "<group>"; };
 		4EBD27AD2E5F030400E227D4 /* MyLikedMenuModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLikedMenuModal.swift; sourceTree = "<group>"; };
+		4EBD27AF2E6089F100E227D4 /* AlarmRestaurantCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmRestaurantCell.swift; sourceTree = "<group>"; };
 		4EC08B502C67ABF600AB2001 /* HexColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
 		4ED177EA2D33C39700374D0C /* FilterItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterItem.swift; sourceTree = "<group>"; };
 		4ED628352B11D51900ECE221 /* CommunityPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityPostView.swift; sourceTree = "<group>"; };
@@ -610,6 +612,7 @@
 				4EA4F0872E4DFBB80056438B /* MapMarker.swift */,
 				4EA4F0892E51A61C0056438B /* LikedMenuRestaurantCell.swift */,
 				4EBD27AD2E5F030400E227D4 /* MyLikedMenuModal.swift */,
+				4EBD27AF2E6089F100E227D4 /* AlarmRestaurantCell.swift */,
 			);
 			path = "View Elements";
 			sourceTree = "<group>";
@@ -923,6 +926,7 @@
 				4EE5729F2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift in Sources */,
 				1ECB257D25F5412300875E18 /* TextView.swift in Sources */,
 				4E23C5A82D17E1E10088C1F6 /* ErrorHelper.swift in Sources */,
+				4EBD27B02E6089F100E227D4 /* AlarmRestaurantCell.swift in Sources */,
 				23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */,
 				330BAD1B2D4616CF003C4B8D /* MenuFilterView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,

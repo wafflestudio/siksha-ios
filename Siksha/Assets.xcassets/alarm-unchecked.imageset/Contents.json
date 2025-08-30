@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "favoriteSelected.png",
+      "filename" : "alarm-unchecked.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "favoriteSelected@2x.png",
+      "filename" : "alarm-unchecked@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "favoriteSelected@3x.png",
+      "filename" : "alarm-unchecked@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
