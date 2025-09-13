@@ -120,6 +120,7 @@
 		4EBD27B02E6089F100E227D4 /* AlarmRestaurantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27AF2E6089F100E227D4 /* AlarmRestaurantCell.swift */; };
 		4EBD27B22E629A5800E227D4 /* AlarmView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27B12E629A5800E227D4 /* AlarmView.swift */; };
 		4EBD27B42E629CD100E227D4 /* AlarmSwitchStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27B32E629CD100E227D4 /* AlarmSwitchStyle.swift */; };
+		4EBD27B62E62AC0C00E227D4 /* AlarmTimeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EBD27B52E62AC0C00E227D4 /* AlarmTimeView.swift */; };
 		4EC08B512C67ABF600AB2001 /* HexColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EC08B502C67ABF600AB2001 /* HexColor.swift */; };
 		4ED177EB2D33C39C00374D0C /* FilterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED177EA2D33C39700374D0C /* FilterItem.swift */; };
 		4ED628362B11D51900ECE221 /* CommunityPostView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ED628352B11D51900ECE221 /* CommunityPostView.swift */; };
@@ -305,6 +306,7 @@
 		4EBD27AF2E6089F100E227D4 /* AlarmRestaurantCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmRestaurantCell.swift; sourceTree = "<group>"; };
 		4EBD27B12E629A5800E227D4 /* AlarmView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmView.swift; sourceTree = "<group>"; };
 		4EBD27B32E629CD100E227D4 /* AlarmSwitchStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmSwitchStyle.swift; sourceTree = "<group>"; };
+		4EBD27B52E62AC0C00E227D4 /* AlarmTimeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTimeView.swift; sourceTree = "<group>"; };
 		4EC08B502C67ABF600AB2001 /* HexColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HexColor.swift; sourceTree = "<group>"; };
 		4ED177EA2D33C39700374D0C /* FilterItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterItem.swift; sourceTree = "<group>"; };
 		4ED628352B11D51900ECE221 /* CommunityPostView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityPostView.swift; sourceTree = "<group>"; };
@@ -504,6 +506,7 @@
 				4EA4F08B2E51BDCE0056438B /* MyLikedMenuView.swift */,
 				4EBD27B12E629A5800E227D4 /* AlarmView.swift */,
 				4EBD27B32E629CD100E227D4 /* AlarmSwitchStyle.swift */,
+				4EBD27B52E62AC0C00E227D4 /* AlarmTimeView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -956,6 +959,7 @@
 				1E3A581B25C98F9A00DBB3F4 /* AppState.swift in Sources */,
 				4E3D4EE72A74E02A005C7AB2 /* BoardNameCell.swift in Sources */,
 				1E3A582A25C9C6E300DBB3F4 /* RestaurantsView.swift in Sources */,
+				4EBD27B62E62AC0C00E227D4 /* AlarmTimeView.swift in Sources */,
 				A615B4DE2D86B91C0095865F /* MenuListView.swift in Sources */,
 				4E1BDE242A7F75BC00046ADC /* CommunityView.swift in Sources */,
 				1E3A57FB25C73FDD00DBB3F4 /* DailyMenu.swift in Sources */,
