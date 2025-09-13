@@ -10,6 +10,7 @@ import SwiftUI
 struct MyLikedMenuView: View {
     @Environment(\.presentationMode) var presentationMode:
         Binding<PresentationMode>
+    var restaurants:[Restaurant]
     var backButton: some View {
         Button(action: {
             ContentViewModel.contentViewModel.showPopUp = false
@@ -24,7 +25,11 @@ struct MyLikedMenuView: View {
         ZStack(alignment: .topTrailing) {
 
             ScrollView {
-
+                VStack{
+                    ForEach(restaurants,id:\.self){restaurant in
+                        LikedMenuRestaurantCell(restaurant)
+                    }
+                }
             }
         }
      
@@ -44,6 +49,25 @@ struct MyLikedMenuView: View {
 
 }
 
-#Preview {
-    MyLikedMenuView()
+struct MyLikedMenuView_Previews:PreviewProvider{
+   static var previews : some View {
+        let emptyRes = Restaurant()
+        let nonEmptyRes = Restaurant()
+        emptyRes.nameKr = "빈 식당"
+        nonEmptyRes.nameKr = "든 식당"
+        let menu = Meal()
+        menu.price = 3000
+        menu.nameKr = "식단"
+        menu.reviewCnt = 1
+        menu.score = 3
+        let menu2 = Meal()
+        menu2.price = 4000
+        menu2.nameKr = "식단2"
+        menu2.reviewCnt = 0
+        menu2.score = 4
+        nonEmptyRes.menus.append(menu)
+        nonEmptyRes.menus.append(menu2)
+
+       return MyLikedMenuView(restaurants: [emptyRes,nonEmptyRes])
+    }
 }

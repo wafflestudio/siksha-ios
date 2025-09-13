@@ -50,14 +50,16 @@ struct AlarmView: View {
                 .frame(height:1)
             Spacer()
                 .frame(height:13.5)
-            HStack(alignment:.center){
-                Text("메뉴 알림 설정")
-                    .foregroundStyle(Color.blackColor)
-                    .customFont(font: .text15(weight: .Regular))
-                Spacer()
-                Image("alarm-arrow")
-                    .resizable()
-                    .frame(width:16,height:16)
+            NavigationLink(destination: AlarmTimeView()){
+                HStack(alignment:.center){
+                    Text("메뉴 알림 설정")
+                        .foregroundStyle(Color.blackColor)
+                        .customFont(font: .text15(weight: .Regular))
+                    Spacer()
+                    Image("alarm-arrow")
+                        .resizable()
+                        .frame(width:16,height:16)
+                }
             }
 
         }

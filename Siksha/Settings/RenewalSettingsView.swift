@@ -113,7 +113,7 @@ struct RenewalSettingsView: View {
             }
       
             partitionBar
-            NavigationLink(destination: MyLikedMenuView()) {
+            NavigationLink(destination: MyLikedMenuView( restaurants: [])) {
                 HStack(alignment: .center) {
                     Text("내가 찜한 메뉴")
                         .font(.custom("NanumSquareOTFR", size: 15))

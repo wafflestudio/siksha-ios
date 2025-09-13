@@ -15,16 +15,12 @@ struct LikedMenuRestaurantCell: View {
     
     var restaurant: Restaurant
     var meals: [Meal]
-    var selectedPage:Int
-    var dayType:Int
     @State var isFavorite: Bool = false
     @State var showRestaurant: Bool = false
     @Environment(\.menuViewModel) var viewModel: MenuViewModel?
     
-    init(_ restaurant: Restaurant,_ selectedPage:Int,_ dayType:Int) {
+    init(_ restaurant: Restaurant) {
         self.restaurant = restaurant
-        self.selectedPage = selectedPage
-        self.dayType = dayType
         self.meals = Array(restaurant.menus)
         self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
     }
@@ -132,6 +128,6 @@ struct LikedMenuRestaurantCell_Previews: PreviewProvider {
         nonEmptyRes.menus.append(menu)
         nonEmptyRes.menus.append(menu2)
 
-        return LikedMenuRestaurantCell(nonEmptyRes,0,0)
+        return LikedMenuRestaurantCell(nonEmptyRes)
     }
 }
