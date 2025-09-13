@@ -43,6 +43,7 @@ struct MyLikedMenuView: View {
             })
         .onAppear{
             ContentViewModel.contentViewModel.showPopUp = true
+
             print("appeared")
         }
     }

@@ -41,6 +41,7 @@ class ContentViewModel:ObservableObject{
     @Published var showPopUp = false
     @Published var popUpOpacity = 0.0
     @Published var showModal = true
+    @Published var showMyMenuViewFromPopup = false
     static var contentViewModel = ContentViewModel()
     
 }
@@ -70,31 +71,36 @@ struct ContentView: View {
             GeometryReader { geometry in
                 ZStack{
                     NavigationView {
-                        VStack {
+                        ZStack{
+                            VStack {
+                                
+                                tabItems[selectedTab].content
+                                
+                                Spacer()
+                                tabBar(geometry)
+                                
+                                
+                            }
+                            .ignoresSafeArea(.keyboard, edges: .bottom)
                             
-                            tabItems[selectedTab].content
-                            
-                            Spacer()
-                            tabBar(geometry)
-                            
-                            
+                            if contentViewModel.showModal{
+                                ZStack{
+                                    MyLikedMenuModal()
+                                        .environmentObject(ContentViewModel.contentViewModel)
+                                        .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
+                                    
+                                }
+                                .ignoresSafeArea()
+                                .frame(maxWidth:.infinity,maxHeight:.infinity)
+                                .background(Color.backgroundDim)
+                            }
+                            NavigationLink(destination: MyLikedMenuView(restaurants: []),isActive: $contentViewModel.showMyMenuViewFromPopup){
+                                EmptyView()
+                            }
                         }
-                        .ignoresSafeArea(.keyboard, edges: .bottom)
-                        
-                        
                     }
                     .navigationViewStyle(StackNavigationViewStyle())
-                    if contentViewModel.showModal{
-                        ZStack{
-                            MyLikedMenuModal()
-                                .environmentObject(ContentViewModel.contentViewModel)
-                                .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
-                              
-                        }
-                        .ignoresSafeArea()
-                        .frame(maxWidth:.infinity,maxHeight:.infinity)
-                        .background(Color.backgroundDim)
-                    }
+                 
                     if contentViewModel.showPopUp{
                         ZStack(alignment: .topTrailing) {
                             Image("notificationPopup")

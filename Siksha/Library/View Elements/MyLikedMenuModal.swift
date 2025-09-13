@@ -62,8 +62,10 @@ struct MyLikedMenuModal: View {
             Spacer()
                 .frame(height:30)
             HStack(alignment: .center,spacing:7){
-                NavigationLink(destination:MyLikedMenuView(restaurants:[])){
-                    Text("직접 설정하기")
+                Button(action:{
+                    contentViewModel.showMyMenuViewFromPopup = true
+                    contentViewModel.showModal = false                })
+                {Text("직접 설정하기")
                     
                         .padding(EdgeInsets(top: 11, leading: 33.25, bottom: 11, trailing: 33.25))
                         .foregroundStyle(Color.gray600)
