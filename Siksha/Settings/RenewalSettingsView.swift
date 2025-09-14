@@ -98,17 +98,53 @@ struct RenewalSettingsView: View {
     }
     
     var myWritings: some View {
-        NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository))) {
-            HStack(alignment: .center) {
-                Text("내가 쓴 글")
-                    .font(.custom("NanumSquareOTF", size: 16))
-                    .foregroundColor(blackColor)
-                    .padding([.top, .bottom], 19)
-                    .padding(.leading, 16)
-                
-                Spacer()
-                
-                arrow
+        VStack(spacing: 0) {
+            NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository))) {
+                HStack(alignment: .center) {
+                    Text("내가 쓴 글")
+                        .font(.custom("NanumSquareOTF", size: 15))
+                        .foregroundColor(blackColor)
+                        .padding([.top, .bottom], 12)
+                        .padding(.leading, 16)
+                    
+                    Spacer()
+                    
+                    arrow
+                }
+            }
+            
+            partitionBar
+            
+            NavigationLink(destination: MyReviewManageView()) {
+                HStack(alignment: .center) {
+                    // TODO: - Destination 변경
+                    Text("나의 평가 관리")
+                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .foregroundColor(blackColor)
+                        .padding([.top, .bottom], 12)
+                        .padding(.leading, 16)
+                    
+                    Spacer()
+                    
+                    arrow
+                }
+            }
+            
+            partitionBar
+            
+            NavigationLink(destination: AccountManageView(viewModel: viewModel)) {
+                // TODO: - Destination 변경
+                HStack(alignment: .center) {
+                    Text("내가 찜한 메뉴")
+                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .foregroundColor(blackColor)
+                        .padding([.top, .bottom], 12)
+                        .padding(.leading, 16)
+                    
+                    Spacer()
+                    
+                    arrow
+                }
             }
         }
         .background(
@@ -122,7 +158,7 @@ struct RenewalSettingsView: View {
     var partitionBar: some View {
         partitionColor
             .frame(height: 1)
-            .padding(.leading, 7)
+            .padding(.leading, 14)
             .padding(.trailing, 9)
     }
     
