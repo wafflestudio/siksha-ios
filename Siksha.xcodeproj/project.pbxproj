@@ -10,6 +10,7 @@
 		07491E412E51BFBF00889C67 /* MixpanelAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */; };
 		07491E432E51C00500889C67 /* AnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E422E51C00500889C67 /* AnalyticsEvent.swift */; };
 		07491E452E51C02D00889C67 /* AnalyticsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E442E51C02D00889C67 /* AnalyticsKey.swift */; };
+		07D241B62E769A7500B56593 /* KeywordReivewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241B52E769A7500B56593 /* KeywordReivewView.swift */; };
 		1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */; };
 		1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */; };
 		1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EE25C6FCE600DBB3F4 /* ContentView.swift */; };
@@ -192,6 +193,7 @@
 		07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixpanelAnalytics.swift; sourceTree = "<group>"; };
 		07491E422E51C00500889C67 /* AnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEvent.swift; sourceTree = "<group>"; };
 		07491E442E51C02D00889C67 /* AnalyticsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsKey.swift; sourceTree = "<group>"; };
+		07D241B52E769A7500B56593 /* KeywordReivewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordReivewView.swift; sourceTree = "<group>"; };
 		1E3A56E725C6FCE600DBB3F4 /* Siksha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Siksha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -383,6 +385,14 @@
 			path = Analytics;
 			sourceTree = "<group>";
 		};
+		07D241B42E769A6300B56593 /* KeywordReview */ = {
+			isa = PBXGroup;
+			children = (
+				07D241B52E769A7500B56593 /* KeywordReivewView.swift */,
+			);
+			path = KeywordReview;
+			sourceTree = "<group>";
+		};
 		1E3A56DE25C6FCE600DBB3F4 = {
 			isa = PBXGroup;
 			children = (
@@ -407,6 +417,7 @@
 		1E3A56E925C6FCE600DBB3F4 /* Siksha */ = {
 			isa = PBXGroup;
 			children = (
+				07D241B42E769A6300B56593 /* KeywordReview */,
 				07491E3F2E51BF8900889C67 /* Analytics */,
 				4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */,
 				4E23C5A72D17E1DD0088C1F6 /* ErrorHelper.swift */,
@@ -945,6 +956,7 @@
 				4E79A1862C80B6BE007CE49B /* AlertView.swift in Sources */,
 				4E51987D2DDA2FD300F85388 /* Font.swift in Sources */,
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
+				07D241B62E769A7500B56593 /* KeywordReivewView.swift in Sources */,
 				BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
 				749AA1222CE3618E00AD61E5 /* WebView.swift in Sources */,

@@ -15,34 +15,41 @@ private extension MealReviewView {
             
             VStack(alignment: .center) {
                 HStack(spacing: 0) {
-                    Text("'\(viewModel.meal?.nameKr ?? "")")
-                        .font(.custom("NanumSquareOTFB", size: 22))
-                        .foregroundColor(darkFontColor)
+                    Text("\(viewModel.meal?.nameKr ?? "")")
+                        .customFont(font: .text20(weight: .ExtraBold))
+//                        .font(.custom("NanumSquareOTFB", size: 22))
+                        .foregroundColor(Color.blackColor)
                         .lineLimit(1)
                         .truncationMode(.tail)
-                    Text("'")
-                        .font(.custom("NanumSquareOTFB", size: 22))
-                        .foregroundColor(darkFontColor)
                     Text("\((viewModel.meal?.nameKr ?? "").inspectFinalConsonant() == .hasConsonant ? "은" : "는") 어땠나요?")
-                        .font(.custom("NanumSquareOTFB", size: 22))
+                        .customFont(font: .text20(weight: .Bold))
                         .foregroundColor(Color.gray700)
                 }
                 .padding(.top, 24)
                 
                 Text("별점을 선택해주세요.")
-                    .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(Color.gray700)
-                    .padding(.top, 26)
+                    .customFont(font: .text14(weight: .Bold))
+                    .foregroundStyle(Color.gray700)
+                    .padding(.top, 24)
                 
-                RatingStar($viewModel.scoreToSubmit, size: 35, spacing: 5.5)
-                    .gesture(
-                        DragGesture(minimumDistance: 0, coordinateSpace: .local)
-                            .updating($score) { (value, state, transcation) in
-                                let xvalue = max(0, value.location.x)
-                                state = Int(xvalue / 50.0)+1
-                                viewModel.scoreToSubmit = min(Double(state), 5)
-                            }
-                    )
+                HStack(spacing: 3) {
+                    ForEach(0..<5) { _ in
+                        Image("Star")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 28, height: 25)
+                            .foregroundStyle(Color.gray200)
+                    }
+                }
+//                RatingStar($viewModel.scoreToSubmit, size: 35, spacing: 5.5)
+//                    .gesture(
+//                        DragGesture(minimumDistance: 0, coordinateSpace: .local)
+//                            .updating($score) { (value, state, transcation) in
+//                                let xvalue = max(0, value.location.x)
+//                                state = Int(xvalue / 50.0)+1
+//                                viewModel.scoreToSubmit = min(Double(state), 5)
+//                            }
+//                    )
                 
                 // score
                 Text("\(String(Int(viewModel.scoreToSubmit)))")
@@ -54,23 +61,33 @@ private extension MealReviewView {
             
             Spacer()
         }
-        .padding(EdgeInsets(top: 20, leading: 28, bottom: 48, trailing: 28))
+        .padding(EdgeInsets(top: 20, leading: 28, bottom: 20, trailing: 28))
     }
     
     var commentSection: some View {
         VStack(spacing: 0) {
             HStack {
                 Image("Comment-new")
+                    .renderingMode(.template)
                     .resizable()
-                    .frame(width: 17, height: 16)
+                    .frame(width: 21, height: 21)
+                    .foregroundStyle(Color.blackColor)
                 
-                Text("식단 한 줄 평을 함께 남겨보세요!")
-                    .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(fontColor)
+                HStack(spacing: 1) {
+                    Text("식단 한 줄 평을 함께 남겨보세요!")
+                        .customFont(font: .text18(weight: .ExtraBold))
+                        .foregroundStyle(Color.blackColor)
+                    
+                    Text("(선택)")
+                        .customFont(font: .text12(weight: .Bold))
+                        .foregroundStyle(Color.gray700)
+                    
+                    Spacer()
+                }
                 
                 Spacer()
             }
-            .padding([.leading, .trailing], 36)
+            .padding([.leading, .trailing], 16)
             
             ZStack(alignment: .bottomTrailing) {
                 TextEditor(text: $viewModel.commentToSubmit)
@@ -98,7 +115,7 @@ private extension MealReviewView {
                 }
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 12, trailing: 13))
             }
-            .padding(EdgeInsets(top: 11, leading: 28, bottom: 0, trailing: 28))
+            .padding(EdgeInsets(top: 11, leading: 16, bottom: 0, trailing: 16))
         }
     }
     
@@ -176,7 +193,7 @@ private extension MealReviewView {
                 }
                 
                 Text("평가 등록")
-                    .font(.custom("NanumSquareOTFB", size: 20))
+                    .customFont(font: .text18(weight: .ExtraBold))
                     .foregroundColor(Color.textButton)
                     .padding(.top, 15)
             }
@@ -238,6 +255,72 @@ private extension MealReviewView {
 
 // MARK: - Rating View
 
+struct KeywordCell: View {
+    var text: String
+    var isSelected: Bool = false
+    
+    var body: some View {
+        Text(text)
+            .customFont(font: .text13(weight: .Regular))
+            .foregroundStyle(isSelected ? Color.orange500 : Color.gray800)
+            .padding(.vertical, 5)
+            .padding(.horizontal, 11)
+            .background {
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(isSelected ? Color.orange500 : Color.gray200, lineWidth: 1)
+            }
+    }
+}
+
+struct KeywordSelectionView: View {
+    var type: KeywordRateType
+    @State var selectedIndex: Int? = nil
+    var selections: [String] {
+        type.selects
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 4) {
+                Image(type.imageString)
+                    .resizable()
+                    .frame(width: 16, height: 16)
+                    .padding(3)
+                Text(type.title)
+                    .customFont(font: .text14(weight: .Bold))
+                    .foregroundStyle(Color.blackColor)
+            }
+            
+            HStack(spacing: 6) {
+                KeywordCell(text: selections[0])
+                    .onTapGesture {
+                        selectedIndex = 0
+                    }
+                KeywordCell(text: selections[1])
+                    .onTapGesture {
+                        selectedIndex = 1
+                    }
+                KeywordCell(text: selections[2])
+                    .onTapGesture {
+                        selectedIndex = 2
+                    }
+            }
+            
+            HStack(spacing: 6) {
+                KeywordCell(text: selections[3])
+                    .onTapGesture {
+                        selectedIndex = 3
+                    }
+                KeywordCell(text: selections[4])
+                    .onTapGesture {
+                        selectedIndex = 4
+                    }
+            }
+            
+        }
+    }
+}
+
 struct MealReviewView: View {
     private let darkFontColor = Color.blackColor
     private let fontColor = Color.gray700
@@ -268,9 +351,37 @@ struct MealReviewView: View {
                 ScrollView {
                     starSection
                     
+                    Color.gray100
+                        .frame(height: 10)
+                        .frame(maxWidth: .infinity)
+                    
+                    VStack(alignment: .leading, spacing: 0) {
+                        
+                        HStack(spacing: 1) {
+                            Text("어떤 점이 얼마나 좋았나요?")
+                                .customFont(font: .text18(weight: .ExtraBold))
+                                .foregroundStyle(Color.blackColor)
+                            
+                            Text("(필수)")
+                                .customFont(font: .text12(weight: .Bold))
+                                .foregroundStyle(Color.gray700)
+                            
+                            Spacer()
+                        }
+                        .padding(16)
+                        
+                        VStack(spacing: 22) {
+                            KeywordSelectionView(type: .taste)
+                            KeywordSelectionView(type: .price)
+                            KeywordSelectionView(type: .yang)
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                    .padding(.bottom, 30)
+                    
                     commentSection
                     
-                    imageSection
+//                    imageSection
                 }
                 .onTapGesture {
                     UIApplication.shared.endEditing()
@@ -296,11 +407,11 @@ struct MealReviewView: View {
 // MARK: - Preview
 
 
-//struct MealReviewView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let meal = Meal()
-//        meal.nameKr = "올리브스테이크"
-//
-//        return MealReviewView(meal, mealInfoViewModel: MealInfoViewModel(meal))
-//    }
-//}
+struct MealReviewView_Previews: PreviewProvider {
+    static var previews: some View {
+        let meal = Meal()
+        meal.nameKr = "올리브스테이크"
+
+        return MealReviewView(meal, mealInfoViewModel: MealInfoViewModel(meal: meal))
+    }
+}
