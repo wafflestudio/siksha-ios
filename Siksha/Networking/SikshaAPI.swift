@@ -51,6 +51,7 @@ enum SikshaAPI: URLRequestConvertible {
     case refreshAccessToken(token: String)
     case getMenus(startDate: String, endDate: String, noMenuHide: Bool)
     case getMenuFromId(menuId: Int)
+    case getMyLikedMenu
     case likeMenu(menuId:Int)
     case unlikeMenu(menuId:Int)
     case getFestivalDates
@@ -113,6 +114,8 @@ enum SikshaAPI: URLRequestConvertible {
             return true
         case .unlikeMenu:
             return true
+        case .getMyLikedMenu:
+            return true
         default:
             return true
         }
@@ -136,6 +139,8 @@ enum SikshaAPI: URLRequestConvertible {
         case .getMenus:
             return .get
         case .getMenuFromId:
+            return .get
+        case .getMyLikedMenu:
             return .get
         case .getFestivalDates:
             return .get
@@ -217,6 +222,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/menus/lo"
         case let .getMenuFromId(menuId):
             return "/menus/\(menuId)"
+        case .getMyLikedMenu:
+            return "/menus/me"
         case let .likeMenu(menuId):
             return "/menus/\(menuId)/like"
         case let .unlikeMenu(menuId):

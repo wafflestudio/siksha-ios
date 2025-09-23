@@ -13,15 +13,12 @@ struct LikedMenuRestaurantCell: View {
     private let lightGrayColor = Color.gray600
     private let orangeColor = Color.orange500
     
-    var restaurant: Restaurant
-    var meals: [Meal]
+    var restaurant: MyLikedRestaurant
     @State var isFavorite: Bool = false
     @State var showRestaurant: Bool = false
-    @Environment(\.menuViewModel) var viewModel: MenuViewModel?
     
-    init(_ restaurant: Restaurant) {
+    init(_ restaurant: MyLikedRestaurant) {
         self.restaurant = restaurant
-        self.meals = Array(restaurant.menus)
         self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
     }
     
@@ -29,7 +26,7 @@ struct LikedMenuRestaurantCell: View {
         VStack(spacing: 0) {
             // Restaurant Name
             HStack(alignment: .center) {
-                Text(restaurant.nameKr)
+                Text(restaurant.name)
                     .customFont(font: .text16(weight: .ExtraBold))
                     .foregroundColor(.blackColor)
                 Spacer()
@@ -37,9 +34,6 @@ struct LikedMenuRestaurantCell: View {
                 Button(action: {
                     isFavorite.toggle()
                     UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                    if viewModel?.isFavoriteTab == true {
-                        viewModel?.getMenuStatus = .needRerender
-                    }
                 }, label: {
                     Image(isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
@@ -79,18 +73,12 @@ struct LikedMenuRestaurantCell: View {
                 .padding([.trailing], 11.5)
                 .padding([.leading],11.5)
             VStack(spacing: 13) {
-                    ForEach(meals, id: \.id) { meal in
-                        let mealInfoViewModel = MealInfoViewModel(meal: meal)
-                        NavigationLink(
-                            destination: MealInfoView(viewModel: mealInfoViewModel)
-                                .environment(\.menuViewModel, viewModel)
-                                .onAppear {
-                                    viewModel?.reloadOnAppear = false
-                                },
-                            label: {
+                ForEach(restaurant.menus, id: \.id) { menu in
+                    let mealInfoViewModel = MealInfoViewModel(meal: Meal.fromMyLikedMenu(menu: menu))
+                 
                                 MealCell(viewModel: mealInfoViewModel)
-                                    .id("\(meal.id)\(meal.score)")
-                            })
+                                    .id("\(menu.id)\(menu.score)")
+                         
                     }
                 
             }
@@ -108,26 +96,3 @@ struct LikedMenuRestaurantCell: View {
 
 // MARK: - Preview
 
-struct LikedMenuRestaurantCell_Previews: PreviewProvider {
-    
-    static var previews: some View {
-        let emptyRes = Restaurant()
-        let nonEmptyRes = Restaurant()
-        emptyRes.nameKr = "빈 식당"
-        nonEmptyRes.nameKr = "든 식당"
-        let menu = Meal()
-        menu.price = 3000
-        menu.nameKr = "식단"
-        menu.reviewCnt = 1
-        menu.score = 3
-        let menu2 = Meal()
-        menu2.price = 4000
-        menu2.nameKr = "식단2"
-        menu2.reviewCnt = 0
-        menu2.score = 4
-        nonEmptyRes.menus.append(menu)
-        nonEmptyRes.menus.append(menu2)
-
-        return LikedMenuRestaurantCell(nonEmptyRes)
-    }
-}

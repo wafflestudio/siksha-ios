@@ -94,7 +94,7 @@ struct ContentView: View {
                                 .frame(maxWidth:.infinity,maxHeight:.infinity)
                                 .background(Color.backgroundDim)
                             }
-                            NavigationLink(destination: MyLikedMenuView(restaurants: []),isActive: $contentViewModel.showMyMenuViewFromPopup){
+                            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository)),isActive: $contentViewModel.showMyMenuViewFromPopup){
                                 EmptyView()
                             }
                         }

@@ -133,3 +133,17 @@ extension Repository: UserRepositoryProtocol {
         return self.networkModule.request(endpoint: endpoint)
     }
 }
+extension Repository: MyLikedMenuRepositoryProtocol{
+ 
+    func unlikeMenu(menuId: Int) -> AnyPublisher<Void, AppError> {
+        let endpoint = SikshaAPI.unlikeMenu(menuId: menuId)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+    }
+    
+    func getMyLikedMenu() -> AnyPublisher<MyLikedMenuResponse, AppError> {
+        let endpoint = SikshaAPI.getMyLikedMenu
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    
+    
+}

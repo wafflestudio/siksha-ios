@@ -111,6 +111,8 @@
 		4E74167D2A9B63A10010769F /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74167C2A9B63A00010769F /* CommentCell.swift */; };
 		4E79A1842C7DCBFE007CE49B /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E79A1832C7DCBFE007CE49B /* ImageView.swift */; };
 		4E79A1862C80B6BE007CE49B /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E79A1852C80B6BE007CE49B /* AlertView.swift */; };
+		4E90A07F2E7BE6E60016BAAF /* MyLikedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E90A07E2E7BE6E00016BAAF /* MyLikedMenu.swift */; };
+		4E90A0812E7BEA110016BAAF /* MyLikedMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E90A0802E7BEA0B0016BAAF /* MyLikedMenuViewModel.swift */; };
 		4EA4F0882E4DFBB80056438B /* MapMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA4F0872E4DFBB80056438B /* MapMarker.swift */; };
 		4EA4F08A2E51A61C0056438B /* LikedMenuRestaurantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA4F0892E51A61C0056438B /* LikedMenuRestaurantCell.swift */; };
 		4EA4F08C2E51BDCE0056438B /* MyLikedMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA4F08B2E51BDCE0056438B /* MyLikedMenuView.swift */; };
@@ -297,6 +299,8 @@
 		4E74167C2A9B63A00010769F /* CommentCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommentCell.swift; sourceTree = "<group>"; };
 		4E79A1832C7DCBFE007CE49B /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		4E79A1852C80B6BE007CE49B /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		4E90A07E2E7BE6E00016BAAF /* MyLikedMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLikedMenu.swift; sourceTree = "<group>"; };
+		4E90A0802E7BEA0B0016BAAF /* MyLikedMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLikedMenuViewModel.swift; sourceTree = "<group>"; };
 		4EA4F0872E4DFBB80056438B /* MapMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapMarker.swift; sourceTree = "<group>"; };
 		4EA4F0892E51A61C0056438B /* LikedMenuRestaurantCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikedMenuRestaurantCell.swift; sourceTree = "<group>"; };
 		4EA4F08B2E51BDCE0056438B /* MyLikedMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLikedMenuView.swift; sourceTree = "<group>"; wrapsLines = 0; };
@@ -492,6 +496,7 @@
 		1E3A572F25C6FDEC00DBB3F4 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				4E90A0802E7BEA0B0016BAAF /* MyLikedMenuViewModel.swift */,
 				C091FEE92C314FCC00D48F92 /* MyPostView.swift */,
 				C091FEEA2C314FCC00D48F92 /* MyPostViewModel.swift */,
 				C091FEE72C314FA100D48F92 /* AccountManageView.swift */,
@@ -532,6 +537,7 @@
 		1E3A574125C6FEC600DBB3F4 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				4E90A07E2E7BE6E00016BAAF /* MyLikedMenu.swift */,
 				1E3A57FA25C73FDD00DBB3F4 /* DailyMenu.swift */,
 				1E3A57EF25C73EC700DBB3F4 /* Meal.swift */,
 				1E3A574D25C6FF0500DBB3F4 /* Restaurant.swift */,
@@ -940,6 +946,7 @@
 				330BAD1B2D4616CF003C4B8D /* MenuFilterView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
 				4E23C5A62D17DCDA0088C1F6 /* ErrorAlert.swift in Sources */,
+				4E90A07F2E7BE6E60016BAAF /* MyLikedMenu.swift in Sources */,
 				4E79A1842C7DCBFE007CE49B /* ImageView.swift in Sources */,
 				4E6465102B1D8DB200A4ABAD /* UserManager.swift in Sources */,
 				1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */,
@@ -1020,6 +1027,7 @@
 				23DFD2172664CD400049F8D7 /* ThumbnailImage.swift in Sources */,
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
 				BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */,
+				4E90A0812E7BEA110016BAAF /* MyLikedMenuViewModel.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
 				07491E452E51C02D00889C67 /* AnalyticsKey.swift in Sources */,
 				4E6465122B1D8EEB00A4ABAD /* User.swift in Sources */,

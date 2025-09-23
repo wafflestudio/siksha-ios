@@ -26,4 +26,7 @@ final class Domain: DomainProtocol {
     var userRepository: UserRepositoryProtocol {
         return self.repository
     }
+    var myLikedMenuRepository: MyLikedMenuRepositoryProtocol{
+        return self.repository
+    }
 }
