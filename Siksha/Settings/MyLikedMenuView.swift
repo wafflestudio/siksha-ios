@@ -30,7 +30,7 @@ struct MyLikedMenuView: View {
             ScrollView {
                 VStack{
                     ForEach(viewModel.myLikedRestaurants,id:\.self){restaurant in
-                        LikedMenuRestaurantCell(restaurant)
+                        LikedMenuRestaurantCell(viewModel,restaurant)
                             
                     }
                 }

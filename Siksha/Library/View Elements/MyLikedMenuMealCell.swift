@@ -1,0 +1,83 @@
+//
+//  MyLikedMenuMealCell.swift
+//  Siksha
+//
+//  Created by 박정헌 on 9/28/25.
+//
+
+import SwiftUI
+
+struct MyLikedMenuMealCell: View {
+    @ObservedObject var viewModel: MyLikedMenuViewModel
+    let menu: MyLikedMenu
+    private var vegetarian: Bool = false
+    private let orangeColor = Color.orange500
+    private let grayColor = Color.gray900
+    private let lightGrayColor = Color.gray700
+    var formattedPrice: String {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        let formattedNumber = formatter.string(from: NSNumber(value: menu.price))!
+        return formattedNumber
+    }
+    
+    init(viewModel: MyLikedMenuViewModel,menu:MyLikedMenu) {
+        self.viewModel = viewModel
+        self.menu = menu
+        print("ETC:")
+        print(menu.etc)
+        if menu.etc.contains("No meat") {
+            print("contains no meat")
+            self.vegetarian = true
+        }
+    }
+    
+    var body: some View {
+        HStack(alignment: .top) {
+            Text("\(menu.nameKr)")
+                .multilineTextAlignment(.leading)
+                .frame(maxWidth: 168,alignment: .leading)
+                .customFont(font: .text15(weight: .Regular))
+                .foregroundColor(.blackColor)
+            
+            if vegetarian {
+                Image("Vegetarian")
+                    .resizable()
+                    .renderingMode(.original)
+                    .frame(width: 18, height: 18)
+            }
+
+            Spacer()
+            if menu.price < 10000{
+                Text(menu.price > 0 ? String(formattedPrice) : "-")
+                    .customFont(font: .text14(weight:.Regular))
+                    .foregroundColor(.blackColor)
+                    .frame(width: 38)
+            }
+            else{
+                Text(menu.price > 0 ? String(formattedPrice) : "-")
+                    .customFont(font: .text14(weight:.Regular))
+                    .foregroundColor(.blackColor)
+            }
+            Spacer()
+                .frame(width:16)
+                Text(menu.reviewCnt > 0 ? String(format: "%.1f", menu.score ?? 0) : "-")
+                    .customFont(font: .text14(weight: .Regular))
+                    .foregroundColor(.blackColor)
+                    .frame(width:23)
+                    
+            Spacer()
+                .frame(width:16)
+
+            Button(action: {
+                viewModel.unlikeMenu(menuId: menu.id)
+            }){
+                Image(menu.isLiked ? "Heart-selected" : "Heart-default")
+                    .frame(width: 24, height: 24)
+            }
+        }
+        .padding(.zero)
+        .background(Color.backgroundSecondary)
+    }
+}
+

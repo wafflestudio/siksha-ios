@@ -14,10 +14,12 @@ struct LikedMenuRestaurantCell: View {
     private let orangeColor = Color.orange500
     
     var restaurant: MyLikedRestaurant
+    let viewModel: MyLikedMenuViewModel
     @State var isFavorite: Bool = false
     @State var showRestaurant: Bool = false
     
-    init(_ restaurant: MyLikedRestaurant) {
+    init(_ viewModel: MyLikedMenuViewModel, _ restaurant: MyLikedRestaurant) {
+        self.viewModel = viewModel
         self.restaurant = restaurant
         self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
     }
@@ -76,8 +78,7 @@ struct LikedMenuRestaurantCell: View {
                 ForEach(restaurant.menus, id: \.id) { menu in
                     let mealInfoViewModel = MealInfoViewModel(meal: Meal.fromMyLikedMenu(menu: menu))
                  
-                                MealCell(viewModel: mealInfoViewModel)
-                                    .id("\(menu.id)\(menu.score)")
+                    MyLikedMenuMealCell(viewModel: viewModel, menu: menu)
                          
                     }
                 

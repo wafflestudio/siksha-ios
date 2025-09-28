@@ -56,5 +56,9 @@ class MyLikedMenuViewModel: ObservableObject{
                 menu.id == menuId
             })
         }
+        myLikedRestaurants.removeAll(where: {
+            restaurant in
+            restaurant.menus.isEmpty
+        })
     }
 }
