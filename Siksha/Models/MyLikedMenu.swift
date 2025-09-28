@@ -19,9 +19,9 @@ struct MyLikedMenu:Codable,Equatable,Hashable{
  var id: Int = 0
  var code: String = ""
  var nameKr: String = ""
- var nameEn: String = ""
+ var nameEn: String? = ""
  var price: Int = 0
-   var score: Double = 0
+   var score: Double? = 0
    var reviewCnt: Int = 0
 var isLiked: Bool = false
  var likeCnt: Int = 0

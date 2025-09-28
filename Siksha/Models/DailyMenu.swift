@@ -25,15 +25,17 @@ class DailyMenu: Object {
         case "HOLIDAY":dateType = Restaurant.OperatingHourType.holiday.rawValue
         default:dateType = 0
         }
-        addRestaurants(list: br, json["BR"])
-        addRestaurants(list: lu, json["LU"])
-        addRestaurants(list: dn, json["DN"])
+        addRestaurants(list: br, json["br"])
+        addRestaurants(list: lu, json["lu"])
+        addRestaurants(list: dn, json["dn"])
     }
    
     
     private func addRestaurants(list: List<Restaurant>, _ json: JSON){
         json.forEach { (str, restJson) in
             let newRest = Restaurant(restJson)
+            print("restaurant object added: ")
+            print(newRest)
             list.append(newRest)
         }
     }

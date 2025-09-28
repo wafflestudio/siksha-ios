@@ -46,6 +46,6 @@ struct FestivalDatesResponse: Codable {
 struct MyLikedMenuResponse: Codable{
     var restaurants:[MyLikedRestaurant]
     enum CodingKeys: String, CodingKey {
-        case restaurants = "results"
+        case restaurants = "result"
     }
 }

@@ -23,7 +23,7 @@ enum SikshaAPI: URLRequestConvertible {
         if self.askingForToken {
             switch self {
             case let .getAccessToken(token, endPoint):
-                request.setToken(token: token, type: endPoint)
+                request.setToken(token: token)
             default:
                 break
             }
@@ -219,7 +219,7 @@ enum SikshaAPI: URLRequestConvertible {
         case .refreshAccessToken:
             return "/auth/refresh"
         case .getMenus:
-            return "/menus/lo"
+            return "/menus"
         case let .getMenuFromId(menuId):
             return "/menus/\(menuId)"
         case .getMyLikedMenu:
