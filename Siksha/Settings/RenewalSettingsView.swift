@@ -115,9 +115,8 @@ struct RenewalSettingsView: View {
             
             partitionBar
             
-            NavigationLink(destination: MyReviewManageView()) {
+            NavigationLink(destination: MyReviewManageView(viewModel: MyReviewViewModel())) {
                 HStack(alignment: .center) {
-                    // TODO: - Destination 변경
                     Text("나의 평가 관리")
                         .font(.custom("NanumSquareOTFR", size: 15))
                         .foregroundColor(blackColor)
