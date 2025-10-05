@@ -133,7 +133,7 @@ struct ReviewCardView: View {
                             .foregroundColor(Color.gray600)
                     }
                     
-                    RatingStar(.constant(Double(review.rating)), size: 10, spacing: 2)
+                    RatingStar(.constant(Double(review.rating)), size: 13, spacing: 2, emptyStarType: .filled)
                 }
                 .padding(.init(top: 12, leading: 12, bottom: 16, trailing: 0))
                 Spacer()

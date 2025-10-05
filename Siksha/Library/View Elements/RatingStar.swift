@@ -7,15 +7,22 @@
 
 import SwiftUI
 
+enum EmptyStarType {
+    case empty
+    case filled
+}
+
 struct RatingStar: View {
     @Binding var score: Double
     private var starSize: CGFloat
     private var spacing: CGFloat
+    private var emptyStarType: EmptyStarType
     
-    init(_ score: Binding<Double>, size: CGFloat, spacing: CGFloat = 8){
+    init(_ score: Binding<Double>, size: CGFloat, spacing: CGFloat = 8, emptyStarType: EmptyStarType = .empty){
         self._score = score
         self.starSize = size
         self.spacing = spacing
+        self.emptyStarType = emptyStarType
     }
     
     func starImage(_ index: Int) -> some View {
@@ -28,11 +35,12 @@ struct RatingStar: View {
         } else if index * 2 < intScore {
             image = "RatingHalf"
         } else {
-            image = "RatingEmpty"
+            image = emptyStarType == .empty ? "RatingEmpty" :"RatingEmptyFilled"
         }
         
         return Image(image)
             .resizable()
+            .aspectRatio(contentMode: .fill)
             .frame(width: starSize * 13/12, height: starSize)
     }
     
