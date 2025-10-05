@@ -99,8 +99,8 @@ struct RestaurantSectionView: View {
                         .foregroundColor(Color.blackColor)
                     Spacer()
 
-                    Image("select")
-                        .rotationEffect(.degrees(isExpanded ? 180 : 0))
+                    Image("SelectGray")
+                        .rotationEffect(.degrees(isExpanded ? 0 : 180))
                 }
                 .padding(.init(top: 13, leading: 16, bottom: 13, trailing: 0))
                 .background(Color.backgroundSecondary)
@@ -123,7 +123,7 @@ struct ReviewCardView: View {
                             .customFont(font: .text15(weight: .ExtraBold))
                             .foregroundStyle(Color.blackColor)
                         
-                        Image("Arrow")
+                        Image("ArrowGray800")
                             .frame(width: 20, height: 20)
                         
                         Spacer()
