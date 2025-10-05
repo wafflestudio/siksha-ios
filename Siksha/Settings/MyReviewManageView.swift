@@ -102,7 +102,7 @@ struct RestaurantSectionView: View {
                     Image("select")
                         .rotationEffect(.degrees(isExpanded ? 180 : 0))
                 }
-                .padding(.init(top: 12, leading: 16, bottom: 5, trailing: 0))
+                .padding(.init(top: 13, leading: 16, bottom: 13, trailing: 0))
                 .background(Color.backgroundSecondary)
             }
         )
@@ -152,6 +152,7 @@ struct ReviewCardView: View {
                 .lineLimit(nil)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding(.top, 8)
+                .padding(.leading, 4)
             
             // Tags
             HStack(spacing: 10) {
@@ -165,6 +166,7 @@ struct ReviewCardView: View {
                 }
                 Spacer()
             }
+            .padding(.leading, 4)
             
             // Food images
             ScrollView(.horizontal, showsIndicators: false) {
@@ -185,6 +187,7 @@ struct ReviewCardView: View {
                 .padding(.horizontal, 1)
             }
             .padding(.top, 4)
+            .padding(.leading, 4)
             
             // Bottom buttons
             HStack(spacing: 16) {
