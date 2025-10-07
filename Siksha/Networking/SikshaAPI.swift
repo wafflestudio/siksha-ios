@@ -214,7 +214,7 @@ enum SikshaAPI: URLRequestConvertible {
         case .refreshAccessToken:
             return "/auth/refresh"
         case .getMenus:
-            return "/menus/lo"
+            return "/menus"
         case let .getMenuFromId(menuId):
             return "/menus/\(menuId)"
         case let .likeMenu(menuId):
