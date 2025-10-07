@@ -7,195 +7,171 @@
 
 import SwiftUI
 
-enum KeywordRateType {
-    case taste
-    case price
-    case yang
+struct MealInfoView: View {
+    private let darkFontColor = Color.blackColor
+    private let lightGrayColor = Color.gray600
+    private let orangeColor = Color.orange500
     
-    var imageString: String {
-        switch self {
-        case .taste:
-            return "KeywordTaste"
-        case .price:
-            return "KeywordMoney"
-        case .yang:
-            return "KeywordYang"
-        }
+    @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    
+    @StateObject var viewModel: MealInfoViewModel
+    @State var showSubmitButton: Bool = true
+    @State var showDetailImage: Bool = false
+    
+    init(viewModel: MealInfoViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
     
-    var description: String {
-        switch self {
-        case .taste:
-            return "또 먹고 싶어요"
-        case .price:
-            return "가성비 좋아요"
-        case .yang:
-            return "알찬 편이에요"
-        }
-    }
-    
-    var tempCnt: Int {
-        switch self {
-        case .taste:
-            22
-        case .price:
-            10
-        case .yang:
-            17
-        }
-    }
-    
-    var title: String {
-        switch self {
-        case .taste:
-            return "맛"
-        case .price:
-            return "가격"
-        case .yang:
-            return "음식 구성"
-        }
-    }
-    
-    var selects: [String] {
-        switch self {
-        case .taste:
-            ["또 먹고 싶어요", "생각보다 맛있어요", "무난해요", "아쉬운 맛이에요", "별로에요"]
-        case .price:
-            ["혜자스러워요", "가성비 좋아요", "합리적이에요", "약간 비싸요", "너무 비싸요"]
-        case .yang:
-            ["조화로워요", "알찬 편이에요", "기본적이에요", "다소 단조로워요", "너무 빈약해요"]
+    var body: some View {
+        ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 0) {
+                    Image("Heart")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 30, height: 30)
+                        .foregroundStyle(Color.accentLike)
+                        .padding(.top, 20)
+                    
+                    HStack(spacing: 0) {
+                        Text("찜 \(viewModel.meal.likeCnt)개")
+                            .customFont(font: .text13(weight: .Bold))
+                            .foregroundColor(Color.blackColor)
+                    }
+                    .padding(.bottom, 18)
+                    
+                    separator
+                    
+                    scoreSummary
+                        .padding(.top, 32)
+                        .padding(.bottom, 18)
+                        .padding(.horizontal, 16)
+                    
+                    Button(action: {}) {
+                        NavigationLink(
+                            destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel)
+                                .environment(\.menuViewModel, menuViewModel),
+                            label: {
+                                Text("나의 평가 남기기")
+                                    .customFont(font: .text14(weight: .ExtraBold))
+                                    .foregroundStyle(Color.whiteColor
+                                    )
+                                    .padding(.vertical, 7)
+                                    .padding(.horizontal, 23)
+                                    .background(Color.orange500)
+                                    .cornerRadius(50)
+                            })
+                    }
+                    .padding(.bottom, 32)
+                    
+                    separator
+                    
+                    // TODO: 리뷰 없을 때 empty view
+                    VStack(spacing: 33) {
+                        PhotoReviewView()
+                        ReviewList(meal: viewModel.meal)
+                    }
+                    .padding(.top, 17)
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 65)
+                }
+            }
+        .background(Color.backgroundPrimary)
+        .customNavigationBar(title: viewModel.meal.nameKr)
+        .navigationBarItems(leading: backButton)
+        .onAppear {
+            self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
+            if !viewModel.loadedReviews {
+                viewModel.mealReviews = []
+                viewModel.loadReviews()
+                viewModel.loadImages()
+                viewModel.loadDistribution()
+                viewModel.loadedReviews = true
+            }
         }
     }
 }
 
-struct KeywordRateRow: View {
-    var type: KeywordRateType
+fileprivate struct ReviewList: View {
+    let meal: Meal
     
     var body: some View {
-        HStack(spacing: 0) {
-            Image(type.imageString)
-                .resizable()
-                .scaledToFit()
-                .frame(width: 16, height: 16)
-                .padding(.trailing, 9.5)
-                .padding(.leading, 18)
-            
-            Text(type.description)
-                .customFont(font: .text13(weight: .Bold))
-                .foregroundStyle(Color.gray800)
-            
-            Spacer()
-            
-            Text("\(type.tempCnt)")
-                .customFont(font: .text14(weight: .ExtraBold))
-                .foregroundStyle(Color.orange500)
-                .padding(.trailing, 19)
-        }
-        .frame(width: 217, height: 36)
-        .background {
-            ZStack(alignment: .leading) {
-                Color.gray100
-                
-                Group {
-                    if type == .price {
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.orangeTint)
-                            .frame(width: 106)
-                    } else if type == .yang {
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.orangeTint)
-                            .frame(width: 156)
-                    } else {
-                        Color.orangeTint
-                    }
+        VStack(spacing: 21) {
+            HStack(spacing: 0) {
+                NavigationLink(destination: ReviewListView(meal, false)) {
+                    Text("리뷰")
+                        .customFont(font: .text18(weight: .Bold))
+                        .foregroundColor(.blackColor)
+                    
+                    Spacer()
                 }
-                .background{ Color.white }
-                .cornerRadius(8)
+            }
+            
+            VStack(spacing: 32) {
+                ForEach(0..<10) { _ in
+                    ReviewRow()
+                }
             }
         }
-        .cornerRadius(8)
+    }
+}
+
+fileprivate struct PhotoReviewView: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 11) {
+            Text("사진 리뷰")
+                .customFont(font: .text14(weight: .Bold))
+                .foregroundStyle(Color.blackColor)
+            
+            // TODO: 실제 데이터 넣기
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8.5) {
+                    ForEach(0..<3) { _ in
+                        RoundedRectangle(cornerRadius: 10)
+                            .frame(width: 120, height: 120)
+                            .foregroundColor(Color.gray200)
+                    }
+                }
+            }
+        }
     }
 }
 
 private extension MealInfoView {
+    var separator: some View {
+        Color.gray100
+            .frame(height: 10)
+            .frame(maxWidth: .infinity)
+    }
     
     var scoreSummary: some View {
-        VStack(spacing: 0) {
-            HStack (alignment: .center, spacing: 12) {
-                VStack(alignment: .center, spacing: 0) {
-                    Text("\(String(format: "%.1f", viewModel.meal.score))")
-                        .customFont(font: .text32(weight: .Bold))
-                        .foregroundColor(Color.blackColor)
-                    
-                    RatingStar(.constant(viewModel.meal.score), size: 12, spacing: 1)
-                    
-                    Spacer().frame(height: 10)
-                    
-                    Text("후기 47개")
-                        .customFont(font: .text14(weight: .Regular))
-                        .foregroundStyle(Color.blackColor)
-                }
-                .padding(.vertical, 12)
-                .padding(.horizontal, 20)
-                .background {
-                    RoundedRectangle(cornerRadius: 16)
-                        .stroke(Color.gray200, lineWidth: 1)
-                }
+        HStack (alignment: .center, spacing: 12) {
+            VStack(alignment: .center, spacing: 0) {
+                Text("\(String(format: "%.1f", viewModel.meal.score))")
+                    .customFont(font: .text32(weight: .Bold))
+                    .foregroundColor(Color.blackColor)
                 
-                VStack(spacing: 6) {
-                    KeywordRateRow(type: .taste)
-                    KeywordRateRow(type: .price)
-                    KeywordRateRow(type: .yang)
-                }
-                            
-//                VStack(alignment: .leading) {
-//                    HStack(spacing: 0) {
-//                        Text("총 ")
-//                            .font(.custom("NanumSquareOTFB", size: 12))
-//                            .foregroundColor(lightGrayColor)
-//                        Text("\(viewModel.meal.reviewCnt)명")
-//                            .font(.custom("NanumSquareOTFB", size: 12))
-//                            .foregroundColor(orangeColor)
-//                        Text("이 평가했어요!")
-//                            .font(.custom("NanumSquareOTFB", size: 12))
-//                            .foregroundColor(lightGrayColor)
-//                    }
-//                                    
-//                    HorizontalGraph(viewModel.scoreDistribution)
-//                        .frame(width: 200, alignment: .leading)
-//                }
-//                .padding(.leading, 20)
-//                
-//                Spacer()
+                StarRateView(rate: viewModel.meal.score, spacing: 1)
+                    .frame(height: 12)
+                
+                Spacer().frame(height: 10)
+                
+                Text("후기 \(viewModel.meal.reviewCnt)개")
+                    .customFont(font: .text14(weight: .Regular))
+                    .foregroundStyle(Color.blackColor)
             }
-            .padding(EdgeInsets(top: 20, leading: 0, bottom: 16, trailing: 0))
+            .padding(.vertical, 12)
+            .padding(.horizontal, 20)
+            .background {
+                RoundedRectangle(cornerRadius: 16)
+                    .strokeBorder(Color.gray200, lineWidth: 1)
+            }
             
-//            if showSubmitButton {
-//                NavigationLink(
-//                    destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel)
-//                        .environment(\.menuViewModel, menuViewModel),
-//                    label: {
-//                        Image("RateButton-new")
-//                            .resizable()
-//                            .renderingMode(.original)
-//                            .frame(width: 200, height: 32)
-//                    })
-//            }
-            
-            Button(action: {}) {
-                NavigationLink(
-                    destination: MealReviewView(viewModel.meal, mealInfoViewModel: viewModel)
-                        .environment(\.menuViewModel, menuViewModel),
-                    label: {
-                        Text("나의 평가 남기기")
-                            .customFont(font: .text14(weight: .ExtraBold))
-                            .foregroundStyle(Color.whiteColor
-                            )
-                            .padding(.vertical, 7)
-                            .padding(.horizontal, 20)
-                            .background(Color.orange500)
-                            .cornerRadius(50)
-                    })
+            // TODO: 키워드 리뷰 없을 때
+            VStack(spacing: 6) {
+                KeywordRateRow(type: .taste)
+                KeywordRateRow(type: .price)
+                KeywordRateRow(type: .yang)
             }
         }
     }
@@ -272,127 +248,6 @@ private extension MealInfoView {
                 .frame(width: 24, height: 24)
                 .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
                 .foregroundColor(.white)
-        }
-    }
-}
-
-struct MealInfoView: View {
-    private let darkFontColor = Color.blackColor
-    private let lightGrayColor = Color.gray600
-    private let orangeColor = Color.orange500
-    
-    @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
-    @StateObject var viewModel: MealInfoViewModel
-    @State var showSubmitButton: Bool = true
-    @State var showDetailImage: Bool = false
-    
-    init(viewModel: MealInfoViewModel) {
-        UITableView.appearance().separatorStyle = .none
-        
-        _viewModel = StateObject(wrappedValue: viewModel)
-    }
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            ScrollView {
-                VStack(spacing: 0) {
-                    
-                    Image("Heart")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 30, height: 30)
-                        .foregroundStyle(Color.accentLike)
-                        .padding(.top, 20)
-                    
-                    HStack(spacing: 0) {
-                        Text("찜 \(viewModel.meal.likeCnt)개")
-                            .customFont(font: .text13(weight: .Bold))
-                            .foregroundColor(Color.blackColor)
-                    }
-                    .padding(.bottom, 18)
-                    
-                    HStack {
-                        Color.gray100
-                            .frame(height: 10)
-                            .frame(maxWidth: .infinity)
-                    }
-                    
-                    scoreSummary
-                        .padding(.vertical, 20)
-                    
-                    Color.gray100
-                        .frame(height: 10)
-                        .frame(maxWidth: .infinity)
-                        .padding(.top, 10)
-                    
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text("사진 리뷰")
-                            .customFont(font: .text14(weight: .Bold))
-                            .foregroundStyle(Color.blackColor)
-                        
-                        ScrollView {
-                            HStack(spacing: 8.5) {
-                                ForEach(0..<3) { _ in
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .frame(width: 120, height: 120)
-                                        .foregroundColor(Color.gray200)
-                                }
-                            }
-                        }
-                    }
-                    .padding(.top, 17)
-                    .padding(.bottom, 15)
-                    .padding(.horizontal, 16)
-                    
-                    HStack {
-                        NavigationLink(
-                            destination: EmptyView(),
-                            label: {})
-                        NavigationLink(destination: ReviewListView(viewModel.meal, false)) {
-                            Text("리뷰")
-                                .font(.custom("NanumSquareOTFB", size: 18))
-                                .foregroundColor(.blackColor)
-                            
-                            Spacer()
-                            
-//                            Image("Arrow")
-//                                .resizable()
-//                                .frame(width: 7.5, height: 12)
-                        }
-                    }
-                    .padding(EdgeInsets(top: 10, leading: 16, bottom: 21, trailing: 16))
-                    VStack(spacing: 32) {
-                        ForEach(0..<10) { _ in
-                            ReviewRow()
-                                .padding(.horizontal, 16)
-                        }
-                    }
-                    
-//                    if viewModel.mealReviews.count > 0 {
-//                        reviewList
-//                    } else {
-//                        Text("평가가 없습니다.")
-//                            .font(.custom("NanumSquareOTFB", size: 13))
-//                            .foregroundColor(lightGrayColor)
-//                            .padding(.top, 20)
-//                    }
-                }
-            }
-        }
-        .background(Color.backgroundPrimary)
-        .customNavigationBar(title: viewModel.meal.nameKr)
-        .navigationBarItems(leading: backButton)
-        .onAppear {
-            self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
-            if !viewModel.loadedReviews {
-                viewModel.mealReviews = []
-                viewModel.loadReviews()
-                viewModel.loadImages()
-                viewModel.loadDistribution()
-                viewModel.loadedReviews = true
-            }
         }
     }
 }

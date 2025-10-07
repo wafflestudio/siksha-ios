@@ -13,6 +13,8 @@
 		07D241B62E769A7500B56593 /* KeywordReivewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241B52E769A7500B56593 /* KeywordReivewView.swift */; };
 		07D241C82E94AFB300B56593 /* StarUnitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241C72E94AFB300B56593 /* StarUnitView.swift */; };
 		07D241CA2E94AFF300B56593 /* StarRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241C92E94AFF300B56593 /* StarRateView.swift */; };
+		07D241CC2E94B1CD00B56593 /* KeywordRateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */; };
+		07D241CE2E94B1E200B56593 /* KeywordRateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241CD2E94B1E200B56593 /* KeywordRateRow.swift */; };
 		1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */; };
 		1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */; };
 		1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EE25C6FCE600DBB3F4 /* ContentView.swift */; };
@@ -198,6 +200,8 @@
 		07D241B52E769A7500B56593 /* KeywordReivewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordReivewView.swift; sourceTree = "<group>"; };
 		07D241C72E94AFB300B56593 /* StarUnitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarUnitView.swift; sourceTree = "<group>"; };
 		07D241C92E94AFF300B56593 /* StarRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarRateView.swift; sourceTree = "<group>"; };
+		07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordRateType.swift; sourceTree = "<group>"; };
+		07D241CD2E94B1E200B56593 /* KeywordRateRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordRateRow.swift; sourceTree = "<group>"; };
 		1E3A56E725C6FCE600DBB3F4 /* Siksha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Siksha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -395,6 +399,8 @@
 				07D241B52E769A7500B56593 /* KeywordReivewView.swift */,
 				07D241C72E94AFB300B56593 /* StarUnitView.swift */,
 				07D241C92E94AFF300B56593 /* StarRateView.swift */,
+				07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */,
+				07D241CD2E94B1E200B56593 /* KeywordRateRow.swift */,
 			);
 			path = KeywordReview;
 			sourceTree = "<group>";
@@ -948,6 +954,7 @@
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
 				BF60ADE62AC1EABF0015C468 /* Errors.swift in Sources */,
 				2360CD9A2663778B007E02DB /* ReviewListView.swift in Sources */,
+				07D241CE2E94B1E200B56593 /* KeywordRateRow.swift in Sources */,
 				C091FEEC2C314FCC00D48F92 /* MyPostViewModel.swift in Sources */,
 				1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */,
 				1EABA80B25EBE28000B79CB8 /* Utils.swift in Sources */,
@@ -977,6 +984,7 @@
 				BF97DF572AAF00780083FC6F /* Repository.swift in Sources */,
 				BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
+				07D241CC2E94B1CD00B56593 /* KeywordRateType.swift in Sources */,
 				4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */,
 				1E9A6EAA2674BDFD005CAEA1 /* NavigationBarModifier.swift in Sources */,
 				4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */,
