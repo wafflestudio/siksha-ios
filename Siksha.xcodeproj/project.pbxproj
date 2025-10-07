@@ -11,6 +11,8 @@
 		07491E432E51C00500889C67 /* AnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E422E51C00500889C67 /* AnalyticsEvent.swift */; };
 		07491E452E51C02D00889C67 /* AnalyticsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E442E51C02D00889C67 /* AnalyticsKey.swift */; };
 		07D241B62E769A7500B56593 /* KeywordReivewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241B52E769A7500B56593 /* KeywordReivewView.swift */; };
+		07D241C82E94AFB300B56593 /* StarUnitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241C72E94AFB300B56593 /* StarUnitView.swift */; };
+		07D241CA2E94AFF300B56593 /* StarRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241C92E94AFF300B56593 /* StarRateView.swift */; };
 		1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */; };
 		1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */; };
 		1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EE25C6FCE600DBB3F4 /* ContentView.swift */; };
@@ -194,6 +196,8 @@
 		07491E422E51C00500889C67 /* AnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEvent.swift; sourceTree = "<group>"; };
 		07491E442E51C02D00889C67 /* AnalyticsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsKey.swift; sourceTree = "<group>"; };
 		07D241B52E769A7500B56593 /* KeywordReivewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordReivewView.swift; sourceTree = "<group>"; };
+		07D241C72E94AFB300B56593 /* StarUnitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarUnitView.swift; sourceTree = "<group>"; };
+		07D241C92E94AFF300B56593 /* StarRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarRateView.swift; sourceTree = "<group>"; };
 		1E3A56E725C6FCE600DBB3F4 /* Siksha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Siksha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -389,6 +393,8 @@
 			isa = PBXGroup;
 			children = (
 				07D241B52E769A7500B56593 /* KeywordReivewView.swift */,
+				07D241C72E94AFB300B56593 /* StarUnitView.swift */,
+				07D241C92E94AFF300B56593 /* StarRateView.swift */,
 			);
 			path = KeywordReview;
 			sourceTree = "<group>";
@@ -919,6 +925,7 @@
 				1ECB255225F2999100875E18 /* RatingStar.swift in Sources */,
 				747811C02CE0B7E600EEEB6C /* KakaoShareManager.swift in Sources */,
 				BF97DF552AAF003D0083FC6F /* RepositoryProtocol.swift in Sources */,
+				07D241C82E94AFB300B56593 /* StarUnitView.swift in Sources */,
 				1EB5F4412644710A0012201A /* Networking.swift in Sources */,
 				A615B4DC2D86AAA60095865F /* MenuFilters.swift in Sources */,
 				330C55132D4D047A0011345D /* Sliders.swift in Sources */,
@@ -977,6 +984,7 @@
 				C091FEE52C314F9600D48F92 /* RenewalSettingsViewModel.swift in Sources */,
 				1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */,
 				4EA4F0882E4DFBB80056438B /* MapMarker.swift in Sources */,
+				07D241CA2E94AFF300B56593 /* StarRateView.swift in Sources */,
 				1E96F92F25DEC14F0074940C /* MenuRepository.swift in Sources */,
 				C091FEE82C314FA100D48F92 /* AccountManageView.swift in Sources */,
 				1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */,
