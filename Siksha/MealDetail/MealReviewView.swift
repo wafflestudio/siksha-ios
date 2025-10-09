@@ -25,13 +25,13 @@ private extension MealReviewView {
                         .foregroundColor(darkFontColor)
                     Text("\((viewModel.meal?.nameKr ?? "").inspectFinalConsonant() == .hasConsonant ? "은" : "는") 어땠나요?")
                         .font(.custom("NanumSquareOTFB", size: 22))
-                        .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
+                        .foregroundColor(Color.gray700)
                 }
                 .padding(.top, 24)
                 
                 Text("별점을 선택해주세요.")
                     .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(Color(red: 112 / 255, green: 112 / 255, blue: 112 / 255))
+                    .foregroundColor(Color.gray700)
                     .padding(.top, 26)
                 
                 RatingStar($viewModel.scoreToSubmit, size: 35, spacing: 5.5)
@@ -75,13 +75,15 @@ private extension MealReviewView {
             ZStack(alignment: .bottomTrailing) {
                 TextEditor(text: $viewModel.commentToSubmit)
                     .font(.system(size: 14))
-                    .foregroundColor(viewModel.commentRecommended ? Color.gray : Color.black)
+                    .foregroundColor(viewModel.commentRecommended ? Color.gray600 : Color.blackColor)
                     .frame(height: 148)
                     .padding(EdgeInsets(top: 8, leading: 8, bottom: 8, trailing: 8))
+                    .scrollContentBackground(.hidden)
                     .background(
-                        Color.init("AppBackgroundColor")
-                            .cornerRadius(10)
+                        Color.gray50
                     )
+                    .cornerRadius(10)
+
                     .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
                         if viewModel.commentRecommended {
                             viewModel.commentRecommended = false
@@ -165,17 +167,17 @@ private extension MealReviewView {
             ZStack(alignment: .top) {
                 if viewModel.canSubmit {
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.init("main"))
+                        .fill(Color.orange500)
                         .frame(width: 343, height: 56)
                 } else {
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.init("LightGrayColor"))
+                        .fill(Color.gray600)
                         .frame(width: 343, height: 56)
                 }
                 
                 Text("평가 등록")
                     .font(.custom("NanumSquareOTFB", size: 20))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color.textButton)
                     .padding(.top, 15)
             }
         }
@@ -226,7 +228,10 @@ private extension MealReviewView {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 10, height: 16)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .foregroundColor(Color.white)
         }
     }
 }
@@ -234,9 +239,9 @@ private extension MealReviewView {
 // MARK: - Rating View
 
 struct MealReviewView: View {
-    private let darkFontColor = Color("DarkFontColor")
-    private let fontColor = Color("DefaultFontColor")
-    private let orangeColor = Color.init("main")
+    private let darkFontColor = Color.blackColor
+    private let fontColor = Color.gray700
+    private let orangeColor = Color.orange500
 
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?

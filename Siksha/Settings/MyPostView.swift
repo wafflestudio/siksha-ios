@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct MyPostPreView: View {
-    private let contentColor = Color("ReviewHighColor")
-    private let likeColor = Color("MainThemeColor")
-    private let replyColor = Color("ReviewMediumColor")
-    private let defaultImageColor = Color("DefaultImageColor")
+    private let contentColor = Color.gray900
+    private let likeColor = Color.orange500
+    private let replyColor = Color.gray700
+    private let defaultImageColor = Color.gray100
     
     let info: PostInfo
     let boardName: String
@@ -49,7 +49,7 @@ struct MyPostPreView: View {
                                 .frame(width: 4)
                             Text(String(info.commentCount))
                                 .font(.custom("Inter-Regular", size: 9))
-                                .foregroundColor(Color.init("ReviewMediumColor"))
+                                .foregroundColor(Color.init("Color/Foundation/Gray/700"))
                                 .frame(height: 11, alignment: .center)
                             
                         }
@@ -70,7 +70,7 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     
     @State var tag: Int? = nil
     @State var needRefresh = false
-    let dividerColor = Color("ReviewLowColor")
+    let dividerColor = Color("Color/Foundation/Gray/100")
     
     @ObservedObject private var viewModel: ViewModel
     
@@ -85,7 +85,10 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 7, height: 15)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .foregroundColor(.white)
         }
     }
 

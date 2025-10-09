@@ -18,7 +18,7 @@ private extension ContentView {
                     Image((self.selectedTab == item.id ? item.buttonImage[0] : item.buttonImage[1]))
                         .renderingMode(.original)
                         .resizable()
-                        .frame(width: 30, height: 30)
+                        .frame(width: 36, height: 46)
                 }
                 .padding(.bottom, geometry.safeAreaInsets.bottom)
                 .transaction { transaction in
@@ -30,7 +30,7 @@ private extension ContentView {
             }
         }
         .frame(width: geometry.size.width, height: 50 + geometry.safeAreaInsets.bottom)
-        .background(Color.white.shadow(color: .init(white: 0.5), radius: 0, x: 0, y: -0.3))
+        .background(Color.backgroundSecondary.shadow(color:Color(red: 0, green: 0, blue: 0,opacity: 0.05), radius: 0, x: 0, y: -0.3))
         .padding(.top, -8)
         .padding(.bottom, -geometry.safeAreaInsets.bottom)
     }
@@ -49,16 +49,13 @@ struct ContentView: View {
         var buttonImage: [String]
     }
     
-    let tabItems = FeatureFlag.shared.isEnabled(feature: .community) ? [
-        TabItem(id: 0, content: AnyView(MenuView(isFavoriteTab: true).id("favorite")), buttonImage: ["Favorite", "Favorite-disabled"]),
+    let tabItems =
+        [TabItem(id: 0, content: AnyView(MenuView(isFavoriteTab: true).id("favorite")), buttonImage: ["Favorite", "Favorite-disabled"]),
         TabItem(id: 1, content: AnyView(MenuView().id("main")), buttonImage: ["Main", "Main-disabled"]),
         TabItem(id: 2, content: AnyView(CommunityView(viewModel: CommunityViewModel(communityRepository: DomainManager.shared.domain.communityRepository))), buttonImage: ["Community", "Community-disabled"]),
         TabItem(id: 3, content: AnyView(RenewalSettingsView(viewModel: RenewalSettingsViewModel())), buttonImage: ["Settings", "Settings-disabled"])
-    ] : [
-        TabItem(id: 0, content: AnyView(MenuView(isFavoriteTab: true).id("favorite")), buttonImage: ["Favorite", "Favorite-disabled"]),
-        TabItem(id: 1, content: AnyView(MenuView().id("main")), buttonImage: ["Main", "Main-disabled"]),
-        TabItem(id: 2, content: AnyView(SettingsView()), buttonImage: ["Settings", "Settings-disabled"])
-    ]
+        ]
+    
   
     var body: some View {
             GeometryReader { geometry in

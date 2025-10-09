@@ -14,7 +14,7 @@ private extension MealInfoView {
                 VStack(alignment: .center, spacing: 10) {
                     Text("\(String(format: "%.1f", viewModel.meal.score))")
                         .font(.custom("NanumSquareOTFB", size: 32))
-                        .foregroundColor(.black)
+                        .foregroundColor(Color.blackColor)
                     
                     RatingStar(.constant(viewModel.meal.score), size: 17, spacing: 2)
                 }
@@ -73,11 +73,11 @@ private extension MealInfoView {
                                     .clipped()
                                 
                                 Text(viewModel.totalImageCount-3 > 0 ? "+\n\(viewModel.totalImageCount-3)건 더 보기" : "+\n더 보기")
-                                    .foregroundColor(.white)
+                                    .foregroundColor(.whiteColor)
                                     .font(.custom("NanumSquareOTFB", size: 12))
                                     .multilineTextAlignment(.center)
                             }
-                            .background(Color.black)
+                            .background(Color.backgroundPrimary)
                             .opacity(0.5)
                             .cornerRadius(8)
                         })
@@ -94,7 +94,7 @@ private extension MealInfoView {
                 ReviewCell(review, false)
                     .padding(EdgeInsets(top: 12, leading: 8, bottom: 0, trailing: 0))
                     .listRowInsets(EdgeInsets())
-                    .background(Color.white)
+                    .background(Color.backgroundPrimary)
             }
             if viewModel.hasMorePages {
                 NavigationLink(destination: ReviewListView(viewModel.meal, false)) {
@@ -124,15 +124,18 @@ private extension MealInfoView {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 10, height: 16)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .foregroundColor(.white)
         }
     }
 }
 
 struct MealInfoView: View {
-    private let darkFontColor = Color.init("DarkFontColor")
-    private let lightGrayColor = Color.init("LightGrayColor")
-    private let orangeColor = Color.init("main")
+    private let darkFontColor = Color.blackColor
+    private let lightGrayColor = Color.gray600
+    private let orangeColor = Color.orange500
     
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -161,14 +164,14 @@ struct MealInfoView: View {
                     HStack(spacing: 0) {
                         Text("좋아요 ")
                             .font(.custom("NanumSquareOTF", size: 14))
-                            .foregroundColor(.black)
+                            .foregroundColor(darkFontColor)
                         Text("\(viewModel.meal.likeCnt)개")
                             .font(.custom("NanumSquareOTF", size: 14))
-                            .foregroundColor(.black)
+                            .foregroundColor(darkFontColor)
                     }.padding(EdgeInsets(top: 5, leading: 0, bottom: 15, trailing: 0))
                     
                     HStack {
-                        orangeColor
+                        Color.borderPrimary
                             .frame(height: 1)
                             .frame(maxWidth: .infinity)
                     }
@@ -176,7 +179,7 @@ struct MealInfoView: View {
                     
                     scoreSummary
                     
-                    Color.init("DarkBackgroundColor")
+                    Color.gray100
                         .frame(height: 10)
                         .frame(maxWidth: .infinity)
                         .padding(.top, 10)
@@ -230,6 +233,7 @@ struct MealInfoView: View {
                 }
             }
         }
+        .background(Color.backgroundPrimary)
         .customNavigationBar(title: viewModel.meal.nameKr)
         .navigationBarItems(leading: backButton)
         .onAppear {

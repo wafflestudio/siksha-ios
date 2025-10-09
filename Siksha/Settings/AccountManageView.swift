@@ -23,12 +23,15 @@ struct AccountManageView: View {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 7, height: 15)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .foregroundColor(.white)
         }
     }
     
     var partitionBar: some View {
-        Color.init(white: 232/255)
+        Color.borderPrimary
             .frame(height: 1)
             .padding([.leading, .trailing], 8)
     }
@@ -42,7 +45,7 @@ struct AccountManageView: View {
                     HStack(alignment: .center) {
                         Text("로그아웃")
                             .font(.custom("NanumSquareOTFR", size: 15))
-                            .foregroundColor(.black)
+                            .foregroundColor(Color.blackColor)
                             .padding([.top, .bottom], 12)
                             .padding(.leading, 16)
                         
@@ -73,7 +76,7 @@ struct AccountManageView: View {
                     HStack(alignment: .center) {
                         Text("회원탈퇴")
                             .font(.custom("NanumSquareOTFR", size: 15))
-                            .foregroundColor(Color.init(white: 87/255))
+                            .foregroundColor(.accentLike)
                             .padding([.top, .bottom], 12)
                             .padding(.leading, 16)
                         
@@ -100,7 +103,9 @@ struct AccountManageView: View {
             }
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.init(white: 232/255), lineWidth: 1)
+                    .strokeBorder(Color.gray200, lineWidth: 1)
+                    .background(Color.backgroundSecondary)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             )
             .padding(.top, 24)
             .padding([.leading, .trailing], 20)

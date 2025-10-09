@@ -12,10 +12,10 @@ struct MenuListView: View {
     @Binding var selectedFilterType: MenuFilterType?
     @State private var isAtLeadingEdge: Bool = true
     
-    private let backgroundColor = Color("AppBackgroundColor")
-    private let lightGrayColor = Color("Gray600")
-    private let orangeColor = Color("main")
-    private let fontColor = Color("DefaultFontColor")
+    private let backgroundColor = Color.backgroundMain
+    private let lightGrayColor = Color.gray600
+    private let orangeColor = Color.orange500
+    private let fontColor = Color.gray700
     private let typeInfos: [TypeInfo] = [
         TypeInfo(type: .breakfast),
         TypeInfo(type: .lunch),
@@ -34,7 +34,7 @@ struct MenuListView: View {
             } else if viewModel.restaurantsLists.count > 0 {
                 TabView(selection: $viewModel.selectedPage) {
                     ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
-                        RestaurantsView(viewModel.restaurantsLists[index])
+                        RestaurantsView(viewModel.restaurantsLists[index],viewModel.selectedPage,viewModel.selectedMenu?.dateType ?? 0)
                             .tag(index)
                     }
                 }
@@ -130,6 +130,9 @@ private extension MenuListView {
                                 viewModel.selectedFilters.isOpen = true
                             }
                             viewModel.saveFilters()
+                            viewModel.analytics.track(
+                                .instantFilterToggled(filter: .isOpenNow, value: viewModel.selectedFilters.isOpen ?? true, pageName: viewModel.pageName)
+                            )
                         }
                         
                         FilterItem(
@@ -144,6 +147,7 @@ private extension MenuListView {
                                 viewModel.selectedFilters.hasReview = true
                             }
                             viewModel.saveFilters()
+                            viewModel.analytics.track(.instantFilterToggled(filter: .hasReviews, value: viewModel.selectedFilters.hasReview ?? true, pageName: viewModel.pageName))
                         }
                         
                         FilterItem(
@@ -154,15 +158,6 @@ private extension MenuListView {
                         .onTapGesture {
                             selectedFilterType = .minimumRating
                         }
-                        
-                        //                FilterItem(
-                        //                    text: viewModel.categoryLabel,
-                        //                    isOn:viewModel.selectedFilters.categories != nil,
-                        //                    isCheck: false
-                        //                )
-                        //                .onTapGesture {
-                        //                    selectedFilterType = .category
-                        //                }
                     }
                     .background(
                         GeometryReader {
@@ -182,21 +177,25 @@ private extension MenuListView {
                     Rectangle()
                         .foregroundStyle(.clear)
                         .background(
-                            LinearGradient(colors: [Color("Gray50"), Color("Gray50").opacity(0)], startPoint: .leading, endPoint: .trailing)
+                            LinearGradient(colors: [Color.gray50, Color.gray50.opacity(0)], startPoint: .leading, endPoint: .trailing)
                         )
                         .frame(width: 16, height: 34)
                 }
             }
         }
         .padding(EdgeInsets(top: 17, leading: 9, bottom: 9, trailing: 9))
-
+        .onChange(of: selectedFilterType) { newType in
+            if let newType {
+                viewModel.analytics.track(.filterModalOpened(entryPoint: newType.entryPointString, pageName: viewModel.pageName))
+            }
+        }
     }
     
     var emptyView: some View {
         VStack {
             Spacer()
             Text("식단 정보가 없습니다")
-                .font(.custom("NanumSquareOTFB", size: 15))
+                .customFont(font: .text15(weight: .Bold))
                 .foregroundColor(fontColor)
             Spacer()
         }

@@ -9,6 +9,7 @@ import SwiftUI
 import NMapsMap
 
 struct MapView: UIViewRepresentable {
+    @Environment(\.colorScheme) private var colorScheme
     private let coordinate: NMGLatLng
     private let markerText: String
     private let LAT_ERROR = 0.002129
@@ -30,12 +31,15 @@ struct MapView: UIViewRepresentable {
         let cameraFixCoordinate = NMGLatLng(lat: coordinate.lat + LAT_ERROR, lng: coordinate.lng + LNG_ERROR)
         let cameraUpdate = NMFCameraUpdate(position: NMFCameraPosition(cameraFixCoordinate, zoom: 15))
         view.moveCamera(cameraUpdate)
-        let marker = NMFMarker(position: coordinate, iconImage: .init(name: "mapMarker"))
-        marker.captionText = markerText
-        marker.captionColor = UIColor(named: "DefaultFontColor") ?? .black
-        marker.captionAligns = [.top]
-        marker.captionOffset = -18
+        
+        let marker = NMFMarker(position: coordinate,iconImage: NMFOverlayImage(image: getMarkerImage()))
         marker.mapView = view
+    }
+    @MainActor func getMarkerImage() -> UIImage{
+        let renderer = ImageRenderer(content:MapMarker(name: markerText)                .environment(\.colorScheme,colorScheme)
+)
+        renderer.scale = UIScreen.main.scale
+        return renderer.uiImage!
     }
     
 }
