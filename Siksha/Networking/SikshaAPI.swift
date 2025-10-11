@@ -23,7 +23,7 @@ enum SikshaAPI: URLRequestConvertible {
         if self.askingForToken {
             switch self {
             case let .getAccessToken(token, endPoint):
-                request.setToken(token: token, type: endPoint)
+                request.setToken(token: token)
             default:
                 break
             }
