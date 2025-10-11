@@ -132,4 +132,10 @@ extension Repository: UserRepositoryProtocol {
         let endpoint = SikshaAPI.updateUserProfile(nickname: nickname, image: image, changeToDefaultImage: changeToDefaultImage)
         return self.networkModule.request(endpoint: endpoint)
     }
+    
+    func getMyReview(page: Int, perPage: Int) -> AnyPublisher<MyReviewResponse, AppError> {
+        let endpoint = SikshaAPI.getMyReview(page: page, perPage: perPage)
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    
 }

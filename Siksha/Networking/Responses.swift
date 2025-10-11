@@ -43,3 +43,9 @@ struct FestivalDatesResponse: Codable {
         case festivalDates = "festival_dates"
     }
 }
+
+struct MyReviewResponse: Codable {
+    var totalCount: Int
+    var hasNext: Bool
+    var result: [RenewalReviewRestaurant]
+}

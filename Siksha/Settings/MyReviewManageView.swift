@@ -7,14 +7,14 @@
 
 import SwiftUI
 
-struct MyReviewManageView<ViewModel>: View where ViewModel: MyReviewViewModel {
+struct MyReviewManageView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @StateObject var viewModel: ViewModel
+    @StateObject var viewModel: MyReviewViewModel
     @State private var showReviewDeleteAlert = false
     @State private var showToast = false
     @State private var selectedReview: RestaurantReview?
     
-    init(viewModel: ViewModel) {
+    init(viewModel: MyReviewViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
     
@@ -23,34 +23,48 @@ struct MyReviewManageView<ViewModel>: View where ViewModel: MyReviewViewModel {
             Color(.systemGray6)
                 .ignoresSafeArea()
             
-            VStack(spacing: 0) {
-                ScrollView {
-                    if viewModel.isLoading {
-                        // TODO: LoadingIndicator
+            Group {
+                if viewModel.isLoading {
+                    VStack {
+                        Spacer()
                         ProgressView()
-                            .padding()
-                    } else {
-                        LazyVStack(spacing: 12) {
-                            ForEach(viewModel.restaurantSections) { section in
-                                RestaurantSectionView(
-                                    section: section,
-                                    isExpanded: Binding(
-                                        get: { viewModel.expandedSections[section.id] ?? false },
-                                        set: { viewModel.toggleSection(section.id, expanded: $0) }
-                                    ),
-                                    showDeleteAlert: $showReviewDeleteAlert,
-                                    selectedReview: $selectedReview
-                                )
-                                .background(Color.backgroundSecondary)
-                                .cornerRadius(8)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(Color.gray200, lineWidth: 1)
-                                )
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else if viewModel.restaurantSections.isEmpty {
+                    VStack(alignment: .center) {
+                        Spacer()
+                        Text("내가 쓴 리뷰가 없어요")
+                            .font(.custom("NanumSquareOTF", size: 15))
+                            .foregroundColor(Color(white: 166/255))
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    VStack(spacing: 0) {
+                        ScrollView {
+                            LazyVStack(spacing: 12) {
+                                ForEach(viewModel.restaurantSections) { section in
+                                    RestaurantSectionView(
+                                        section: section,
+                                        isExpanded: Binding(
+                                            get: { viewModel.expandedSections[section.id] ?? false },
+                                            set: { viewModel.toggleSection(section.id, expanded: $0) }
+                                        ),
+                                        showDeleteAlert: $showReviewDeleteAlert,
+                                        selectedReview: $selectedReview
+                                    )
+                                    .background(Color.backgroundSecondary)
+                                    .cornerRadius(8)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .stroke(Color.gray200, lineWidth: 1)
+                                    )
+                                }
                             }
+                            .padding(.top, 20)
+                            .padding(.horizontal, 8)
                         }
-                        .padding(.top, 20)
-                        .padding(.horizontal, 8)
                     }
                 }
             }
@@ -298,5 +312,5 @@ struct ReviewCardView: View {
 
 
 #Preview {
-    MyReviewManageView(viewModel: MyReviewViewModel())
+    MyReviewManageView(viewModel: MyReviewViewModel(repository: DomainManager.shared.domain.userRepository))
 }

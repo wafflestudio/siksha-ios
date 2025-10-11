@@ -115,7 +115,7 @@ struct RenewalSettingsView: View {
             
             partitionBar
             
-            NavigationLink(destination: MyReviewManageView(viewModel: MyReviewViewModel())) {
+            NavigationLink(destination: MyReviewManageView(viewModel: MyReviewViewModel(repository: DomainManager.shared.domain.userRepository))) {
                 HStack(alignment: .center) {
                     Text("나의 평가 관리")
                         .font(.custom("NanumSquareOTFR", size: 15))

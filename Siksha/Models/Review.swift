@@ -30,3 +30,38 @@ struct Review: Codable {
     }
 }
 
+struct RenewalReviewRestaurant: Codable, Identifiable {
+    let restaurantId: Int
+    let nameKr: String
+    let nameEn: String
+    let reviews: [RenewalReview]
+    
+    var id: Int { restaurantId }
+}
+
+struct RenewalReview: Codable, Identifiable {
+    let id: Int
+    let menuId: Int
+    let nameKr: String
+    let nameEn: String
+    let userId: Int
+    let score: Int
+    let comment: String
+    let etc: String
+    let createdAt: String
+    let updatedAt: String
+    let keywordReviews: [String]
+    let isLiked: Bool
+    
+    var createdDate: Date? {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter.date(from: createdAt)
+    }
+    
+    var updatedDate: Date? {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter.date(from: updatedAt)
+    }
+}
