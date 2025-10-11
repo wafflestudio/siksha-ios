@@ -230,7 +230,6 @@ private extension MealReviewView {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
                 .foregroundColor(Color.white)
         }
     }

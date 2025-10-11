@@ -89,7 +89,7 @@ struct MyReviewManageView: View {
             )
         }
         .customNavigationBar(title: "나의 평가 관리")
-        .navigationBarItems(leading: backButton.padding(.leading, -25))
+        .navigationBarItems(leading: backButton)
         .onAppear {
             viewModel.loadReviews()
         }
@@ -103,7 +103,6 @@ struct MyReviewManageView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
                 .foregroundColor(.white)
         }
     }
