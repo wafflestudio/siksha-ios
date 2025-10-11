@@ -10,6 +10,9 @@ import SwiftUI
 struct MyReviewManageView<ViewModel>: View where ViewModel: MyReviewViewModel {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @StateObject var viewModel: ViewModel
+    @State private var showReviewDeleteAlert = false
+    @State private var showToast = false
+    @State private var selectedReview: RestaurantReview?
     
     init(viewModel: ViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
@@ -34,7 +37,9 @@ struct MyReviewManageView<ViewModel>: View where ViewModel: MyReviewViewModel {
                                     isExpanded: Binding(
                                         get: { viewModel.expandedSections[section.id] ?? false },
                                         set: { viewModel.toggleSection(section.id, expanded: $0) }
-                                    )
+                                    ),
+                                    showDeleteAlert: $showReviewDeleteAlert,
+                                    selectedReview: $selectedReview
                                 )
                                 .background(Color.backgroundSecondary)
                                 .cornerRadius(8)
@@ -49,9 +54,28 @@ struct MyReviewManageView<ViewModel>: View where ViewModel: MyReviewViewModel {
                     }
                 }
             }
+            
+            if showReviewDeleteAlert {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea(.all)
+                    .onTapGesture {
+                        showReviewDeleteAlert = false
+                    }
+                
+                reviewDeleteAlert
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.horizontal, 30)
+            }
+            
+            ToastView(
+                type: .check,
+                message: "평가가 삭제되었습니다.",
+                bottomMargin: 60,
+                isVisible: showToast
+            )
         }
         .customNavigationBar(title: "나의 평가 관리")
-        .navigationBarItems(leading: backButton)
+        .navigationBarItems(leading: backButton.padding(.leading, -25))
         .onAppear {
             viewModel.loadReviews()
         }
@@ -69,50 +93,111 @@ struct MyReviewManageView<ViewModel>: View where ViewModel: MyReviewViewModel {
                 .foregroundColor(.white)
         }
     }
+    
+    var reviewDeleteAlert: some View {
+        VStack(spacing: 0) {
+            Spacer()
+                .frame(height: 18.34)
+            Text("평가 삭제")
+                .customFont(font: .text16(weight: .ExtraBold))
+                .foregroundStyle(Color.blackColor)
+            Spacer()
+                .frame(height: 7.23)
+            Text("해당 평가를 정말 삭제하시겠습니까?")
+                .customFont(font: .text13(weight: .Regular))
+            Spacer()
+                .frame(height: 13.84)
+            Divider()
+                .foregroundStyle(Color.borderPrimary)
+            HStack(spacing: 0) {
+                Button(action: { showReviewDeleteAlert = false }) {
+                    Text("취소")
+                        .customFont(font: .text16(weight: .ExtraBold))
+                        .frame(maxWidth: .infinity)
+                }
+                .foregroundColor(.orange500)
+                .frame(maxWidth: .infinity, alignment: .center)
+                
+                Divider()
+                    .foregroundStyle(Color.borderPrimary)
+                
+                Button(action: {
+                    showReviewDeleteAlert = false
+                    showToast = true
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        showToast = false
+                    }
+                }) {
+                    Text("삭제")
+                        .customFont(font: .text16(weight: .Regular))
+                        .frame(maxWidth: .infinity)
+                        .foregroundStyle(Color.gray700)
+                }
+                .frame(maxWidth: .infinity, alignment: .center)
+            }
+        }
+        .background(Color.backgroundSecondary)
+        .frame(width: 315, height: 130.3)
+        .cornerRadius(26)
+    }
+
 }
 
 struct RestaurantSectionView: View {
     let section: RestaurantSection
     @Binding var isExpanded: Bool
+    @Binding var showDeleteAlert: Bool
+    @Binding var selectedReview: RestaurantReview?
     
     var body: some View {
-        DisclosureGroup(
-            isExpanded: $isExpanded,
-            content: {
-                Divider()
-                    .frame(height: 1.5)
-                    .background(Color.orange500)
-                    .padding(.horizontal, 15.5)
-                    .padding(.bottom, 12)
-                VStack(spacing: 16) {
-                    ForEach(section.reviews) { review in
-                        ReviewCardView(review: review)
-                    }
+        VStack(spacing: 0) {
+            Button(action: {
+                withAnimation {
+                    isExpanded.toggle()
                 }
-                .padding(.horizontal, 16)
-                .padding(.bottom, 20)
-            },
-            label: {
+            }) {
                 HStack {
                     Text(section.name)
                         .customFont(font: .text16(weight: .Bold))
                         .foregroundColor(Color.blackColor)
                     Spacer()
-
+                    
                     Image("SelectGray")
                         .rotationEffect(.degrees(isExpanded ? 0 : 180))
                 }
-                .padding(.init(top: 13, leading: 16, bottom: 13, trailing: 0))
-                .background(Color.backgroundSecondary)
+                .padding(.init(top: 13, leading: 16, bottom: 13, trailing: 16))
             }
-        )
-        .accentColor(.clear)
+            
+            // 내용
+            if isExpanded {
+                Rectangle()
+                    .fill(Color.orange500)
+                    .frame(height: 1.5)
+                    .padding(.horizontal, 15.5)
+                    .padding(.bottom, 12)
+                
+                VStack(spacing: 16) {
+                    ForEach(section.reviews) { review in
+                        ReviewCardView(
+                            review: review,
+                            showDeleteAlert: $showDeleteAlert,
+                            selectedReview: $selectedReview
+                        )
+                    }
+                }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 20)
+            }
+        }
         .background(Color.backgroundSecondary)
     }
 }
 
 struct ReviewCardView: View {
     let review: RestaurantReview
+    @Binding var showDeleteAlert: Bool
+    @Binding var selectedReview: RestaurantReview?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -193,9 +278,10 @@ struct ReviewCardView: View {
             HStack(spacing: 16) {
                 Spacer()
                 
-                Button("삭제하기") {
-                    // Delete action
-                }
+                Button("삭제하기", action: {
+                    selectedReview = review
+                    showDeleteAlert = true
+                })
                 .customFont(font: .text11(weight: .Bold))
                 .foregroundColor(.gray600)
                 
@@ -209,6 +295,7 @@ struct ReviewCardView: View {
         }
     }
 }
+
 
 #Preview {
     MyReviewManageView(viewModel: MyReviewViewModel())
