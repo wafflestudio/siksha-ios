@@ -48,4 +48,10 @@ struct MyReviewResponse: Codable {
     var totalCount: Int
     var hasNext: Bool
     var result: [RenewalReviewRestaurant]
+    
+    enum CodingKeys: String, CodingKey {
+        case totalCount = "total_count"
+        case hasNext = "has_next"
+        case result
+    }
 }

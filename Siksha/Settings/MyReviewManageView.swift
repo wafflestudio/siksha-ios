@@ -253,39 +253,43 @@ struct ReviewCardView: View {
                 .padding(.leading, 4)
             
             // Tags
-            HStack(spacing: 10) {
-                ForEach(review.tags, id: \.self) { tag in
-                    Text(tag)
-                        .customFont(font: .text11(weight: .Bold))
-                        .foregroundColor(Color.gray700)
-                        .padding(4)
-                        .background(Color.elementChip)
-                        .cornerRadius(4)
+            if !review.tags.isEmpty {
+                HStack(spacing: 10) {
+                    ForEach(review.tags, id: \.self) { tag in
+                        Text(tag)
+                            .customFont(font: .text11(weight: .Bold))
+                            .foregroundColor(Color.gray700)
+                            .padding(4)
+                            .background(Color.elementChip)
+                            .cornerRadius(4)
+                    }
+                    Spacer()
                 }
-                Spacer()
+                .padding(.leading, 4)
             }
-            .padding(.leading, 4)
             
             // Food images
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
-                    ForEach(review.imageUrls.indices, id: \.self) { index in
-                        AsyncImage(url: URL(string: review.imageUrls[index])) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fill)
-                        } placeholder: {
-                            RoundedRectangle(cornerRadius: 0)
-                                .fill(Color.gray200)
+            if !review.imageUrls.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        ForEach(review.imageUrls.indices, id: \.self) { index in
+                            AsyncImage(url: URL(string: review.imageUrls[index])) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                            } placeholder: {
+                                RoundedRectangle(cornerRadius: 0)
+                                    .fill(Color.gray200)
+                            }
+                            .frame(width: 48, height: 48)
+                            .clipped()
                         }
-                        .frame(width: 48, height: 48)
-                        .clipped()
                     }
+                    .padding(.horizontal, 1)
                 }
-                .padding(.horizontal, 1)
+                .padding(.top, 4)
+                .padding(.leading, 4)
             }
-            .padding(.top, 4)
-            .padding(.leading, 4)
             
             // Bottom buttons
             HStack(spacing: 16) {
@@ -308,7 +312,6 @@ struct ReviewCardView: View {
         }
     }
 }
-
 
 #Preview {
     MyReviewManageView(viewModel: MyReviewViewModel(repository: DomainManager.shared.domain.userRepository))

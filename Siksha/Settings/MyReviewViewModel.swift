@@ -124,7 +124,7 @@ class MyReviewViewModel: ObservableObject {
                 date: formatDate(review.createdDate),
                 reviewText: review.comment,
                 imageUrls: [],
-                tags: review.keywordReviews
+                tags: review.keywordReviews.compactMap { $0 }.filter { !$0.isEmpty } 
             )
         }
         
