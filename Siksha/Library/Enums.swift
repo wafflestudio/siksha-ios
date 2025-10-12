@@ -30,7 +30,7 @@ struct TypeInfo: Identifiable {
         case .breakfast:
             self.icon = "BreakfastTime"
             self.width = 20
-            self.height = 12
+            self.height = 20
             self.name = "아침"
         case .lunch:
             self.icon = "LunchTime"
@@ -39,8 +39,8 @@ struct TypeInfo: Identifiable {
             self.name = "점심"
         case .dinner:
             self.icon = "DinnerTime"
-            self.width = 14
-            self.height = 14
+            self.width = 20
+            self.height = 20
             self.name = "저녁"
         }
     }
