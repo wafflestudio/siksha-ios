@@ -25,9 +25,9 @@ class DailyMenu: Object {
         case "HOLIDAY":dateType = Restaurant.OperatingHourType.holiday.rawValue
         default:dateType = 0
         }
-        addRestaurants(list: br, json["BR"])
-        addRestaurants(list: lu, json["LU"])
-        addRestaurants(list: dn, json["DN"])
+        addRestaurants(list: br, json["br"])
+        addRestaurants(list: lu, json["lu"])
+        addRestaurants(list: dn, json["dn"])
     }
    
     
