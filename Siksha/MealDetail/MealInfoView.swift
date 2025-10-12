@@ -87,6 +87,7 @@ struct MealInfoView: View {
                 viewModel.loadImages()
                 viewModel.loadDistribution()
                 viewModel.loadedReviews = true
+                print(viewModel.meal)
             }
         }
     }
@@ -246,18 +247,26 @@ private extension MealInfoView {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .foregroundColor(.white)
         }
     }
 }
 
-struct MealInfoView_Previews: PreviewProvider {
+private struct MealInfoPreview {
     static var previews: some View {
         let meal = Meal()
         meal.nameKr = "제육보쌈&막국수"
         meal.score = 4.1
         meal.reviewCnt = 40
         return MealInfoView(viewModel: MealInfoViewModel(meal: meal))
+    }
+}
+
+
+
+#Preview {
+    NavigationView {
+        MealInfoPreview.previews
     }
 }

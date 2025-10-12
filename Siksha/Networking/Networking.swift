@@ -77,14 +77,14 @@ class Networking {
         return request.validate().publishDecodable(type: CommentRecommendationResponse.self)
     }
     
-    func submitReview(menuId: Int, score: Double, comment: String) -> DataResponsePublisher<Data> {
-        let request = AF.request(SikshaAPI.submitReview(menuId: menuId, score: score, comment: comment))
+    func submitReview(menuId: Int, score: Double, comment: String, taste: String, price: String, foodComposition: String) -> DataResponsePublisher<Data> {
+        let request = AF.request(SikshaAPI.submitReview(menuId: menuId, score: score, comment: comment, taste: taste, price: price, foodComposition: foodComposition))
         
         return request.validate().publishData()
     }
     
-    func submitReviewImages(menuId: Int, score: Double, comment: String, images: [Data]) -> DataResponsePublisher<Data> {
-        let api = SikshaAPI.submitReviewImages(menuId: menuId, score: score, comment: comment, images: images)
+    func submitReviewImages(menuId: Int, score: Double, comment: String, taste: String, price: String, foodComposition: String, images: [Data]) -> DataResponsePublisher<Data> {
+        let api = SikshaAPI.submitReviewImages(menuId: menuId, score: score, comment: comment, taste: taste, price: price, foodComposition: foodComposition, images: images)
         let request = AF.upload(multipartFormData: api.multipartFormData!, with: api)
         
         return request.validate().publishData()

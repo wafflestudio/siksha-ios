@@ -36,6 +36,7 @@ enum SikshaAPI: URLRequestConvertible {
         
         #if DEBUG
         print(Self.baseURL + path)
+        print(parameters)
         #endif
         
         request.method = self.method
@@ -58,8 +59,8 @@ enum SikshaAPI: URLRequestConvertible {
     case getReviews(menuId: Int, page: Int, perPage: Int)
     case getScoreDistribution(menuId: Int)
     case getCommentRecommendation(score: Int)
-    case submitReview(menuId: Int, score: Double, comment: String)
-    case submitReviewImages(menuId: Int, score: Double, comment: String, images: [Data])
+    case submitReview(menuId: Int, score: Double, comment: String, taste: String, price: String, foodComposition: String)
+    case submitReviewImages(menuId: Int, score: Double, comment: String, taste: String, price: String, foodComposition: String, images: [Data])
     case getReviewImages(menuId: Int, page: Int, perPage: Int, comment: Bool, etc: Bool)
     case getUserInfo
     case submitVOC(comment: String, platform: String)
@@ -226,17 +227,17 @@ enum SikshaAPI: URLRequestConvertible {
         case .getRestaurants:
             return "/restaurants/"
         case .getReviews:
-            return "/reviews/"
+            return "/reviews"
         case .getScoreDistribution:
             return "/reviews/dist"
         case .getCommentRecommendation:
             return "/reviews/comments/recommendation"
         case .submitReview:
-            return "/reviews/"
+            return "/reviews"
         case .submitReviewImages:
             return "/reviews/images"
         case .getReviewImages:
-            return "/reviews/filter/"
+            return "/reviews/filter"
         case .getUserInfo:
             return "/auth/me"
         case .submitVOC:
@@ -291,15 +292,15 @@ enum SikshaAPI: URLRequestConvertible {
         case let .getMenus(startDate, endDate, noMenuHide):
             return ["start_date": startDate, "end_date": endDate, "except_empty": noMenuHide]
         case let .getReviews(menuId, page, perPage):
-            return ["menu_id": menuId, "page": page, "per_page": perPage]
+            return ["menu_id": menuId, "is_private": true, "page": page, "size": perPage]
         case let .getScoreDistribution(menuId):
             return ["menu_id": menuId]
         case let .getCommentRecommendation(score):
             return ["score": score]
-        case let .submitReview(menuId, score, comment):
-            return ["menu_id": menuId, "score": score, "comment": comment]
+        case let .submitReview(menuId, score, comment, taste, price, foodComposition):
+            return ["menu_id": menuId, "score": score, "comment": comment, "taste": taste, "price": price, "foodComposition": foodComposition]
         case let .getReviewImages(menuId, page, perPage, comment, etc):
-            return ["menu_id": menuId, "page": page, "per_page": perPage, "comment": comment, "etc": etc]
+            return ["menu_id": menuId, "page": page, "size": perPage, "comment": comment, "etc": etc, "is_private": true]
         case let .submitVOC(comment, platform):
             return ["voc": comment, "platform": platform]
         case let .getPosts(boardId, page, perPage):
@@ -354,11 +355,14 @@ enum SikshaAPI: URLRequestConvertible {
     
     var multipartFormData: MultipartFormData? {
         switch self {
-        case let .submitReviewImages(menuId, score, comment, images):
+        case let .submitReviewImages(menuId, score, comment, taste, price, foodComposition, images):
             let data = MultipartFormData()
             data.append("\(menuId)".data(using: .utf8)!, withName: "menu_id", mimeType: "text/plain")
             data.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
             data.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain")
+//            data.append(taste.data(using: .utf8)!, withName: "taste", mimeType: "text/plain")
+//            data.append(price.data(using: .utf8)!, withName: "price", mimeType: "text/plain")
+//            data.append(foodComposition.data(using: .utf8)!, withName: "foodComposition", mimeType: "text/plain")
             for (index, image) in images.enumerated() {
                 data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }

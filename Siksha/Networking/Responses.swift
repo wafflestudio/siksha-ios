@@ -12,7 +12,7 @@ struct ReviewResponse: Codable {
     var reviews: [Review]
     
     enum CodingKeys: String, CodingKey {
-        case totalCount = "total_count"
+        case totalCount = "totalCount"
         case reviews = "result"
     }
 }

@@ -130,7 +130,7 @@ public class MealInfoViewModel: ObservableObject {
             })
             .map(\.?.reviews)
             .replaceNil(with: [])
-            .map { $0.map {$0.images?["images"]?[0] ?? ""} }
+            .map { $0.map {$0.etc?["images"]?[0] ?? ""} }
             .assign(to: \.images, on: self)
             .store(in: &cancellables)
     }

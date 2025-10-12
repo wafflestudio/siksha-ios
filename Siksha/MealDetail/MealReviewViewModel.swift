@@ -14,8 +14,16 @@ class MealReviewViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     @Published var meal: Meal? = nil
-    @Published var scoreToSubmit: Double = 0
-    @Published var commentPlaceHolder: String = ""
+    @Published var scoreToSubmit: Double = 0 {
+        didSet {
+            if scoreToSubmit - scoreToSubmit.rounded() == 0 {
+                scoreString = String(Int(scoreToSubmit))
+            } else {
+                scoreString = String(scoreToSubmit)
+            }
+        }
+    }
+    @Published var scoreString: String = "0"
     @Published var commentToSubmit: String = ""
     @Published var commentRecommended: Bool = false
     @Published var canSubmit: Bool = false
@@ -24,6 +32,8 @@ class MealReviewViewModel: ObservableObject {
     @Published var errorCode: ReviewErrorCode? = nil
     @Published var requireLogin: Bool = false
     @Published var showAlert: Bool = false
+    
+    @Published var selectedKeywords: [KeywordRateType: String] = [:]
     
     private var imagesData = [Data]()
     
@@ -80,10 +90,15 @@ class MealReviewViewModel: ObservableObject {
             return
         }
 
+        // TODO: 아래 더미데이터 교체
         Networking.shared.submitReview(
             menuId: meal.id,
             score: scoreToSubmit,
-            comment: commentToSubmit.count > 0 ? commentToSubmit : commentPlaceHolder)
+            comment: commentToSubmit.count > 0 ? commentToSubmit : "",
+            taste: "또 먹고 싶어요",
+            price: "혜자스러워요",
+            foodComposition: "조화로워요"
+        )
             .receive(on: RunLoop.main)
             .sink { [weak self] result in
                 guard let self = self else { return }
@@ -125,7 +140,10 @@ class MealReviewViewModel: ObservableObject {
         Networking.shared.submitReviewImages(
             menuId: meal.id,
             score: scoreToSubmit,
-            comment: commentToSubmit.count > 0 ? commentToSubmit : commentPlaceHolder,
+            comment: commentToSubmit.count > 0 ? commentToSubmit : "",
+            taste: "또 먹고 싶어요",
+            price: "혜자스러워요",
+            foodComposition: "조화로워요",
             images: imagesData)
             .receive(on: RunLoop.main)
             .sink { [weak self] result in
