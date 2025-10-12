@@ -170,7 +170,7 @@ struct Comment: Decodable,Identifiable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
         case nickname = "nickname"
-        case profileUrl = "profile_url"
+        case profileUrl = "profile_uri"
         case available
         case likeCnt = "like_cnt"
         case isLiked = "is_liked"
