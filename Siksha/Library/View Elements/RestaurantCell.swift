@@ -102,8 +102,9 @@ struct RestaurantCell: View {
             HStack(alignment: .center){
                 Image(TypeInfo(type:TypeSelection(rawValue: (selectedPage))!).icon)
                     .resizable()
-                    .renderingMode(.original)
-                    .frame(width: TypeInfo(type:TypeSelection(rawValue: (selectedPage))!).width, height: TypeInfo(type:TypeSelection(rawValue: (selectedPage))!).height)
+                    .renderingMode(.template)
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(Color.gray600)
                 Spacer()
                     .frame(width:4)
                 Text(MenuViewModel.getOperatingHours(restaurant: restaurant,dayType: dayType,selectedPage: selectedPage))
