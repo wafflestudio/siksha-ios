@@ -13,6 +13,7 @@ struct MyReviewManageView: View {
     @State private var showReviewDeleteAlert = false
     @State private var showToast = false
     @State private var selectedReview: RestaurantReview?
+    @State private var isDeleting = false
     
     init(viewModel: MyReviewViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
@@ -73,7 +74,9 @@ struct MyReviewManageView: View {
                 Color.black.opacity(0.4)
                     .ignoresSafeArea(.all)
                     .onTapGesture {
-                        showReviewDeleteAlert = false
+                        if !isDeleting {
+                            showReviewDeleteAlert = false
+                        }
                     }
                 
                 reviewDeleteAlert
@@ -123,38 +126,60 @@ struct MyReviewManageView: View {
             Divider()
                 .foregroundStyle(Color.borderPrimary)
             HStack(spacing: 0) {
-                Button(action: { showReviewDeleteAlert = false }) {
+                Button(action: {
+                    if !isDeleting {
+                        showReviewDeleteAlert = false
+                    }
+                }) {
                     Text("취소")
                         .customFont(font: .text16(weight: .ExtraBold))
                         .frame(maxWidth: .infinity)
                 }
                 .foregroundColor(.orange500)
                 .frame(maxWidth: .infinity, alignment: .center)
+                .disabled(isDeleting)
                 
                 Divider()
                     .foregroundStyle(Color.borderPrimary)
                 
                 Button(action: {
-                    showReviewDeleteAlert = false
-                    showToast = true
+                    guard let reviewToDelete = selectedReview, !isDeleting else { return }
                     
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                        showToast = false
+                    isDeleting = true
+                    
+                    viewModel.deleteReview(id: reviewToDelete.id) { success in
+                        isDeleting = false
+                        showReviewDeleteAlert = false
+                        
+                        if success {
+                            viewModel.removeReviewFromSection(reviewId: reviewToDelete.id)
+                            
+                            showToast = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                showToast = false
+                            }
+                        }
                     }
                 }) {
-                    Text("삭제")
-                        .customFont(font: .text16(weight: .Regular))
-                        .frame(maxWidth: .infinity)
-                        .foregroundStyle(Color.gray700)
+                    if isDeleting {
+                        ProgressView()
+                            .progressViewStyle(CircularProgressViewStyle())
+                            .frame(maxWidth: .infinity)
+                    } else {
+                        Text("삭제")
+                            .customFont(font: .text16(weight: .Regular))
+                            .frame(maxWidth: .infinity)
+                            .foregroundStyle(Color.gray700)
+                    }
                 }
                 .frame(maxWidth: .infinity, alignment: .center)
+                .disabled(isDeleting)
             }
         }
         .background(Color.backgroundSecondary)
         .frame(width: 315, height: 130.3)
         .cornerRadius(26)
     }
-
 }
 
 struct RestaurantSectionView: View {

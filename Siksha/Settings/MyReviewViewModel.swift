@@ -95,6 +95,47 @@ class MyReviewViewModel: ObservableObject {
         expandedSections[sectionId] = expanded
     }
     
+    func deleteReview(id: String, completion: @escaping (Bool) -> Void) {
+        guard let reviewId = Int(id) else {
+            completion(false)
+            return
+        }
+        
+        repository.deleteMyReview(reviewId: reviewId)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { completionStatus in
+                switch completionStatus {
+                case .finished:
+                    completion(true)
+                case .failure(let error):
+                    completion(false)
+                }
+            }, receiveValue: { _ in
+            })
+            .store(in: &cancellables)
+    }
+    
+    func removeReviewFromSection(reviewId: String) {
+        for (index, section) in restaurantSections.enumerated() {
+            if let reviewIndex = section.reviews.firstIndex(where: { $0.id == reviewId }) {
+                var updatedReviews = section.reviews
+                updatedReviews.remove(at: reviewIndex)
+                
+                if updatedReviews.isEmpty {
+                    restaurantSections.remove(at: index)
+                } else {
+                    let updatedSection = RestaurantSection(
+                        id: section.id,
+                        name: section.name,
+                        reviews: updatedReviews
+                    )
+                    restaurantSections[index] = updatedSection
+                }
+                break
+            }
+        }
+    }
+    
     private func handleReviewResponse(_ response: MyReviewResponse, isLoadMore: Bool) {
         self.hasNext = response.hasNext
         

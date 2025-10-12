@@ -138,4 +138,9 @@ extension Repository: UserRepositoryProtocol {
         return self.networkModule.request(endpoint: endpoint)
     }
     
+    func deleteMyReview(reviewId: Int) -> AnyPublisher<Void, AppError> {
+        let endpoint = SikshaAPI.deleteMyReview(reviewId: reviewId)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+    }
+    
 }

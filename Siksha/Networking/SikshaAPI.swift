@@ -89,6 +89,7 @@ enum SikshaAPI: URLRequestConvertible {
     case updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool)
     case deleteUser
     case getMyReview(page: Int, perPage: Int)
+    case deleteMyReview(reviewId: Int)
 
     static var baseURL = Config.shared.baseURL
     
@@ -207,6 +208,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .delete
         case .getMyReview:
             return .get
+        case .deleteMyReview:
+            return .delete
         }
     }
 
@@ -288,6 +291,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/auth"
         case .getMyReview:
             return "/reviews/me"
+        case let .deleteMyReview(reviewId):
+            return "/reviews/\(reviewId)"
         }
     }
     
