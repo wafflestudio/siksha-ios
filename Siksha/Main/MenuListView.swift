@@ -71,7 +71,7 @@ private extension MenuListView {
     
     var mealSelectorView: some View {
         ZStack {
-            HStack(alignment: .bottom, spacing: 28) {
+            HStack(alignment: .bottom, spacing: 24) {
                 ForEach(typeInfos) { type in
                     typeButton(type: type)
                 }
@@ -207,16 +207,14 @@ private extension MenuListView {
         Button(action: {
             viewModel.selectedPage = type.id
         }) {
-            VStack {
+            VStack(spacing: 3) {
                 Image(type.icon)
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: type.width, height: type.height)
+                    .frame(width: 20, height: 20)
                     .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
-                    .padding(.leading, type.id == 2 ? 3 : 0)
-                    .padding(.bottom, type.id == 1 ? 0 : 2)
                 Text(type.name)
-                    .font(.custom(viewModel.selectedPage == type.id ? "NanumSquareOTFB" : "NanumSquareOTFR", size: 10))
+                    .font(.custom(viewModel.selectedPage == type.id ? "NanumSquareOTFB" : "NanumSquareOTFR", size: 11))
                     .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
             }
         }
