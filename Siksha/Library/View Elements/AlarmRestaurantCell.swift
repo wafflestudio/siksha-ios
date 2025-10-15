@@ -8,8 +8,15 @@
 import SwiftUI
 
 struct AlarmRestaurantCell: View {
+    @State var isChecked: [Bool]
     var restaurantName:String
     var menus:[String]
+    
+    init(restaurantName: String, menus: [String]) {
+        self.restaurantName = restaurantName
+        self.menus = menus
+        isChecked = Array(repeating: false, count: menus.count)
+    }
     var body: some View {
         VStack(alignment:.leading,spacing:0){
             Text(restaurantName)
@@ -22,16 +29,20 @@ struct AlarmRestaurantCell: View {
                 .foregroundColor(Color.orange500)
             Spacer()
                 .frame(height:8)
-            ForEach(menus,id:\.self){
-                menu in
+            ForEach(Array(menus.enumerated()),id:\.offset){
+                index,menu in
                 HStack(alignment: .center){
                     Text(menu)
                         .foregroundStyle(Color.blackColor)
                         .customFont(font: .text15(weight: .Regular))
                     Spacer()
-                    Image("alarm-unchecked")
+                    Image(isChecked[index] ?"alarm-checked" : "alarm-unchecked")
                         .resizable()
                         .frame(width:20,height:20)
+                        .onTapGesture {
+                            isChecked[index].toggle()
+                        }
+                    
                 }
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 12, trailing: 0))
                 
