@@ -11,6 +11,7 @@ struct AlarmTimeView: View {
     
     @Environment(\.presentationMode) var presentationMode:
         Binding<PresentationMode>
+    @State var isMorning = true
     var backButton: some View {
         Button(action: {
             ContentViewModel.contentViewModel.showPopUp = false
@@ -29,7 +30,14 @@ struct AlarmTimeView: View {
                     .foregroundStyle(Color.blackColor)
                     .customFont(font: .text15(weight: .Regular))
                 Spacer()
-
+                if isMorning{
+                    Image("alarm-time-check")
+                }
+           
+            }
+            .background(Color.backgroundSecondary) // for wider touch area
+            .onTapGesture {
+                isMorning = true
             }
             Spacer()
                 .frame(height:10)
@@ -42,6 +50,15 @@ struct AlarmTimeView: View {
                     .foregroundStyle(Color.blackColor)
                     .customFont(font: .text15(weight: .Regular))
                 Spacer()
+                if !isMorning{
+                    Image("alarm-time-check")
+                }
+
+            }
+            .background(Color.backgroundSecondary)
+
+            .onTapGesture {
+                isMorning = false
             }
 
         }
