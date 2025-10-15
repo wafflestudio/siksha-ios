@@ -44,7 +44,7 @@ struct MyLikedMenuView: View {
         .customNavigationBar(title: "내가 찜한 메뉴")
         .navigationBarItems(leading: backButton)
         .navigationBarItems(
-            trailing: NavigationLink(destination:AlarmView(menus: SAMPLE_ALARM_MENU)){Image("notification").padding(
+            trailing: NavigationLink(destination:AlarmView(restaurants:viewModel.myLikedRestaurants)){Image("notification").padding(
                 EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
             })
         .onAppear{

@@ -10,9 +10,9 @@ import SwiftUI
 struct AlarmRestaurantCell: View {
     @State var isChecked: [Bool]
     var restaurantName:String
-    var menus:[String]
+    var menus:[MyLikedMenu]
     
-    init(restaurantName: String, menus: [String]) {
+    init(restaurantName: String, menus: [MyLikedMenu]) {
         self.restaurantName = restaurantName
         self.menus = menus
         isChecked = Array(repeating: false, count: menus.count)
@@ -32,7 +32,7 @@ struct AlarmRestaurantCell: View {
             ForEach(Array(menus.enumerated()),id:\.offset){
                 index,menu in
                 HStack(alignment: .center){
-                    Text(menu)
+                    Text(menu.nameKr)
                         .foregroundStyle(Color.blackColor)
                         .customFont(font: .text15(weight: .Regular))
                     Spacer()
@@ -59,5 +59,5 @@ struct AlarmRestaurantCell: View {
 }
 
 #Preview {
-    AlarmRestaurantCell(restaurantName: "학생회관 식당", menus: ["콩나물밥 & 부추양념", "돌솥부대찌개"])
+    AlarmRestaurantCell(restaurantName: "학생회관 식당", menus: [])
 }

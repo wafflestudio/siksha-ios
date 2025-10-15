@@ -18,7 +18,7 @@ struct AlarmMenu:Hashable{
 }
 struct AlarmView: View {
     @State var isAlarmOn = false
-    var menus:[AlarmMenu]
+    var restaurants:[MyLikedRestaurant]
     @Environment(\.presentationMode) var presentationMode:
         Binding<PresentationMode>
     var backButton: some View {
@@ -83,9 +83,9 @@ struct AlarmView: View {
                         .customFont(font: .text14(weight: .Bold))
                         .padding(EdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 0))
                     if isAlarmOn{
-                        ForEach(menus,id:\.self){
-                            menu in
-                            AlarmRestaurantCell(restaurantName: menu.restaurant, menus: menu.menus)
+                        ForEach(restaurants,id:\.self){
+                            restaurant in
+                            AlarmRestaurantCell(restaurantName: restaurant.name, menus: restaurant.menus)
                             Spacer()
                                 .frame(height:12)
                         }
@@ -102,5 +102,5 @@ struct AlarmView: View {
     }
 
 #Preview {
-    AlarmView(menus: SAMPLE_ALARM_MENU)
+    AlarmView(restaurants:[])
 }
