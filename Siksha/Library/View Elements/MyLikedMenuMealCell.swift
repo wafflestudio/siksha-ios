@@ -10,6 +10,7 @@ import SwiftUI
 struct MyLikedMenuMealCell: View {
     @ObservedObject var viewModel: MyLikedMenuViewModel
     let menu: MyLikedMenu
+    var price = 0
     private var vegetarian: Bool = false
     private let orangeColor = Color.orange500
     private let grayColor = Color.gray900
@@ -17,8 +18,10 @@ struct MyLikedMenuMealCell: View {
     var formattedPrice: String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
-        let formattedNumber = formatter.string(from: NSNumber(value: menu.price))!
-        return formattedNumber
+        let price = menu.price ?? 0
+        let formattedNumber = price > 0 ? formatter.string(from: NSNumber(value: price)) : "-"
+        
+        return formattedNumber!
     }
     
     init(viewModel: MyLikedMenuViewModel,menu:MyLikedMenu) {
@@ -30,6 +33,7 @@ struct MyLikedMenuMealCell: View {
             print("contains no meat")
             self.vegetarian = true
         }
+        self.price = menu.price ?? 0
     }
     
     var body: some View {
@@ -48,14 +52,14 @@ struct MyLikedMenuMealCell: View {
             }
 
             Spacer()
-            if menu.price < 10000{
-                Text(menu.price > 0 ? String(formattedPrice) : "-")
+            if price < 10000{
+                Text(price > 0 ? String(formattedPrice) : "-")
                     .customFont(font: .text14(weight:.Regular))
                     .foregroundColor(.blackColor)
                     .frame(width: 38)
             }
             else{
-                Text(menu.price > 0 ? String(formattedPrice) : "-")
+                Text(price > 0 ? String(formattedPrice) : "-")
                     .customFont(font: .text14(weight:.Regular))
                     .foregroundColor(.blackColor)
             }

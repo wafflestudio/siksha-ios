@@ -40,7 +40,7 @@ class Meal: Object {
         meal.code = menu.code
         meal.nameKr = menu.nameKr
         meal.nameEn = menu.nameEn ?? ""
-        meal.price = menu.price
+        meal.price = menu.price ?? 0
         meal.score = menu.score ?? 0
         meal.isLiked = menu.isLiked
         meal.reviewCnt = menu.reviewCnt
