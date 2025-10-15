@@ -35,6 +35,7 @@ struct MyLikedMenuView: View {
                             
                     }
                 }
+                .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 16))
             }
         }
      
