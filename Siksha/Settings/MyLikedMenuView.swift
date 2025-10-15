@@ -18,7 +18,8 @@ struct MyLikedMenuView: View {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 10, height: 16)
+                .frame(width: 24, height: 24)
+                .foregroundColor(.white)
         }
     }
     init(viewModel:MyLikedMenuViewModel){
