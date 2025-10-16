@@ -19,10 +19,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         let googleClientId = Config.shared.googleClientId
-        let naverMapClientId = Config.shared.naverMapClientId
+        let nmfNcpKeyId = Config.shared.nmfNcpKeyId
         let kakaoAppKey = Config.shared.kakaoAppKey
         
-        NMFAuthManager.shared().clientId = naverMapClientId
+        NMFAuthManager.shared().ncpKeyId = nmfNcpKeyId
         GIDSignIn.sharedInstance.configuration = GIDConfiguration(clientID: googleClientId)
 
         FirebaseApp.configure()
