@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PhotosUI
 
 struct MealReviewView: View {
     private let darkFontColor = Color.blackColor
@@ -68,6 +69,11 @@ struct MealReviewView: View {
                 
                 commentSection
                 
+                Spacer().frame(height: 2)
+                
+                PhotoAddView(viewModel: viewModel)
+                    .padding(.horizontal, 16)
+                
                 Spacer().frame(height: 66)
             }
             .onTapGesture {
@@ -77,6 +83,7 @@ struct MealReviewView: View {
             Spacer()
             
             submitButton
+                .padding(.horizontal, 16)
         }
         .customNavigationBar(title: "나의 평가 남기기")
         .navigationBarItems(leading: backButton)
@@ -154,34 +161,51 @@ private extension MealReviewView {
             
             Spacer().frame(height: 15)
             
-            ZStack(alignment: .bottomTrailing) {
-                TextEditor(text: $viewModel.commentToSubmit)
-                    .customFont(font: .text14(weight: .Regular))
-                    .foregroundColor(Color.blackColor)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
-                    .frame(height: 148)
-                    .scrollContentBackground(.hidden)
-                    .background(
-                        Color.gray50
-                    )
-                    .cornerRadius(8)
-                    .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
-                        if viewModel.commentRecommended {
-                            viewModel.commentRecommended = false
+            ZStack(alignment: .topLeading) {
+                VStack(spacing: 0) {
+                    TextEditor(text: $viewModel.commentToSubmit)
+                        .customFont(font: .text14(weight: .Regular))
+                        .foregroundColor(Color.blackColor)
+                        .accentColor(.blackColor)
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
+                            if viewModel.commentRecommended {
+                                viewModel.commentRecommended = false
+                            }
                         }
-                    }
+                        .onChange(of: viewModel.commentToSubmit) { comment in
+                            viewModel.commentToSubmit = String(comment.prefix(150))
+                        }
                     
-                HStack(spacing: 0) {
-                    Spacer()
-                    Text("\(viewModel.commentToSubmit.count)자 / 150자")
-                        .customFont(font: .text11(weight: .Regular))
-                        .foregroundColor(Color.gray700)
+                    HStack(spacing: 0) {
+                        Spacer()
+                        Text("\(viewModel.commentToSubmit.count)자 / 150자")
+                            .customFont(font: .text11(weight: .Regular))
+                            .foregroundColor(Color.gray700)
+                    }
+                    .padding(.bottom, 12)
                 }
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 12, trailing: 12))
+                .padding(.horizontal, 12)
+                .frame(height: 148)
+                .scrollContentBackground(.hidden)
+                .background(
+                    Color.gray50
+                )
+                .cornerRadius(8)
+                
+                if viewModel.commentToSubmit.isEmpty {
+                    textEditorPlaceholder
+                        .padding(.horizontal, 16)
+                        .padding(.top, 12)
+                }
             }
             .padding(.horizontal, 16)
         }
+    }
+    
+    var textEditorPlaceholder: some View {
+        Text("오늘의 메뉴는 어땠나요?")
+            .customFont(font: .text14(weight: .Regular))
+            .foregroundStyle(Color.gray600)
     }
     
     var imageSection: some View {
@@ -247,15 +271,10 @@ private extension MealReviewView {
             }
         }) {
             ZStack(alignment: .top) {
-                if viewModel.canSubmit {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.orange500)
-                        .frame(width: 343, height: 56)
-                } else {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.gray600)
-                        .frame(width: 343, height: 56)
-                }
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(viewModel.canSubmit ? Color.orange500 : Color.gray600)
+                    .frame(height: 56)
+                    .frame(maxWidth: .infinity)
                 
                 Text("평가 등록")
                     .customFont(font: .text18(weight: .ExtraBold))
@@ -343,7 +362,7 @@ struct KeywordSelectionView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 4) {
+            HStack(spacing: 3) {
                 Image(type.imageString)
                     .resizable()
                     .frame(width: 16, height: 16)
@@ -418,6 +437,58 @@ private struct KeywordCellContainerView: View {
             )
         }
         .frame(height: totalHeight)
+    }
+}
+
+struct PhotoAddView: View {
+    @ObservedObject var viewModel: MealReviewViewModel
+    
+    var body: some View {
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 6) {
+                PhotosPicker(selection: $viewModel.imageSelections, matching: .images, photoLibrary: .shared()) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 8)
+                            .frame(width: 80, height: 80)
+                            .foregroundStyle(Color.gray100)
+                        
+                        Image("Plus")
+                            .renderingMode(.template)
+                            .resizable()
+                            .foregroundStyle(Color.gray600)
+                            .frame(width: 21, height: 21)
+                    }
+                    .padding(.top, 6)
+                    .padding(.trailing, 5)
+                    
+                    ForEach(0..<viewModel.selectedImages.count, id: \.self) { i in
+                        ZStack(alignment: .topTrailing) {
+                            Image(uiImage: viewModel.selectedImages[i])
+                                .resizable()
+                                .frame(width: 80, height: 80)
+                                .cornerRadius(8)
+                                .padding(.top, 6)
+                                .padding(.trailing, 5)
+                            
+                            Button {
+                                viewModel.deleteImage(at: i)
+                            } label: {
+                                Image("Cancel")
+                                    .frame(width: 18, height: 18)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                            }
+                        }
+
+                    }
+                }
+                .onChange(of: viewModel.imageSelections) { selections in
+                    Task {
+                        await viewModel.imageSelectionsToImage()
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 import Combine
 import RealmSwift
+import SwiftUI
+import PhotosUI
 
 class MealReviewViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
@@ -35,7 +37,11 @@ class MealReviewViewModel: ObservableObject {
     
     @Published var selectedKeywords: [KeywordRateType: String] = [:]
     
+    @Published var imageSelections: [PhotosPickerItem] = []
+    @Published private(set) var selectedImages: [UIImage] = []
+    
     private var imagesData = [Data]()
+    private var recommendedComment = ""
     
     init() {
         $postReviewSucceeded
@@ -59,7 +65,9 @@ class MealReviewViewModel: ObservableObject {
             .sink { [weak self] score in
                 guard let self = self else { return }
                 
-                self.getRecommendedComment(Int(score))
+                if commentToSubmit.isEmpty || commentToSubmit == recommendedComment {
+                    self.getRecommendedComment(Int(score))
+                }
             }
             .store(in: &cancellables)
         
@@ -75,13 +83,31 @@ class MealReviewViewModel: ObservableObject {
         Networking.shared.getCommentRecommendation(score: score)
             .map(\.value?.comment)
             .replaceNil(with: "")
+            .filter({ comment in
+                !comment.isEmpty
+            })
             .handleEvents(receiveOutput : { comment in
-                if comment.count > 0 {
-                    self.commentRecommended = true
-                }
+                self.commentRecommended = true
+                self.recommendedComment = comment
             })
             .assign(to: \.commentToSubmit, on: self)
             .store(in: &cancellables)
+    }
+    
+    func imageSelectionsToImage() async {
+        selectedImages.removeAll()
+        
+        for selection in imageSelections {
+            if let data = try? await selection.loadTransferable(type: Data.self),
+               let uiImage = UIImage(data: data) {
+                selectedImages.append(uiImage)
+            }
+        }
+        print(selectedImages.count)
+    }
+    
+    func deleteImage(at index: Int) {
+        imageSelections.remove(at: index)
     }
     
     func submitReview() {
