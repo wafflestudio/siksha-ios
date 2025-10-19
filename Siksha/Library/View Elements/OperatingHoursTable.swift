@@ -15,17 +15,15 @@ struct OperatingHoursCell: View {
         self.type = type
         
         if hours.count == 3 {
-            self.hours.append(("BreakfastTime", hours[0]))
-            self.hours.append(("LunchTime", hours[1]))
-            self.hours.append(("DinnerTime", hours[2]))
+    
+                self.hours.append(("아침", hours[0]))
+                self.hours.append(("점심", hours[1]))
+                self.hours.append(("저녁", hours[2]))
+            
         } else if hours.count == 2 {
-            if isFestivalRestaurant {
-                self.hours.append(("5/13, 5/14", hours[0]))
-                self.hours.append(("5/15", hours[1]))
-            } else {
-                self.hours.append(("LunchTime", hours[0]))
-                self.hours.append(("DinnerTime", hours[1]))
-            }
+                self.hours.append(("점심", hours[0]))
+                self.hours.append(("저녁", hours[1]))
+            
         } else if hours.count == 1 {
             self.hours.append(("", hours[0]))
         }
