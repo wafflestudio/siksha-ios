@@ -15,6 +15,7 @@ final class Config {
     let nmfNcpKeyId: String
     let kakaoAppKey: String
     let kakaoShareTemplateId: Int64
+    let mixpanelToken: String
     
     private let envDict: NSDictionary
     
@@ -38,6 +39,7 @@ final class Config {
         self.nmfNcpKeyId = Self.getString(from: envDict, key: .nmfNcpKeyId)
         self.kakaoAppKey = Self.getString(from: envDict, key: .kakaoAppKey)
         self.kakaoShareTemplateId = Self.getInt64(from: envDict, key: .kakaoShareTemplateId)
+        self.mixpanelToken = Self.getString(from: envDict, key: .mixpanelToken)
     }
     
     enum Key: String {
@@ -46,6 +48,7 @@ final class Config {
         case nmfNcpKeyId = "nmf_ncp_key_id"
         case kakaoAppKey = "kakao_app_key"
         case kakaoShareTemplateId = "kakao_share_template_id"
+        case mixpanelToken = "mixpanel_token"
     }
     
     private static func getString(from dict: NSDictionary, key: Key) -> String {

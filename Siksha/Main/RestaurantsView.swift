@@ -9,12 +9,15 @@ import SwiftUI
 import Combine
 
 struct RestaurantsView: View {
-    private let fontColor = Color("Gray600")
+    private let fontColor = Color.gray600
     
     var restaurantsList: [Restaurant]
-        
-    init(_ restaurants: [Restaurant]){
+    var selectedPage:Int
+    var dayType:Int
+    init(_ restaurants: [Restaurant],_ selectedPage:Int,_ dayType:Int){
         self.restaurantsList = restaurants
+        self.selectedPage = selectedPage
+        self.dayType = dayType
     }
     
     var body: some View {
@@ -22,13 +25,13 @@ struct RestaurantsView: View {
             ScrollView(.vertical) {
                 VStack(spacing: 18) {
                     ForEach(restaurantsList, id: \.id) { restaurant in
-                        RestaurantCell(restaurant)
+                        RestaurantCell(restaurant,selectedPage,dayType)
                             .padding([.leading, .trailing], 8)
                     }
                 }
                 .padding(.vertical, 8)
             }
-            .background(Color.init("AppBackgroundColor"))
+            .background(Color.backgroundMain)
         } else {
             VStack {
                 HStack{
@@ -39,7 +42,7 @@ struct RestaurantsView: View {
                 .frame(maxHeight: .infinity)
             }
             .frame(maxWidth: .infinity)
-            .background(Color.init("AppBackgroundColor"))
+            .background(Color.backgroundMain)
         }
     }
 }

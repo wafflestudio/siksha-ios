@@ -9,6 +9,7 @@ import SwiftUI
 import NMapsMap
 
 struct MapView: UIViewRepresentable {
+    @Environment(\.colorScheme) private var colorScheme
     private let coordinate: NMGLatLng
     private let markerText: String
 

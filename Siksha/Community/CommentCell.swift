@@ -32,51 +32,45 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
     }
     
     var body:some View{
-        HStack{
-
+        HStack(spacing: 11) {
         if(comment.available){
-            VStack(alignment:.leading,spacing:0){
-                HStack{
+            VStack(alignment: .leading,spacing:5.5){
+                HStack(spacing: 5) {
                     if let profileUrl = comment.profileUrl,!comment.isAnonymous{
                         KFImage(URL(string:profileUrl))
                             .resizable()
-                            .frame(width: 16,height:16)
+                            .frame(width: 20,height:20)
                             .clipShape(Circle())
                     }
                     else{
                         Image("LogoEllipse")
                             .resizable()
-                            .frame(width: 16,height:16)
+                            .frame(width: 20,height:20)
                             .clipShape(Circle())
                     }
-                    Spacer()
-                        .frame(width:5.5)
                     Text("\(comment.nickname)")
-                        .font(.custom("NanumSquareOTFB",size:11))
-                        .foregroundColor(.black)
-                    Spacer()
-                        .frame(width:8.2)
+                        .customFont(font: .text12(weight: .Bold))
+                        .foregroundColor(.blackColor)
                     Text(relativeDate)
-                        .font(.custom("NanumSquareOTFR", size: 10))
-                        .foregroundColor(.init("ReviewLowColor"))
-                    
+                        .customFont(font: .text12(weight: .Regular))
+                        .foregroundColor(.gray600)
                 }
-                Spacer()
-                    .frame(height:9.37)
                 Text(comment.content)
-                    .font(.custom("NanumSquareOTFR", size: 12))
-                    .foregroundColor(.init("ReviewHighColor"))
-                
+                    .customFont(font: .text13(weight: .Regular))
+                    .foregroundStyle(Color.gray900)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Image("etc")
-                    .frame(width:16,height:2.29)
-                    .padding(EdgeInsets(top: 15, leading: 2.25, bottom: 15, trailing: 0))
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 16,height: 16)
+                    .padding(.vertical, 5)
+                    .padding(.horizontal, 3.5)
+                    .foregroundStyle(Color.gray700)
                     .onTapGesture {
                         onMenuPressed()
                     }
-                
-                
-                
             }
             Spacer()
             
@@ -85,47 +79,39 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
             }) {
                 VStack(spacing: 0) {
                     Spacer()
-                        .frame(height: 10)
-                    VStack(spacing: 8) {
+                        .frame(height: 11)
+                    VStack(spacing: 4) {
                         Image(comment.isLiked ? "PostLike-liked" : "PostLike-default")
-                            .frame(width: 11.5, height: 11)
-                            .padding(.init(top: 0, leading: 0, bottom: 4, trailing: 0))
+                            .resizable()
+                            .frame(width: 13.5, height: 13)
+                            .scaledToFit()
                         Text("\(comment.likeCnt)")
-                            .font(.custom("Inter-Regular", size: 8))
-                            .foregroundColor(.init("MainThemeColor"))
+                            .customFont(font: .text11(weight: .ExtraBold))
+                            .foregroundColor(.orange500)
+                            .frame(width: 36)
                     }
-                    .padding(EdgeInsets(top: 12.5, leading: 11, bottom: 12.5, trailing: 11))
-                    .background(Color("CommentLikeBackgroundColor"))
-                    .cornerRadius(6)
                     Spacer()
-                        .frame(height: 10)
+                        .frame(height: 11)
                 }
+                .background(Color.gray50)
+                .cornerRadius(6)
             }
             .buttonStyle(PlainButtonStyle())
-
             
-        }
-            else{
+        } else {
                 Text("신고가 누적되어 숨겨진 댓글입니다.")
-                    .font(.custom("NanumSquareOTFR", size: 12))
-                    .foregroundColor(Color(hex: 0xB7B7B7))
+                    .customFont(font: .text13(weight: .Regular))
+                    .foregroundStyle(Color.gray900)
                     .frame(maxWidth: .infinity,alignment:.leading)
-                    .padding(EdgeInsets(top: 17.55
-                                        , leading: 0, bottom: 27.5
-, trailing: 0))
+                    .padding(EdgeInsets(top: 17.55, leading: 0, bottom: 27.5, trailing: 0))
             }
+        }
+        .padding(.vertical, 16)
+        .padding(.horizontal, 18)
     }
-   
-    
-        .padding(EdgeInsets(top: 9.95, leading: 22, bottom: 0, trailing: 18.67))
-      
-      
-     
-    
 }
 
-}
-
+// TODO: 수정 필요
 struct EditCommentView: View {
     @State var editedContent: String
     let onSave: (String) -> Void
@@ -134,7 +120,7 @@ struct EditCommentView: View {
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
-                Color("MainThemeColor")
+                Color("Color/Foundation/Orange/500")
                     .edgesIgnoringSafeArea(.top)
                 
                 HStack {
@@ -155,7 +141,7 @@ struct EditCommentView: View {
                         .font(.custom("NanumSquareOTFR", size: 15))
                 }
                 .padding()
-                .background(Color("MainThemeColor").opacity(0))
+                .background(Color("Color/Foundation/Orange/500").opacity(0))
             }
             .frame(height: 40)
             

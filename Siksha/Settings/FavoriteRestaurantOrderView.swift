@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct FavoriteRestaurantOrderView: View {
-    private let backgroundColor = Color.init("AppBackgroundColor")
+    private let backgroundColor = Color.backgroundMain
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel: RestaurantOrderViewModel
@@ -26,7 +26,10 @@ struct FavoriteRestaurantOrderView: View {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 10, height: 16)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .foregroundColor(.white)
         }
     }
     
@@ -44,7 +47,7 @@ struct FavoriteRestaurantOrderView: View {
                 Spacer()
                 Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
                     .font(.custom("NanumSquareOTFR", size: 14))
-                    .foregroundColor(.init("DefaultFontColor"))
+                    .foregroundColor(Color.gray700)
                 Spacer()
             }
             .padding(.top, 20)
@@ -67,7 +70,7 @@ struct FavoriteRestaurantOrderView: View {
                     
                     Text("즐겨찾기에 추가된 식당이 없습니다.")
                         .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(.init("DefaultFontColor"))
+                        .foregroundColor(.gray700)
                     
                     Spacer()
                 }

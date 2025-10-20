@@ -15,6 +15,7 @@ import FirebaseRemoteConfig
 
 final class MenuViewModel: NSObject, ObservableObject {
     let isFavoriteTab: Bool
+    let analytics: AnalyticsService
     
     private var remoteConfig = RemoteConfig.remoteConfig()
     private var settings = RemoteConfigSettings()
@@ -96,8 +97,9 @@ final class MenuViewModel: NSObject, ObservableObject {
         return "카테고리"
     }
     
-    init(isFavoriteTab: Bool = false) {
+    init(isFavoriteTab: Bool = false, analytics: AnalyticsService = MixpanelAnalytics()) {
         self.isFavoriteTab = isFavoriteTab
+        self.analytics = analytics
         
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
@@ -577,8 +579,30 @@ final class MenuViewModel: NSObject, ObservableObject {
             }
             .store(in: &cancellables)
     }
+    static func getOperatingHours(restaurant:Restaurant,dayType:Int,selectedPage:Int)->String{
+      
+        let operatingHours = restaurant.operatingHours[dayType].split(separator: "\n").map { String($0) }
+        if operatingHours.count == 3{
+            return operatingHours[selectedPage]
+        }
+        if operatingHours.count == 2{
+            if selectedPage == TypeSelection.breakfast.rawValue{
+                return "정보 없음"
+            }
+            return operatingHours[selectedPage-1]
+        }
+        if operatingHours.count == 1{
+            return operatingHours[0]
+        }
+        return "정보 없음"
+        
+    }
 }
 
 extension MenuViewModel: CLLocationManagerDelegate {
     
+}
+
+extension MenuViewModel {
+    var pageName: String { isFavoriteTab ? PageName.favoritesList.rawValue : PageName.storeList.rawValue }
 }

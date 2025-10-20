@@ -11,6 +11,7 @@ import RealmSwift
 
 class DailyMenu: Object {
     @objc dynamic var date: String = ""
+    @objc dynamic var dateType:Int = 0
     var br = List<Restaurant>()
     var lu = List<Restaurant>()
     var dn = List<Restaurant>()
@@ -18,11 +19,17 @@ class DailyMenu: Object {
     convenience init(_ json: JSON){
         self.init()
         self.date = json["date"].stringValue
-        
+        switch(json["date_type"]){
+        case "WEEKDAY":dateType = Restaurant.OperatingHourType.weekdays.rawValue
+        case "SATURDAY":dateType = Restaurant.OperatingHourType.saturday.rawValue
+        case "HOLIDAY":dateType = Restaurant.OperatingHourType.holiday.rawValue
+        default:dateType = 0
+        }
         addRestaurants(list: br, json["BR"])
         addRestaurants(list: lu, json["LU"])
         addRestaurants(list: dn, json["DN"])
     }
+   
     
     private func addRestaurants(list: List<Restaurant>, _ json: JSON){
         json.forEach { (str, restJson) in
