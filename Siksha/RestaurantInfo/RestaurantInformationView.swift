@@ -9,7 +9,7 @@ import SwiftUI
 import NMapsMap
 
 struct RestaurantInformationView: View {
-    
+    @Environment(\.dismiss) var dismiss
     var restaurant: Restaurant
     
     let position: NMGLatLng?
@@ -29,14 +29,25 @@ struct RestaurantInformationView: View {
     var body: some View {
                         
         VStack(spacing: 0) {
-            HStack {
-                Spacer()
-                Text(restaurant.nameKr)
-                    .customFont(font: .text20(weight: .ExtraBold))
-                    .foregroundColor(Color.gray900)
-                Spacer()
+            ZStack(alignment: .top) {
+                HStack {
+                    Text(restaurant.nameKr)
+                        .customFont(font: .text20(weight: .ExtraBold))
+                        .foregroundColor(Color.gray900)
+                }
+                .padding(EdgeInsets(top: 23, leading: 0, bottom: 10.73, trailing: 0))
+                
+                HStack {
+                    Spacer()
+                    Button(action: { dismiss() }) {
+                        Image("Close")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(Color.gray900)
+                    }
+                    .padding(EdgeInsets(top: 24, leading: 0, bottom: 0, trailing: 17))
+                }
             }
-            .padding(EdgeInsets(top: 23, leading: 0, bottom: 10.73, trailing: 0))
             
             if position != nil {
                 Color.borderPrimary
