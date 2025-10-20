@@ -58,7 +58,7 @@ struct RestaurantInformationView: View {
             ScrollView {
                 VStack(spacing: 0){
                     if let position = position {
-                        HStack {
+                        HStack(spacing: 4) {
                             Image("Location")
                                 .resizable()
                                 .frame(width: 24, height: 24)
@@ -94,13 +94,15 @@ struct RestaurantInformationView: View {
                     .padding(EdgeInsets(top: 24, leading: 16, bottom: 8, trailing: 16))
                     
                     Color.orange500
-                        .frame(height: 1)
+                        .frame(height: 1.4)
+                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                     
                     OperatingHoursTable(hours: Array(restaurant.operatingHours), isFestivalRestaurant: restaurant.nameKr.contains("[축제]"))
                 }
             }
         }
         .padding(.bottom)
+        .background(Color.backgroundSecondary)
     }
 }
 
