@@ -81,8 +81,8 @@ struct PriceRangeSliderView: View {
     let minValue: Double = 2500
     let maxValue: Double = 10000
     let step: Double = 500
-    private let orangeColor = Color("Color/Foundation/Orange/500")
-    private let sliderBackgroundColor: Color = Color("Color/Foundation/Gray/200")
+    private let orangeColor = Color.orange500
+    private let sliderBackgroundColor: Color = .elementControl
     
     var body: some View {
         VStack {
