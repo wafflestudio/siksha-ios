@@ -350,6 +350,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 }
                 .ignoresSafeArea(edges: .bottom)
             }
+            .background(Color.backgroundPrimary)
           
                 if(showPostDeleteAlert){
                     Color.black.opacity(0.4)
