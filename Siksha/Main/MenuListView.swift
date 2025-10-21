@@ -177,7 +177,7 @@ private extension MenuListView {
                     Rectangle()
                         .foregroundStyle(.clear)
                         .background(
-                            LinearGradient(colors: [Color.gray50, Color.gray50.opacity(0)], startPoint: .leading, endPoint: .trailing)
+                            LinearGradient(colors: [.backgroundPrimary, .backgroundPrimary.opacity(0)], startPoint: .leading, endPoint: .trailing)
                         )
                         .frame(width: 16, height: 34)
                 }
