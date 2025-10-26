@@ -77,6 +77,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
             .padding(.trailing, 29)
             .padding(.bottom, 24)
         }
+        .background(Color.backgroundPrimary)
         .errorAlert(error: $viewModel.error)
         .onAppear {
             self.viewModel.loadBasicInfos()
