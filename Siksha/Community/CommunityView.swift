@@ -24,58 +24,58 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     @ObservedObject var viewModel: ViewModel
 
     var body: some View {
-            ZStack(alignment: .bottomTrailing) {
-                VStack(spacing: 0) {
-                    Spacer().frame(height: 18)
-                    BoardList(viewModel: viewModel)
-                    
-                    if !viewModel.trendingPostsListPublisher.isEmpty {
-                        Spacer().frame(height: 13)
-                        TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh)
-                    }
-                    Spacer().frame(height: 18)
-                    
-                    if viewModel.loadInitialPostsStatus == .loading && (viewModel.postsListPublisher.isEmpty || viewModel.isChangingBoard) {
-                        loadingView
-                    } else {
-                        ScrollView(showsIndicators: false) {
-                            postList
-                        }
-                        .refreshable {
-                            await viewModel.asyncRefresh()
-                        }
-                    }
-                    
-                    Spacer(minLength: 0)
-                }
-                .customNavigationBar(title: "icon")
+        ZStack(alignment: .bottomTrailing) {
+            VStack(spacing: 0) {
+                Spacer().frame(height: 18)
+                BoardList(viewModel: viewModel)
                 
-                Button {
-                    tag = 1
-                } label: {
-                    NavigationLink(
-                        destination: CommunityPostPublishView(
-                            needRefresh: $needRefresh,
-                            viewModel: CommunityPostPublishViewModel(
-                                boardId:selectedBoardId ?? 0,
-                                communityRepository: DomainManager.shared.domain.communityRepository
-                            )
-                        ),
-                        tag: 1,
-                        selection: self.$tag
-                    ){
-                        Image("Pencil")
-                            .resizable()
-                            .frame(width: 28, height: 28)
-                            .foregroundColor(.white)
-                            .frame(width: 50, height: 50)
-                            .background(Color.orange500)
-                            .clipShape(Circle())
+                if !viewModel.trendingPostsListPublisher.isEmpty {
+                    Spacer().frame(height: 13)
+                    TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh)
+                }
+                Spacer().frame(height: 18)
+                
+                if viewModel.loadInitialPostsStatus == .loading && (viewModel.postsListPublisher.isEmpty || viewModel.isChangingBoard) {
+                    loadingView
+                } else {
+                    ScrollView(showsIndicators: false) {
+                        postList
+                    }
+                    .refreshable {
+                        await viewModel.asyncRefresh()
                     }
                 }
-                .disabled(selectedBoardId == nil)
-                .padding(.trailing, 29)
-                .padding(.bottom, 24)
+                
+                Spacer(minLength: 0)
+            }
+            .customNavigationBar(title: "icon")
+            
+            Button {
+                tag = 1
+            } label: {
+                NavigationLink(
+                    destination: CommunityPostPublishView(
+                        needRefresh: $needRefresh,
+                        viewModel: CommunityPostPublishViewModel(
+                            boardId:selectedBoardId ?? 0,
+                            communityRepository: DomainManager.shared.domain.communityRepository
+                        )
+                    ),
+                    tag: 1,
+                    selection: self.$tag
+                ){
+                    Image("Pencil")
+                        .resizable()
+                        .frame(width: 28, height: 28)
+                        .foregroundColor(.white)
+                        .frame(width: 50, height: 50)
+                        .background(Color.orange500)
+                        .clipShape(Circle())
+                }
+            }
+            .disabled(selectedBoardId == nil)
+            .padding(.trailing, 29)
+            .padding(.bottom, 24)
         }
         .errorAlert(error: $viewModel.error)
         .onAppear {
