@@ -21,12 +21,13 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 mainContent
                 keyboardToolbarContent
             }
-            .errorAlert(error: $viewModel.error)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.backgroundPrimary)
             .contentShape(Rectangle())
+            .ignoresSafeArea(.keyboard)
+            .errorAlert(error: $viewModel.error)
             .customNavigationBar(title: "프로필 관리")
             .navigationBarItems(leading: backButton)
-            .ignoresSafeArea(.keyboard)
             .onTapGesture {
                 UIApplication.shared.endEditing()
                 viewModel.setPreviousNickname()
@@ -164,7 +165,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 viewModel.resetNickname()
             }) {
                 Text("취소")
-                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .customFont(font: .text16(weight: .Bold))
                     .foregroundColor(Color.orange500)
                     .padding(.leading, 20)
             }
@@ -174,7 +175,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 viewModel.setPreviousNickname()
             }) {
                 Text("OK")
-                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .customFont(font: .text16(weight: .Bold))
                     .foregroundColor(.orange500)
                     .padding(.trailing, 20)
             }
