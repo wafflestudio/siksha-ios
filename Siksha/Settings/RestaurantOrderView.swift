@@ -54,9 +54,7 @@ struct RestaurantOrderView: View {
             List {
                 ForEach(viewModel.restaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
                         RestaurantOrderRow(text: row)
-                            .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
                             .listRowInsets(EdgeInsets())
-                            .background(backgroundColor)
                 }
                 .onMove(perform: move)
             }

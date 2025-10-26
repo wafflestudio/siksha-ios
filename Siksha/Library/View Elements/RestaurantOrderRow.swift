@@ -11,14 +11,18 @@ struct RestaurantOrderRow: View {
     
     var body: some View {
         ZStack(alignment: .leading) {
-            Color.white.cornerRadius(10).shadow(color: .init(white: 0.75), radius: 1, x: 0, y: 0)
+            Color.elementTooltip2.cornerRadius(12).shadow(color: .black.opacity(0.16), radius: 1.5, x: 0, y: 0)
             
             Text(text)
-                .padding(.leading, 15)
-                .font(.custom("NanumSquareOTFB", size: 15))
-                .foregroundColor(.init("Color/Foundation/Gray/700"))
+                .customFont(font: .text13(weight: .Bold))
+                .foregroundColor(Color.gray800)
+                .padding(.leading, 12)
+                .padding(.vertical, 11)
         }
         .frame(height: 40)
+        .padding(.vertical, 6)
+        .padding(.horizontal, 8)
+        .background(Color.gray50)
     }
 }
 
