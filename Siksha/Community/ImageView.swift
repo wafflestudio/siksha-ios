@@ -16,10 +16,11 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType{
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
         }) {
-            Image("ImageReturn")
+            Image("Close")
                 .resizable()
-                .frame(width: 12, height: 12)
-                .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
+                .frame(width: 28, height: 28)
+                .foregroundStyle(Color.iconWhiteIcon)
+                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
         }
         .contentShape(Rectangle())
     }
@@ -28,9 +29,7 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType{
     @State var imageIndex: Int
     var body: some View {
         ZStack{
-            Color(.black)
-                .ignoresSafeArea()
-            VStack{
+            VStack(spacing: 0){
                 ZStack{
                     HStack{
                         backButton
@@ -45,6 +44,7 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType{
                     }
 
                 }
+                .padding(.top, 11)
                 
                 TabView(selection: $imageIndex){
                     ForEach(viewModel.postInfo.imageURLs!.indices ,id: \.self){index in
@@ -62,6 +62,7 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType{
             }.frame(maxWidth: .infinity)
             
         }
+        .background(Color.backgroundPrimary)
     }
 }
 struct ZoomableScrollView<Content: View>: UIViewRepresentable {
@@ -78,14 +79,14 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
     scrollView.maximumZoomScale = 20
     scrollView.minimumZoomScale = 1
     scrollView.bouncesZoom = true
-    scrollView.backgroundColor = .black
+    scrollView.backgroundColor = UIColor(.backgroundPrimary)
       
     // create a UIHostingController to hold our SwiftUI content
     let hostedView = context.coordinator.hostingController.view!
     hostedView.translatesAutoresizingMaskIntoConstraints = true
     hostedView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
     hostedView.frame = scrollView.bounds
-    hostedView.backgroundColor = .black
+    hostedView.backgroundColor = UIColor(.backgroundPrimary)
     scrollView.addSubview(hostedView)
 
     return scrollView
