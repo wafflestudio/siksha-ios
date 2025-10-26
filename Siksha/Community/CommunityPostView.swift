@@ -125,8 +125,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             Image("etc")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 16, height: 16)
-                .padding(17)
+                .frame(width: 33, height: 33)
                 .onTapGesture {
                     showActionSheet = .post(post:viewModel.postInfo)
                 }
