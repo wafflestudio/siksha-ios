@@ -27,35 +27,31 @@ struct RenewalSettingsView: View {
     private let gray900 = Color.gray900
     
     var body: some View {
-            VStack(alignment: .center, spacing: 0) {
+            VStack(alignment: .center, spacing: 20) {
                 profileState
-                    .padding(.bottom, 20)
                 
                 myWritings
-                    .padding(.bottom, 20)
                 
                 additionalSettings
-                    .padding(.bottom, 20)
                 
                 contact
                 
                 Spacer()
                 
                 versionInfo
-                    .padding(.bottom, 15)
+                    .padding(.bottom, 35)
                 
             }
-            .errorAlert(error: $viewModel.error)
-         
             .padding(.top, 24)
             .padding([.leading, .trailing], 20)
-        
-        .customNavigationBar(title: "icon")
+            .background(Color.backgroundPrimary)
+            .customNavigationBar(title: "icon")
+            .errorAlert(error: $viewModel.error)
     }
     
     var profileState: some View {
         NavigationLink(destination: ProfileEditView(viewModel: ProfileEditViewModel())) {
-            HStack {
+            HStack(spacing: 11) {
                 if let profileImageData = userModel.imageData,
                 let uiImage = UIImage(data: profileImageData) {
                     Image(uiImage: uiImage)
@@ -63,22 +59,22 @@ struct RenewalSettingsView: View {
                         .aspectRatio(contentMode: .fill)
                         .clipShape(Circle())
                         .frame(width: 48, height: 48)
-                        .padding(EdgeInsets(top: 13, leading: 12, bottom: 13, trailing: 6))
                 } else {
                     Image("LogoEllipse")
                         .resizable()
                         .frame(width: 48, height: 48)
-                        .padding(EdgeInsets(top: 13, leading: 12, bottom: 13, trailing: 6))
                 }
                 
                 Text(userModel.nickname ?? "무명의 미식가")
-                    .font(.custom("NanumSquareOTFB", size: 16))
+                    .customFont(font: .text16(weight: .Bold))
                     .foregroundColor(gray900)
                 
                 Spacer()
                 
                 arrow
             }
+            .padding(.vertical, 11)
+            .padding(.horizontal, 12)
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(borderColor, lineWidth: 1)
@@ -94,22 +90,23 @@ struct RenewalSettingsView: View {
             .renderingMode(.template)
             .foregroundColor(Color.gray500)
             .frame(width: 16, height: 16)
-            .padding(.trailing, 12)
+//            .padding(.trailing, 12)
     }
     
     var myWritings: some View {
         NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository))) {
             HStack(alignment: .center) {
                 Text("내가 쓴 글")
-                    .font(.custom("NanumSquareOTF", size: 16))
+                    .customFont(font: .text15(weight: .Regular))
                     .foregroundColor(blackColor)
-                    .padding([.top, .bottom], 19)
-                    .padding(.leading, 16)
+//                    .padding([.top, .bottom], 13)
+//                    .padding(.leading, 16)
                 
                 Spacer()
                 
                 arrow
             }
+            .padding(EdgeInsets(top: 13, leading: 16, bottom: 13, trailing: 12))
         }
         .background(
             RoundedRectangle(cornerRadius: 8)
@@ -122,19 +119,15 @@ struct RenewalSettingsView: View {
     var partitionBar: some View {
         partitionColor
             .frame(height: 1)
-            .padding(.leading, 7)
-            .padding(.trailing, 9)
     }
     
     var additionalSettings: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 8) {
             NavigationLink(destination: RestaurantOrderView(orderViewModel)) {
                 HStack(alignment: .center) {
                     Text("식당 순서 변경")
-                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
-                        .padding([.top, .bottom], 12)
-                        .padding(.leading, 16)
                     
                     Spacer()
                     
@@ -147,10 +140,8 @@ struct RenewalSettingsView: View {
             NavigationLink(destination: FavoriteRestaurantOrderView(orderViewModel)) {
                 HStack(alignment: .center) {
                     Text("즐겨찾기 식당 순서 변경")
-                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
-                        .padding([.top, .bottom], 12)
-                        .padding(.leading, 16)
                     
                     Spacer()
                     
@@ -166,19 +157,17 @@ struct RenewalSettingsView: View {
             }) {
                 HStack(alignment: .center) {
                     Text("메뉴 없는 식당 숨기기")
-                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
-                        .padding([.top, .bottom], 12)
-                        .padding(.leading, 16)
                     
                     Spacer()
                     
-                    Image(viewModel.noMenuHide ? "CheckCircle" : "CheckCircle")
+                    Image("CheckCircle")
                         .resizable()
                         .renderingMode(.template)
                         .frame(width: 20, height: 20)
-                        .foregroundStyle(Color(viewModel.noMenuHide ? "Color/Foundation/Orange/500" :"Color/Foundation/Gray/500"))
-                        .padding(.trailing, 14)
+                        .foregroundStyle(viewModel.noMenuHide ? Color.orange500 : Color.gray500)
+                        .padding(.trailing, 2)
                 }
             }
             
@@ -187,10 +176,8 @@ struct RenewalSettingsView: View {
             NavigationLink(destination: AccountManageView(viewModel: viewModel)) {
                 HStack(alignment: .center) {
                     Text("계정 관리")
-                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
-                        .padding([.top, .bottom], 12)
-                        .padding(.leading, 16)
                     
                     Spacer()
                     
@@ -198,6 +185,8 @@ struct RenewalSettingsView: View {
                 }
             }
         }
+        .padding([.vertical, .trailing], 12)
+        .padding(.leading, 16)
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .strokeBorder(borderColor, lineWidth: 1)
@@ -210,16 +199,17 @@ struct RenewalSettingsView: View {
         NavigationLink(destination: RenewalVOCView(viewModel)) {
             HStack(alignment: .center) {
                 Text("1:1 문의하기")
-                    .font(.custom("NanumSquareOTFB", size: 15))
+                    .customFont(font: .text15(weight: .Bold))
                     .foregroundColor(.orange500)
-                    .padding([.top, .bottom], 15)
-                    .padding(.leading, 16)
                 
                 Spacer()
                 
                 arrow
             }
         }
+        .padding(.vertical, 8)
+        .padding(.leading, 16)
+        .padding(.trailing, 12)
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .strokeBorder(borderColor, lineWidth: 1)
@@ -229,13 +219,13 @@ struct RenewalSettingsView: View {
     }
     
     var versionInfo: some View {
-        VStack {
+        VStack(spacing: 0) {
             Text("siksha-\(viewModel.version)")
-                .font(.custom("NanumSquareOTF", size: 12))
+                .customFont(font: .text12(weight: .Regular))
                 .foregroundColor(gray500)
                 .padding(.top, 20)
             Text(viewModel.isUpdateAvailable ? "업데이트가 가능합니다" : "최신버전을 이용중입니다.")
-                .font(.custom("NanumSquareOTF", size: 12))
+                .customFont(font: .text12(weight: .Regular))
                 .foregroundColor(gray500)
         }
     }
