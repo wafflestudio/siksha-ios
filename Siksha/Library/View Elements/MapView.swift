@@ -12,36 +12,38 @@ struct MapView: UIViewRepresentable {
     @Environment(\.colorScheme) private var colorScheme
     private let coordinate: NMGLatLng
     private let markerText: String
-    private let LAT_ERROR = 0.002129
-    private let LNG_ERROR = -0.004098
+
     //임시 픽스. 나중에 고칠 것
     init(coordinate: NMGLatLng, markerText: String) {
         self.coordinate = coordinate
         self.markerText = markerText
     }
     
-    func makeUIView(context: Context) -> NMFMapView {
-        let mapView = NMFMapView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width-32, height: 250))
-        mapView.allowsTilting = false
+    func makeUIView(context: Context) -> NMFNaverMapView {
+        let nMapView: NMFNaverMapView = NMFNaverMapView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width-32, height: 250))
+        nMapView.mapView.allowsTilting = true
+        nMapView.showZoomControls = false
+        nMapView.showScaleBar = false
+        nMapView.showCompass = false
         
-        return mapView
+        return nMapView
     }
     
-    func updateUIView(_ view: NMFMapView, context: Context) {
-        let cameraFixCoordinate = NMGLatLng(lat: coordinate.lat + LAT_ERROR, lng: coordinate.lng + LNG_ERROR)
+    func updateUIView(_ view: NMFNaverMapView, context: Context) {
+        let cameraFixCoordinate = NMGLatLng(lat: coordinate.lat, lng: coordinate.lng)
         let cameraUpdate = NMFCameraUpdate(position: NMFCameraPosition(cameraFixCoordinate, zoom: 15))
-        view.moveCamera(cameraUpdate)
         
-        let marker = NMFMarker(position: coordinate,iconImage: NMFOverlayImage(image: getMarkerImage()))
-        marker.mapView = view
+        view.mapView.moveCamera(cameraUpdate)
+        
+        let marker = NMFMarker(position: coordinate, iconImage: .init(name: "mapMarker"))
+        marker.captionText = markerText
+        marker.captionColor = UIColor(named: "DefaultFontColor") ?? .black
+        marker.captionAligns = [.top]
+        marker.captionOffset = -18
+        marker.position = cameraFixCoordinate
+        marker.mapView = view.mapView
     }
-    @MainActor func getMarkerImage() -> UIImage{
-        let renderer = ImageRenderer(content:MapMarker(name: markerText)                .environment(\.colorScheme,colorScheme)
-)
-        renderer.scale = UIScreen.main.scale
-        return renderer.uiImage!
-    }
-    
+
 }
 
 struct MapView_Previews: PreviewProvider {
