@@ -29,55 +29,71 @@ struct ReviewListView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 0))
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .foregroundColor(.white)
         }
     }
     
     var body: some View {
-        VStack(spacing: 0) {
-            if viewModel.reviews.count > 0 {
-                List {
-                    ForEach(viewModel.reviews, id: \.id) { review in
-                        ReviewCell(review, true)
-                            .padding(EdgeInsets(top: 16, leading: 8, bottom: 4, trailing: 0))
-                            .listRowInsets(EdgeInsets())
-                            .background(Color.backgroundPrimary)
-                            .onAppear {
-                                viewModel.loadMoreReviewsIfNeeded(currentItem: review, showOnlyImageReviews)
-                            }
+        ScrollView(.vertical, showsIndicators: false) {
+            VStack(spacing: 32) {
+                if showOnlyImageReviews {
+                    ForEach(0..<10) { _ in
+                        ReviewRow(showImage: true)
                     }
-                    if viewModel.hasMorePages && viewModel.getReviewStatus == .loading {
-                        HStack {
-                            Spacer()
-                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
-                            Spacer()
-                        }
+                } else {
+                    ReviewRow(showImage: true)
+                    ForEach(0..<10) { _ in
+                        ReviewRow(showImage: false)
                     }
                 }
-                .listStyle(PlainListStyle())
-            } else if viewModel.getReviewStatus == .loading {
-                VStack {
-                    Spacer()
-                    HStack {
-                        ActivityIndicator(isAnimating: .constant(true), style: .medium)
-                    }
-                    .frame(maxWidth: .infinity)
-                    Spacer()
-                }
-            } else {
-                VStack {
-                    Text("리뷰가 없습니다.")
-                        .font(.custom("NanumSquareOTFB", size: 13))
-                        .foregroundColor(lightGrayColor)
-                        .padding(.top, 20)
-                    
-                    Spacer()
-                }
-                .frame(maxWidth: .infinity)
+                
+                //            if viewModel.reviews.count > 0 {
+                //                List {
+                //                    ForEach(viewModel.reviews, id: \.id) { review in
+                //                        ReviewCell(review, true)
+                //                            .padding(EdgeInsets(top: 16, leading: 8, bottom: 4, trailing: 0))
+                //                            .listRowInsets(EdgeInsets())
+                //                            .background(Color.backgroundPrimary)
+                //                            .onAppear {
+                //                                viewModel.loadMoreReviewsIfNeeded(currentItem: review, showOnlyImageReviews)
+                //                            }
+                //                    }
+                //                    if viewModel.hasMorePages && viewModel.getReviewStatus == .loading {
+                //                        HStack {
+                //                            Spacer()
+                //                            ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                //                            Spacer()
+                //                        }
+                //                    }
+                //                }
+                //                .listStyle(PlainListStyle())
+                //            } else if viewModel.getReviewStatus == .loading {
+                //                VStack {
+                //                    Spacer()
+                //                    HStack {
+                //                        ActivityIndicator(isAnimating: .constant(true), style: .medium)
+                //                    }
+                //                    .frame(maxWidth: .infinity)
+                //                    Spacer()
+                //                }
+                //            } else {
+                //                VStack {
+                //                    Text("리뷰가 없습니다.")
+                //                        .font(.custom("NanumSquareOTFB", size: 13))
+                //                        .foregroundColor(lightGrayColor)
+                //                        .padding(.top, 20)
+                //
+                //                    Spacer()
+                //                }
+                //                .frame(maxWidth: .infinity)
+                //            }
             }
+            .padding(.horizontal, 14)
+            .padding(.top, 24)
+            .padding(.bottom, 65)
         }
-        .customNavigationBar(title: showOnlyImageReviews ? "사진 리뷰 모아보기" : "리뷰")
+        .customNavigationBar(title: showOnlyImageReviews ? "사진 리뷰" : "전체 리뷰")
         .background(Color.backgroundPrimary)
         .navigationBarItems(leading: backButton)
         .onAppear {
@@ -90,8 +106,9 @@ struct ReviewListView: View {
     }
 }
 
-//struct ReviewView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ReviewView()
-//    }
-//}
+#Preview {
+    NavigationStack {
+        ReviewListView(Meal(), true)
+    }
+}
+

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct MealInfoView: View {
     private let darkFontColor = Color.blackColor
@@ -99,19 +100,40 @@ fileprivate struct ReviewList: View {
     var body: some View {
         VStack(spacing: 21) {
             HStack(spacing: 0) {
-                NavigationLink(destination: ReviewListView(meal, false)) {
+//                NavigationLink(destination: ReviewListView(meal, false)) {
                     Text("리뷰")
                         .customFont(font: .text18(weight: .Bold))
                         .foregroundColor(.blackColor)
                     
                     Spacer()
-                }
+//                }
             }
             
             VStack(spacing: 32) {
                 ForEach(0..<10) { _ in
-                    ReviewRow()
+                    ReviewRow(showImage: false)
                 }
+            }
+            
+            HStack {
+                Spacer()
+                
+//                if viewModel.hasMorePages {
+                NavigationLink(destination: ReviewListView(Meal(), false)) {
+                    HStack(spacing: 11) {
+                        Text("리뷰 더보기")
+                            .foregroundStyle(Color.gray600)
+                            .customFont(font: .text12(weight: .Bold))
+                        
+                        Image("Arrow")
+                            .renderingMode(.template)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 5, height: 8)
+                            .foregroundStyle(Color.gray600)
+                    }
+                }
+//                }
             }
         }
     }
@@ -119,20 +141,63 @@ fileprivate struct ReviewList: View {
 
 fileprivate struct PhotoReviewView: View {
     var body: some View {
-        VStack(alignment: .leading, spacing: 11) {
-            Text("사진 리뷰")
-                .customFont(font: .text14(weight: .Bold))
-                .foregroundStyle(Color.blackColor)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(spacing: 0) {
+                Text("사진 리뷰")
+                    .customFont(font: .text14(weight: .Bold))
+                    .foregroundStyle(Color.blackColor)
+                
+                Spacer()
+                
+                NavigationLink(destination: ReviewListView(Meal(), true)) {
+                    Image("Arrow")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 7.5, height: 12)
+                        .foregroundStyle(Color.gray600)
+                }
+            }
             
             // TODO: 실제 데이터 넣기
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8.5) {
-                    ForEach(0..<3) { _ in
-                        RoundedRectangle(cornerRadius: 10)
+                    ForEach(0..<2) { _ in
+                        
+                        KFImage(URL(string: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1899")!)
+                            .resizable()
+                            .scaledToFill()
                             .frame(width: 120, height: 120)
-                            .foregroundColor(Color.gray200)
+                            .cornerRadius(10)
                     }
-                }
+                    NavigationLink(destination: ReviewListView(Meal(), true)) {
+                        KFImage(URL(string: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1899")!)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 120, height: 120)
+                            .cornerRadius(10)
+                            .overlay {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 10)
+                                        .fill(Color.black.opacity(0.25))
+                                        .frame(width: 120, height: 120)
+                                    
+                                    VStack(spacing: 6) {
+                                        Image("Plus")
+                                            .renderingMode(.template)
+                                            .resizable()
+                                            .foregroundStyle(Color.white)
+                                            .frame(width: 10, height: 10)
+                                        
+                                        Text("5건 더보기")
+                                            .foregroundStyle(Color.white)
+                                            .customFont(font: .text12(weight: .Bold))
+                                    }
+                                }
+                                
+                            }
+                    }
+                    }
             }
         }
     }

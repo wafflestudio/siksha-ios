@@ -10,7 +10,6 @@ import UIKit
 import Combine
 import RealmSwift
 import SwiftUI
-import PhotosUI
 
 class MealReviewViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
@@ -37,8 +36,7 @@ class MealReviewViewModel: ObservableObject {
     
     @Published var selectedKeywords: [KeywordRateType: String] = [:]
     
-    @Published var imageSelections: [PhotosPickerItem] = []
-    @Published private(set) var selectedImages: [UIImage] = []
+    @Published var selectedImages: [UIImage] = []
     
     private var imagesData = [Data]()
     private var recommendedComment = ""
@@ -72,8 +70,8 @@ class MealReviewViewModel: ObservableObject {
             .store(in: &cancellables)
         
         $scoreToSubmit
-            .combineLatest($commentToSubmit)
-            .map { $0 > 0 && $1.count > 0 && $1.count <= 150 }
+            .combineLatest($selectedKeywords)
+            .map { $0 > 0 && $1[KeywordRateType.taste]?.isEmpty == false && $1[KeywordRateType.yang]?.isEmpty == false && $1[KeywordRateType.price]?.isEmpty == false }
             .assign(to: \.canSubmit, on: self)
             .store(in: &cancellables)
         
@@ -94,28 +92,12 @@ class MealReviewViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func imageSelectionsToImage() async {
-        selectedImages.removeAll()
-        
-        for selection in imageSelections {
-            if let data = try? await selection.loadTransferable(type: Data.self),
-               let uiImage = UIImage(data: data) {
-                selectedImages.append(uiImage)
-            }
-        }
-        print(selectedImages.count)
-    }
-    
-    func deleteImage(at index: Int) {
-        imageSelections.remove(at: index)
-    }
-    
     func submitReview() {
         guard let meal = meal else {
             self.postReviewSucceeded = false
             return
         }
-
+        
         // TODO: 아래 더미데이터 교체
         Networking.shared.submitReview(
             menuId: meal.id,
@@ -125,34 +107,34 @@ class MealReviewViewModel: ObservableObject {
             price: "혜자스러워요",
             foodComposition: "조화로워요"
         )
-            .receive(on: RunLoop.main)
-            .sink { [weak self] result in
-                guard let self = self else { return }
-                guard let response = result.response else {
-                    self.postReviewSucceeded = false
-                    return
-                }
-                
-                if 200..<300 ~= response.statusCode {
-                    self.postReviewSucceeded = true
-                    
-                    let score = meal.score
-                    let reviewCnt = meal.reviewCnt
-                    
-                    let newScore = (score * Double(reviewCnt) + self.scoreToSubmit) / Double(reviewCnt + 1)
-                    let newReviewCnt = reviewCnt + 1
-                    
-                    let realm = try! Realm()
-                    try! realm.write {
-                        meal.score = newScore
-                        meal.reviewCnt = newReviewCnt
-                    }
-                } else {
-                    self.errorCode = .init(rawValue: response.statusCode)
-                    self.postReviewSucceeded = false
-                }
+        .receive(on: RunLoop.main)
+        .sink { [weak self] result in
+            guard let self = self else { return }
+            guard let response = result.response else {
+                self.postReviewSucceeded = false
+                return
             }
-            .store(in: &cancellables)
+            
+            if 200..<300 ~= response.statusCode {
+                self.postReviewSucceeded = true
+                
+                let score = meal.score
+                let reviewCnt = meal.reviewCnt
+                
+                let newScore = (score * Double(reviewCnt) + self.scoreToSubmit) / Double(reviewCnt + 1)
+                let newReviewCnt = reviewCnt + 1
+                
+                let realm = try! Realm()
+                try! realm.write {
+                    meal.score = newScore
+                    meal.reviewCnt = newReviewCnt
+                }
+            } else {
+                self.errorCode = .init(rawValue: response.statusCode)
+                self.postReviewSucceeded = false
+            }
+        }
+        .store(in: &cancellables)
     }
     
     func submitReviewImages(images: [UIImage]) {
@@ -171,34 +153,40 @@ class MealReviewViewModel: ObservableObject {
             price: "혜자스러워요",
             foodComposition: "조화로워요",
             images: imagesData)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] result in
-                guard let self = self else { return }
-                guard let response = result.response else {
-                    self.postReviewSucceeded = false
-                    return
-                }
-                
-                if 200..<300 ~= response.statusCode {
-                    self.postReviewSucceeded = true
-                    
-                    let score = meal.score
-                    let reviewCnt = meal.reviewCnt
-                    
-                    let newScore = (score * Double(reviewCnt) + self.scoreToSubmit) / Double(reviewCnt + 1)
-                    let newReviewCnt = reviewCnt + 1
-                    
-                    let realm = try! Realm()
-                    try! realm.write {
-                        meal.score = newScore
-                        meal.reviewCnt = newReviewCnt
-                    }
-                } else {
-                    self.errorCode = .init(rawValue: response.statusCode)
-                    self.postReviewSucceeded = false
-                }
+        .receive(on: RunLoop.main)
+        .sink { [weak self] result in
+            guard let self = self else { return }
+            guard let response = result.response else {
+                self.postReviewSucceeded = false
+                return
             }
-            .store(in: &cancellables)
+            
+            if 200..<300 ~= response.statusCode {
+                self.postReviewSucceeded = true
+                
+                let score = meal.score
+                let reviewCnt = meal.reviewCnt
+                
+                let newScore = (score * Double(reviewCnt) + self.scoreToSubmit) / Double(reviewCnt + 1)
+                let newReviewCnt = reviewCnt + 1
+                
+                let realm = try! Realm()
+                try! realm.write {
+                    meal.score = newScore
+                    meal.reviewCnt = newReviewCnt
+                }
+            } else {
+                self.errorCode = .init(rawValue: response.statusCode)
+                self.postReviewSucceeded = false
+            }
+        }
+        .store(in: &cancellables)
+    }
+    
+    func deleteImage(_ image: UIImage) {
+        selectedImages.removeAll {
+            $0 == image
+        }
     }
     
 }

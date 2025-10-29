@@ -7,9 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		071E87842EA637C4002B0BE0 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071E87832EA637C4002B0BE0 /* ImageViewer.swift */; };
 		07491E412E51BFBF00889C67 /* MixpanelAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */; };
 		07491E432E51C00500889C67 /* AnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E422E51C00500889C67 /* AnalyticsEvent.swift */; };
 		07491E452E51C02D00889C67 /* AnalyticsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E442E51C02D00889C67 /* AnalyticsKey.swift */; };
+		07CD061B2EA4B40500CCC4B7 /* PhotoAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */; };
+		07CD061D2EA4B45800CCC4B7 /* KeywordSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */; };
 		07D241B62E769A7500B56593 /* KeywordReivewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241B52E769A7500B56593 /* KeywordReivewView.swift */; };
 		07D241C82E94AFB300B56593 /* StarUnitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241C72E94AFB300B56593 /* StarUnitView.swift */; };
 		07D241CA2E94AFF300B56593 /* StarRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241C92E94AFF300B56593 /* StarRateView.swift */; };
@@ -195,9 +198,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		071E87832EA637C4002B0BE0 /* ImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixpanelAnalytics.swift; sourceTree = "<group>"; };
 		07491E422E51C00500889C67 /* AnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEvent.swift; sourceTree = "<group>"; };
 		07491E442E51C02D00889C67 /* AnalyticsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsKey.swift; sourceTree = "<group>"; };
+		07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAddView.swift; sourceTree = "<group>"; };
+		07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSelectionView.swift; sourceTree = "<group>"; };
 		07D241B52E769A7500B56593 /* KeywordReivewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordReivewView.swift; sourceTree = "<group>"; };
 		07D241C72E94AFB300B56593 /* StarUnitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarUnitView.swift; sourceTree = "<group>"; };
 		07D241C92E94AFF300B56593 /* StarRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarRateView.swift; sourceTree = "<group>"; };
@@ -651,6 +657,9 @@
 				1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */,
 				231DEB3A266BC5C900AA32C0 /* ReviewListViewModel.swift */,
 				2360CD992663778B007E02DB /* ReviewListView.swift */,
+				07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */,
+				07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */,
+				071E87832EA637C4002B0BE0 /* ImageViewer.swift */,
 			);
 			path = MealDetail;
 			sourceTree = "<group>";
@@ -960,6 +969,7 @@
 				07D241CE2E94B1E200B56593 /* KeywordRateRow.swift in Sources */,
 				C091FEEC2C314FCC00D48F92 /* MyPostViewModel.swift in Sources */,
 				1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */,
+				071E87842EA637C4002B0BE0 /* ImageViewer.swift in Sources */,
 				1EABA80B25EBE28000B79CB8 /* Utils.swift in Sources */,
 				1E3A581B25C98F9A00DBB3F4 /* AppState.swift in Sources */,
 				4E3D4EE72A74E02A005C7AB2 /* BoardNameCell.swift in Sources */,
@@ -975,6 +985,7 @@
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
 				07D241D02E96074600B56593 /* Double+roundedToHalf.swift in Sources */,
 				07D241B62E769A7500B56593 /* KeywordReivewView.swift in Sources */,
+				07CD061D2EA4B45800CCC4B7 /* KeywordSelectionView.swift in Sources */,
 				BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
 				749AA1222CE3618E00AD61E5 /* WebView.swift in Sources */,
@@ -986,6 +997,7 @@
 				330C55112D4CCA480011345D /* SegmentedPicker.swift in Sources */,
 				231C9CE525F835B40072C07A /* BackButton.swift in Sources */,
 				BF97DF572AAF00780083FC6F /* Repository.swift in Sources */,
+				07CD061B2EA4B40500CCC4B7 /* PhotoAddView.swift in Sources */,
 				BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
 				07D241CC2E94B1CD00B56593 /* KeywordRateType.swift in Sources */,
@@ -1131,6 +1143,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ZHQQM4M49J;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1194,6 +1207,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = ZHQQM4M49J;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1227,7 +1241,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
@@ -1264,7 +1278,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 9;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"Siksha/Preview Content\"";
 				DEVELOPMENT_TEAM = "";

@@ -15,8 +15,8 @@ struct KeywordRateRow: View {
             Image(type.imageString)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 16, height: 16)
-                .padding(.trailing, 9.5)
+                .frame(width: 21, height: 16.5)
+                .padding(.trailing, 6)
                 .padding(.leading, 18)
             
             Text(type.description)
