@@ -89,7 +89,8 @@ enum SikshaAPI: URLRequestConvertible {
     case loadUserInfo
     case updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool)
     case deleteUser
-
+    case postUserDevice(fcmToken:String)
+    case deleteUserDevice(fcmToken:String)
     static var baseURL = Config.shared.baseURL
     
     var needToken: Bool {
@@ -209,6 +210,10 @@ enum SikshaAPI: URLRequestConvertible {
             return .patch
         case .deleteUser:
             return .delete
+        case .postUserDevice:
+            return .post
+        case .deleteUserDevice:
+            return .delete
         }
     }
 
@@ -290,6 +295,10 @@ enum SikshaAPI: URLRequestConvertible {
             return "/auth/me/image/profile"
         case .deleteUser:
             return "/auth"
+        case .postUserDevice:
+            return "/auth/userDevice"
+        case .deleteUserDevice:
+            return "/auth/userDevice"
         }
     }
     
@@ -339,6 +348,10 @@ enum SikshaAPI: URLRequestConvertible {
             return ["post_id": postId,"reason":reason]
         case let .reportComment(commentId, reason):
             return ["comment_id" : commentId,"reason":reason]
+        case let .postUserDevice(fcmToken):
+            return ["fcmToken" : fcmToken]
+        case let .deleteUserDevice(fcmToken):
+            return ["fcmToken" : fcmToken]
         default:
             return nil
         }
