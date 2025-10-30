@@ -147,3 +147,15 @@ extension Repository: MyLikedMenuRepositoryProtocol{
     
     
 }
+extension Repository: AuthRepositoryProtocol{
+    func postUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>{
+        let endpoint = SikshaAPI.postUserDevice(fcmToken: fcmToken)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+
+    }
+    func deleteUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>{
+        let endpoint = SikshaAPI.deleteUserDevice(fcmToken: fcmToken)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+
+    }
+}

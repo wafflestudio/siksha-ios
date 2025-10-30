@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol,MyLikedMenuRepositoryProtocol {
+protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol,MyLikedMenuRepositoryProtocol,AuthRepositoryProtocol {
 
 }
 
@@ -44,4 +44,9 @@ protocol UserRepositoryProtocol {
 protocol MyLikedMenuRepositoryProtocol{
     func unlikeMenu(menuId: Int) -> AnyPublisher<Void, AppError>
     func getMyLikedMenu() -> AnyPublisher<MyLikedMenuResponse,AppError>
+}
+
+protocol AuthRepositoryProtocol{
+    func postUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>
+    func deleteUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>
 }
