@@ -111,6 +111,7 @@
 		4E74167D2A9B63A10010769F /* CommentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E74167C2A9B63A00010769F /* CommentCell.swift */; };
 		4E79A1842C7DCBFE007CE49B /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E79A1832C7DCBFE007CE49B /* ImageView.swift */; };
 		4E79A1862C80B6BE007CE49B /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E79A1852C80B6BE007CE49B /* AlertView.swift */; };
+		4E7A71BF2EB352CE00C910CE /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 4E7A71BE2EB352CE00C910CE /* FirebaseMessaging */; };
 		4E90A07F2E7BE6E60016BAAF /* MyLikedMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E90A07E2E7BE6E00016BAAF /* MyLikedMenu.swift */; };
 		4E90A0812E7BEA110016BAAF /* MyLikedMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E90A0802E7BEA0B0016BAAF /* MyLikedMenuViewModel.swift */; };
 		4E90A0832E88DA450016BAAF /* MyLikedMenuMealCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E90A0822E88DA450016BAAF /* MyLikedMenuMealCell.swift */; };
@@ -363,6 +364,7 @@
 				33EA41FC2DDDAEC200A9ADD0 /* FirebaseAnalyticsWithoutAdIdSupport in Frameworks */,
 				A62E8CB22E0D91A300052DAE /* Mixpanel in Frameworks */,
 				33C456212DDB6CA600BEFAB2 /* GoogleSignInSwift in Frameworks */,
+				4E7A71BF2EB352CE00C910CE /* FirebaseMessaging in Frameworks */,
 				741BE3382CE3514D00A09881 /* KakaoSDKShare in Frameworks */,
 				33EA420E2DDF130E00A9ADD0 /* BSImagePicker in Frameworks */,
 				33EA420B2DDF0E9C00A9ADD0 /* JTAppleCalendar in Frameworks */,
@@ -1560,6 +1562,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 33EA420F2DDF158600A9ADD0 /* XCRemoteSwiftPackageReference "SPM-NMapsMap" */;
 			productName = NMapsMap;
+		};
+		4E7A71BE2EB352CE00C910CE /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 33EA41FA2DDDAEC200A9ADD0 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
 		};
 		741BE3332CE3514D00A09881 /* KakaoSDK */ = {
 			isa = XCSwiftPackageProductDependency;

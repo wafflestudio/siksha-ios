@@ -12,6 +12,7 @@ import NMapsMap
 import RealmSwift
 import FirebaseCore
 import Mixpanel
+import FirebaseMessaging
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -56,6 +57,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         UserManager.shared.loadUserInfo()
         
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+        UNUserNotificationCenter.current().requestAuthorization(
+            options: authOptions,
+            completionHandler: { _, _ in }
+        )
+        UIApplication.shared.registerForRemoteNotifications()
+     
+
         return true
     }
     
@@ -86,6 +95,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+ 
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        print("device token: \(String(describing:deviceToken))")
+         Messaging.messaging().apnsToken = deviceToken
+        Messaging.messaging().token { token, error in
+        }
+     }
 
 
 }
