@@ -51,6 +51,7 @@ struct AlarmSwitchStylePreviewWrapper: View {
         .toggleStyle(AlarmSwitchStyle())
         .padding()
         .previewLayout(.sizeThatFits)
+    
     }
 }
 

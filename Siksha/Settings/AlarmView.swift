@@ -98,7 +98,14 @@ struct AlarmView: View {
             .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 17))
                 .customNavigationBar(title: "내가 찜한 메뉴")
                 .navigationBarItems(leading: backButton)
+                .onChange(of: isAlarmOn, perform: {  isAlarmOn in
+                    if isAlarmOn{
+                        AppDelegate.requestNotificationPermission()
+                    }
+                    
+                })
         }
+       
     }
 
 #Preview {

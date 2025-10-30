@@ -99,6 +99,9 @@ struct MyLikedMenuModal: View {
                     }
                     Button(action:{
                         contentViewModel.showModal = false
+                        if isYesSelected{
+                            AppDelegate.requestNotificationPermission()
+                        }
                     }){
                         Text("완료")
                         
