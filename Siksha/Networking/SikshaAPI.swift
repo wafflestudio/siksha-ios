@@ -349,9 +349,9 @@ enum SikshaAPI: URLRequestConvertible {
         case let .reportComment(commentId, reason):
             return ["comment_id" : commentId,"reason":reason]
         case let .postUserDevice(fcmToken):
-            return ["fcmToken" : fcmToken]
+            return ["fcm_token" : fcmToken]
         case let .deleteUserDevice(fcmToken):
-            return ["fcmToken" : fcmToken]
+            return ["fcm_token" : fcmToken]
         default:
             return nil
         }
