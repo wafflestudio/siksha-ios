@@ -13,7 +13,7 @@ class RenewalSettingsViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     private let repository: UserRepositoryProtocol = DomainManager.shared.domain.userRepository
-    
+    private let authRepository:AuthRepositoryProtocol = DomainManager.shared.domain.authRepository
     @Published var error: AppError?
 
     @Published var noMenuHide = false
@@ -22,7 +22,7 @@ class RenewalSettingsViewModel: ObservableObject {
     @Published var showSignOutAlert: Bool = false
     @Published var showRemoveAccountAlert: Bool = false
     @Published var removeAccountFailed: Bool = false
-    
+    @Published var logoutFailed: Bool = false
     @Published var version: String = ""
     @Published var appStoreVersion: String = ""
    
@@ -118,8 +118,32 @@ class RenewalSettingsViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    func logOutAccount() {
-        UserDefaults.standard.removeObject(forKey: "accessToken")
+    func logOutAccount(completion:@escaping(Bool)->()) {
+        if UserDefaults.standard.string(forKey: "fcmToken") == nil{
+            completion(true)
+        }
+        else{
+            authRepository.deleteUserDevice(fcmToken: UserDefaults.standard.string(forKey: "fcmToken")!)
+                .receive(on: RunLoop.main)
+                .sink(receiveCompletion: { [weak self] completionStatus in
+                    switch completionStatus {
+                    case .finished:
+                        print("delete success fcm")
+                        UserDefaults.standard.removeObject(forKey: "accessToken")
+                        UserDefaults.standard.removeObject(forKey: "fcmToken")
+                        completion(true)
+                    case .failure(let error):
+                        print("delete fail fcm")
+                        print(error)
+                        self?.error = ErrorHelper.categorize(error)
+                        self?.logoutFailed = true
+                        completion(false)
+                    }
+                }, receiveValue: { value in
+                    
+                })
+                .store(in: &cancellables)
+        }
     }
     
     func removeAccount(completion: @escaping (Bool) -> Void) {

@@ -123,7 +123,7 @@ struct ContentView: View {
                     
                 }
                 .onAppear{
-                    
+                    AppDelegate.sendFCMToken()
                 }
             }
         

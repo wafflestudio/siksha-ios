@@ -58,10 +58,17 @@ struct AccountManageView: View {
                         message: Text("앱에서 로그아웃합니다."),
                         buttons: [
                             .destructive(Text("로그아웃")){
-                                viewModel.logOutAccount()
-                                viewControllerHolder?.present(style: .fullScreen) {
-                                    LoginView()
+                                viewModel.logOutAccount(){ result in
+                                    if result{
+                                        viewControllerHolder?.present(style: .fullScreen) {
+                                            LoginView()
+                                        }
+                                    }
+                                    else{
+                                        
+                                    }
                                 }
+        
                             },
                             .cancel(Text("취소"))
                         ]
@@ -119,6 +126,12 @@ struct AccountManageView: View {
                   message: Text("회원 탈퇴에 실패했습니다."),
                   dismissButton: .default(Text("확인")))
         }
+        .alert(isPresented: $viewModel.logoutFailed) {
+            Alert(title: Text("로그아웃"),
+                  message: Text("로그아웃에 실패했습니다."),
+                  dismissButton: .default(Text("확인")))
+        }
+
         .customNavigationBar(title: "계정관리")
                     .navigationBarItems(leading: backButton)
     }
