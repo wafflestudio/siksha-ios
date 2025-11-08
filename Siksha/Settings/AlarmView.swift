@@ -78,16 +78,28 @@ struct AlarmView: View {
                     alarmSettingsView
                     Spacer()
                         .frame(height:20)
-                    Text("알림 받을 메뉴를 선택하세요.")
-                        .foregroundStyle(Color.gray600)
-                        .customFont(font: .text14(weight: .Bold))
-                        .padding(EdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 0))
                     if isAlarmOn{
-                        ForEach(restaurants,id:\.self){
-                            restaurant in
-                            AlarmRestaurantCell(restaurantName: restaurant.name, menus: restaurant.menus)
-                            Spacer()
-                                .frame(height:12)
+                        if restaurants.isEmpty{
+                                Text("내가 찜한 메뉴가 없어요")
+                                    .foregroundStyle(Color.gray600)
+                                    .customFont(font: .text15(weight: .Bold))
+                                    .frame(maxWidth: .infinity, alignment: .center)
+
+                                    .padding(EdgeInsets(top: 231.5, leading: 0, bottom: 0, trailing: 0))
+
+                        }
+                        else{
+                            Text("알림 받을 메뉴를 선택하세요.")
+                                .foregroundStyle(Color.gray600)
+                                .customFont(font: .text14(weight: .Bold))
+                                .padding(EdgeInsets(top: 0, leading: 14, bottom: 8, trailing: 0))
+                            
+                            ForEach(restaurants,id:\.self){
+                                restaurant in
+                                AlarmRestaurantCell(restaurantName: restaurant.name, menus: restaurant.menus)
+                                Spacer()
+                                    .frame(height:12)
+                            }
                         }
                     }
                     
@@ -96,7 +108,7 @@ struct AlarmView: View {
                 }
             }
             .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 17))
-                .customNavigationBar(title: "내가 찜한 메뉴")
+                .customNavigationBar(title: "메뉴 알림 설정")
                 .navigationBarItems(leading: backButton)
                 .onChange(of: isAlarmOn, perform: {  isAlarmOn in
                     if isAlarmOn{

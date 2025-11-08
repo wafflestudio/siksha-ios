@@ -80,7 +80,7 @@ struct AlarmTimeView: View {
                 .frame(maxWidth: .infinity,alignment: .leading)
                 .padding(EdgeInsets(top: 0, leading: 14, bottom: 0, trailing: 0))
         }
-        .customNavigationBar(title: "내가 찜한 메뉴")
+        .customNavigationBar(title: "메뉴 알림 시간 설정")
         .navigationBarItems(leading: backButton)
         .frame(maxHeight:.infinity,alignment: .top)
         .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 16))

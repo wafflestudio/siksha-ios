@@ -28,7 +28,7 @@ struct AlarmRestaurantCell: View {
                 .frame(height:1.5)
                 .foregroundColor(Color.orange500)
             Spacer()
-                .frame(height:8)
+                .frame(height:14)
             ForEach(Array(menus.enumerated()),id:\.offset){
                 index,menu in
                 HStack(alignment: .center){
