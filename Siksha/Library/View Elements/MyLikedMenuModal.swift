@@ -33,14 +33,22 @@ struct MyLikedMenuModal: View {
     }
     var body: some View {
         VStack(alignment: .leading,spacing:0){
-            VStack(alignment: .center,spacing: 0){
-                Spacer()
-                Image("alarm-modal")
-                    .resizable()
-                    .frame(width: 253,height:179)
-                    .shadow(color:Color.black.opacity(0.25),radius:4,x:0,y:-1)
-                    .mask(Rectangle().padding(.top, -1))
-
+            ZStack(alignment:.bottom){
+                VStack(alignment: .center,spacing: 0){
+                    Spacer()
+                    Image("alarm-modal")
+                        .resizable()
+                        .frame(width: 253,height:179)
+                        .shadow(color:Color.black.opacity(0.25),radius:4,x:0,y:-1)
+                        .mask(Rectangle().padding(.top, -1))
+                    
+                }
+                .frame(maxWidth: .infinity)
+                .frame(height:216)
+                .padding(.zero)
+                LinearGradient(gradient: Gradient(colors:[Color(UIColor(red: 168/255, green: 146/255, blue: 123/255, alpha: 0.45)),Color(UIColor(red:1,green:1,blue:1,alpha:0))]), startPoint: .bottom, endPoint: .top)
+                    .frame(maxWidth: .infinity)
+                    .frame(height:55)
             }
             .frame(maxWidth: .infinity)
             .frame(height:216)
@@ -69,6 +77,9 @@ struct MyLikedMenuModal: View {
                         isConfirmedEnabled = true
                     }
                 Text("좋아요, 알림을 받을래요.")
+                    .foregroundStyle(Color.blackColor)
+                    .customFont(font: .text15(weight: .Regular))
+
             }
             Spacer()
                 .frame(height:12)
@@ -82,6 +93,9 @@ struct MyLikedMenuModal: View {
                         isConfirmedEnabled = true
                     }
                 Text("괜찮아요, 알림을 받지 않을래요.")
+                    .foregroundStyle(Color.blackColor)
+                    .customFont(font: .text15(weight: .Regular))
+
             }
             Spacer()
                 .frame(height:30)
