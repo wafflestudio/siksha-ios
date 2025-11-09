@@ -27,15 +27,24 @@ struct MyLikedMenuView: View {
     }
     var body: some View {
         ZStack(alignment: .topTrailing) {
-
-            ScrollView {
-                VStack{
-                    ForEach(viewModel.myLikedRestaurants,id:\.self){restaurant in
-                        LikedMenuRestaurantCell(viewModel,restaurant)
+            if viewModel.myLikedRestaurants.isEmpty{
+                ZStack(alignment: .center, content: {
+                    Text("내가 찜한 메뉴가 없어요")
+                        .customFont(font: .text15(weight: .Bold))
+                        .foregroundColor(Color.gray600)
+                })
+                .frame(maxWidth: .infinity,maxHeight: .infinity)
+            }
+            else{
+                ScrollView {
+                    VStack{
+                        ForEach(viewModel.myLikedRestaurants,id:\.self){restaurant in
+                            LikedMenuRestaurantCell(viewModel,restaurant)
                             
+                        }
                     }
+                    .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 16))
                 }
-                .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 16))
             }
         }
      
