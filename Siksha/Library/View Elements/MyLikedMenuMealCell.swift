@@ -74,7 +74,7 @@ struct MyLikedMenuMealCell: View {
                 .frame(width:16)
 
             Button(action: {
-                viewModel.unlikeMenu(menuId: menu.id)
+                viewModel.toggleMenu(menuId: menu.id)
             }){
                 Image(menu.isLiked ? "Heart-selected" : "Heart-default")
                     .frame(width: 24, height: 24)

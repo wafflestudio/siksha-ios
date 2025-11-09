@@ -42,6 +42,7 @@ protocol UserRepositoryProtocol {
 }
 
 protocol MyLikedMenuRepositoryProtocol{
+    func likeMenu(menuId: Int) -> AnyPublisher<Void, AppError>
     func unlikeMenu(menuId: Int) -> AnyPublisher<Void, AppError>
     func getMyLikedMenu() -> AnyPublisher<MyLikedMenuResponse,AppError>
 }

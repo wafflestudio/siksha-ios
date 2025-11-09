@@ -61,6 +61,9 @@ struct MyLikedMenuView: View {
 
             print("appeared")
         }
+        .onDisappear{
+            viewModel.unLikedMenuCleanup()
+        }
     }
 
 }
