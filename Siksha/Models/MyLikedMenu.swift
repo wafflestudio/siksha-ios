@@ -26,6 +26,7 @@ struct MyLikedMenu:Codable,Equatable,Hashable{
     var isLiked: Bool = false
     var likeCnt: Int = 0
     var etc: [String] = []
+    var alarm = false
     enum CodingKeys: String, CodingKey {
         case id = "id"
         case nameKr = "name_kr"
@@ -35,6 +36,7 @@ struct MyLikedMenu:Codable,Equatable,Hashable{
         case reviewCnt = "review_cnt"
         case isLiked = "is_liked"
         case likeCnt = "like_cnt"
+        case alarm = "alarm"
         case etc = "etc"
     }
 }

@@ -148,6 +148,18 @@ extension Repository: MyLikedMenuRepositoryProtocol{
         let endpoint = SikshaAPI.getMyLikedMenu
         return self.networkModule.request(endpoint: endpoint)
     }
+    func onAlarm(menuId:Int)->AnyPublisher<MyLikedMenu,AppError>{
+        let endpoint = SikshaAPI.alarmOn(menuId: menuId)
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    func offAlarm(menuId:Int)->AnyPublisher<MyLikedMenu,AppError>{
+        let endpoint = SikshaAPI.alarmOff(menuId: menuId)
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    func offAlarmAll()->AnyPublisher<Void,AppError>{
+        let endpoint = SikshaAPI.alarmOffAll
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+    }
     
     
 }

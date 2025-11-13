@@ -91,6 +91,9 @@ enum SikshaAPI: URLRequestConvertible {
     case deleteUser
     case postUserDevice(fcmToken:String)
     case deleteUserDevice(fcmToken:String)
+    case alarmOn(menuId:Int)
+    case alarmOff(menuId:Int)
+    case alarmOffAll
     static var baseURL = Config.shared.baseURL
     
     var needToken: Bool {
@@ -214,6 +217,12 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .deleteUserDevice:
             return .delete
+        case .alarmOn(menuId: let menuId):
+            return .post
+        case .alarmOff(menuId: let menuId):
+            return .post
+        case .alarmOffAll:
+            return .post
         }
     }
 
@@ -299,6 +308,13 @@ enum SikshaAPI: URLRequestConvertible {
             return "/auth/userDevice"
         case .deleteUserDevice:
             return "/auth/userDevice"
+        case .alarmOn(menuId: let menuId):
+            return "/menus/\(menuId)/alarm/on"
+        case .alarmOff(menuId: let menuId):
+            return "/menus/\(menuId)/alarm/off"
+        case .alarmOffAll:
+            return "/menus/alarm/off"
+
         }
     }
     
@@ -352,6 +368,12 @@ enum SikshaAPI: URLRequestConvertible {
             return ["fcm_token" : fcmToken]
         case let .deleteUserDevice(fcmToken):
             return ["fcm_token" : fcmToken]
+        
+        case let .alarmOn(menuId: menuId):
+            return ["menu_id":menuId]
+        case let .alarmOff(menuId: menuId):
+            return ["menu_id":menuId]
+
         default:
             return nil
         }
