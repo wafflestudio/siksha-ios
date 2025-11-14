@@ -236,39 +236,50 @@ struct ReviewCardView: View {
     let review: RestaurantReview
     @Binding var showDeleteAlert: Bool
     @Binding var selectedReview: RestaurantReview?
+    @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack(alignment: .center) {
-                VStack(alignment: .leading, spacing: 4) {
-                    HStack(spacing: 4) {
-                        Text(review.menuName)
-                            .customFont(font: .text15(weight: .ExtraBold))
-                            .foregroundStyle(Color.blackColor)
+            NavigationLink(
+            // TODO: 현재 설계에서 MealInfoVM이 mealID가 아닌 Meal 생성자를 받고 있어 당장 수정 어려움.
+            // TODO: 키워드 리뷰 페이지 완성 후 수정 예정
+            destination: MealInfoView(viewModel: MealInfoViewModel(meal: Meal()))
+                .environment(\.menuViewModel, menuViewModel)
+                .onAppear {
+                    menuViewModel?.reloadOnAppear = false
+                },
+            label: {
+                HStack(alignment: .center) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        HStack(spacing: 4) {
+                            Text(review.menuName)
+                                .customFont(font: .text15(weight: .ExtraBold))
+                                .foregroundStyle(Color.blackColor)
+                            
+                            Image("ArrowGray800")
+                                .frame(width: 20, height: 20)
+                            
+                            Spacer()
+                            
+                            Text(review.date)
+                                .customFont(font: .text12(weight: .Bold))
+                                .foregroundColor(Color.gray600)
+                        }
                         
-                        Image("ArrowGray800")
-                            .frame(width: 20, height: 20)
-                        
-                        Spacer()
-                        
-                        Text(review.date)
-                            .customFont(font: .text12(weight: .Bold))
-                            .foregroundColor(Color.gray600)
+                        RatingStar(.constant(Double(review.rating)), size: 13, spacing: 2, emptyStarType: .filled)
                     }
-                    
-                    RatingStar(.constant(Double(review.rating)), size: 13, spacing: 2, emptyStarType: .filled)
+                    .padding(.init(top: 12, leading: 12, bottom: 16, trailing: 0))
+                    Spacer()
                 }
-                .padding(.init(top: 12, leading: 12, bottom: 16, trailing: 0))
-                Spacer()
-            }
-            .background(
-                RoundedRectangle(cornerRadius: 8)
-                    .fill(Color.elementTooltip2)
-            )
-            .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.gray200, lineWidth: 1)
-            )
+                .background(
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.elementTooltip2)
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8)
+                        .stroke(Color.gray200, lineWidth: 1)
+                )
+            })
             
             Text(review.reviewText)
                 .customFont(font: .text12(weight: .Regular))
