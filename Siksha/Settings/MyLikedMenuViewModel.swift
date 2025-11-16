@@ -7,12 +7,14 @@
 
 import Foundation
 import Combine
+import SwiftUI
 
 class MyLikedMenuViewModel: ObservableObject{
     private let myLikedMenuRepository: MyLikedMenuRepositoryProtocol
     private var cancellables = Set<AnyCancellable>()
 
     @Published var error: AppError?
+    @Published var isAlarmEnabled = UserDefaults.standard.bool(forKey: "isAlarmEnabled")
     @Published  var myLikedRestaurants: [MyLikedRestaurant] = []
     
     init(myLikedMenuRepository: MyLikedMenuRepositoryProtocol) {
@@ -48,6 +50,15 @@ class MyLikedMenuViewModel: ObservableObject{
             for (j,_) in myLikedRestaurants[i].menus.enumerated(){
                 if myLikedRestaurants[i].menus[j].id == menuId{
                     myLikedRestaurants[i].menus[j].isLiked.toggle()
+                }
+            }
+        }
+    }
+    private func toggleMenuAlarm(menuId:Int){
+        for (i,_) in myLikedRestaurants.enumerated(){
+            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
+                if myLikedRestaurants[i].menus[j].id == menuId{
+                    myLikedRestaurants[i].menus[j].alarm.toggle()
                 }
             }
         }
@@ -113,5 +124,89 @@ class MyLikedMenuViewModel: ObservableObject{
             restaurant in
             restaurant.menus.isEmpty
         })
+    }
+    private func isAlarmOn(menuId:Int)->Bool{
+        for (i,_) in myLikedRestaurants.enumerated(){
+            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
+                if myLikedRestaurants[i].menus[j].id == menuId{
+                    return myLikedRestaurants[i].menus[j].alarm
+                }
+            }
+        }
+        return false
+    }
+    private func turnOnAlarm(menuId:Int){
+        myLikedMenuRepository.onAlarm(menuId: menuId)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { [weak self] completionStatus in
+                switch completionStatus {
+                case .finished:
+                    self?.toggleMenuAlarm(menuId:menuId)
+                case .failure(let error):
+                    self?.error = ErrorHelper.categorize(error)
+                }
+            }, receiveValue: { value in
+                
+            })
+            .store(in: &cancellables)
+
+    }
+    private func turnOffAlarm(menuId:Int){
+        myLikedMenuRepository.offAlarm(menuId: menuId)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { [weak self] completionStatus in
+                switch completionStatus {
+                case .finished:
+                    self?.toggleMenuAlarm(menuId:menuId)
+                case .failure(let error):
+                    self?.error = ErrorHelper.categorize(error)
+                }
+            }, receiveValue: { value in
+                
+            })
+            .store(in: &cancellables)
+
+    }
+    func toggleAlarm(menuId:Int){
+        if isAlarmOn(menuId: menuId){
+            turnOffAlarm(menuId: menuId)
+        }
+        else{
+            turnOnAlarm(menuId: menuId)
+        }
+    }
+    private func enableAlarm(){
+        UserDefaults.standard.set(true, forKey: "isAlarmEnabled")
+        withAnimation(.easeOut(duration: 0.3)) {
+            self.isAlarmEnabled = true
+        }
+    }
+    private func disableAlarm(){
+        myLikedMenuRepository.offAlarmAll()
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { [weak self] completionStatus in
+                switch completionStatus {
+                case .finished:
+                    UserDefaults.standard.set(false,forKey: "isAlarmEnabled")
+                    withAnimation(.easeOut(duration: 0.3)) {
+                        self?.isAlarmEnabled = false
+                    }
+                case .failure(let error):
+                    self?.error = ErrorHelper.categorize(error)
+                }
+            }, receiveValue: { value in
+                
+            })
+            .store(in: &cancellables)
+
+    }
+    func toggleAlarmEnabled(){
+        
+        if isAlarmEnabled{
+            disableAlarm()
+        }
+        else{
+            enableAlarm()
+        }
     }
 }

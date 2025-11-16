@@ -8,14 +8,14 @@
 import SwiftUI
 
 struct AlarmRestaurantCell: View {
-    @State var isChecked: [Bool]
+    @ObservedObject var viewModel: MyLikedMenuViewModel
     var restaurantName:String
     var menus:[MyLikedMenu]
     
-    init(restaurantName: String, menus: [MyLikedMenu]) {
+    init(viewModel:MyLikedMenuViewModel,restaurantName: String, menus: [MyLikedMenu]) {
+        self.viewModel = viewModel
         self.restaurantName = restaurantName
         self.menus = menus
-        isChecked = Array(repeating: false, count: menus.count)
     }
     var body: some View {
         VStack(alignment:.leading,spacing:0){
@@ -36,11 +36,11 @@ struct AlarmRestaurantCell: View {
                         .foregroundStyle(Color.blackColor)
                         .customFont(font: .text15(weight: .Regular))
                     Spacer()
-                    Image(isChecked[index] ?"alarm-checked" : "alarm-unchecked")
+                    Image(menu.alarm ?"alarm-checked" : "alarm-unchecked")
                         .resizable()
                         .frame(width:20,height:20)
                         .onTapGesture {
-                            isChecked[index].toggle()
+                            viewModel.toggleAlarm(menuId: menu.id)
                         }
                     
                 }
@@ -58,6 +58,3 @@ struct AlarmRestaurantCell: View {
     }
 }
 
-#Preview {
-    AlarmRestaurantCell(restaurantName: "학생회관 식당", menus: [])
-}

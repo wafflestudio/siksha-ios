@@ -369,10 +369,6 @@ enum SikshaAPI: URLRequestConvertible {
         case let .deleteUserDevice(fcmToken):
             return ["fcm_token" : fcmToken]
         
-        case let .alarmOn(menuId: menuId):
-            return ["menu_id":menuId]
-        case let .alarmOff(menuId: menuId):
-            return ["menu_id":menuId]
 
         default:
             return nil

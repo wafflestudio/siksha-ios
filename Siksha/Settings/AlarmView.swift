@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+
 var SAMPLE_ALARM_MENU = [
     AlarmMenu(id:0,restaurant: "학생회관식당", menus: ["콩나물밥 & 부추양념", "돌솥부대찌개"]),
     AlarmMenu(id:1,restaurant: "학생회관식당", menus: ["콩나물밥 & 부추양념", "돌솥부대찌개"])
@@ -17,8 +18,7 @@ struct AlarmMenu:Hashable{
     var menus:[String]
 }
 struct AlarmView: View {
-    @State var isAlarmOn = false
-    var restaurants:[MyLikedRestaurant]
+    @ObservedObject var viewModel:MyLikedMenuViewModel
     @Environment(\.presentationMode) var presentationMode:
         Binding<PresentationMode>
     var backButton: some View {
@@ -39,10 +39,13 @@ struct AlarmView: View {
                     .foregroundStyle(Color.blackColor)
                     .customFont(font: .text15(weight: .Regular))
                 Spacer()
-                Toggle(isOn:$isAlarmOn){
+                Toggle(isOn:$viewModel.isAlarmEnabled){
                     EmptyView()
                 }
-                    .toggleStyle(AlarmSwitchStyle())
+                .toggleStyle(AlarmSwitchStyle())
+                .onTapGesture {
+                        viewModel.toggleAlarmEnabled()
+                }
 
             }
             Spacer()
@@ -78,8 +81,8 @@ struct AlarmView: View {
                     alarmSettingsView
                     Spacer()
                         .frame(height:20)
-                    if isAlarmOn{
-                        if restaurants.isEmpty{
+                    if viewModel.isAlarmEnabled{
+                        if viewModel.myLikedRestaurants.isEmpty{
                                 Text("내가 찜한 메뉴가 없어요")
                                     .foregroundStyle(Color.gray600)
                                     .customFont(font: .text15(weight: .Bold))
@@ -94,9 +97,9 @@ struct AlarmView: View {
                                 .customFont(font: .text14(weight: .Bold))
                                 .padding(EdgeInsets(top: 0, leading: 14, bottom: 8, trailing: 0))
                             
-                            ForEach(restaurants,id:\.self){
+                            ForEach(viewModel.myLikedRestaurants,id:\.self){
                                 restaurant in
-                                AlarmRestaurantCell(restaurantName: restaurant.name, menus: restaurant.menus)
+                                AlarmRestaurantCell(viewModel:viewModel,restaurantName: restaurant.name, menus: restaurant.menus)
                                 Spacer()
                                     .frame(height:12)
                             }
@@ -110,7 +113,7 @@ struct AlarmView: View {
             .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 17))
                 .customNavigationBar(title: "메뉴 알림 설정")
                 .navigationBarItems(leading: backButton)
-                .onChange(of: isAlarmOn, perform: {  isAlarmOn in
+                .onChange(of: viewModel.isAlarmEnabled, perform: {  isAlarmOn in
                     if isAlarmOn{
                         AppDelegate.requestNotificationPermission()
                     }
@@ -120,6 +123,4 @@ struct AlarmView: View {
        
     }
 
-#Preview {
-    AlarmView(restaurants:[])
-}
+

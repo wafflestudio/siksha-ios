@@ -45,6 +45,9 @@ protocol MyLikedMenuRepositoryProtocol{
     func likeMenu(menuId: Int) -> AnyPublisher<Void, AppError>
     func unlikeMenu(menuId: Int) -> AnyPublisher<Void, AppError>
     func getMyLikedMenu() -> AnyPublisher<MyLikedMenuResponse,AppError>
+    func onAlarm(menuId:Int)->AnyPublisher<MyLikedMenu,AppError>
+    func offAlarm(menuId:Int)->AnyPublisher<MyLikedMenu,AppError>
+    func offAlarmAll()->AnyPublisher<Void,AppError>
 }
 
 protocol AuthRepositoryProtocol{
