@@ -170,3 +170,7 @@ enum FontType{
         }
     }
 }
+enum AlarmTime:String{
+    case DAILY = "DAILY"
+    case EVERY_MEAL = "EVERY_MEAL"
+}

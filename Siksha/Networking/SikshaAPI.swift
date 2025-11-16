@@ -94,6 +94,7 @@ enum SikshaAPI: URLRequestConvertible {
     case alarmOn(menuId:Int)
     case alarmOff(menuId:Int)
     case alarmOffAll
+    case alarmTime(alarmTime:String)
     static var baseURL = Config.shared.baseURL
     
     var needToken: Bool {
@@ -119,6 +120,8 @@ enum SikshaAPI: URLRequestConvertible {
         case .unlikeMenu:
             return true
         case .getMyLikedMenu:
+            return true
+        case .alarmTime:
             return true
         default:
             return true
@@ -223,6 +226,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .alarmOffAll:
             return .post
+        case .alarmTime:
+            return .post
         }
     }
 
@@ -314,7 +319,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/menus/\(menuId)/alarm/off"
         case .alarmOffAll:
             return "/menus/alarm/off"
-
+        case .alarmTime:
+            return "/auth/alarm"
         }
     }
     
@@ -369,7 +375,8 @@ enum SikshaAPI: URLRequestConvertible {
         case let .deleteUserDevice(fcmToken):
             return ["fcm_token" : fcmToken]
         
-
+        case let .alarmTime(alarmTime):
+            return ["type":alarmTime]
         default:
             return nil
         }
