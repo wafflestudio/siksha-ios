@@ -11,7 +11,7 @@ struct AlarmTimeView: View {
     
     @Environment(\.presentationMode) var presentationMode:
         Binding<PresentationMode>
-    @State var isMorning = true
+    @ObservedObject var viewModel: MyLikedMenuViewModel
     var backButton: some View {
         Button(action: {
             ContentViewModel.contentViewModel.showPopUp = false
@@ -30,14 +30,16 @@ struct AlarmTimeView: View {
                     .foregroundStyle(Color.blackColor)
                     .customFont(font: .text15(weight: .Regular))
                 Spacer()
-                if isMorning{
+                if viewModel.alarmTime == .DAILY{
                     Image("alarm-time-check")
                 }
            
             }
             .background(Color.backgroundSecondary) // for wider touch area
             .onTapGesture {
-                isMorning = true
+                if viewModel.alarmTime == .EVERY_MEAL{
+                    viewModel.toggleAlarmTime()
+                }
             }
             Spacer()
                 .frame(height:10)
@@ -50,7 +52,7 @@ struct AlarmTimeView: View {
                     .foregroundStyle(Color.blackColor)
                     .customFont(font: .text15(weight: .Regular))
                 Spacer()
-                if !isMorning{
+                if viewModel.alarmTime == .EVERY_MEAL{
                     Image("alarm-time-check")
                 }
 
@@ -58,8 +60,9 @@ struct AlarmTimeView: View {
             .background(Color.backgroundSecondary)
 
             .onTapGesture {
-                isMorning = false
-            }
+                if viewModel.alarmTime == .DAILY{
+                    viewModel.toggleAlarmTime()
+                }            }
 
         }
         .padding(EdgeInsets(top: 10, leading: 14, bottom: 10, trailing: 14))
@@ -87,6 +90,3 @@ struct AlarmTimeView: View {
     }
 }
 
-#Preview {
-    AlarmTimeView()
-}

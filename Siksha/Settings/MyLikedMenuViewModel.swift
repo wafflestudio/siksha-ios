@@ -16,7 +16,7 @@ class MyLikedMenuViewModel: ObservableObject{
     @Published var error: AppError?
     @Published var isAlarmEnabled = UserDefaults.standard.bool(forKey: "isAlarmEnabled")
     @Published  var myLikedRestaurants: [MyLikedRestaurant] = []
-    
+    @Published var alarmTime:AlarmTime = .DAILY
     init(myLikedMenuRepository: MyLikedMenuRepositoryProtocol) {
         self.myLikedMenuRepository = myLikedMenuRepository
         loadMyLikedMenu()
@@ -208,5 +208,23 @@ class MyLikedMenuViewModel: ObservableObject{
         else{
             enableAlarm()
         }
+    }
+    func toggleAlarmTime(){
+        let next_alarm_time =   alarmTime == AlarmTime.EVERY_MEAL ? AlarmTime.DAILY : AlarmTime.EVERY_MEAL
+        myLikedMenuRepository.postAlarmTime(type: next_alarm_time )
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { [weak self] completionStatus in
+                switch completionStatus {
+                case .finished:
+                    self?.alarmTime = next_alarm_time
+ 
+                case .failure(let error):
+                    self?.error = ErrorHelper.categorize(error)
+                }
+            }, receiveValue: { value in
+                
+            })
+            .store(in: &cancellables)
+
     }
 }

@@ -54,7 +54,7 @@ struct AlarmView: View {
                 .frame(height:1)
             Spacer()
                 .frame(height:13.5)
-            NavigationLink(destination: AlarmTimeView()){
+            NavigationLink(destination: AlarmTimeView(viewModel:viewModel)){
                 HStack(alignment:.center){
                     Text("메뉴 알림 설정")
                         .foregroundStyle(Color.blackColor)
