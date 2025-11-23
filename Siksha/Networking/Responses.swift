@@ -49,3 +49,22 @@ struct MyLikedMenuResponse: Codable{
         case restaurants = "result"
     }
 }
+
+struct AlarmResponse: Codable{
+    var id: Int = 0
+    var nameKr: String = ""
+    var nameEn: String? = ""
+    var price: Int?
+    var isLiked: Bool = false
+    var etc: [String] = []
+    var alarm = false
+    enum CodingKeys: String, CodingKey {
+        case id = "id"
+        case nameKr = "name_kr"
+        case nameEn = "name_en"
+        case price = "price"
+        case isLiked = "is_liked"
+        case alarm = "alarm"
+        case etc = "etc"
+    }
+}
