@@ -49,6 +49,33 @@ class Networking {
         let request = AF.request(SikshaAPI.unlikeMenu(menuId: menuId))
         return request.validate().publishDecodable(type:MenuIdResponse.self,decoder: JSONDecoder())
     }
+    
+    func likeReview(reviewId: Int)->AnyPublisher<Void, AppError>{
+        let request = AF.request(SikshaAPI.likeReview(reviewId: reviewId))
+        return request
+            .validate()
+            .publishData(emptyResponseCodes: [204])
+            .tryMap { response in
+                if let error = response.error {
+                    throw error
+                }
+                return ()
+            }
+            .mapError({ error in
+                if let afError = error as? AFError {
+                    return .serverError("\(afError.responseCode ?? 0)", afError.localizedDescription)
+                }
+                return .unknownError("unknown error occurred")
+            })
+            .eraseToAnyPublisher()
+    }
+    
+    func unlikeReview(reviewId: Int)->DataResponsePublisher<Data>{
+        let request = AF.request(SikshaAPI.unlikeReview(reviewId: reviewId))
+        return request
+            .validate(statusCode: 200..<300)
+            .publishData(emptyResponseCodes: [204])
+    }
     func getRestaurants() -> DataResponsePublisher<Data> {
         let request = AF.request(SikshaAPI.getRestaurants)
         
@@ -59,6 +86,7 @@ class Networking {
         let request = AF.request(SikshaAPI.getReviews(menuId: menuId, page: page, perPage: perPage))
         
         let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         decoder.dateDecodingStrategy = .formatted(formatter)
@@ -69,6 +97,14 @@ class Networking {
         let request = AF.request(SikshaAPI.getScoreDistribution(menuId: menuId))
         
         return request.validate().publishDecodable(type: ScoreDistributionResponse.self)
+    }
+    
+    func getKeywordDistribution(menuId: Int) -> DataResponsePublisher<KeywordDistributionResponse> {
+        let request = AF.request(SikshaAPI.getKeywordDistribution(menuId: menuId))
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        
+        return request.validate().publishDecodable(type: KeywordDistributionResponse.self, decoder: decoder)
     }
     
     func getCommentRecommendation(score: Int) -> DataResponsePublisher<CommentRecommendationResponse> {

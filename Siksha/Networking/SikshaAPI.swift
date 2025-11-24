@@ -52,12 +52,15 @@ enum SikshaAPI: URLRequestConvertible {
     case refreshAccessToken(token: String)
     case getMenus(startDate: String, endDate: String, noMenuHide: Bool)
     case getMenuFromId(menuId: Int)
-    case likeMenu(menuId:Int)
-    case unlikeMenu(menuId:Int)
+    case likeMenu(menuId: Int)
+    case unlikeMenu(menuId: Int)
+    case likeReview(reviewId: Int)
+    case unlikeReview(reviewId: Int)
     case getFestivalDates
     case getRestaurants
     case getReviews(menuId: Int, page: Int, perPage: Int)
     case getScoreDistribution(menuId: Int)
+    case getKeywordDistribution(menuId: Int)
     case getCommentRecommendation(score: Int)
     case submitReview(menuId: Int, score: Double, comment: String, taste: String, price: String, foodComposition: String)
     case submitReviewImages(menuId: Int, score: Double, comment: String, taste: String, price: String, foodComposition: String, images: [Data])
@@ -105,14 +108,12 @@ enum SikshaAPI: URLRequestConvertible {
         case .getRestaurants:
             return false
         case .getReviews:
-            return false
+            return true
         case .getScoreDistribution:
             return false
         case .getCommentRecommendation:
             return false
-        case .likeMenu:
-            return true
-        case .unlikeMenu:
+        case .likeMenu, .unlikeMenu, .likeReview, .unlikeReview:
             return true
         default:
             return true
@@ -144,7 +145,7 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .getReviews:
             return .get
-        case .getScoreDistribution:
+        case .getScoreDistribution, .getKeywordDistribution:
             return .get
         case .getCommentRecommendation:
             return .get
@@ -156,6 +157,10 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .unlikeMenu:
             return .post
+        case .likeReview:
+            return .post
+        case .unlikeReview:
+            return .delete
         case .getReviewImages:
             return .get
         case .getUserInfo:
@@ -222,6 +227,10 @@ enum SikshaAPI: URLRequestConvertible {
             return "/menus/\(menuId)/like"
         case let .unlikeMenu(menuId):
             return "/menus/\(menuId)/unlike"
+        case let .likeReview(reviewId):
+            return "/reviews/\(reviewId)/like"
+        case let .unlikeReview(reviewId):
+            return "/reviews/\(reviewId)/like"
         case .getFestivalDates:
             return "/menus/festival/dates"
         case .getRestaurants:
@@ -230,6 +239,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/reviews"
         case .getScoreDistribution:
             return "/reviews/dist"
+        case .getKeywordDistribution:
+            return "/reviews/keyword/dist"
         case .getCommentRecommendation:
             return "/reviews/comments/recommendation"
         case .submitReview:
@@ -292,15 +303,17 @@ enum SikshaAPI: URLRequestConvertible {
         case let .getMenus(startDate, endDate, noMenuHide):
             return ["start_date": startDate, "end_date": endDate, "except_empty": noMenuHide]
         case let .getReviews(menuId, page, perPage):
-            return ["menu_id": menuId, "is_private": true, "page": page, "size": perPage]
+            return ["menu_id": menuId, "page": page, "size": perPage]
         case let .getScoreDistribution(menuId):
+            return ["menu_id": menuId]
+        case let .getKeywordDistribution(menuId):
             return ["menu_id": menuId]
         case let .getCommentRecommendation(score):
             return ["score": score]
         case let .submitReview(menuId, score, comment, taste, price, foodComposition):
-            return ["menu_id": menuId, "score": score, "comment": comment, "taste": taste, "price": price, "foodComposition": foodComposition]
+            return ["menu_id": menuId, "score": score, "comment": comment, "taste": taste, "price": price, "food_composition": foodComposition]
         case let .getReviewImages(menuId, page, perPage, comment, etc):
-            return ["menu_id": menuId, "page": page, "size": perPage, "comment": comment, "etc": etc, "is_private": true]
+            return ["menu_id": menuId, "page": page, "size": perPage, "comment": comment, "image": etc]
         case let .submitVOC(comment, platform):
             return ["voc": comment, "platform": platform]
         case let .getPosts(boardId, page, perPage):
@@ -360,9 +373,9 @@ enum SikshaAPI: URLRequestConvertible {
             data.append("\(menuId)".data(using: .utf8)!, withName: "menu_id", mimeType: "text/plain")
             data.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
             data.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain")
-//            data.append(taste.data(using: .utf8)!, withName: "taste", mimeType: "text/plain")
-//            data.append(price.data(using: .utf8)!, withName: "price", mimeType: "text/plain")
-//            data.append(foodComposition.data(using: .utf8)!, withName: "foodComposition", mimeType: "text/plain")
+            data.append(taste.data(using: .utf8)!, withName: "taste", mimeType: "text/plain")
+            data.append(price.data(using: .utf8)!, withName: "price", mimeType: "text/plain")
+            data.append(foodComposition.data(using: .utf8)!, withName: "food_composition", mimeType: "text/plain")
             for (index, image) in images.enumerated() {
                 data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }

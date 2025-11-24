@@ -11,9 +11,11 @@
 		07491E412E51BFBF00889C67 /* MixpanelAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */; };
 		07491E432E51C00500889C67 /* AnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E422E51C00500889C67 /* AnalyticsEvent.swift */; };
 		07491E452E51C02D00889C67 /* AnalyticsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E442E51C02D00889C67 /* AnalyticsKey.swift */; };
+		0749F82F2EB20ED600FC2C7E /* ReviewRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0749F82E2EB20ED600FC2C7E /* ReviewRowViewModel.swift */; };
+		0749F8332EB349B300FC2C7E /* ReviewKeywordSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0749F8322EB349B300FC2C7E /* ReviewKeywordSummary.swift */; };
 		07CD061B2EA4B40500CCC4B7 /* PhotoAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */; };
 		07CD061D2EA4B45800CCC4B7 /* KeywordSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */; };
-		07D241B62E769A7500B56593 /* KeywordReivewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241B52E769A7500B56593 /* KeywordReivewView.swift */; };
+		07D241B62E769A7500B56593 /* ReviewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241B52E769A7500B56593 /* ReviewRow.swift */; };
 		07D241C82E94AFB300B56593 /* StarUnitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241C72E94AFB300B56593 /* StarUnitView.swift */; };
 		07D241CA2E94AFF300B56593 /* StarRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241C92E94AFF300B56593 /* StarRateView.swift */; };
 		07D241CC2E94B1CD00B56593 /* KeywordRateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */; };
@@ -202,9 +204,11 @@
 		07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixpanelAnalytics.swift; sourceTree = "<group>"; };
 		07491E422E51C00500889C67 /* AnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEvent.swift; sourceTree = "<group>"; };
 		07491E442E51C02D00889C67 /* AnalyticsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsKey.swift; sourceTree = "<group>"; };
+		0749F82E2EB20ED600FC2C7E /* ReviewRowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRowViewModel.swift; sourceTree = "<group>"; };
+		0749F8322EB349B300FC2C7E /* ReviewKeywordSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewKeywordSummary.swift; sourceTree = "<group>"; };
 		07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAddView.swift; sourceTree = "<group>"; };
 		07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSelectionView.swift; sourceTree = "<group>"; };
-		07D241B52E769A7500B56593 /* KeywordReivewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordReivewView.swift; sourceTree = "<group>"; };
+		07D241B52E769A7500B56593 /* ReviewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRow.swift; sourceTree = "<group>"; };
 		07D241C72E94AFB300B56593 /* StarUnitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarUnitView.swift; sourceTree = "<group>"; };
 		07D241C92E94AFF300B56593 /* StarRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarRateView.swift; sourceTree = "<group>"; };
 		07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordRateType.swift; sourceTree = "<group>"; };
@@ -404,11 +408,12 @@
 		07D241B42E769A6300B56593 /* KeywordReview */ = {
 			isa = PBXGroup;
 			children = (
-				07D241B52E769A7500B56593 /* KeywordReivewView.swift */,
+				07D241B52E769A7500B56593 /* ReviewRow.swift */,
 				07D241C72E94AFB300B56593 /* StarUnitView.swift */,
 				07D241C92E94AFF300B56593 /* StarRateView.swift */,
 				07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */,
 				07D241CD2E94B1E200B56593 /* KeywordRateRow.swift */,
+				0749F82E2EB20ED600FC2C7E /* ReviewRowViewModel.swift */,
 			);
 			path = KeywordReview;
 			sourceTree = "<group>";
@@ -552,6 +557,7 @@
 				BF97DF5C2AB836910083FC6F /* Community.swift */,
 				4E6465112B1D8EEB00A4ABAD /* User.swift */,
 				A615B4DB2D86AAA60095865F /* MenuFilters.swift */,
+				0749F8322EB349B300FC2C7E /* ReviewKeywordSummary.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -984,7 +990,7 @@
 				4E51987D2DDA2FD300F85388 /* Font.swift in Sources */,
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
 				07D241D02E96074600B56593 /* Double+roundedToHalf.swift in Sources */,
-				07D241B62E769A7500B56593 /* KeywordReivewView.swift in Sources */,
+				07D241B62E769A7500B56593 /* ReviewRow.swift in Sources */,
 				07CD061D2EA4B45800CCC4B7 /* KeywordSelectionView.swift in Sources */,
 				BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
@@ -999,6 +1005,7 @@
 				BF97DF572AAF00780083FC6F /* Repository.swift in Sources */,
 				07CD061B2EA4B40500CCC4B7 /* PhotoAddView.swift in Sources */,
 				BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */,
+				0749F82F2EB20ED600FC2C7E /* ReviewRowViewModel.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
 				07D241CC2E94B1CD00B56593 /* KeywordRateType.swift in Sources */,
 				4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */,
@@ -1020,6 +1027,7 @@
 				BF97DF5B2AAF12200083FC6F /* AlamofireNetworking.swift in Sources */,
 				A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */,
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
+				0749F8332EB349B300FC2C7E /* ReviewKeywordSummary.swift in Sources */,
 				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
 				C091FEE62C314F9600D48F92 /* RenewalSettingsView.swift in Sources */,
 				BF97DF592AAF00B30083FC6F /* DomainManager.swift in Sources */,

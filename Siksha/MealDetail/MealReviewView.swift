@@ -21,7 +21,6 @@ struct MealReviewView: View {
     @ObservedObject var mealInfoViewModel: MealInfoViewModel
     
     @State private var isShowingPhotoLibrary = false
-    @State private var addedImages = [UIImage]()
     
     let meal: Meal
     
@@ -60,7 +59,7 @@ struct MealReviewView: View {
                     VStack(spacing: 22) {
                         KeywordSelectionView(type: .taste, viewModel: viewModel)
                         KeywordSelectionView(type: .price, viewModel: viewModel)
-                        KeywordSelectionView(type: .yang, viewModel: viewModel)
+                        KeywordSelectionView(type: .composition, viewModel: viewModel)
                     }
                 }
                 .padding(.horizontal, 16)
@@ -211,11 +210,10 @@ private extension MealReviewView {
     
     var submitButton: some View {
         Button(action: {
-            if addedImages.count > 0 {
-                viewModel.submitReviewImages(images: addedImages)
+            if viewModel.selectedImages.count > 0 {
+                viewModel.submitReviewImages(images: viewModel.selectedImages)
             } else {
                 viewModel.submitReview()
-
             }
         }) {
             ZStack(alignment: .top) {

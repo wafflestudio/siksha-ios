@@ -39,12 +39,13 @@ struct ReviewListView: View {
             VStack(spacing: 32) {
                 if showOnlyImageReviews {
                     ForEach(0..<10) { _ in
-                        ReviewRow(showImage: true)
+//                        ReviewRow(showImage: true)
                     }
                 } else {
-                    ReviewRow(showImage: true)
+//                    ReviewRow(showImage: true)
                     ForEach(0..<10) { _ in
-                        ReviewRow(showImage: false)
+                        // TODO: 진짜 데이터 넣고 environmentObject도 넣어줘!
+//                        ReviewRow(showImage: false)
                     }
                 }
                 

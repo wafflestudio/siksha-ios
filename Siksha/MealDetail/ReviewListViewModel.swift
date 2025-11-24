@@ -60,7 +60,7 @@ public class ReviewListViewModel: ObservableObject {
                 self.currentPage += 1
                 self.getReviewStatus = .succeeded
             })
-            .map(\.?.reviews)
+            .map(\.?.result)
             .replaceNil(with: [])
             .map { self.reviews + $0 }
             .assign(to: \.reviews, on: self)
@@ -87,7 +87,7 @@ public class ReviewListViewModel: ObservableObject {
                 self.currentPage += 1
                 self.getReviewStatus = .succeeded
             })
-            .map(\.?.reviews)
+            .map(\.?.result)
             .replaceNil(with: [])
             .map { self.reviews + $0 }
             .assign(to: \.reviews, on: self)

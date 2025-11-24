@@ -8,49 +8,42 @@
 import SwiftUI
 
 struct KeywordRateRow: View {
-    var type: KeywordRateType
+    let summary: ReviewKeywordSummary
+    
+    @State private var barWidth: CGFloat = 0
     
     var body: some View {
         HStack(spacing: 0) {
-            Image(type.imageString)
+            Image(summary.type.imageString)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 21, height: 16.5)
                 .padding(.trailing, 6)
                 .padding(.leading, 18)
             
-            Text(type.description)
+            Text(summary.keyword.isEmpty ? summary.type.title : summary.keyword)
                 .customFont(font: .text13(weight: .Bold))
-                .foregroundStyle(Color.gray800)
+                .foregroundStyle(summary.keyword.isEmpty ? Color.gray600 : Color.gray800)
             
             Spacer()
             
-            Text("\(type.tempCnt)")
+            Text("\(summary.count)")
                 .customFont(font: .text14(weight: .ExtraBold))
                 .foregroundStyle(Color.orange500)
                 .padding(.trailing, 19)
         }
         .frame(height: 36)
         .frame(maxWidth: .infinity)
+        .measureWidth($barWidth)
         .background {
             ZStack(alignment: .leading) {
                 Color.gray100
                 
-                Group {
-                    if type == .price {
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.orangeTint)
-                            .frame(width: 106)
-                    } else if type == .yang {
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.orangeTint)
-                            .frame(width: 156)
-                    } else {
-                        Color.orangeTint
-                    }
+                if summary.total > 0 {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color.orangeTint)
+                        .frame(width: barWidth * CGFloat(summary.count) / CGFloat(summary.total))
                 }
-                .background{ Color.white }
-                .cornerRadius(8)
             }
         }
         .cornerRadius(8)

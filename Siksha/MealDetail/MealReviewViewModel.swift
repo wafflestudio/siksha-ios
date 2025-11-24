@@ -71,7 +71,7 @@ class MealReviewViewModel: ObservableObject {
         
         $scoreToSubmit
             .combineLatest($selectedKeywords)
-            .map { $0 > 0 && $1[KeywordRateType.taste]?.isEmpty == false && $1[KeywordRateType.yang]?.isEmpty == false && $1[KeywordRateType.price]?.isEmpty == false }
+            .map { $0 > 0 && $1[KeywordRateType.taste]?.isEmpty == false && $1[KeywordRateType.composition]?.isEmpty == false && $1[KeywordRateType.price]?.isEmpty == false }
             .assign(to: \.canSubmit, on: self)
             .store(in: &cancellables)
         
@@ -103,9 +103,9 @@ class MealReviewViewModel: ObservableObject {
             menuId: meal.id,
             score: scoreToSubmit,
             comment: commentToSubmit.count > 0 ? commentToSubmit : "",
-            taste: "또 먹고 싶어요",
-            price: "혜자스러워요",
-            foodComposition: "조화로워요"
+            taste: selectedKeywords[.taste] ?? "",
+            price: selectedKeywords[.price] ?? "",
+            foodComposition: selectedKeywords[.composition] ?? ""
         )
         .receive(on: RunLoop.main)
         .sink { [weak self] result in
@@ -149,9 +149,9 @@ class MealReviewViewModel: ObservableObject {
             menuId: meal.id,
             score: scoreToSubmit,
             comment: commentToSubmit.count > 0 ? commentToSubmit : "",
-            taste: "또 먹고 싶어요",
-            price: "혜자스러워요",
-            foodComposition: "조화로워요",
+            taste: selectedKeywords[.taste] ?? "",
+            price: selectedKeywords[.price] ?? "",
+            foodComposition: selectedKeywords[.composition] ?? "",
             images: imagesData)
         .receive(on: RunLoop.main)
         .sink { [weak self] result in

@@ -43,7 +43,7 @@ struct StarRateView: View {
                                         let starWidth = geo.size.width / CGFloat(5)
                                         
                                         let newRating = Double(tapLocation / starWidth)
-                                        let roundedRating = newRating.roundedToHalf()
+                                        let roundedRating = ceil(newRating)
                                         
                                         self.rate = max(0, min(Double(5), roundedRating))
                                     }
@@ -55,12 +55,14 @@ struct StarRateView: View {
     }
 }
 
+// 돈육고추장찌개 리뷰 하나있는데 이미지만 있어서인지 안보임 다시 확인
+
 private struct Preview: View {
     @State var score: Double = 0
     
     var body: some View {
-        StarRateView(rate: $score, spacing: 1)
-            .frame(height: 12)
+        StarRateView(rate: $score, spacing: 5)
+            .frame(height: 50)
     }
 }
 
