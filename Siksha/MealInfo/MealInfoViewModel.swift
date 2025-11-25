@@ -105,7 +105,7 @@ public class MealInfoViewModel: ObservableObject {
                     self.getReviewStatus = .failed
                     return
                 }
-                self.hasMorePages = (1 < (response.totalCount+4)/5)
+                self.hasMorePages = response.hasNext
                 self.getReviewStatus = .succeeded
             })
             .map(\.?.result)

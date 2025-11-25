@@ -9,7 +9,13 @@ import SwiftUI
 import Kingfisher
 
 struct ReviewRow: View {
-    @StateObject var viewModel: ReviewRowViewModel
+    @StateObject var viewModel:ReviewRowViewModel
+    @State var isImageExpanded: Bool = false
+    @State var tappedIndex: Int? = nil
+    
+    init(_ review: Review, showImage: Bool = true) {
+        self._viewModel = StateObject(wrappedValue: ReviewRowViewModel(review: review, showImage: showImage))
+    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -80,32 +86,40 @@ struct ReviewRow: View {
                 .padding(.leading, 30)
             }
             
-            // TODO: 이미지 보여주기!!!
-//            if viewModel.showImage {
-//                Spacer()
-//                    .frame(height: 8)
-//                
-//                ScrollView(.horizontal, showsIndicators: false) {
-//                    HStack(spacing: 4) {
-//                        ForEach(Array(tempImages.enumerated()), id: \.offset) { i, url in
-//                            KFImage(url)
-//                                .resizable()
-//                                .scaledToFill()
-//                                .frame(width: 102, height: 102)
-//                                .cornerRadius(8)
-//                                .onTapGesture { tappedIndex = i }
-//                        }
-//                    }
-//                }
-//                .padding(.leading, 30)
-//                .onChange(of: tappedIndex) { index in
-//                    isImageExpanded = true
-//                }
-//                .fullScreenCover(isPresented: $isImageExpanded) {
-//                    ImageViewer(imageURLs: tempImages, initialIndex: tappedIndex)
-//                }
-//            }
+            if viewModel.showImage {
+                Spacer()
+                    .frame(height: 8)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 4) {
+                        ForEach(Array(viewModel.imageUrlString.enumerated()), id: \.offset) { i, url in
+                            KFImage(URL(string: url))
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 102, height: 102)
+                                .cornerRadius(8)
+                                .onTapGesture { tappedIndex = i }
+                        }
+                    }
+                }
+                .padding(.leading, 30)
+                .onChange(of: tappedIndex) { index in
+                    guard tappedIndex != nil else { return }
+                    isImageExpanded = true
+                }
+                .fullScreenCover(isPresented: $isImageExpanded) {
+                    ImageViewer(
+                        imageURLs: viewModel.imageUrlString
+                            .filter { !$0.isEmpty}
+                            .map { URL(string: $0)! },
+                        initialIndex: tappedIndex ?? 0)
+                    .onAppear {
+                        tappedIndex = nil
+                    }
+                }
+            }
         }
+        .modifier(ErrorAlert(error: $viewModel.error))
     }
 }
 

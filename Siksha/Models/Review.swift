@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct Review: Codable {
+struct Review: Codable, Hashable {
     var id: Int
     var menuId: Int
     var userId: Int

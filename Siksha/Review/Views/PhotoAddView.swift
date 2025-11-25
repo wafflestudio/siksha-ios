@@ -30,7 +30,6 @@ struct PhotoAddView: View {
                     }
                     .padding(.top, 6)
                     .padding(.trailing, 5)
-                    
                 }
                     ForEach(viewModel.selectedImages, id: \.self) { image in
                         ZStack(alignment: .topTrailing) {

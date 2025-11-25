@@ -15,7 +15,8 @@
 		0749F8332EB349B300FC2C7E /* ReviewKeywordSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0749F8322EB349B300FC2C7E /* ReviewKeywordSummary.swift */; };
 		075E0ADE2ED55F11009E95BA /* MenuHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075E0ADD2ED55F11009E95BA /* MenuHeaderView.swift */; };
 		075E0AE02ED55F5A009E95BA /* KeywordSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075E0ADF2ED55F5A009E95BA /* KeywordSectionView.swift */; };
-		075E0AE22ED56B0F009E95BA /* PhotoReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075E0AE12ED56B0F009E95BA /* PhotoReviewView.swift */; };
+		075E0AE22ED56B0F009E95BA /* PhotoReviewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075E0AE12ED56B0F009E95BA /* PhotoReviewSection.swift */; };
+		075E0AE42ED57DD7009E95BA /* ReviewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075E0AE32ED57DD7009E95BA /* ReviewSection.swift */; };
 		07CD061B2EA4B40500CCC4B7 /* PhotoAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */; };
 		07CD061D2EA4B45800CCC4B7 /* KeywordSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */; };
 		07D241B62E769A7500B56593 /* ReviewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241B52E769A7500B56593 /* ReviewRow.swift */; };
@@ -211,7 +212,8 @@
 		0749F8322EB349B300FC2C7E /* ReviewKeywordSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewKeywordSummary.swift; sourceTree = "<group>"; };
 		075E0ADD2ED55F11009E95BA /* MenuHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuHeaderView.swift; sourceTree = "<group>"; };
 		075E0ADF2ED55F5A009E95BA /* KeywordSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSectionView.swift; sourceTree = "<group>"; };
-		075E0AE12ED56B0F009E95BA /* PhotoReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoReviewView.swift; sourceTree = "<group>"; };
+		075E0AE12ED56B0F009E95BA /* PhotoReviewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoReviewSection.swift; sourceTree = "<group>"; };
+		075E0AE32ED57DD7009E95BA /* ReviewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewSection.swift; sourceTree = "<group>"; };
 		07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAddView.swift; sourceTree = "<group>"; };
 		07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSelectionView.swift; sourceTree = "<group>"; };
 		07D241B52E769A7500B56593 /* ReviewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRow.swift; sourceTree = "<group>"; };
@@ -411,17 +413,40 @@
 			path = Analytics;
 			sourceTree = "<group>";
 		};
-		07D241B42E769A6300B56593 /* KeywordReview */ = {
+		075E0AE52ED581B9009E95BA /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				07D241B52E769A7500B56593 /* ReviewRow.swift */,
-				07D241C72E94AFB300B56593 /* StarUnitView.swift */,
-				07D241C92E94AFF300B56593 /* StarRateView.swift */,
-				07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */,
+				071E87832EA637C4002B0BE0 /* ImageViewer.swift */,
+				075E0AE32ED57DD7009E95BA /* ReviewSection.swift */,
+				075E0AE12ED56B0F009E95BA /* PhotoReviewSection.swift */,
 				07D241CD2E94B1E200B56593 /* KeywordRateRow.swift */,
+				07D241B52E769A7500B56593 /* ReviewRow.swift */,
 				0749F82E2EB20ED600FC2C7E /* ReviewRowViewModel.swift */,
 			);
-			path = KeywordReview;
+			path = Views;
+			sourceTree = "<group>";
+		};
+		075E0AE62ED581CF009E95BA /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				075E0AE72ED581EF009E95BA /* Views */,
+				1ED44A3625CC6094001D916B /* MealReviewView.swift */,
+				1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */,
+			);
+			path = Review;
+			sourceTree = "<group>";
+		};
+		075E0AE72ED581EF009E95BA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */,
+				075E0ADD2ED55F11009E95BA /* MenuHeaderView.swift */,
+				075E0ADF2ED55F5A009E95BA /* KeywordSectionView.swift */,
+				07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */,
+				07D241C72E94AFB300B56593 /* StarUnitView.swift */,
+				07D241C92E94AFF300B56593 /* StarRateView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		1E3A56DE25C6FCE600DBB3F4 = {
@@ -448,7 +473,7 @@
 		1E3A56E925C6FCE600DBB3F4 /* Siksha */ = {
 			isa = PBXGroup;
 			children = (
-				07D241B42E769A6300B56593 /* KeywordReview */,
+				075E0AE62ED581CF009E95BA /* Review */,
 				07491E3F2E51BF8900889C67 /* Analytics */,
 				4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */,
 				4E23C5A72D17E1DD0088C1F6 /* ErrorHelper.swift */,
@@ -465,7 +490,7 @@
 				1E96F95025E2525B0074940C /* LoginView.swift */,
 				1ECB248025F14C0F00875E18 /* LoginViewModel.swift */,
 				231C9C9425F82EA80072C07A /* RestaurantInfo */,
-				1ECB254525F2970C00875E18 /* MealDetail */,
+				1ECB254525F2970C00875E18 /* MealInfo */,
 				1E3A572825C6FDC000DBB3F4 /* Main */,
 				1E3A572F25C6FDEC00DBB3F4 /* Settings */,
 				1E3A573825C6FE1600DBB3F4 /* Library */,
@@ -564,6 +589,7 @@
 				4E6465112B1D8EEB00A4ABAD /* User.swift */,
 				A615B4DB2D86AAA60095865F /* MenuFilters.swift */,
 				0749F8322EB349B300FC2C7E /* ReviewKeywordSummary.swift */,
+				07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -660,23 +686,16 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1ECB254525F2970C00875E18 /* MealDetail */ = {
+		1ECB254525F2970C00875E18 /* MealInfo */ = {
 			isa = PBXGroup;
 			children = (
+				075E0AE52ED581B9009E95BA /* Views */,
 				1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */,
 				1ECB254C25F2975A00875E18 /* MealInfoView.swift */,
-				1ED44A3625CC6094001D916B /* MealReviewView.swift */,
-				1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */,
 				231DEB3A266BC5C900AA32C0 /* ReviewListViewModel.swift */,
 				2360CD992663778B007E02DB /* ReviewListView.swift */,
-				07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */,
-				07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */,
-				071E87832EA637C4002B0BE0 /* ImageViewer.swift */,
-				075E0ADD2ED55F11009E95BA /* MenuHeaderView.swift */,
-				075E0ADF2ED55F5A009E95BA /* KeywordSectionView.swift */,
-				075E0AE12ED56B0F009E95BA /* PhotoReviewView.swift */,
 			);
-			path = MealDetail;
+			path = MealInfo;
 			sourceTree = "<group>";
 		};
 		231C9C9425F82EA80072C07A /* RestaurantInfo */ = {
@@ -1055,7 +1074,7 @@
 				23DFD2172664CD400049F8D7 /* ThumbnailImage.swift in Sources */,
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
 				BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */,
-				075E0AE22ED56B0F009E95BA /* PhotoReviewView.swift in Sources */,
+				075E0AE22ED56B0F009E95BA /* PhotoReviewSection.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
 				07491E452E51C02D00889C67 /* AnalyticsKey.swift in Sources */,
 				4E6465122B1D8EEB00A4ABAD /* User.swift in Sources */,
@@ -1064,6 +1083,7 @@
 				1E7226F825FBDE72008C272E /* MealCell.swift in Sources */,
 				7418F4E72E2CBF6700C24A92 /* Color+SikshaColor.swift in Sources */,
 				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,
+				075E0AE42ED57DD7009E95BA /* ReviewSection.swift in Sources */,
 				4ED177EB2D33C39C00374D0C /* FilterItem.swift in Sources */,
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				23DFD2042664110B0049F8D7 /* RemoteImage.swift in Sources */,

@@ -22,7 +22,6 @@ struct StarRateView: View {
     }
     
     init(rate: Binding<Int>, spacing: CGFloat) {
-        // 내부에서는 옵셔널 바인딩으로 보관
         self._editableRate = Binding<Int?>(
             get: { rate.wrappedValue },
             set: { newValue in

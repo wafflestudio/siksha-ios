@@ -1,5 +1,5 @@
 //
-//  PhotoReviewView.swift
+//  PhotoReviewSection.swift
 //  Siksha
 //
 //  Created by Jihyeon on 11/25/25.
@@ -8,9 +8,10 @@
 import SwiftUI
 import Kingfisher
 
-struct PhotoReviewView: View {
+struct PhotoReviewSection: View {
     @ObservedObject var viewModel: MealInfoViewModel
     @State var isImageExpanded = false
+    @State var tappedImageUrlString: String? = nil
     
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -35,10 +36,19 @@ struct PhotoReviewView: View {
                 }
             }
         }
+        .onChange(of: tappedImageUrlString) {
+            guard $0 != nil else { return }
+            isImageExpanded = true
+        }
+        .fullScreenCover(isPresented: $isImageExpanded) {
+            if let urlString = tappedImageUrlString {
+                ImageViewer(imageURLs: [URL(string: urlString)!], showNumber: false)
+            }
+        }
     }
     
     private var moreImageReviewOverlay: some View {
-        NavigationLink(destination: ReviewListView(viewModel.meal, true)) {
+        NavigationLink(destination: ReviewListView(mealID: viewModel.meal.id, imageReviewOnly: true)) {
             ZStack {
                 RoundedRectangle(cornerRadius: 10)
                     .fill(Color.black.opacity(0.25))
@@ -66,10 +76,7 @@ struct PhotoReviewView: View {
             .frame(width: 120, height: 120)
             .cornerRadius(10)
             .onTapGesture {
-                isImageExpanded = true
-            }
-            .fullScreenCover(isPresented: $isImageExpanded) {
-                ImageViewer(imageURLs: [URL(string: urlString)!], showNumber: false)
+                tappedImageUrlString = urlString
             }
     }
     
@@ -79,7 +86,7 @@ struct PhotoReviewView: View {
                 .customFont(font: .text14(weight: .Bold))
                 .foregroundStyle(Color.blackColor)
             Spacer()
-            NavigationLink(destination: ReviewListView(Meal(), true)) {
+            NavigationLink(destination: ReviewListView(mealID: viewModel.meal.id, imageReviewOnly: true)) {
                 Image("Arrow")
                     .renderingMode(.template)
                     .resizable()

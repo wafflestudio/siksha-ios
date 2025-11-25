@@ -50,6 +50,7 @@ class ReviewRowViewModel: ObservableObject {
     @Published var isLiked: Bool
     @Published var isImageExpanded: Bool = false
     @Published var tappedIndex: Int = 0
+    @Published var error: AppError?
     
     init(review: Review, showImage: Bool) {
         self.review = review
@@ -70,8 +71,8 @@ class ReviewRowViewModel: ObservableObject {
                     self?.likeCount += 1
                     self?.getLikeStatus = .succeeded
                 case .failure(let error):
-                    // TODO: 상태에 맞는 dialog 보여주기
                     self?.getLikeStatus = .failed
+                    self?.error = error
                 }
             } receiveValue: { _ in }
             .store(in: &cancellables)
@@ -87,8 +88,8 @@ class ReviewRowViewModel: ObservableObject {
                     self?.likeCount -= 1
                     self?.getLikeStatus = .succeeded
                 case .failure(let error):
-                    // TODO: 상태에 맞는 dialog 보여주기
                     self?.getLikeStatus = .failed
+                    self?.error = error
                 }
             } receiveValue: { _ in }
             .store(in: &cancellables)

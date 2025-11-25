@@ -44,59 +44,6 @@ struct MealInfoView: View {
     }
 }
 
-private struct ReviewList: View {
-    @ObservedObject var viewModel: MealInfoViewModel
-    
-    var body: some View {
-        VStack(spacing: 21) {
-            titleLabel
-            
-            if viewModel.mealReviews.isEmpty {
-                Text("아직 작성된 리뷰가 없어요")
-                    .customFont(font: .text14(weight: .Bold))
-                    .foregroundStyle(Color.gray600)
-            } else {
-                VStack(spacing: 32) {
-                    ForEach(viewModel.mealReviews, id: \.id) { review in
-                        ReviewRow(viewModel: ReviewRowViewModel(review: review, showImage: false))
-                    }
-                }
-                
-                HStack {
-                    Spacer()
-                    
-                    //                if viewModel.hasMorePages {
-                    NavigationLink(destination: ReviewListView(Meal(), false)) {
-                        HStack(spacing: 11) {
-                            Text("리뷰 더보기")
-                                .foregroundStyle(Color.gray600)
-                                .customFont(font: .text12(weight: .Bold))
-                            
-                            Image("Arrow")
-                                .renderingMode(.template)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 5, height: 8)
-                                .foregroundStyle(Color.gray600)
-                        }
-                    }
-                    //                }
-                }
-            }
-        }
-    }
-    
-    var titleLabel: some View {
-        HStack(spacing: 0) {
-                Text("리뷰")
-                    .customFont(font: .text18(weight: .Bold))
-                    .foregroundColor(.blackColor)
-                
-                Spacer()
-        }
-    }
-}
-
 private extension MealInfoView {
     var heartSection: some View {
         VStack(spacing: 0) {
@@ -153,10 +100,10 @@ private extension MealInfoView {
     var reviewListSection: some View {
         VStack(spacing: 33) {
             if !viewModel.images.isEmpty {
-                PhotoReviewView(viewModel: viewModel)
+                PhotoReviewSection(viewModel: viewModel)
             }
             
-            ReviewList(viewModel: viewModel)
+            ReviewSection(viewModel: viewModel)
         }
         .padding(.top, 17)
         .padding(.horizontal, 16)
@@ -193,68 +140,6 @@ private extension MealInfoView {
             }
         }
     }
-    
-//    var pictureList: some View {
-//        ScrollView(.horizontal, showsIndicators: false) {
-//            HStack {
-//                ThumbnailImage(viewModel.images[0])
-//                if viewModel.images.count >= 2 {
-//                    ThumbnailImage(viewModel.images[1])
-//                }
-//                if viewModel.images.indices.contains(2) {
-//                    NavigationLink(
-//                        destination: ReviewListView(viewModel.meal, true),
-//                        label: {
-//                            ZStack {
-//                                RemoteImage(url: viewModel.images[2])
-//                                    .frame(width: 120, height: 120)
-//                                    .clipped()
-//                                
-//                                Text(viewModel.totalImageCount-3 > 0 ? "+\n\(viewModel.totalImageCount-3)건 더 보기" : "+\n더 보기")
-//                                    .foregroundColor(.whiteColor)
-//                                    .font(.custom("NanumSquareOTFB", size: 12))
-//                                    .multilineTextAlignment(.center)
-//                            }
-//                            .background(Color.backgroundPrimary)
-//                            .opacity(0.5)
-//                            .cornerRadius(8)
-//                        })
-//                }
-//                Spacer()
-//            }
-//        }
-//        .padding(.leading, 16)
-//    }
-    
-//    var reviewList: some View {
-//        VStack {
-//            ForEach(viewModel.mealReviews, id: \.id) { review in
-//                ReviewCell(review, false)
-//                    .padding(EdgeInsets(top: 12, leading: 8, bottom: 0, trailing: 0))
-//                    .listRowInsets(EdgeInsets())
-//                    .background(Color.backgroundPrimary)
-//            }
-//            if viewModel.hasMorePages {
-//                NavigationLink(destination: ReviewListView(viewModel.meal, false)) {
-//                    HStack(alignment: .center) {
-//                        Spacer()
-//                        
-//                        Text("리뷰 더 보기")
-//                            .font(.custom("NanumSquareOTFB", size: 13))
-//                            .foregroundColor(.gray600)
-//                        
-//                        Image("Arrow")
-//                            .resizable()
-//                            .frame(width: 7.5, height: 12)
-//                            .padding(.trailing, 8)
-//                            .padding(.bottom, 2)
-//                    }
-//                    .padding(EdgeInsets(top: 16, leading: 0, bottom: 10, trailing: 16))
-//                }
-//            }
-//        }
-//        .padding(.bottom, 30)
-//    }
     
     var backButton: some View {
         Button(action: {

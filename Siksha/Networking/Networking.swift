@@ -8,6 +8,7 @@
 import Foundation
 import Alamofire
 import Combine
+import SwiftyJSON
 
 class Networking {
     static let shared = Networking()
@@ -62,6 +63,40 @@ class Networking {
             .publishData(emptyResponseCodes: [204])
             .tryMap { response in
                 if let error = response.error {
+                    if let data = response.data,
+                       let message = try? JSON(data: data)["message"].stringValue {
+                        throw AppError.error(message)
+                    }
+                    switch error {
+                    case .responseSerializationFailed(let reason):
+                        if case .inputDataNilOrZeroLength = reason {
+                            return ()
+                        }
+                    default: break
+                    }
+                    throw error
+                }
+                return ()
+            }
+            .mapError({ error in
+                if let e = error as? AppError {
+                    return e
+                }
+                if let afError = error as? AFError {
+                    return .serverError("\(afError.responseCode ?? 0)", afError.localizedDescription)
+                }
+                return .unknownError("unknown error occurred")
+            })
+            .eraseToAnyPublisher()
+    }
+    
+    func unlikeReview(reviewId: Int)->AnyPublisher<Void, AppError>{
+        let request = AF.request(SikshaAPI.unlikeReview(reviewId: reviewId))
+        return request
+            .validate(statusCode: 200..<300)
+            .publishData(emptyResponseCodes: [204])
+            .tryMap { response in
+                if let error = response.error {
                     throw error
                 }
                 return ()
@@ -73,13 +108,6 @@ class Networking {
                 return .unknownError("unknown error occurred")
             })
             .eraseToAnyPublisher()
-    }
-    
-    func unlikeReview(reviewId: Int)->DataResponsePublisher<Data>{
-        let request = AF.request(SikshaAPI.unlikeReview(reviewId: reviewId))
-        return request
-            .validate(statusCode: 200..<300)
-            .publishData(emptyResponseCodes: [204])
     }
     func getRestaurants() -> DataResponsePublisher<Data> {
         let request = AF.request(SikshaAPI.getRestaurants)
@@ -151,5 +179,11 @@ class Networking {
         let request = AF.request(SikshaAPI.submitVOC(comment: comment, platform: platform))
         
         return request.validate().publishData()
+    }
+}
+
+struct EmptyEntity: Codable, EmptyResponse {
+    static func emptyValue() -> EmptyEntity {
+        return EmptyEntity.init()
     }
 }
