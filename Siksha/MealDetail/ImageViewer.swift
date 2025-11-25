@@ -12,10 +12,12 @@ struct ImageViewer: View {
     @Environment(\.dismiss) private var dismiss
     @State private var selection: Int
     private var imageURLs: [URL]
+    private let showNumber: Bool
     
-    init(imageURLs: [URL], initialIndex: Int = 0) {
+    init(imageURLs: [URL], initialIndex: Int = 0, showNumber: Bool = true) {
         self._selection = State(initialValue: max(0, min(imageURLs.count - 1, initialIndex)))
         self.imageURLs = imageURLs
+        self.showNumber = showNumber
     }
     
     var body: some View {
@@ -47,10 +49,11 @@ struct ImageViewer: View {
                         }
                         Spacer()
                     }
-                    
-                    Text("\(selection + 1) / \(imageURLs.count)")
-                        .foregroundStyle(Color.iconWhiteIcon)
-                        .customFont(font: .text16(weight: .ExtraBold))
+                    if showNumber {
+                        Text("\(selection + 1) / \(imageURLs.count)")
+                            .foregroundStyle(Color.iconWhiteIcon)
+                            .customFont(font: .text16(weight: .ExtraBold))
+                    }
                 }
                 Spacer()
             }

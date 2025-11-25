@@ -9,17 +9,9 @@ import SwiftUI
 import PhotosUI
 
 struct MealReviewView: View {
-    private let darkFontColor = Color.blackColor
-    private let fontColor = Color.gray700
-    private let orangeColor = Color.orange500
-    
-    @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
-    @Environment(\.viewController) private var viewControllerHolder: UIViewController?
-    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
-    @StateObject var viewModel: MealReviewViewModel = MealReviewViewModel()
+    @Environment(\.dismiss) var dismiss
+    @StateObject var viewModel = MealReviewViewModel()
     @ObservedObject var mealInfoViewModel: MealInfoViewModel
-    
     @State private var isShowingPhotoLibrary = false
     
     let meal: Meal
@@ -33,55 +25,23 @@ struct MealReviewView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .center, spacing: 0) {
-                starSection
-                
-                Color.gray100
-                    .frame(height: 10)
-                    .frame(maxWidth: .infinity)
-                
+                MenuRatingHeaderView(menuName: meal.nameKr, score: $viewModel.scoreToSubmit)
+                separator
                 Spacer().frame(height: 26)
-                
-                VStack(alignment: .leading, spacing: 0) {
-                    HStack(spacing: 5) {
-                        Text("어떤 점이 얼마나 좋았나요?")
-                            .customFont(font: .text18(weight: .ExtraBold))
-                            .foregroundStyle(Color.blackColor)
-                        
-                        Text("(필수)")
-                            .customFont(font: .text12(weight: .Bold))
-                            .foregroundStyle(Color.gray700)
-                        
-                        Spacer()
-                    }
-                    
-                    Spacer().frame(height: 18)
-                    
-                    VStack(spacing: 22) {
-                        KeywordSelectionView(type: .taste, viewModel: viewModel)
-                        KeywordSelectionView(type: .price, viewModel: viewModel)
-                        KeywordSelectionView(type: .composition, viewModel: viewModel)
-                    }
-                }
-                .padding(.horizontal, 16)
-                
+                KeywordSectionView(viewModel: viewModel)
                 Spacer().frame(height: 35)
-                
                 commentSection
-                
                 Spacer().frame(height: 2)
-                
                 PhotoAddView(viewModel: viewModel)
                     .padding(.horizontal, 16)
-                
                 Spacer().frame(height: 66)
             }
             .contentShape(Rectangle())
             .onTapGesture {
                 UIApplication.shared.endEditing()
             }
-            
+    
             Spacer()
-            
             submitButton
                 .padding(.horizontal, 16)
         }
@@ -97,40 +57,11 @@ struct MealReviewView: View {
     }
 }
 
-
 private extension MealReviewView {
-    var starSection: some View {
-        VStack(alignment: .center, spacing: 0) {
-            HStack(spacing: 0) {
-                Text("\(viewModel.meal?.nameKr ?? "")")
-                    .customFont(font: .text20(weight: .ExtraBold))
-                    .foregroundColor(Color.blackColor)
-                    .lineLimit(1)
-                    .truncationMode(.tail)
-                Text("\((viewModel.meal?.nameKr ?? "").inspectFinalConsonant() == .hasConsonant ? "은" : "는") 어땠나요?")
-                    .customFont(font: .text20(weight: .Bold))
-                    .foregroundColor(Color.gray700)
-            }
-            
-            Spacer().frame(height: 24)
-            
-            Text("별점을 선택해주세요.")
-                .customFont(font: .text14(weight: .Bold))
-                .foregroundStyle(Color.gray700)
-            
-            Spacer().frame(height: 9)
-            
-            StarRateView(rate: $viewModel.scoreToSubmit, spacing: 3)
-                .frame(height: 25)
-            
-            Spacer().frame(height: 9)
-            
-            Text("\(String(viewModel.scoreString))")
-                .customFont(font: .text20(weight: .Bold))
-                .foregroundColor(Color.blackColor)
-        }
-        .padding(.horizontal, 15.5)
-        .padding(EdgeInsets(top: 41, leading: 0, bottom: 19, trailing: 0))
+    private var separator: some View {
+        Color.gray100
+            .frame(height: 10)
+            .frame(maxWidth: .infinity)
     }
     
     var commentSection: some View {
@@ -209,13 +140,13 @@ private extension MealReviewView {
     }
     
     var submitButton: some View {
-        Button(action: {
+        Button{
             if viewModel.selectedImages.count > 0 {
                 viewModel.submitReviewImages(images: viewModel.selectedImages)
             } else {
                 viewModel.submitReview()
             }
-        }) {
+        } label: {
             ZStack(alignment: .top) {
                 RoundedRectangle(cornerRadius: 8)
                     .fill(viewModel.canSubmit ? Color.orange500 : Color.gray600)
@@ -254,13 +185,12 @@ private extension MealReviewView {
                 mealInfoViewModel.loadReviews()
                 mealInfoViewModel.loadImages()
                 mealInfoViewModel.loadDistribution()
-                menuViewModel?.pageViewReload = true
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             }
         } else {
             if let _ = viewModel.errorCode {
                 action = {
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 }
             } else {
                 action = {}
@@ -271,7 +201,7 @@ private extension MealReviewView {
     
     var backButton: some View {
         Button(action: {
-            self.presentationMode.wrappedValue.dismiss()
+            dismiss()
         }) {
             Image("NavigationBack")
                 .resizable()

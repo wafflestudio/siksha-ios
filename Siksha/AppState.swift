@@ -18,7 +18,7 @@ public class AppState: ObservableObject {
         
         let expDate = Date(timeIntervalSince1970: exp)
         
-        if DateInterval(start: Date(), end: expDate).duration < TimeInterval(15552000), let token = token { // 6 month
+        if expDate >= Date(), DateInterval(start: Date(), end: expDate).duration < TimeInterval(15552000), let token = token { // 6 month
             Networking.shared.refreshAccessToken(token: token)
                 .receive(on: RunLoop.main)
                 .sink { _ in }

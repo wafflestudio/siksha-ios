@@ -15,6 +15,11 @@ class Networking {
     
     private init() {}
     
+    func testLogin() -> DataResponsePublisher<Data> {
+        let request = AF.request(SikshaAPI.testLogin)
+        return request.validate().publishData()
+    }
+    
     func getAccessToken(token: String, endPoint: String) -> DataResponsePublisher<Data> {
         let request = AF.request(SikshaAPI.getAccessToken(token: token, endPoint: endPoint))
         
@@ -113,25 +118,26 @@ class Networking {
         return request.validate().publishDecodable(type: CommentRecommendationResponse.self)
     }
     
-    func submitReview(menuId: Int, score: Double, comment: String, taste: String, price: String, foodComposition: String) -> DataResponsePublisher<Data> {
+    func submitReview(menuId: Int, score: Int, comment: String, taste: String, price: String, foodComposition: String) -> DataResponsePublisher<Data> {
         let request = AF.request(SikshaAPI.submitReview(menuId: menuId, score: score, comment: comment, taste: taste, price: price, foodComposition: foodComposition))
         
         return request.validate().publishData()
     }
     
-    func submitReviewImages(menuId: Int, score: Double, comment: String, taste: String, price: String, foodComposition: String, images: [Data]) -> DataResponsePublisher<Data> {
+    func submitReviewImages(menuId: Int, score: Int, comment: String, taste: String, price: String, foodComposition: String, images: [Data]) -> DataResponsePublisher<Data> {
         let api = SikshaAPI.submitReviewImages(menuId: menuId, score: score, comment: comment, taste: taste, price: price, foodComposition: foodComposition, images: images)
         let request = AF.upload(multipartFormData: api.multipartFormData!, with: api)
         
         return request.validate().publishData()
     }
     
-    func getReviewImages(menuId: Int, page: Int, perPage: Int, comment: Bool, etc: Bool) -> DataResponsePublisher<ReviewResponse> {
-        let request = AF.request(SikshaAPI.getReviewImages(menuId: menuId, page: page, perPage: perPage, comment: comment, etc: etc))
+    func getReviewImages(menuId: Int, page: Int, perPage: Int) -> DataResponsePublisher<ReviewResponse> {
+        let request = AF.request(SikshaAPI.getReviewImages(menuId: menuId, page: page, perPage: perPage))
         let decoder = JSONDecoder()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         decoder.dateDecodingStrategy = .formatted(formatter)
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
         return request.validate().publishDecodable(type: ReviewResponse.self, decoder: decoder)
     }
     

@@ -74,7 +74,7 @@ public class ReviewListViewModel: ObservableObject {
         
         getReviewStatus = .loading
         
-        Networking.shared.getReviewImages(menuId: meal.id, page: currentPage, perPage: perPage, comment: false, etc: true)
+        Networking.shared.getReviewImages(menuId: meal.id, page: currentPage, perPage: perPage)
             .map(\.value)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in

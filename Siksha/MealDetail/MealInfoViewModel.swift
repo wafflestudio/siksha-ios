@@ -121,19 +121,18 @@ public class MealInfoViewModel: ObservableObject {
         
         getImageStatus = .loading
         
-        Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 3, comment: false, etc: true)
-            .map(\.value)
+        Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 3)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in
                 guard let self = self else { return }
-                guard let response = response else {
+                guard let response = response.value else {
                     self.getImageStatus = .failed
                     return
                 }
                 self.totalImageCount = response.totalCount
                 self.getImageStatus = .succeeded
             })
-            .map(\.?.result)
+            .map(\.value?.result)
             .replaceNil(with: [])
             .map { $0.map {$0.etc?["images"]?[0] ?? ""} }
             .assign(to: \.images, on: self)

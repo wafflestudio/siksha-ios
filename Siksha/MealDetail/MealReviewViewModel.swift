@@ -15,16 +15,7 @@ class MealReviewViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     @Published var meal: Meal? = nil
-    @Published var scoreToSubmit: Double = 0 {
-        didSet {
-            if scoreToSubmit - scoreToSubmit.rounded() == 0 {
-                scoreString = String(Int(scoreToSubmit))
-            } else {
-                scoreString = String(scoreToSubmit)
-            }
-        }
-    }
-    @Published var scoreString: String = "0"
+    @Published var scoreToSubmit: Int = 0
     @Published var commentToSubmit: String = ""
     @Published var commentRecommended: Bool = false
     @Published var canSubmit: Bool = false
@@ -121,7 +112,7 @@ class MealReviewViewModel: ObservableObject {
                 let score = meal.score
                 let reviewCnt = meal.reviewCnt
                 
-                let newScore = (score * Double(reviewCnt) + self.scoreToSubmit) / Double(reviewCnt + 1)
+                let newScore = (score * Double(reviewCnt) + Double(self.scoreToSubmit)) / Double(reviewCnt + 1)
                 let newReviewCnt = reviewCnt + 1
                 
                 let realm = try! Realm()
@@ -167,7 +158,7 @@ class MealReviewViewModel: ObservableObject {
                 let score = meal.score
                 let reviewCnt = meal.reviewCnt
                 
-                let newScore = (score * Double(reviewCnt) + self.scoreToSubmit) / Double(reviewCnt + 1)
+                let newScore = (score * Double(reviewCnt) + Double(self.scoreToSubmit)) / Double(reviewCnt + 1)
                 let newReviewCnt = reviewCnt + 1
                 
                 let realm = try! Realm()
