@@ -112,8 +112,8 @@ extension UIApplication {
 }
 
 extension URLRequest {
-    mutating func setToken(token: String, type: String? = nil) {
-        self.setValue("Bearer " + token, forHTTPHeaderField: "Authorization")
+    mutating func setToken(token: String, type: String = "Authorization") {
+        self.setValue("Bearer " + token, forHTTPHeaderField: type)
     }
 }
 

@@ -23,7 +23,7 @@ enum SikshaAPI: URLRequestConvertible {
         if self.askingForToken {
             switch self {
             case let .getAccessToken(token, endPoint):
-                request.setToken(token: token, type: endPoint)
+                request.setToken(token: token)
             default:
                 break
             }
@@ -295,9 +295,9 @@ enum SikshaAPI: URLRequestConvertible {
         case let .reportComment(commentId, _):
             return "/community/comments/\(commentId)/report"
         case .loadUserInfo:
-            return "/auth/me/image"
+            return "/auth/me"
         case .updateUserProfile:
-            return "/auth/me/image/profile"
+            return "/auth/me/profile"
         case .deleteUser:
             return "/auth"
         case .testLogin:
