@@ -76,7 +76,6 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
-        
     }
     
     var backButton: some View {
@@ -92,39 +91,42 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     }
 
     var body: some View {
-        if self.viewModel.postsListPublisher.count == 0 {
-            VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/){
-                Spacer()
-                Text("내가 쓴 글이 없어요")
-                    .font(.custom("NanumSquareOTF", size: 15))
-                    .foregroundColor(Color(white: 166/255))
-                Spacer()
-            }
-            .errorAlert(error: $viewModel.error)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .customNavigationBar(title: "내가 쓴 글")
-                .navigationBarItems(leading: backButton)
-           
-            .onChange(of: needRefresh, perform: { refresh in
-                if refresh{
-                    self.viewModel.loadPosts()
-                    needRefresh = false
+        Group {
+            if viewModel.isInitialLoading {
+                VStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
                 }
-            })
-        } else {
-            ScrollView{
-                divider
-                postList
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if self.viewModel.postsListPublisher.count == 0 {
+                VStack(alignment: .center){
+                    Spacer()
+                    Text("내가 쓴 글이 없어요")
+                        .font(.custom("NanumSquareOTF", size: 15))
+                        .foregroundColor(Color(white: 166/255))
+                    Spacer()
+                }
+                .errorAlert(error: $viewModel.error)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ScrollView{
+                    divider
+                    postList
+                }
             }
-            .customNavigationBar(title: "내가 쓴 글")
-                .navigationBarItems(leading: backButton)
-                .onChange(of: needRefresh, perform: { refresh in
-                    if refresh{
-                        self.viewModel.loadPosts()
-                        needRefresh = false
-                    }
-                })
         }
+        .customNavigationBar(title: "내가 쓴 글")
+        .navigationBarItems(leading: backButton)
+        .onAppear {
+            viewModel.loadPosts()
+        }
+        .onChange(of: needRefresh, perform: { refresh in
+            if refresh{
+                self.viewModel.loadPosts()
+                needRefresh = false
+            }
+        })
     }
     
     var divider: some View {
@@ -163,6 +165,7 @@ struct MyPostView_Previews: PreviewProvider {
 
 class StubMyPostViewModel: MyPostViewModelType {
     var error: AppError?
+    var isInitialLoading: Bool = false
     
     var hasNextPublisher: Bool {
         return false
