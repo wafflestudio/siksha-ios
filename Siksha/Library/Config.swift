@@ -12,7 +12,7 @@ final class Config {
     
     let baseURL: String
     let googleClientId: String
-    let naverMapClientId: String
+    let nmfNcpKeyId: String
     let kakaoAppKey: String
     let kakaoShareTemplateId: Int64
     let mixpanelToken: String
@@ -36,7 +36,7 @@ final class Config {
         
         self.baseURL = Self.getString(from: envDict, key: .serverURL)
         self.googleClientId = Self.getString(from: envDict, key: .googleClientId)
-        self.naverMapClientId = Self.getString(from: envDict, key: .naverMapClientId)
+        self.nmfNcpKeyId = Self.getString(from: envDict, key: .nmfNcpKeyId)
         self.kakaoAppKey = Self.getString(from: envDict, key: .kakaoAppKey)
         self.kakaoShareTemplateId = Self.getInt64(from: envDict, key: .kakaoShareTemplateId)
         self.mixpanelToken = Self.getString(from: envDict, key: .mixpanelToken)
@@ -45,7 +45,7 @@ final class Config {
     enum Key: String {
         case serverURL = "server_url"
         case googleClientId = "google_client_id"
-        case naverMapClientId = "naver_map_client_id"
+        case nmfNcpKeyId = "nmf_ncp_key_id"
         case kakaoAppKey = "kakao_app_key"
         case kakaoShareTemplateId = "kakao_share_template_id"
         case mixpanelToken = "mixpanel_token"
