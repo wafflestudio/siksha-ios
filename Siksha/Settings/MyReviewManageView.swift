@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import SwiftyJSON
+import Combine
 
 struct MyReviewManageView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -147,7 +149,7 @@ struct MyReviewManageView: View {
                     
                     isDeleting = true
                     
-                    viewModel.deleteReview(id: reviewToDelete.id) { success in
+                    viewModel.deleteReview(reviewToDelete.id) { success in
                         isDeleting = false
                         showReviewDeleteAlert = false
                         
@@ -237,16 +239,22 @@ struct ReviewCardView: View {
     @Binding var showDeleteAlert: Bool
     @Binding var selectedReview: RestaurantReview?
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
+    @State private var cancellables = Set<AnyCancellable>()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             NavigationLink(
-            // TODO: 현재 설계에서 MealInfoVM이 mealID가 아닌 Meal 생성자를 받고 있어 당장 수정 어려움.
-            // TODO: 키워드 리뷰 페이지 완성 후 수정 예정
-            destination: MealInfoView(viewModel: MealInfoViewModel(meal: Meal()))
-                .environment(\.menuViewModel, menuViewModel)
-                .onAppear {
-                    menuViewModel?.reloadOnAppear = false
+                destination: {
+                    let tempMeal = Meal()
+                    tempMeal.id = review.menuId
+                    let mealInfoVM = MealInfoViewModel(meal: tempMeal)
+                    mealInfoVM.updateMealFromId()
+                    
+                    return MealInfoView(viewModel: mealInfoVM)
+                        .environment(\.menuViewModel, menuViewModel)
+                        .onAppear {
+                            menuViewModel?.reloadOnAppear = false
+                        }
                 },
             label: {
                 HStack(alignment: .center) {

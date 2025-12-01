@@ -9,6 +9,7 @@ import Foundation
 import Combine
 import UIKit
 import RealmSwift
+import SwiftyJSON
 
 public class MealInfoViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
@@ -157,6 +158,23 @@ public class MealInfoViewModel: ObservableObject {
             .replaceNil(with: [])
             .map { dist in dist.map { CGFloat($0) } }
             .assign(to: \.scoreDistribution, on: self)
+            .store(in: &cancellables)
+    }
+    
+    /// 서버 MealID로 Meal 호출 속도 느림 -> 불가피하게 아는 정보가 mealId뿐일 때만 사용
+    func updateMealFromId() {
+        Networking.shared.getMenuFromId(menuId: meal.id)
+            .map(\.value)
+            .receive(on: RunLoop.main)
+            .sink { [weak self] response in
+                guard let self = self,
+                      let response = response,
+                      let jsonData = try? JSONEncoder().encode(response),
+                      let json = try? JSON(data: jsonData) else {
+                    return
+                }
+                self.meal = Meal(json)
+            }
             .store(in: &cancellables)
     }
 }
