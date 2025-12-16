@@ -7,18 +7,10 @@
 import SwiftUI
 
 struct RestaurantOrderView: View {
-    private let backgroundColor = Color.backgroundMain
+    private let backgroundColor = Color.backgroundSecondary
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel: RestaurantOrderViewModel
-    
-    private var leading: CGFloat {
-        if UIScreen.main.bounds.width > 380 {
-            return -44
-        } else {
-            return -40
-        }
-    }
     
     var backButton: some View {
         Button(action: {
@@ -30,45 +22,52 @@ struct RestaurantOrderView: View {
                 .frame(width: 24, height: 24)
                 .foregroundColor(Color.iconWhiteIcon)
         }
+        .contentShape(Rectangle())
     }
     
     init(_ viewModel: RestaurantOrderViewModel) {
-        UITableView.appearance().separatorStyle = .none
-        UITableView.appearance().backgroundColor = .clear
-        
         self.viewModel = viewModel
     }
     
     var body: some View {
-        VStack(alignment: .center) {
-            // Description
+        VStack(alignment: .center, spacing: 0) {
             HStack {
                 Spacer()
                 Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
-                    .font(.custom("NanumSquareOTFR", size: 14))
+                    .customFont(font: .text13(weight: .Regular))
                     .foregroundColor(.gray700)
                 Spacer()
             }
-            .padding(.top, 20)
-            .padding(.bottom, 5)
+            .padding(.top, 14)
+            .padding(.bottom, 14)
+            .background(backgroundColor)
+            
             List {
-                ForEach(viewModel.restaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
+                Section {
+                    ForEach(viewModel.restaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
                         RestaurantOrderRow(text: row)
                             .listRowInsets(EdgeInsets())
+                            .alignmentGuide(.listRowSeparatorLeading) { d in
+                                d[.leading]
+                            }
+                            .listRowSeparatorTint(Color.borderPrimary)
+                    }
+                    .onMove(perform: move)
+                } header: {
+                    Spacer(minLength: 0).listRowInsets(EdgeInsets())
                 }
-                .onMove(perform: move)
             }
+            .environment(\.defaultMinListHeaderHeight, 20)
             .environment(\.editMode, .constant(.active))
-        } // VStack
+        }
         .contentShape(Rectangle())
         .customNavigationBar(title: "식당 순서 변경")
         .navigationBarItems(leading: backButton)
-        .background(backgroundColor)
         .onAppear {
             viewModel.bind()
             viewModel.loadRestaurants()
         }
-    } // View
+    }
     
     func move(from source: IndexSet, to destination: Int) {
         viewModel.restaurantIds.move(fromOffsets: source, toOffset: destination)
@@ -77,9 +76,6 @@ struct RestaurantOrderView: View {
 
 struct MenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            RestaurantOrderView(RestaurantOrderViewModel())
-                .previewDevice(PreviewDevice(rawValue: "iPhone 7"))
-        }
+        RestaurantOrderView(RestaurantOrderViewModel())
     }
 }
