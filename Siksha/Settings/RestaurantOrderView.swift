@@ -58,7 +58,6 @@ struct RestaurantOrderView: View {
                 }
             }
             .environment(\.defaultMinListHeaderHeight, 20)
-            .environment(\.editMode, .constant(.active))
         }
         .contentShape(Rectangle())
         .customNavigationBar(title: "식당 순서 변경")
