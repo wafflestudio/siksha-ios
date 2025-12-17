@@ -77,7 +77,7 @@ struct FavoriteRestaurantOrderView: View {
         .navigationBarItems(leading: backButton)
         .background(Color.backgroundPrimary)
         .onAppear {
-            
+            viewModel.bind()
             viewModel.loadRestaurants()
         }
     }
