@@ -29,7 +29,7 @@ struct ReviewCell: View {
                 VStack(alignment: .leading) {
                     Text("ID \(String(review.userId))")
                         .font(.custom("NanumSquareOTFB", size: 12))
-                        .foregroundColor(.black)
+                        .foregroundColor(.blackColor)
                     RatingStar(.constant(review.score), size: 11, spacing: 1.5)
                         .padding(.top, -6)
                 }

@@ -41,6 +41,7 @@ struct ReviewListView: View {
                         ReviewCell(review, true)
                             .padding(EdgeInsets(top: 16, leading: 8, bottom: 4, trailing: 0))
                             .listRowInsets(EdgeInsets())
+                            .listRowSeparator(.hidden)
                             .background(Color.backgroundPrimary)
                             .onAppear {
                                 viewModel.loadMoreReviewsIfNeeded(currentItem: review, showOnlyImageReviews)
