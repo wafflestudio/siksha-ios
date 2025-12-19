@@ -123,7 +123,8 @@ struct ContentView: View {
                     
                 }
                 .onAppear{
-                    AppDelegate.sendFCMToken()
+                    print("CONTENTVIEW")
+                    UIApplication.shared.registerForRemoteNotifications()
                 }
             }
         

@@ -70,7 +70,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UserManager.shared.loadUserInfo()
         
 
-        UIApplication.shared.registerForRemoteNotifications()
+        
      
 
         return true

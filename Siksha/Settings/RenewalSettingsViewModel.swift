@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import SwiftyJSON
+import FirebaseMessaging
 
 class RenewalSettingsViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
@@ -120,6 +121,7 @@ class RenewalSettingsViewModel: ObservableObject {
     
     func logOutAccount(completion:@escaping(Bool)->()) {
         if UserDefaults.standard.string(forKey: "fcmToken") == nil{
+            UserDefaults.standard.removeObject(forKey: "accessToken")
             completion(true)
         }
         else{
@@ -129,9 +131,23 @@ class RenewalSettingsViewModel: ObservableObject {
                     switch completionStatus {
                     case .finished:
                         print("delete success fcm")
-                        UserDefaults.standard.removeObject(forKey: "accessToken")
-                        UserDefaults.standard.removeObject(forKey: "fcmToken")
-                        completion(true)
+                        Messaging.messaging().deleteToken { error in
+                            if let error = error {
+                                print("Failed to delete FCM token:", error)
+                                print(error)
+                                self?.error = ErrorHelper.categorize(error)
+                                self?.logoutFailed = true
+                                completion(false)
+
+                            }
+                            else{
+                                print("delete done")
+                                UserDefaults.standard.removeObject(forKey: "fcmToken")
+                                UserDefaults.standard.removeObject(forKey: "accessToken")
+                                completion(true)
+
+                            }
+                        }
                     case .failure(let error):
                         print("delete fail fcm")
                         print(error)
