@@ -151,6 +151,14 @@ class MyLikedMenuViewModel: ObservableObject{
             .store(in: &cancellables)
 
     }
+    private func disableAllAlarm(){
+        for (i,_) in myLikedRestaurants.enumerated(){
+            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
+                     myLikedRestaurants[i].menus[j].alarm = false
+                
+            }
+        }
+    }
     private func turnOffAlarm(menuId:Int){
         myLikedMenuRepository.offAlarm(menuId: menuId)
             .receive(on: RunLoop.main)
@@ -181,6 +189,7 @@ class MyLikedMenuViewModel: ObservableObject{
             self.isAlarmEnabled = true
         }
     }
+
     private func disableAlarm(){
         myLikedMenuRepository.offAlarmAll()
             .receive(on: RunLoop.main)
@@ -190,6 +199,7 @@ class MyLikedMenuViewModel: ObservableObject{
                     UserDefaults.standard.set(false,forKey: "isAlarmEnabled")
                     withAnimation(.easeOut(duration: 0.3)) {
                         self?.isAlarmEnabled = false
+                        self?.disableAllAlarm()
                     }
                 case .failure(let error):
                     self?.error = ErrorHelper.categorize(error)
