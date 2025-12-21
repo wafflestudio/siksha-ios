@@ -96,6 +96,8 @@ enum FontType{
         case Bold = "NanumSquareOTFB"
         case ExtraBold = "NanumSquareOTFEB"
     }
+    case text9(weight:FontWeight)
+    case text10(weight:FontWeight)
     case text11(weight:FontWeight)
     case text12(weight:FontWeight)
     case text13(weight:FontWeight)
@@ -109,6 +111,10 @@ enum FontType{
     case text32(weight:FontWeight)
     var fontSize:Int{
         switch self{
+        case .text9:
+            return 9
+        case .text10:
+            return 10
         case .text11:
             return 11
         case .text12:
@@ -145,6 +151,10 @@ enum FontType{
     }
     var fontName:String{
         switch self{
+        case .text9(let weight):
+            return weight.rawValue
+        case .text10(let weight):
+            return weight.rawValue
         case .text11(let weight):
             return weight.rawValue
         case .text12(let weight):

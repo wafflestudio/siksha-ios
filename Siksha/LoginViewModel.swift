@@ -72,6 +72,22 @@ class LoginViewModel: NSObject, ObservableObject, ASAuthorizationControllerDeleg
             .store(in: &cancellables)
     }
     
+    func requestTestLogin() {
+        Networking.shared.testLogin()
+            .sink { result in
+                guard let data = result.value,
+                      let accessToken = try? JSON(data: data)["access_token"].stringValue else {
+                    self.signInFailed = true
+                    return
+                }
+                
+                UserDefaults.standard.set(accessToken, forKey: "accessToken")
+                
+                self.onSignedIn()
+            }
+            .store(in: &cancellables)
+    }
+    
     // MARK: - Google Sign in
     
     func authenticateWithGoogle(idToken: String) {

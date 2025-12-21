@@ -48,7 +48,6 @@ final class MenuViewModel: NSObject, ObservableObject {
     @Published var showDistanceAlert: Bool = false
     
     @Published var selectedPage: Int = 0
-    @Published var pageViewReload: Bool = false
     
     @Published var reloadOnAppear: Bool = true
     
@@ -328,7 +327,6 @@ final class MenuViewModel: NSObject, ObservableObject {
                         self.noFavorites = false
                     }
                 }
-                self.pageViewReload = true
             }
             .store(in: &cancellables)
     }
