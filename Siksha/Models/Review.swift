@@ -8,26 +8,18 @@
 import Foundation
 import UIKit
 
-struct Review: Codable {
+struct Review: Codable, Hashable {
     var id: Int
-    var mealId: Int
+    var menuId: Int
     var userId: Int
     var score: Double
     var comment: String?
-    var images: [String: [String]]?
+    var etc: [String: [String]]?
+    var keywordReviews: [String]
+    var likeCount: Int
+    var isLiked: Bool
     var createdAt: Date
     var updatedAt: Date
-    
-    enum CodingKeys: String, CodingKey {
-        case id = "id"
-        case mealId = "menu_id"
-        case userId = "user_id"
-        case score = "score"
-        case comment = "comment"
-        case images = "etc"
-        case createdAt = "created_at"
-        case updatedAt = "updated_at"
-    }
 }
 
 struct RenewalReviewRestaurant: Codable, Identifiable {
