@@ -40,7 +40,8 @@ private extension ContentView {
 class ContentViewModel:ObservableObject{
     @Published var showPopUp = false
     @Published var popUpOpacity = 0.0
-    @Published var showModal = true
+    @Published var showModal =                        !UserDefaults.standard.bool(forKey: "isAlreadyDisplayedMyLikedMenuModal")
+
     @Published var showMyMenuViewFromPopup = false
     static var contentViewModel = ContentViewModel()
     
@@ -110,14 +111,16 @@ struct ContentView: View {
                         }
                         .onAppear{
                             print("onappear")
-                            withAnimation(.easeInOut(duration: 1.0).delay(0.5)) {
-                                contentViewModel.popUpOpacity = 1.0
+                            if !UserDefaults.standard.bool(forKey: "isAlreadyShownAlarmPopup"){
+                                withAnimation(.easeInOut(duration: 1.0).delay(0.5)) {
+                                    contentViewModel.popUpOpacity = 1.0
+                                }
+                                
+                                withAnimation(.easeInOut(duration: 1.0).delay(5.0)) {
+                                    contentViewModel.popUpOpacity = 0.0
+                                    UserDefaults.standard.set(true,forKey: "isAlreadyShownAlarmPopup")
+                                }
                             }
-                            
-                            withAnimation(.easeInOut(duration: 1.0).delay(5.0)) {
-                               contentViewModel.popUpOpacity = 0.0
-                            }
-                         
                         }
                     }
                     

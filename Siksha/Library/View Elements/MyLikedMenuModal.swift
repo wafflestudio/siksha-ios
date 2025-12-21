@@ -112,10 +112,17 @@ struct MyLikedMenuModal: View {
                             .cornerRadius(6)
                     }
                     Button(action:{
+                        
                         contentViewModel.showModal = false
                         if isYesSelected{
                             AppDelegate.requestNotificationPermission()
+                            UserDefaults.standard.set(true, forKey: "isAlarmEnabled")
                         }
+                        else{
+                            UserDefaults.standard.set(false, forKey: "isAlarmEnabled")
+
+                        }
+                        UserDefaults.standard.set(true, forKey: "isAlreadyDisplayedMyLikedMenuModal")
                     }){
                         Text("완료")
                         
