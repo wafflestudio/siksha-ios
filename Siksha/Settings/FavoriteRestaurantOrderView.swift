@@ -75,7 +75,7 @@ struct FavoriteRestaurantOrderView: View {
         .contentShape(Rectangle())
         .customNavigationBar(title: "즐겨찾기 식당 순서 변경")
         .navigationBarItems(leading: backButton)
-        .background(Color.backgroundPrimary)
+        .background(Color.backgroundMain)
         .onAppear {
             viewModel.bind()
             viewModel.loadRestaurants()

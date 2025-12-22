@@ -60,6 +60,7 @@ struct RestaurantOrderView: View {
             .environment(\.defaultMinListHeaderHeight, 20)
         }
         .contentShape(Rectangle())
+        .background(Color.backgroundMain)
         .customNavigationBar(title: "식당 순서 변경")
         .navigationBarItems(leading: backButton)
         .onAppear {
