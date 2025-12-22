@@ -31,6 +31,8 @@ struct MenuListView: View {
             
             if viewModel.getMenuStatus == .loading {
                 loadingView
+            } else if viewModel.noFavorites {
+                noFavoritesView
             } else if viewModel.restaurantsLists.count > 0 {
                 TabView(selection: $viewModel.selectedPage) {
                     ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
@@ -188,6 +190,16 @@ private extension MenuListView {
             if let newType {
                 viewModel.analytics.track(.filterModalOpened(entryPoint: newType.entryPointString, pageName: viewModel.pageName))
             }
+        }
+    }
+    
+    var noFavoritesView: some View {
+        VStack {
+            Spacer()
+            Text("즐겨찾기에 추가된 식당이 없습니다.")
+                .customFont(font: .text15(weight: .Bold))
+                .foregroundColor(lightGrayColor)
+            Spacer()
         }
     }
     

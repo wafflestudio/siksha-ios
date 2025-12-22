@@ -52,24 +52,16 @@ struct MenuView: View {
 //                festivalBanner
 //            }
             
-            if viewModel.noFavorites {
-                Spacer()
-                Text("즐겨찾기에 추가된 식당이 없습니다.")
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(lightGrayColor)
-                Spacer()
-            } else {
-                daySelectorView
+            daySelectorView
+            
+            ZStack(alignment: .top) {
+                MenuListView(
+                    viewModel: viewModel,
+                    selectedFilterType: $selectedFilterType
+                )
                 
-                ZStack(alignment: .top) {
-                    MenuListView(
-                        viewModel: viewModel,
-                        selectedFilterType: $selectedFilterType
-                    )
-                    
-                    if viewModel.showCalendar {
-                        calendarOverlay
-                    }
+                if viewModel.showCalendar {
+                    calendarOverlay
                 }
             }
         }
