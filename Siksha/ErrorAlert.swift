@@ -12,6 +12,7 @@ enum AppError: LocalizedError, Identifiable {
     case parsingError(String)
     case unknownError(String)
     case serverError(String, String)
+    case error(String)
 
     var id: String { // Required for `Identifiable`
         UUID().uuidString
@@ -27,6 +28,8 @@ enum AppError: LocalizedError, Identifiable {
             return "Server Error (\(code)): \(message)"
         case .unknownError(let message):
             return "Unknown Error: \(message)"
+        case .error(let message):
+            return "\(message)"
         }
     }
 }

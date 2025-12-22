@@ -59,7 +59,7 @@ struct ContentView: View {
   
     var body: some View {
             GeometryReader { geometry in
-                NavigationView {
+                NavigationStack {
                     VStack {
                             
                             tabItems[selectedTab].content

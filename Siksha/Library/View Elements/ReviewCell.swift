@@ -66,10 +66,10 @@ struct ReviewCell: View {
             }
             .padding(EdgeInsets(top: 2, leading: 16, bottom: 0, trailing: 0))
             
-            if showPictures && review.images != nil {
+            if showPictures && review.etc != nil {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack {
-                        ForEach(review.images?["images"] ?? [], id: \.self) { image in
+                        ForEach(review.etc?["images"] ?? [], id: \.self) { image in
                             ThumbnailImage(image)
                         }
                     }
