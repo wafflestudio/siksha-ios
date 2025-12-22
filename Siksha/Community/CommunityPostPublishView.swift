@@ -31,12 +31,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
         }) {
-            Image(systemName: "xmark")
+            Image("Close")
                 .resizable()
-                .foregroundColor(Color.white)
-                .frame(width: 12, height: 12)
-                .padding(.vertical, 15)
-                .padding(.trailing, 15)
+                .foregroundColor(Color.iconWhiteIcon)
+                .frame(width: 28, height: 28)
+                .padding(.leading, 9)
         }
         .contentShape(Rectangle())
     }
@@ -133,7 +132,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     var customDivider: some View {
         HStack {
             Color.borderPrimary
-                .frame(height: 2)
+                .frame(height: 1)
                 .frame(maxWidth: .infinity)
         }
     }
