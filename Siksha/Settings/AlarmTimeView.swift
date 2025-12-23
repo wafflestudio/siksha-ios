@@ -87,6 +87,8 @@ struct AlarmTimeView: View {
         .navigationBarItems(leading: backButton)
         .frame(maxHeight:.infinity,alignment: .top)
         .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 16))
+        .background(Color.backgroundMain)
+
     }
 }
 

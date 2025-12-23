@@ -27,45 +27,94 @@ struct LikedMenuRestaurantCell: View {
     var body: some View {
         VStack(spacing: 0) {
             // Restaurant Name
-            HStack(alignment: .center) {
-                Text(restaurant.name)
-                    .customFont(font: .text16(weight: .ExtraBold))
-                    .foregroundColor(.blackColor)
-                Spacer()
-                    .frame(width:6)
-                Button(action: {
-                    isFavorite.toggle()
-                    UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                }, label: {
-                    Image(isFavorite ? "Favorite-selected" : "Favorite-default")
-                        .resizable()
-                        .renderingMode(.original)
-                        .frame(width: 20, height: 20)
-                })
-                Spacer()
-                Text("Price")
-                    .customFont(font: .text12(weight: .Regular))
-                    .multilineTextAlignment(.center)
-                    .frame(width:28)
-                    .foregroundColor(orangeColor)
-                Spacer()
-                    .frame(width:16)
-                Text("Rate")
-                    .customFont(font: .text12(weight: .Regular))
-                    .multilineTextAlignment(.center)
-                    .frame(width:26)
-                    .foregroundColor(orangeColor)
-                Spacer()
-                    .frame(width:16)
-                Text("Like")
-                    .customFont(font: .text12(weight: .Regular))
-                    .multilineTextAlignment(.center)
-                    .foregroundColor(orangeColor)
-                    .frame(width:25)
+            
+            ViewThatFits{
+                HStack(alignment: .center) {
+                    Text(restaurant.name)
+                        .customFont(font: .text16(weight: .ExtraBold))
+                        .foregroundColor(.blackColor)
+                        .lineLimit(1)
+                    Spacer()
+                        .frame(width:6)
+                    Button(action: {
+                        isFavorite.toggle()
+                        UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
+                    }, label: {
+                        Image(isFavorite ? "Favorite-selected" : "Favorite-default")
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 20, height: 20)
+                    })
+                    Spacer()
+                    Text("Price")
+                        .customFont(font: .text12(weight: .Regular))
+                        .multilineTextAlignment(.center)
+                        .frame(width:28)
+                        .foregroundColor(orangeColor)
+                    Spacer()
+                        .frame(width:16)
+                    Text("Rate")
+                        .customFont(font: .text12(weight: .Regular))
+                        .multilineTextAlignment(.center)
+                        .frame(width:26)
+                        .foregroundColor(orangeColor)
+                    Spacer()
+                        .frame(width:16)
+                    Text("Like")
+                        .customFont(font: .text12(weight: .Regular))
+                        .multilineTextAlignment(.center)
+                        .foregroundColor(orangeColor)
+                        .frame(width:25)
+                    
+                    
+                }
+                .padding(EdgeInsets(top: 13, leading: 13,bottom: 6.5,trailing: 13))
+                VStack(spacing:10){
+                    HStack(alignment: .center) {
+                        Text(restaurant.name)
+                            .customFont(font: .text16(weight: .ExtraBold))
+                            .foregroundColor(.blackColor)
+                        Spacer()
+                            .frame(width:6)
+                        Button(action: {
+                            isFavorite.toggle()
+                            UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
+                        }, label: {
+                            Image(isFavorite ? "Favorite-selected" : "Favorite-default")
+                                .resizable()
+                                .renderingMode(.original)
+                                .frame(width: 20, height: 20)
+                        })
+                        
+                        
+                    }
+                    HStack{
+                        Spacer()
+                        Text("Price")
+                            .customFont(font: .text12(weight: .Regular))
+                            .multilineTextAlignment(.center)
+                            .frame(width:28)
+                            .foregroundColor(orangeColor)
+                        Spacer()
+                            .frame(width:16)
+                        Text("Rate")
+                            .customFont(font: .text12(weight: .Regular))
+                            .multilineTextAlignment(.center)
+                            .frame(width:26)
+                            .foregroundColor(orangeColor)
+                        Spacer()
+                            .frame(width:16)
+                        Text("Like")
+                            .customFont(font: .text12(weight: .Regular))
+                            .multilineTextAlignment(.center)
+                            .foregroundColor(orangeColor)
+                            .frame(width:25)
 
-      
+                    }
+
+                }   .padding(EdgeInsets(top: 13, leading: 13,bottom: 6.5,trailing: 13))
+
             }
-            .padding(EdgeInsets(top: 13, leading: 13,bottom: 6.5,trailing: 13))
      
 
        

@@ -37,14 +37,15 @@ struct MyLikedMenuView: View {
             }
             else{
                 ScrollView {
-                    VStack{
+                    VStack(spacing:12){
                         ForEach(viewModel.myLikedRestaurants,id:\.self){restaurant in
                             LikedMenuRestaurantCell(viewModel,restaurant)
                             
                         }
                     }
-                    .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 16))
+                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                 }
+                .padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
             }
         }
      
@@ -64,6 +65,7 @@ struct MyLikedMenuView: View {
         .onDisappear{
             viewModel.unLikedMenuCleanup()
         }
+        .background(Color.backgroundMain)
     }
 
 }

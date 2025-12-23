@@ -19,7 +19,7 @@ struct AlarmRestaurantCell: View {
     }
     var body: some View {
         VStack(alignment:.leading,spacing:0){
-            Text(restaurantName)
+            Text((restaurantName).map(String.init).joined(separator: "\u{200B}"))
                 .foregroundStyle(Color.blackColor)
                 .customFont(font: .text16(weight: .ExtraBold))
             Spacer()

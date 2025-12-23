@@ -109,16 +109,20 @@ struct AlarmView: View {
                     
                     
                 }
+                .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 17))
+                    .customNavigationBar(title: "메뉴 알림 설정")
+                    .navigationBarItems(leading: backButton)
+                    .onChange(of: viewModel.isAlarmEnabled, perform: {  isAlarmOn in
+                        if isAlarmOn{
+                            AppDelegate.requestNotificationPermission()
+                        }
+                        
+                    })
+
             }
-            .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 17))
-                .customNavigationBar(title: "메뉴 알림 설정")
-                .navigationBarItems(leading: backButton)
-                .onChange(of: viewModel.isAlarmEnabled, perform: {  isAlarmOn in
-                    if isAlarmOn{
-                        AppDelegate.requestNotificationPermission()
-                    }
-                    
-                })
+            .background(Color.backgroundMain)
+
+
         }
        
     }
