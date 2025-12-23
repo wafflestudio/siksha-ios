@@ -19,18 +19,16 @@ struct PhotoReviewSection: View {
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8.5) {
-                    ForEach(0..<2) { i in
+                    ForEach(0..<5) { i in
                         if viewModel.totalImageCount > i {
                             imageView(urlString: viewModel.images[i])
                         }
                     }
                     
-                    if viewModel.totalImageCount > 2 {
-                        imageView(urlString: viewModel.images[2])
+                    if viewModel.totalImageCount > 5 {
+                        imageView(urlString: viewModel.images[5])
                             .overlay {
-                                if viewModel.totalImageCount > 3 {
                                     moreImageReviewOverlay
-                                }
                             }
                     }
                 }
@@ -61,7 +59,7 @@ struct PhotoReviewSection: View {
                         .foregroundStyle(Color.white)
                         .frame(width: 10, height: 10)
                     
-                    Text("\(viewModel.totalImageCount - 3)건 더보기")
+                    Text("\(viewModel.totalImageCount - 5)건 더보기")
                         .foregroundStyle(Color.white)
                         .customFont(font: .text12(weight: .Bold))
                 }
