@@ -24,32 +24,30 @@ struct ReviewRow: View {
             Spacer().frame(height: 4)
             
             HStack(spacing: 9.5) {
-                if viewModel.hasComment {
-                    ZStack(alignment: .topLeading) {
-                        Image("SpeechArrow")
-                            .renderingMode(.template)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 17, height: 17)
-                            .padding(.top, 7)
-                            .padding(.leading, 15)
-                            .foregroundStyle(Color.whiteColor)
-                        
-                        Text(viewModel.comment)
-                            .customFont(font: .text13(weight: .Regular))
-                            .foregroundStyle(Color.blackColor)
-                            .padding(10)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .background {
-                                Rectangle()
-                                    .fill(Color.whiteColor)
-                                    .cornerRadius(8)
-                            }
-                            .padding(.leading, 29)
-                    }
-                    .drawingGroup()
-                    .shadow(color: .blackColor.opacity(0.15), radius: 1.5)
+                ZStack(alignment: .topLeading) {
+                    Image("SpeechArrow")
+                        .renderingMode(.template)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 17, height: 17)
+                        .padding(.top, 7)
+                        .padding(.leading, 15)
+                        .foregroundStyle(Color.whiteColor)
+                    
+                    Text(viewModel.hasComment ? viewModel.comment : "코멘트가 없습니다.")
+                        .customFont(font: .text13(weight: viewModel.hasComment ? .Regular : .Bold))
+                        .foregroundStyle(viewModel.hasComment ? Color.blackColor : Color.gray400)
+                        .padding(10)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background {
+                            Rectangle()
+                                .fill(Color.whiteColor)
+                                .cornerRadius(8)
+                        }
+                        .padding(.leading, 29)
                 }
+                .drawingGroup()
+                .shadow(color: .blackColor.opacity(0.15), radius: 1.5)
                 
                 Button {
                     viewModel.toggleLike()

@@ -31,29 +31,30 @@ struct PhotoAddView: View {
                     .padding(.top, 6)
                     .padding(.trailing, 5)
                 }
-                    ForEach(viewModel.selectedImages, id: \.self) { image in
-                        ZStack(alignment: .topTrailing) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 80, height: 80)
-                                .cornerRadius(8)
-                                .padding(.top, 6)
-                                .padding(.trailing, 5)
-                            
-                            Button {
-                                viewModel.deleteImage(image)
-                            } label: {
-                                Image("Cancel")
-                                    .frame(width: 18, height: 18)
-                                    .background(Color.white)
-                                    .clipShape(Circle())
-                            }
+                
+                ForEach(viewModel.selectedImages, id: \.self) { image in
+                    ZStack(alignment: .topTrailing) {
+                        Image(uiImage: image)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 80, height: 80)
+                            .cornerRadius(8)
+                            .padding(.top, 6)
+                            .padding(.trailing, 5)
+                        
+                        Button {
+                            viewModel.deleteImage(image)
+                        } label: {
+                            Image("Cancel")
+                                .frame(width: 18, height: 18)
+                                .background(Color.white)
+                                .clipShape(Circle())
                         }
-
                     }
                 }
             }
+        }
+        .scrollBounceBehavior(.basedOnSize, axes: .horizontal)
         .sheet(isPresented: $isShowingPhotoLibrary) {
             ImagePickerCoordinatorView(selectedImages: $viewModel.selectedImages, maxSelection: 5)
         }
