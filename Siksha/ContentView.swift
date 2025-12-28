@@ -28,7 +28,7 @@ private extension ContentView {
             Spacer()
         }
         .padding(.top, 5)
-        .padding(.bottom, geometry.safeAreaInsets.bottom)
+        .padding(.bottom, geometry.safeAreaInsets.bottom == 0 ? geometry.safeAreaInsets.bottom + 13 : geometry.safeAreaInsets.bottom - 2)
         .background(
             Color.backgroundSecondary
                 .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: -2)
