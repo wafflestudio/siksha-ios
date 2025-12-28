@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 struct MyLikedMenuModal: View {
     @EnvironmentObject var contentViewModel:ContentViewModel
@@ -15,6 +16,8 @@ struct MyLikedMenuModal: View {
     @State var isYesSelected = false
     @State var isNoSelected = false
     @State var isConfirmedEnabled = false
+    @ObservedObject var viewModel:MyLikedMenuViewModel
+    
     var attributedInfoText:AttributedString{
         var result = AttributedString("")
         for (i,infoText) in MyLikedMenuModal.infoText.enumerated(){
@@ -102,7 +105,9 @@ struct MyLikedMenuModal: View {
                 HStack(alignment: .center,spacing:7){
                     Button(action:{
                         contentViewModel.showMyMenuViewFromPopup = true
-                        contentViewModel.showModal = false                })
+                        contentViewModel.showModal = false
+                        
+                    })
                     {Text("직접 설정하기")
                         
                             .padding(EdgeInsets(top: 11, leading: 33.25, bottom: 11, trailing: 33.25))
@@ -112,15 +117,18 @@ struct MyLikedMenuModal: View {
                             .cornerRadius(6)
                     }
                     Button(action:{
-                        
-                        contentViewModel.showModal = false
+
                         if isYesSelected{
+                            AppDelegate.alarmViewModel = viewModel
                             AppDelegate.requestNotificationPermission()
-                            UserDefaults.standard.set(true, forKey: "isAlarmEnabled")
+                            contentViewModel.showModal = false
+
                         }
                         else{
                             UserDefaults.standard.set(false, forKey: "isAlarmEnabled")
+                            contentViewModel.showModal = false
 
+                            
                         }
                         UserDefaults.standard.set(true, forKey: "isAlreadyDisplayedMyLikedMenuModal")
                     }){
@@ -145,15 +153,19 @@ struct MyLikedMenuModal: View {
 
         .cornerRadius(16)
         .frame(maxWidth:.infinity,alignment: .topLeading)
-
+        .errorAlert(error: $viewModel.error)
+        .alert("알림에 대한 권한이 없어요.", isPresented: $viewModel.noAlarmPermission, actions: {
+            Button("취소", action: {}).keyboardShortcut(.defaultAction)
+            Button("설정하기") {
+                if let url = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }, message: {
+            Text("앱 설정으로 가서 알림 권한을 수정할 수 있어요. 수정 이후 설정에서 알람을 켜야 해요. 지금 설정으로 이동하시겠어요?")
+        })
          
 
     }
 }
 
-#Preview {
-    VStack{
-        MyLikedMenuModal()
-            .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
-    }
-}

@@ -14,23 +14,31 @@ class MyLikedMenuViewModel: ObservableObject{
     private var cancellables = Set<AnyCancellable>()
 
     @Published var error: AppError?
+    @Published var noAlarmPermission = false
     @Published var isAlarmEnabled = UserDefaults.standard.bool(forKey: "isAlarmEnabled")
     @Published  var myLikedRestaurants: [MyLikedRestaurant] = []
     @Published var alarmTime:AlarmTime = .DAILY
+    private var init_error = 0
     init(myLikedMenuRepository: MyLikedMenuRepositoryProtocol) {
         self.myLikedMenuRepository = myLikedMenuRepository
-        loadMyLikedMenu()
     }
- 
+    func failedAlarm(){
+        print("errorALARM")
+        error = AppError.unknownError("알람 오류가 발생했습니다.")
+    }
     func loadMyLikedMenu(){
         myLikedMenuRepository.getMyLikedMenu()
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { [weak self] completion in
                 if case .failure(let error) = completion {
-                    self?.error = ErrorHelper.categorize(error)
+                    if self?.init_error == 0{ //  알람 화면에서 뒤로 갈 때 알람 떠서 잘 안 돌아가지는 문제 해결용
+                        self?.error = ErrorHelper.categorize(error)
+                    }
+                    self?.init_error += 1
                 }
             }, receiveValue: { [weak self] restaurants in
                 self?.myLikedRestaurants = restaurants.restaurants
+                self?.init_error = 0
             })
             .store(in: &cancellables)
 
@@ -87,6 +95,7 @@ class MyLikedMenuViewModel: ObservableObject{
                 case .finished:
                     self?.toggleMenuLike(menuId: menuId)
                 case .failure(let error):
+                    self?.error = nil
                     self?.error = ErrorHelper.categorize(error)
                 }
             }, receiveValue: { value in
@@ -151,6 +160,14 @@ class MyLikedMenuViewModel: ObservableObject{
             .store(in: &cancellables)
 
     }
+    private func enableAllAlarm(){
+        for (i,_) in myLikedRestaurants.enumerated(){
+            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
+                     myLikedRestaurants[i].menus[j].alarm = true
+                
+            }
+        }
+    }
     private func disableAllAlarm(){
         for (i,_) in myLikedRestaurants.enumerated(){
             for (j,_) in myLikedRestaurants[i].menus.enumerated(){
@@ -183,11 +200,30 @@ class MyLikedMenuViewModel: ObservableObject{
             turnOnAlarm(menuId: menuId)
         }
     }
-    private func enableAlarm(){
-        UserDefaults.standard.set(true, forKey: "isAlarmEnabled")
-        withAnimation(.easeOut(duration: 0.3)) {
-            self.isAlarmEnabled = true
-        }
+     func enableAlarm(){
+        
+        myLikedMenuRepository.onAlarmAll()
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { [weak self] completionStatus in
+                switch completionStatus {
+                case .finished:
+                    UserDefaults.standard.set(true,forKey: "isAlarmEnabled")
+
+                    withAnimation(.easeOut(duration: 0.3)) {
+                        self?.isAlarmEnabled = true
+                        self?.enableAllAlarm()
+
+                    }
+                case .failure(let error):
+                    print("ERROR")
+                    print(error)
+                    self?.error = ErrorHelper.categorize(error)
+                }
+            }, receiveValue: { value in
+                
+            })
+            .store(in: &cancellables)
+
     }
 
     private func disableAlarm(){
@@ -216,7 +252,8 @@ class MyLikedMenuViewModel: ObservableObject{
             disableAlarm()
         }
         else{
-            enableAlarm()
+            AppDelegate.alarmViewModel = self
+            AppDelegate.requestNotificationPermission()
         }
     }
     func toggleAlarmTime(){

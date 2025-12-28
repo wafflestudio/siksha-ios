@@ -47,6 +47,7 @@ protocol MyLikedMenuRepositoryProtocol{
     func getMyLikedMenu() -> AnyPublisher<MyLikedMenuResponse,AppError>
     func onAlarm(menuId:Int)->AnyPublisher<AlarmResponse,AppError>
     func offAlarm(menuId:Int)->AnyPublisher<AlarmResponse,AppError>
+    func onAlarmAll()->AnyPublisher<Void,AppError>
     func offAlarmAll()->AnyPublisher<Void,AppError>
     func postAlarmTime(type:AlarmTime)->AnyPublisher<Void,AppError>
 }

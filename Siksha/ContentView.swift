@@ -52,6 +52,7 @@ struct ContentView: View {
     @State var showPopup = false
     @State var popUpOpacity = 0.0
     @ObservedObject var contentViewModel = ContentViewModel.contentViewModel
+    @StateObject var alarmViewModel = MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository)
     struct TabItem: Identifiable {
         var id: Int
         
@@ -84,9 +85,8 @@ struct ContentView: View {
                             }
                             .ignoresSafeArea(.keyboard, edges: .bottom)
                             
-                            if contentViewModel.showModal{
                                 ZStack{
-                                    MyLikedMenuModal()
+                                    MyLikedMenuModal( viewModel: alarmViewModel)
                                         .environmentObject(ContentViewModel.contentViewModel)
                                         .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
                                     
@@ -94,11 +94,13 @@ struct ContentView: View {
                                 .ignoresSafeArea()
                                 .frame(maxWidth:.infinity,maxHeight:.infinity)
                                 .background(Color.backgroundDim)
+                                .zIndex(contentViewModel.showModal ? 10 : -10)
+                                .opacity(contentViewModel.showModal ? 1 :0)
                             }
                             NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository)),isActive: $contentViewModel.showMyMenuViewFromPopup){
                                 EmptyView()
                             }
-                        }
+                        
                     }
                     .navigationViewStyle(StackNavigationViewStyle())
                  
@@ -130,7 +132,8 @@ struct ContentView: View {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
             }
-        
+
+
         
     }
 }

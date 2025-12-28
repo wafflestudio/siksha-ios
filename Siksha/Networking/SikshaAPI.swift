@@ -93,6 +93,7 @@ enum SikshaAPI: URLRequestConvertible {
     case deleteUserDevice(fcmToken:String)
     case alarmOn(menuId:Int)
     case alarmOff(menuId:Int)
+    case alarmOnAll
     case alarmOffAll
     case alarmTime(alarmTime:String)
     static var baseURL = Config.shared.baseURL
@@ -224,6 +225,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .alarmOff(menuId: let menuId):
             return .post
+        case .alarmOnAll:
+            return .post
         case .alarmOffAll:
             return .post
         case .alarmTime:
@@ -317,6 +320,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/menus/\(menuId)/alarm/on"
         case .alarmOff(menuId: let menuId):
             return "/menus/\(menuId)/alarm/off"
+        case .alarmOnAll:
+            return "/menus/alarm/on"
         case .alarmOffAll:
             return "/menus/alarm/off"
         case .alarmTime:

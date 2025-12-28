@@ -144,6 +144,8 @@ class RenewalSettingsViewModel: ObservableObject {
                                 print("delete done")
                                 UserDefaults.standard.removeObject(forKey: "fcmToken")
                                 UserDefaults.standard.removeObject(forKey: "accessToken")
+                                UserDefaults.standard.removeObject( forKey: "alreadySentFCM")
+
                                 completion(true)
 
                             }

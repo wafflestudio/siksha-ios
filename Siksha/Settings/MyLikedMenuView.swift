@@ -59,13 +59,17 @@ struct MyLikedMenuView: View {
             })
         .onAppear{
             ContentViewModel.contentViewModel.showPopUp = true
+            viewModel.loadMyLikedMenu()
 
             print("appeared")
         }
+       
         .onDisappear{
             viewModel.unLikedMenuCleanup()
         }
         .background(Color.backgroundMain)
+        .errorAlert(error: $viewModel.error)
+
     }
 
 }

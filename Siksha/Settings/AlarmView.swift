@@ -120,8 +120,20 @@ struct AlarmView: View {
                     })
 
             }
+            .errorAlert(error: $viewModel.error)
             .background(Color.backgroundMain)
-
+            .alert("알림에 대한 권한이 없어요.", isPresented: $viewModel.noAlarmPermission, actions: {
+                Button("취소", action: {viewModel.noAlarmPermission = false}).keyboardShortcut(.defaultAction)
+                Button("설정하기") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
+                    viewModel.noAlarmPermission = false
+                }
+            }, message: {
+                Text("앱 설정으로 가서 알림 권한을 수정할 수 있어요. 수정 이후 설정에서 알람을 켜야 해요. 지금 설정으로 이동하시겠어요?")
+            })
+          
 
         }
        

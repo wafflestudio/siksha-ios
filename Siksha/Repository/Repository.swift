@@ -155,6 +155,10 @@ extension Repository: MyLikedMenuRepositoryProtocol{
         let endpoint = SikshaAPI.alarmOff(menuId: menuId)
         return self.networkModule.request(endpoint: endpoint)
     }
+    func onAlarmAll()->AnyPublisher<Void,AppError>{
+        let endpoint = SikshaAPI.alarmOnAll
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+    }
     func offAlarmAll()->AnyPublisher<Void,AppError>{
         let endpoint = SikshaAPI.alarmOffAll
         return self.networkModule.requestWithNoContent(endpoint: endpoint)
