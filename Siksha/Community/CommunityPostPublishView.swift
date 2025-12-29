@@ -140,8 +140,9 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     var imageSection: some View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
+                HStack(spacing: 3) {
                     ForEach(viewModel.images, id: \.self) { image in
+                        ZStack(alignment: .topTrailing) {
                             Image(uiImage: image)
                                 .resizable()
                                 .renderingMode(.original)
@@ -149,23 +150,18 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                 .frame(width: 106, height: 106)
                                 .clipped()
                                 .cornerRadius(cornerRadius)
-                                .overlay(alignment: .topTrailing) {
-                                    Button(action: {
-                                        viewModel.removeImage(image)
-                                    }) {
-                                        ZStack {
-                                            Circle()
-                                                .foregroundColor(.gray700)
-                                                .frame(width: 18, height: 18)
-                                            
-                                            Image(systemName: "xmark")
-                                                .font(.system(size: 10, weight: .semibold))
-                                                .foregroundColor(.white)
-                                        }
-                                        .offset(x: 4, y: -4)
-                                    }
-                                }
-                                .padding(.top, 7)
+                                .padding(.top, 4)
+                                .padding(.trailing, 5)
+                            
+                            Button(action: {
+                                viewModel.removeImage(image)
+                            }) {
+                                Image("Cancel")
+                                    .frame(width: 18, height: 18)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                            }
+                        }
                     }
                     
                     Button(action: {
@@ -181,6 +177,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                 .foregroundColor(.gray600)
                                 .frame(width: 28, height: 28)
                         }
+                        .padding(.top, 4)
+                        .padding(.trailing, 5)
                     }
                     .sheet(isPresented: $isShowingPhotoLibrary) {
                         ImagePickerCoordinatorView(selectedImages: $viewModel.images, maxSelection: 5)
