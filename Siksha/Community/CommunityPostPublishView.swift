@@ -386,6 +386,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }
                     .edgesIgnoringSafeArea(.bottom)
             }
+            .background(Color.backgroundPrimary)
         }
         .ignoresSafeArea(.keyboard)
         .navigationBarBackButtonHidden(true)

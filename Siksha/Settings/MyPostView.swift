@@ -116,6 +116,7 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
                 }
             }
         }
+        .background(Color.backgroundPrimary)
         .customNavigationBar(title: "내가 쓴 글")
         .navigationBarItems(leading: backButton)
         .onAppear {

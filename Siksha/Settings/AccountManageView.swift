@@ -111,7 +111,7 @@ struct AccountManageView: View {
 
             Spacer()
         }
-        .padding([.leading, .trailing], 8)
+        .background(Color.backgroundPrimary)
         
         .alert(isPresented: $viewModel.removeAccountFailed) {
             Alert(title: Text("회원 탈퇴"),
