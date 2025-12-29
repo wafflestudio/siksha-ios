@@ -111,7 +111,6 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ScrollView{
-                    divider
                     postList
                 }
             }
