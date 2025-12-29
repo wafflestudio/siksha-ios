@@ -375,7 +375,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 .customNavigationBar(title: "글쓰기")
                 .navigationBarItems(leading: backButton)
                 .alert(isPresented: $viewModel.isErrorAlert, content: {
-                    Alert(title: Text("게시물 남기기"), message: Text(alertMessage), dismissButton: alertButton)
+                    Alert(title: Text("게시글 작성"), message: Text(alertMessage), dismissButton: alertButton)
                 })
                     VStack {
                         Spacer()
