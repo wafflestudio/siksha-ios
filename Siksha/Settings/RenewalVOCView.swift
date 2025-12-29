@@ -95,12 +95,12 @@ struct RenewalVOCView: View {
                 .frame(height: 56)
                 .padding(16)
             }
-    //        .edgesIgnoringSafeArea(.all)
+            .onTapGesture {
+                UIApplication.shared.endEditing()
+            }
             .background(Color.backgroundPrimary.onTapGesture {
                 UIApplication.shared.endEditing()
             })
-    //        .navigationBarTitle("", displayMode: .inline)
-    //        .navigationBarHidden(true)
             .alert(isPresented: $viewModel.showAlert, content: {
                 Alert(title: Text("1:1 문의하기"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("확인"), action: {
                     if viewModel.postVOCStatus == .succeeded {
@@ -116,7 +116,8 @@ struct RenewalVOCView: View {
                 }))
             })
             .customNavigationBar(title: "1:1 문의하기")
-                        .navigationBarItems(leading: backButton)
+            .navigationBarItems(leading: backButton)
+            .background(Color.backgroundPrimary)
         }
         .ignoresSafeArea(.keyboard)
     }
