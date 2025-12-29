@@ -78,7 +78,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             .foregroundColor(.gray200)
             .overlay(
                 ClearableTextField("닉네임", text: $viewModel.nickname)
-                    .padding(.horizontal, 18)
+                    .padding(.horizontal, 13)
             )
     }
     
@@ -238,12 +238,13 @@ struct ClearableTextField: View {
         ZStack(alignment: .trailing) {
             TextField(title, text: $text)
                 .multilineTextAlignment(.center)
-                .font(.custom("NanumSquareOTFB", size: 15))
+                .customFont(font: .text15(weight: .Bold))
                 .foregroundStyle(Color.blackColor)
-                .padding(.horizontal, 20)
+                .padding(.leading, 16)
+                .padding(.trailing, 28)
             if (text != "") {
-                Image(systemName: "xmark.circle.fill")
-                    .frame(width: 18, height: 18)
+                Image("CloseSmall")
+                    .frame(width: 28, height: 28)
                     .foregroundColor(Color.iconCloseBg)
                     .onTapGesture {
                         text = ""
