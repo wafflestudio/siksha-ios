@@ -149,7 +149,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 RoundedRectangle(cornerRadius: 8.0)
                     .fill(viewModel.enableDoneButton ? Color.orange500 : Color.gray600)
                 Text("완료")
-                    .font(.custom("NanumSquareOTFEB", size: 18))
+                    .customFont(font: .text18(weight: .ExtraBold))
                     .foregroundStyle(Color.textButton)
             }
         }
@@ -213,9 +213,9 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                         .foregroundColor(Color.orange500)
                         .padding(.trailing, 10)
                     Text("이미 존재하는 닉네임입니다.")
-                        .font(.custom("NanumSquareOTFB", size: 12))
+                        .customFont(font: .text12(weight: .Bold))
                         .lineLimit(1)
-                        .foregroundColor(.white)
+                        .foregroundColor(.textButton)
                 }
             }
             .frame(width: 185, height: 30)

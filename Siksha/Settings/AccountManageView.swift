@@ -43,7 +43,7 @@ struct AccountManageView: View {
                 }) {
                     HStack(alignment: .center) {
                         Text("로그아웃")
-                            .font(.custom("NanumSquareOTFR", size: 15))
+                            .customFont(font: .text15(weight: .Regular))
                             .foregroundColor(Color.blackColor)
                             .padding([.top, .bottom], 12)
                             .padding(.leading, 16)
@@ -74,7 +74,7 @@ struct AccountManageView: View {
                 }) {
                     HStack(alignment: .center) {
                         Text("회원탈퇴")
-                            .font(.custom("NanumSquareOTFR", size: 15))
+                            .customFont(font: .text15(weight: .Regular))
                             .foregroundColor(.accentLike)
                             .padding([.top, .bottom], 12)
                             .padding(.leading, 16)

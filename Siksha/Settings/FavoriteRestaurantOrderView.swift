@@ -64,8 +64,8 @@ struct FavoriteRestaurantOrderView: View {
                     Spacer()
                     
                     Text("즐겨찾기에 추가된 식당이 없습니다.")
-                        .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(.gray700)
+                        .customFont(font: .text15(weight: .Bold))
+                        .foregroundColor(.gray600)
                     
                     Spacer()
                 }
