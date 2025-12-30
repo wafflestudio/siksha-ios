@@ -41,7 +41,7 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
                             .kerning(2.7)
                             .foregroundColor(.white)
                             .frame(alignment: .center)
-                            .font(.custom("Inter-Bold", size: 16))
+                            .customFont(font: .text16(weight: .ExtraBold))
                     }
                 }
                 .padding(.top, 11)
@@ -57,13 +57,12 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
                         }
                     }
                 }
-                .tabViewStyle(.page)
+                .tabViewStyle(.page(indexDisplayMode: .never))
                 .frame(maxWidth: .infinity)
             }
             .frame(maxWidth: .infinity)
-            
         }
-        .background(Color.backgroundPrimary)
+        .background(.black)
     }
 }
 
@@ -81,14 +80,14 @@ struct ZoomableScrollView<Content: View>: UIViewRepresentable {
         scrollView.maximumZoomScale = 20
         scrollView.minimumZoomScale = 1
         scrollView.bouncesZoom = true
-        scrollView.backgroundColor = UIColor(.backgroundPrimary)
+        scrollView.backgroundColor = UIColor(.black)
         
         // create a UIHostingController to hold our SwiftUI content
         let hostedView = context.coordinator.hostingController.view!
         hostedView.translatesAutoresizingMaskIntoConstraints = true
         hostedView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         hostedView.frame = scrollView.bounds
-        hostedView.backgroundColor = UIColor(.backgroundPrimary)
+        hostedView.backgroundColor = UIColor(.black)
         scrollView.addSubview(hostedView)
         
         return scrollView
