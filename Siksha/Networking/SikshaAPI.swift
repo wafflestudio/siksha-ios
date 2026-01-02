@@ -101,6 +101,7 @@ enum SikshaAPI: URLRequestConvertible {
     case alarmOnAll
     case alarmOffAll
     case alarmTime(alarmTime:String)
+    case getAlarmTime
     static var baseURL = Config.shared.baseURL
     
     var needToken: Bool {
@@ -128,6 +129,8 @@ enum SikshaAPI: URLRequestConvertible {
         case .getMyLikedMenu:
             return true
         case .alarmTime:
+            return true
+        case .getAlarmTime:
             return true
         case .testLogin:
             return false
@@ -240,6 +243,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .alarmOffAll:
             return .post
+        case .getAlarmTime:
+            return .get
         case .alarmTime:
             return .post
         case .testLogin:
@@ -344,6 +349,8 @@ enum SikshaAPI: URLRequestConvertible {
         case .alarmOffAll:
             return "/menus/alarm/off"
         case .alarmTime:
+            return "/auth/alarm"
+        case .getAlarmTime:
             return "/auth/alarm"
         case .testLogin:
             return "/auth/login/test"

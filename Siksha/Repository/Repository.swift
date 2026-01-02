@@ -182,4 +182,9 @@ extension Repository: AuthRepositoryProtocol{
         return self.networkModule.requestWithNoContent(endpoint: endpoint)
 
     }
+    func getAlarmTime()->AnyPublisher<AlarmTimeResponse,AppError>{
+        let endpoint = SikshaAPI.getAlarmTime
+        return self.networkModule.request(endpoint: endpoint)
+
+    }
 }

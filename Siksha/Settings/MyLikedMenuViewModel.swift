@@ -26,6 +26,19 @@ class MyLikedMenuViewModel: ObservableObject{
         print("errorALARM")
         error = AppError.unknownError("알람 오류가 발생했습니다.")
     }
+    func getAlarmTime(){
+        myLikedMenuRepository.getAlarmTime()
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                if case .failure(let error) = completion {
+                    self?.error = ErrorHelper.categorize(error)
+                }
+            }, receiveValue: {[weak self] response in
+                self?.alarmTime = AlarmTime(rawValue: response.alarmType)!
+                
+            })
+            .store(in: &cancellables)
+    }
     func loadMyLikedMenu(){
         myLikedMenuRepository.getMyLikedMenu()
             .receive(on: RunLoop.main)

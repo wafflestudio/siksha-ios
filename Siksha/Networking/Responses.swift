@@ -78,3 +78,10 @@ struct AlarmResponse: Codable{
         case etc = "etc"
     }
 }
+struct AlarmTimeResponse:Codable{
+    
+    var alarmType:String
+    enum CodingKeys: String, CodingKey {
+        case alarmType = "alarm_type"
+    }
+}
