@@ -85,6 +85,7 @@ struct LikedMenuRestaurantCell: View {
                                 .renderingMode(.original)
                                 .frame(width: 20, height: 20)
                         })
+                        Spacer()
                         
                         
                     }
