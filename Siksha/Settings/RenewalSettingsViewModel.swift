@@ -122,6 +122,7 @@ class RenewalSettingsViewModel: ObservableObject {
     func logOutAccount(completion:@escaping(Bool)->()) {
         if UserDefaults.standard.string(forKey: "fcmToken") == nil{
             UserDefaults.standard.removeObject(forKey: "accessToken")
+            UserDefaults.standard.set(false,forKey: "isAlarmEnabled")
             completion(true)
         }
         else{
@@ -145,6 +146,8 @@ class RenewalSettingsViewModel: ObservableObject {
                                 UserDefaults.standard.removeObject(forKey: "fcmToken")
                                 UserDefaults.standard.removeObject(forKey: "accessToken")
                                 UserDefaults.standard.removeObject( forKey: "alreadySentFCM")
+                                UserDefaults.standard.set(false,forKey: "isAlarmEnabled")
+
 
                                 completion(true)
 
