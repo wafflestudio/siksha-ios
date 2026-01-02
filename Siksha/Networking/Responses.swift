@@ -9,12 +9,8 @@ import Foundation
 
 struct ReviewResponse: Codable {
     var totalCount: Int
-    var reviews: [Review]
-    
-    enum CodingKeys: String, CodingKey {
-        case totalCount = "total_count"
-        case reviews = "result"
-    }
+    var hasNext: Bool
+    var result: [Review]
 }
 
 struct CommentRecommendationResponse: Codable {
@@ -48,6 +44,20 @@ struct MyLikedMenuResponse: Codable{
     enum CodingKeys: String, CodingKey {
         case restaurants = "result"
     }
+}
+
+struct KeywordDistributionResponse: Codable {
+    let tasteKeyword: String
+    let tasteCnt: Int
+    let tasteTotal: Int
+    
+    let priceKeyword: String
+    let priceCnt: Int
+    let priceTotal: Int
+    
+    let foodCompositionKeyword: String
+    let foodCompositionCnt: Int
+    let foodCompositionTotal: Int
 }
 
 struct AlarmResponse: Codable{

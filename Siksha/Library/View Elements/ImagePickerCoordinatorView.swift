@@ -70,12 +70,10 @@ extension ImagePickerCoordinatorView {
             let newImages = getAssetThumbnail(assets: assets)
             parent.selectedImages.append(contentsOf: newImages)
             parent.onImagesSelected?(newImages)
-            parent.dismiss()
         }
         
         public func imagePicker(_ imagePicker: ImagePickerController, didCancelWithAssets assets: [PHAsset]) {
             print("Canceled with selections: \(assets)")
-            parent.dismiss()
         }
         
         public func imagePicker(_ imagePicker: ImagePickerController, didReachSelectionLimit count: Int) {

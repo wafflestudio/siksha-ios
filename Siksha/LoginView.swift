@@ -55,6 +55,17 @@ struct LoginView: View {
                                 .foregroundColor(.black)
                                 .cornerRadius(5.5)
                         })
+                        
+                        #if DEBUG
+                        
+                        Button(action: {
+                            viewModel.requestTestLogin()
+                        }, label: {
+                            Text("테스트 로그인")
+                        })
+                        
+                        
+                        #endif
                     }
                     
                     Spacer()

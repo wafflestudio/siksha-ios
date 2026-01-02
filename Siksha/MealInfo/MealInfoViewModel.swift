@@ -21,10 +21,14 @@ public class MealInfoViewModel: ObservableObject {
     @Published var totalImageCount = 0
     
     @Published var scoreDistribution: [CGFloat] = []
+    @Published var tasteSummary: ReviewKeywordSummary = .init(type: .taste, keyword: "", count: 0, total: 0)
+    @Published var priceSummary: ReviewKeywordSummary = .init(type: .price, keyword: "", count: 0, total: 0)
+    @Published var compositionSummary: ReviewKeywordSummary = .init(type: .composition, keyword: "", count: 0, total: 0)
     
     @Published var getReviewStatus: NetworkStatus = .idle
     @Published var getImageStatus: NetworkStatus = .idle
     @Published var getDistributionStatus: NetworkStatus = .idle
+    @Published var getKeywordDistributionStatus: NetworkStatus = .idle
     @Published var getLikeStatus: NetworkStatus = .idle
     @Published var isLiked = false
     @Published var loadedReviews: Bool = false
@@ -84,6 +88,7 @@ public class MealInfoViewModel: ObservableObject {
                 .store(in: &cancellables)
         }
     }
+    
     func loadReviews() {
         guard getReviewStatus != .loading else {
             return
@@ -100,10 +105,10 @@ public class MealInfoViewModel: ObservableObject {
                     self.getReviewStatus = .failed
                     return
                 }
-                self.hasMorePages = (1 < (response.totalCount+4)/5)
+                self.hasMorePages = response.hasNext
                 self.getReviewStatus = .succeeded
             })
-            .map(\.?.reviews)
+            .map(\.?.result)
             .replaceNil(with: [])
             .assign(to: \.mealReviews, on: self)
             .store(in: &cancellables)
@@ -116,21 +121,20 @@ public class MealInfoViewModel: ObservableObject {
         
         getImageStatus = .loading
         
-        Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 3, comment: false, etc: true)
-            .map(\.value)
+        Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 3)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in
                 guard let self = self else { return }
-                guard let response = response else {
+                guard let response = response.value else {
                     self.getImageStatus = .failed
                     return
                 }
                 self.totalImageCount = response.totalCount
                 self.getImageStatus = .succeeded
             })
-            .map(\.?.reviews)
+            .map(\.value?.result)
             .replaceNil(with: [])
-            .map { $0.map {$0.images?["images"]?[0] ?? ""} }
+            .map { $0.map {$0.etc?["images"]?[0] ?? ""} }
             .assign(to: \.images, on: self)
             .store(in: &cancellables)
     }
@@ -157,6 +161,52 @@ public class MealInfoViewModel: ObservableObject {
             .replaceNil(with: [])
             .map { dist in dist.map { CGFloat($0) } }
             .assign(to: \.scoreDistribution, on: self)
+            .store(in: &cancellables)
+    }
+    
+    func loadKeywordDistribution() {
+        guard getKeywordDistributionStatus != .loading else {
+            return
+        }
+        
+        getKeywordDistributionStatus = .loading
+        
+        Networking.shared.getKeywordDistribution(menuId: meal.id)
+            .map(\.value)
+            .receive(on: RunLoop.main)
+            .handleEvents(receiveOutput: { [weak self] response in
+                guard let self = self else { return }
+                guard let _ = response else {
+                    self.getKeywordDistributionStatus = .failed
+                    return
+                }
+                self.getKeywordDistributionStatus = .succeeded
+            })
+            .compactMap{ $0 }
+            .sink{ [weak self] dist in
+                guard let self else { return }
+                
+                tasteSummary = ReviewKeywordSummary(
+                    type: .taste,
+                    keyword: dist.tasteKeyword,
+                    count: dist.tasteCnt,
+                    total: dist.tasteTotal
+                )
+                
+                priceSummary = ReviewKeywordSummary(
+                    type: .price,
+                    keyword: dist.priceKeyword,
+                    count: dist.priceCnt,
+                    total: dist.priceTotal
+                )
+                
+                compositionSummary = ReviewKeywordSummary(
+                    type: .composition,
+                    keyword: dist.foodCompositionKeyword,
+                    count: dist.foodCompositionCnt,
+                    total: dist.foodCompositionTotal
+                )
+            }
             .store(in: &cancellables)
     }
 }

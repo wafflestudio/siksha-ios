@@ -9,7 +9,7 @@ import SwiftUI
 
 private extension ContentView {
     func tabBar(_ geometry: GeometryProxy) -> some View {
-        HStack {
+        HStack(spacing: 48) {
             Spacer()
             ForEach(self.tabItems) { item in
                 Button(action: {
@@ -20,19 +20,19 @@ private extension ContentView {
                         .resizable()
                         .frame(width: 36, height: 46)
                 }
-                .padding(.bottom, geometry.safeAreaInsets.bottom)
                 .transaction { transaction in
                     transaction.animation = nil
                     transaction.disablesAnimations = true
                 }
-                
-                Spacer()
             }
+            Spacer()
         }
-        .frame(width: geometry.size.width, height: 50 + geometry.safeAreaInsets.bottom)
-        .background(Color.backgroundSecondary.shadow(color:Color(red: 0, green: 0, blue: 0,opacity: 0.05), radius: 0, x: 0, y: -0.3))
-        .padding(.top, -8)
-        .padding(.bottom, -geometry.safeAreaInsets.bottom)
+        .padding(.top, 5)
+        .padding(.bottom, geometry.safeAreaInsets.bottom == 0 ? geometry.safeAreaInsets.bottom + 13 : geometry.safeAreaInsets.bottom - 2)
+        .background(
+            Color.backgroundSecondary
+                .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: -2)
+        )
     }
 }
 
@@ -55,35 +55,33 @@ struct ContentView: View {
     @StateObject var alarmViewModel = MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository)
     struct TabItem: Identifiable {
         var id: Int
-        
         var content: AnyView
         var buttonImage: [String]
     }
     
-    let tabItems =
-        [TabItem(id: 0, content: AnyView(MenuView(isFavoriteTab: true).id("favorite")), buttonImage: ["Favorite", "Favorite-disabled"]),
+    let tabItems = [
+        TabItem(id: 0, content: AnyView(MenuView(isFavoriteTab: true).id("favorite")), buttonImage: ["Favorite", "Favorite-disabled"]),
         TabItem(id: 1, content: AnyView(MenuView().id("main")), buttonImage: ["Main", "Main-disabled"]),
         TabItem(id: 2, content: AnyView(CommunityView(viewModel: CommunityViewModel(communityRepository: DomainManager.shared.domain.communityRepository))), buttonImage: ["Community", "Community-disabled"]),
-         TabItem(id: 3, content: AnyView(RenewalSettingsView(viewModel: RenewalSettingsViewModel())), buttonImage: ["Settings", "Settings-disabled"])
-        ]
+        TabItem(id: 3, content: AnyView(RenewalSettingsView(viewModel: RenewalSettingsViewModel())), buttonImage: ["Settings", "Settings-disabled"])
+    ]
     
-  
     var body: some View {
     
             GeometryReader { geometry in
                 ZStack{
                     NavigationView {
                         ZStack{
-                            VStack {
+                            VStack(spacing:0) {
                                 
                                 tabItems[selectedTab].content
                                 
-                                Spacer()
                                 tabBar(geometry)
                                 
                                 
                             }
-                            .ignoresSafeArea(.keyboard, edges: .bottom)
+                            .frame(width:geometry.size.width)
+                            .ignoresSafeArea(.all, edges: .bottom)
                             
                                 ZStack{
                                     MyLikedMenuModal( viewModel: alarmViewModel)
@@ -134,7 +132,20 @@ struct ContentView: View {
             }
 
 
-        
+/*
+=======
+        GeometryReader { geometry in
+            NavigationStack {
+                VStack(spacing: 0) {
+                    tabItems[selectedTab].content
+                    tabBar(geometry)
+                }
+                .frame(width: geometry.size.width)
+                .ignoresSafeArea(.all, edges: .bottom)
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+        }
+>>>>>>> develop*/
     }
 }
 
@@ -145,6 +156,7 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
+
 extension View{
     @ViewBuilder
     func If<Content: View>(_ condition: Bool, transform: (Self) -> Content) -> some View {

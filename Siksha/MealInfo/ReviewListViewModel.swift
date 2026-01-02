@@ -14,14 +14,20 @@ public class ReviewListViewModel: ObservableObject {
     private var perPage = 10
     var currentPage: Int = 1
     
-    @Published var meal: Meal!
+    private let mealID: Int
+    let imageOnly: Bool
     @Published var reviews: [Review] = []
     @Published var hasMorePages = true
     @Published var getReviewStatus: NetworkStatus = .idle
     
-    func loadMoreReviewsIfNeeded(currentItem item: Review?, _ onlyImage: Bool) {
-        guard let item = item else {
-            if onlyImage {
+    init(mealID: Int, imageOnly: Bool = false) {
+        self.mealID = mealID
+        self.imageOnly = imageOnly
+    }
+    
+    func loadMoreReviewsIfNeeded(current: Review? = nil) {
+        if reviews.isEmpty && getReviewStatus != .loading {
+            if imageOnly {
                 loadMoreImageReviews()
             } else {
                 loadMoreReviews()
@@ -29,10 +35,19 @@ public class ReviewListViewModel: ObservableObject {
             return
         }
         
-        let thresholdIndex = reviews.index(reviews.endIndex, offsetBy: -3)
+        let thresholdIndex = reviews.index(
+            reviews.endIndex,
+            offsetBy: -3,
+            limitedBy: reviews.startIndex
+        ) ?? reviews.startIndex
         
-        if reviews.firstIndex(where: { $0.id == item.id }) == thresholdIndex && hasMorePages {
-            if onlyImage {
+        guard hasMorePages,
+              let currentIndex = reviews.firstIndex(where: { $0.id == current?.id })
+        else { return }
+        
+        // 끝에서 3개 이내로 왔을 때 로드
+        if currentIndex == thresholdIndex {
+            if imageOnly {
                 loadMoreImageReviews()
             } else {
                 loadMoreReviews()
@@ -47,7 +62,7 @@ public class ReviewListViewModel: ObservableObject {
         
         getReviewStatus = .loading
 
-        Networking.shared.getReviews(menuId: meal.id, page: currentPage, perPage: perPage)
+        Networking.shared.getReviews(menuId: mealID, page: currentPage, perPage: perPage)
             .map(\.value)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in
@@ -60,7 +75,7 @@ public class ReviewListViewModel: ObservableObject {
                 self.currentPage += 1
                 self.getReviewStatus = .succeeded
             })
-            .map(\.?.reviews)
+            .map(\.?.result)
             .replaceNil(with: [])
             .map { self.reviews + $0 }
             .assign(to: \.reviews, on: self)
@@ -74,7 +89,7 @@ public class ReviewListViewModel: ObservableObject {
         
         getReviewStatus = .loading
         
-        Networking.shared.getReviewImages(menuId: meal.id, page: currentPage, perPage: perPage, comment: false, etc: true)
+        Networking.shared.getReviewImages(menuId: mealID, page: currentPage, perPage: perPage)
             .map(\.value)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in
@@ -83,11 +98,11 @@ public class ReviewListViewModel: ObservableObject {
                     self.getReviewStatus = .failed
                     return
                 }
-                self.hasMorePages = (self.currentPage < (response.totalCount+self.perPage-1)/self.perPage)
+                self.hasMorePages = response.hasNext
                 self.currentPage += 1
                 self.getReviewStatus = .succeeded
             })
-            .map(\.?.reviews)
+            .map(\.?.result)
             .replaceNil(with: [])
             .map { self.reviews + $0 }
             .assign(to: \.reviews, on: self)

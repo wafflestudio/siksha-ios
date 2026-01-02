@@ -7,9 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		071E87842EA637C4002B0BE0 /* ImageViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071E87832EA637C4002B0BE0 /* ImageViewer.swift */; };
 		07491E412E51BFBF00889C67 /* MixpanelAnalytics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */; };
 		07491E432E51C00500889C67 /* AnalyticsEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E422E51C00500889C67 /* AnalyticsEvent.swift */; };
 		07491E452E51C02D00889C67 /* AnalyticsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07491E442E51C02D00889C67 /* AnalyticsKey.swift */; };
+		0749F82F2EB20ED600FC2C7E /* ReviewRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0749F82E2EB20ED600FC2C7E /* ReviewRowViewModel.swift */; };
+		0749F8332EB349B300FC2C7E /* ReviewKeywordSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0749F8322EB349B300FC2C7E /* ReviewKeywordSummary.swift */; };
+		075E0ADE2ED55F11009E95BA /* MenuHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075E0ADD2ED55F11009E95BA /* MenuHeaderView.swift */; };
+		075E0AE02ED55F5A009E95BA /* KeywordSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075E0ADF2ED55F5A009E95BA /* KeywordSectionView.swift */; };
+		075E0AE22ED56B0F009E95BA /* PhotoReviewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075E0AE12ED56B0F009E95BA /* PhotoReviewSection.swift */; };
+		075E0AE42ED57DD7009E95BA /* ReviewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 075E0AE32ED57DD7009E95BA /* ReviewSection.swift */; };
+		07CD061B2EA4B40500CCC4B7 /* PhotoAddView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */; };
+		07CD061D2EA4B45800CCC4B7 /* KeywordSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */; };
+		07D241B62E769A7500B56593 /* ReviewRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241B52E769A7500B56593 /* ReviewRow.swift */; };
+		07D241C82E94AFB300B56593 /* StarUnitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241C72E94AFB300B56593 /* StarUnitView.swift */; };
+		07D241CA2E94AFF300B56593 /* StarRateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241C92E94AFF300B56593 /* StarRateView.swift */; };
+		07D241CC2E94B1CD00B56593 /* KeywordRateType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */; };
+		07D241CE2E94B1E200B56593 /* KeywordRateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241CD2E94B1E200B56593 /* KeywordRateRow.swift */; };
+		07D241D02E96074600B56593 /* Double+roundedToHalf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D241CF2E96074600B56593 /* Double+roundedToHalf.swift */; };
 		1E3A56EB25C6FCE600DBB3F4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */; };
 		1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */; };
 		1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3A56EE25C6FCE600DBB3F4 /* ContentView.swift */; };
@@ -200,9 +215,24 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		071E87832EA637C4002B0BE0 /* ImageViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewer.swift; sourceTree = "<group>"; };
 		07491E402E51BFBF00889C67 /* MixpanelAnalytics.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MixpanelAnalytics.swift; sourceTree = "<group>"; };
 		07491E422E51C00500889C67 /* AnalyticsEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsEvent.swift; sourceTree = "<group>"; };
 		07491E442E51C02D00889C67 /* AnalyticsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsKey.swift; sourceTree = "<group>"; };
+		0749F82E2EB20ED600FC2C7E /* ReviewRowViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRowViewModel.swift; sourceTree = "<group>"; };
+		0749F8322EB349B300FC2C7E /* ReviewKeywordSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewKeywordSummary.swift; sourceTree = "<group>"; };
+		075E0ADD2ED55F11009E95BA /* MenuHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuHeaderView.swift; sourceTree = "<group>"; };
+		075E0ADF2ED55F5A009E95BA /* KeywordSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSectionView.swift; sourceTree = "<group>"; };
+		075E0AE12ED56B0F009E95BA /* PhotoReviewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoReviewSection.swift; sourceTree = "<group>"; };
+		075E0AE32ED57DD7009E95BA /* ReviewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewSection.swift; sourceTree = "<group>"; };
+		07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoAddView.swift; sourceTree = "<group>"; };
+		07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordSelectionView.swift; sourceTree = "<group>"; };
+		07D241B52E769A7500B56593 /* ReviewRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewRow.swift; sourceTree = "<group>"; };
+		07D241C72E94AFB300B56593 /* StarUnitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarUnitView.swift; sourceTree = "<group>"; };
+		07D241C92E94AFF300B56593 /* StarRateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StarRateView.swift; sourceTree = "<group>"; };
+		07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordRateType.swift; sourceTree = "<group>"; };
+		07D241CD2E94B1E200B56593 /* KeywordRateRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeywordRateRow.swift; sourceTree = "<group>"; };
+		07D241CF2E96074600B56593 /* Double+roundedToHalf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+roundedToHalf.swift"; sourceTree = "<group>"; };
 		1E3A56E725C6FCE600DBB3F4 /* Siksha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Siksha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A56EA25C6FCE600DBB3F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1E3A56EC25C6FCE600DBB3F4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -405,6 +435,42 @@
 			path = Analytics;
 			sourceTree = "<group>";
 		};
+		075E0AE52ED581B9009E95BA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				071E87832EA637C4002B0BE0 /* ImageViewer.swift */,
+				075E0AE32ED57DD7009E95BA /* ReviewSection.swift */,
+				075E0AE12ED56B0F009E95BA /* PhotoReviewSection.swift */,
+				07D241CD2E94B1E200B56593 /* KeywordRateRow.swift */,
+				07D241B52E769A7500B56593 /* ReviewRow.swift */,
+				0749F82E2EB20ED600FC2C7E /* ReviewRowViewModel.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		075E0AE62ED581CF009E95BA /* Review */ = {
+			isa = PBXGroup;
+			children = (
+				075E0AE72ED581EF009E95BA /* Views */,
+				1ED44A3625CC6094001D916B /* MealReviewView.swift */,
+				1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */,
+			);
+			path = Review;
+			sourceTree = "<group>";
+		};
+		075E0AE72ED581EF009E95BA /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				07CD061A2EA4B40500CCC4B7 /* PhotoAddView.swift */,
+				075E0ADD2ED55F11009E95BA /* MenuHeaderView.swift */,
+				075E0ADF2ED55F5A009E95BA /* KeywordSectionView.swift */,
+				07CD061C2EA4B45800CCC4B7 /* KeywordSelectionView.swift */,
+				07D241C72E94AFB300B56593 /* StarUnitView.swift */,
+				07D241C92E94AFF300B56593 /* StarRateView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		1E3A56DE25C6FCE600DBB3F4 = {
 			isa = PBXGroup;
 			children = (
@@ -429,6 +495,7 @@
 		1E3A56E925C6FCE600DBB3F4 /* Siksha */ = {
 			isa = PBXGroup;
 			children = (
+				075E0AE62ED581CF009E95BA /* Review */,
 				07491E3F2E51BF8900889C67 /* Analytics */,
 				4E23C5A52D17DCD80088C1F6 /* ErrorAlert.swift */,
 				4E23C5A72D17E1DD0088C1F6 /* ErrorHelper.swift */,
@@ -445,7 +512,7 @@
 				1E96F95025E2525B0074940C /* LoginView.swift */,
 				1ECB248025F14C0F00875E18 /* LoginViewModel.swift */,
 				231C9C9425F82EA80072C07A /* RestaurantInfo */,
-				1ECB254525F2970C00875E18 /* MealDetail */,
+				1ECB254525F2970C00875E18 /* MealInfo */,
 				1E3A572825C6FDC000DBB3F4 /* Main */,
 				1E3A572F25C6FDEC00DBB3F4 /* Settings */,
 				1E3A573825C6FE1600DBB3F4 /* Library */,
@@ -549,6 +616,8 @@
 				BF97DF5C2AB836910083FC6F /* Community.swift */,
 				4E6465112B1D8EEB00A4ABAD /* User.swift */,
 				A615B4DB2D86AAA60095865F /* MenuFilters.swift */,
+				0749F8322EB349B300FC2C7E /* ReviewKeywordSummary.swift */,
+				07D241CB2E94B1CD00B56593 /* KeywordRateType.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -649,17 +718,16 @@
 			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		1ECB254525F2970C00875E18 /* MealDetail */ = {
+		1ECB254525F2970C00875E18 /* MealInfo */ = {
 			isa = PBXGroup;
 			children = (
+				075E0AE52ED581B9009E95BA /* Views */,
 				1ED44A4525CC6579001D916B /* MealInfoViewModel.swift */,
 				1ECB254C25F2975A00875E18 /* MealInfoView.swift */,
-				1ED44A3625CC6094001D916B /* MealReviewView.swift */,
-				1ECB258125F5572F00875E18 /* MealReviewViewModel.swift */,
 				231DEB3A266BC5C900AA32C0 /* ReviewListViewModel.swift */,
 				2360CD992663778B007E02DB /* ReviewListView.swift */,
 			);
-			path = MealDetail;
+			path = MealInfo;
 			sourceTree = "<group>";
 		};
 		231C9C9425F82EA80072C07A /* RestaurantInfo */ = {
@@ -712,6 +780,7 @@
 				BFA4759E2950B54400B41AA7 /* UINavigationBar+ext.swift */,
 				4EC08B502C67ABF600AB2001 /* HexColor.swift */,
 				1E3A573925C6FE2700DBB3F4 /* Extensions.swift */,
+				07D241CF2E96074600B56593 /* Double+roundedToHalf.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -940,6 +1009,7 @@
 				1ECB255225F2999100875E18 /* RatingStar.swift in Sources */,
 				747811C02CE0B7E600EEEB6C /* KakaoShareManager.swift in Sources */,
 				BF97DF552AAF003D0083FC6F /* RepositoryProtocol.swift in Sources */,
+				07D241C82E94AFB300B56593 /* StarUnitView.swift in Sources */,
 				1EB5F4412644710A0012201A /* Networking.swift in Sources */,
 				A615B4DC2D86AAA60095865F /* MenuFilters.swift in Sources */,
 				330C55132D4D047A0011345D /* Sliders.swift in Sources */,
@@ -965,9 +1035,11 @@
 				1E3A582025C9C28000DBB3F4 /* Enums.swift in Sources */,
 				BF60ADE62AC1EABF0015C468 /* Errors.swift in Sources */,
 				2360CD9A2663778B007E02DB /* ReviewListView.swift in Sources */,
+				07D241CE2E94B1E200B56593 /* KeywordRateRow.swift in Sources */,
 				4E90A0832E88DA450016BAAF /* MyLikedMenuMealCell.swift in Sources */,
 				C091FEEC2C314FCC00D48F92 /* MyPostViewModel.swift in Sources */,
 				1E96F94325E132250074940C /* ActivityIndicator.swift in Sources */,
+				071E87842EA637C4002B0BE0 /* ImageViewer.swift in Sources */,
 				1EABA80B25EBE28000B79CB8 /* Utils.swift in Sources */,
 				1E3A581B25C98F9A00DBB3F4 /* AppState.swift in Sources */,
 				4E3D4EE72A74E02A005C7AB2 /* BoardNameCell.swift in Sources */,
@@ -982,6 +1054,9 @@
 				4E79A1862C80B6BE007CE49B /* AlertView.swift in Sources */,
 				4E51987D2DDA2FD300F85388 /* Font.swift in Sources */,
 				1ECB255D25F2B3EA00875E18 /* ReviewCell.swift in Sources */,
+				07D241D02E96074600B56593 /* Double+roundedToHalf.swift in Sources */,
+				07D241B62E769A7500B56593 /* ReviewRow.swift in Sources */,
+				07CD061D2EA4B45800CCC4B7 /* KeywordSelectionView.swift in Sources */,
 				BF60ADE42AC1EAA20015C468 /* DomainUtils.swift in Sources */,
 				1E3A572425C6FDA300DBB3F4 /* MenuView.swift in Sources */,
 				749AA1222CE3618E00AD61E5 /* WebView.swift in Sources */,
@@ -995,9 +1070,13 @@
 				330C55112D4CCA480011345D /* SegmentedPicker.swift in Sources */,
 				231C9CE525F835B40072C07A /* BackButton.swift in Sources */,
 				BF97DF572AAF00780083FC6F /* Repository.swift in Sources */,
+				07CD061B2EA4B40500CCC4B7 /* PhotoAddView.swift in Sources */,
+				075E0AE02ED55F5A009E95BA /* KeywordSectionView.swift in Sources */,
 				4EA4F08C2E51BDCE0056438B /* MyLikedMenuView.swift in Sources */,
 				BFA4759F2950B54500B41AA7 /* UINavigationBar+ext.swift in Sources */,
+				0749F82F2EB20ED600FC2C7E /* ReviewRowViewModel.swift in Sources */,
 				1E96F95125E2525B0074940C /* LoginView.swift in Sources */,
+				07D241CC2E94B1CD00B56593 /* KeywordRateType.swift in Sources */,
 				4EF807662B170AA200F009B2 /* CommunityPostViewModel.swift in Sources */,
 				4EBD27B22E629A5800E227D4 /* AlarmView.swift in Sources */,
 				1E9A6EAA2674BDFD005CAEA1 /* NavigationBarModifier.swift in Sources */,
@@ -1006,6 +1085,7 @@
 				C091FEE52C314F9600D48F92 /* RenewalSettingsViewModel.swift in Sources */,
 				1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */,
 				4EA4F0882E4DFBB80056438B /* MapMarker.swift in Sources */,
+				07D241CA2E94AFF300B56593 /* StarRateView.swift in Sources */,
 				1E96F92F25DEC14F0074940C /* MenuRepository.swift in Sources */,
 				C091FEE82C314FA100D48F92 /* AccountManageView.swift in Sources */,
 				1E3A56ED25C6FCE600DBB3F4 /* SceneDelegate.swift in Sources */,
@@ -1017,6 +1097,7 @@
 				BF97DF5B2AAF12200083FC6F /* AlamofireNetworking.swift in Sources */,
 				A6F81E0B2BCBCEAE00263D70 /* ProfileEditView.swift in Sources */,
 				1E72267B25F916A6008C272E /* Responses.swift in Sources */,
+				0749F8332EB349B300FC2C7E /* ReviewKeywordSummary.swift in Sources */,
 				2303CF1E265A5E27002328F5 /* ImagePickerCoordinatorView.swift in Sources */,
 				C091FEE62C314F9600D48F92 /* RenewalSettingsView.swift in Sources */,
 				BF97DF592AAF00B30083FC6F /* DomainManager.swift in Sources */,
@@ -1029,10 +1110,12 @@
 				1E3A56EF25C6FCE600DBB3F4 /* ContentView.swift in Sources */,
 				4E3D4EEB2A74F743005C7AB2 /* TopPostCell.swift in Sources */,
 				1EB5F43C263E8EDE0012201A /* OperatingHoursTable.swift in Sources */,
+				075E0ADE2ED55F11009E95BA /* MenuHeaderView.swift in Sources */,
 				1ED44A4125CC6135001D916B /* BottomModalView.swift in Sources */,
 				23DFD2172664CD400049F8D7 /* ThumbnailImage.swift in Sources */,
 				1ECB251D25F1739D00875E18 /* Config.swift in Sources */,
 				BF4E1AAD2AB8498D002E40D6 /* CommunityViewModel.swift in Sources */,
+				075E0AE22ED56B0F009E95BA /* PhotoReviewSection.swift in Sources */,
 				4E90A0812E7BEA110016BAAF /* MyLikedMenuViewModel.swift in Sources */,
 				1E3A574E25C6FF0500DBB3F4 /* Restaurant.swift in Sources */,
 				07491E452E51C02D00889C67 /* AnalyticsKey.swift in Sources */,
@@ -1042,6 +1125,7 @@
 				1E7226F825FBDE72008C272E /* MealCell.swift in Sources */,
 				7418F4E72E2CBF6700C24A92 /* Color+SikshaColor.swift in Sources */,
 				231C9D2125FB5E490072C07A /* SegmentedControlView.swift in Sources */,
+				075E0AE42ED57DD7009E95BA /* ReviewSection.swift in Sources */,
 				4ED177EB2D33C39C00374D0C /* FilterItem.swift in Sources */,
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				23DFD2042664110B0049F8D7 /* RemoteImage.swift in Sources */,
@@ -1141,6 +1225,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = ZHQQM4M49J;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1204,6 +1289,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = ZHQQM4M49J;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;

@@ -1,14 +1,17 @@
 {
   "images" : [
     {
+      "filename" : "yang.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
+      "filename" : "yang@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
+      "filename" : "yang@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

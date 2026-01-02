@@ -11,6 +11,7 @@ import Combine
 protocol MyPostViewModelType: ObservableObject {
     var postsListPublisher: [PostInfo] { get }
     var hasNextPublisher: Bool { get }
+    var isInitialLoading: Bool { get }
     var error: AppError? { get set }
 
     func loadMorePosts()
@@ -24,6 +25,7 @@ final class MyPostViewModel: MyPostViewModelType {
     }
     
     @Published var error: AppError?
+    @Published var isInitialLoading = false
     
     private let communityRepository: CommunityRepositoryProtocol
     
@@ -36,7 +38,6 @@ final class MyPostViewModel: MyPostViewModelType {
     
     init(communityRepository: CommunityRepositoryProtocol) {
         self.communityRepository = communityRepository
-        loadPosts()
     }
 }
 
@@ -54,14 +55,18 @@ extension MyPostViewModel {
 
 extension MyPostViewModel {
     private func loadInitialPosts() {
+        isInitialLoading = true
+        
         self.communityRepository
             .loadMyPostsPage(page: Constants.initialPage, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { [weak self] completion in
+                self?.isInitialLoading = false
                 if case .failure(let error) = completion {
                     self?.error = ErrorHelper.categorize(error)
                 }
             }, receiveValue: { [weak self] postsPage in
+                self?.isInitialLoading = false
                 self?.currPostList = postsPage.posts
                 self?.currentPage = 1
                 self?.hasNext = postsPage.hasNext
@@ -88,6 +93,7 @@ extension MyPostViewModel {
             })
             .store(in: &cancellables)
     }
+    
     func loadPosts() {
         loadInitialPosts()
     }
