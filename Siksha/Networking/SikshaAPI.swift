@@ -95,6 +95,7 @@ enum SikshaAPI: URLRequestConvertible {
     case deleteUser
     case getMyReview(page: Int, perPage: Int)
     case deleteMyReview(reviewId: Int)
+    case editReview(reviewId: Int, menuId: Int, score: Int, comment: String?, taste: String, price: String, foodComposition: String, images: [Data]?)
 
     static var baseURL = Config.shared.baseURL
     
@@ -219,6 +220,8 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .deleteMyReview:
             return .delete
+        case .editReview:
+            return .patch
         case .testLogin:
             return .post
         }
@@ -310,6 +313,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/reviews/me"
         case let .deleteMyReview(reviewId):
             return "/reviews/\(reviewId)"
+        case let .editReview(reviewId, _, _, _, _, _, _, _):
+            return "/reviews/\(reviewId)"
         case .testLogin:
             return "/auth/login/test"
         }
@@ -365,6 +370,8 @@ enum SikshaAPI: URLRequestConvertible {
             return ["comment_id" : commentId,"reason":reason]
         case let .getMyReview(page, perPage):
             return ["page": page, "per_page": perPage]
+        case let .editReview(_, menuId, score, comment, taste, price, foodComposition, _):
+            return ["menu_id": menuId, "score": score, "comment": comment, "taste": taste, "price": price, "food_composition": foodComposition]
         case .testLogin:
             return ["identity": "test user"]
         default:
@@ -381,6 +388,8 @@ enum SikshaAPI: URLRequestConvertible {
         case .updateUserProfile:
             return true
         case .editPost:
+            return true
+        case .editReview:
             return true
         default:
             return false
@@ -435,7 +444,20 @@ enum SikshaAPI: URLRequestConvertible {
                 data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }
             return data
-
+        case let .editReview(_, menuId, score, comment, taste, price, foodComposition, images):
+            let data = MultipartFormData()
+            data.append("\(menuId)".data(using: .utf8)!, withName: "menu_id", mimeType: "text/plain")
+            data.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
+            if let comment = comment { data.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain") }
+            data.append(taste.data(using: .utf8)!, withName: "taste", mimeType: "text/plain")
+            data.append(price.data(using: .utf8)!, withName: "price", mimeType: "text/plain")
+            data.append(foodComposition.data(using: .utf8)!, withName: "food_composition", mimeType: "text/plain")
+            if let images = images {
+                for (index, image) in images.enumerated() {
+                    data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
+                }
+            }
+            return data
         default:
             return nil
         }

@@ -10,15 +10,34 @@ import PhotosUI
 
 struct MealReviewView: View {
     @Environment(\.dismiss) var dismiss
-    @StateObject var viewModel = MealReviewViewModel()
+    @StateObject private var viewModel: MealReviewViewModel
     @ObservedObject var mealInfoViewModel: MealInfoViewModel
     @State private var isShowingPhotoLibrary = false
     
     let meal: Meal
+    let existingReview: RestaurantReview?
     
+    // 새 리뷰 등록 생성자
     init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel) {
         self.meal = meal
         self.mealInfoViewModel = mealInfoViewModel
+        self.existingReview = nil
+        
+        _viewModel = StateObject(wrappedValue: MealReviewViewModel())
+        UITextView.appearance().backgroundColor = .clear
+    }
+    
+    // 리뷰 수정 생성자
+    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel, editingReview: RestaurantReview) {
+        self.meal = meal
+        self.mealInfoViewModel = mealInfoViewModel
+        self.existingReview = editingReview
+        
+        let vm = MealReviewViewModel()
+        vm.meal = meal
+        vm.loadExistingReview(editingReview)
+        _viewModel = StateObject(wrappedValue: vm)
+        
         UITextView.appearance().backgroundColor = .clear
     }
     
@@ -45,15 +64,21 @@ struct MealReviewView: View {
             submitButton
                 .padding(.horizontal, 16)
         }
-        .customNavigationBar(title: "나의 평가 남기기")
+        .customNavigationBar(title: isEditMode ? "나의 평가 수정하기" : "나의 평가 남기기")
         .navigationBarItems(leading: backButton)
         .onAppear {
-            viewModel.meal = self.meal
+            if viewModel.meal == nil {
+                viewModel.meal = self.meal
+            }
         }
         .alert(isPresented: $viewModel.showAlert, content: {
-            Alert(title: Text("나의 평가 남기기"), message: alertMessage, dismissButton: alertButton)
+            Alert(title: Text(isEditMode ? "나의 평가 수정하기" : "나의 평가 남기기"), message: alertMessage, dismissButton: alertButton)
         })
         .ignoresSafeArea(.keyboard)
+    }
+    
+    private var isEditMode: Bool {
+        existingReview != nil
     }
 }
 
@@ -140,11 +165,15 @@ private extension MealReviewView {
     }
     
     var submitButton: some View {
-        Button{
-            if viewModel.selectedImages.count > 0 {
-                viewModel.submitReviewImages(images: viewModel.selectedImages)
+        Button {
+            if isEditMode {
+                viewModel.editReview(reviewId: existingReview!.id)
             } else {
-                viewModel.submitReview()
+                if viewModel.selectedImages.count > 0 {
+                    viewModel.submitReviewImages(images: viewModel.selectedImages)
+                } else {
+                    viewModel.submitReview()
+                }
             }
         } label: {
             ZStack(alignment: .top) {
@@ -153,7 +182,7 @@ private extension MealReviewView {
                     .frame(height: 56)
                     .frame(maxWidth: .infinity)
                 
-                Text("평가 등록")
+                Text(isEditMode ? "평가 수정" : "평가 등록")
                     .customFont(font: .text18(weight: .ExtraBold))
                     .foregroundColor(Color.textButton)
                     .padding(.top, 15)
@@ -166,7 +195,7 @@ private extension MealReviewView {
     var alertMessage: Text {
         var message = ""
         if viewModel.postReviewSucceeded {
-            message = "평가가 등록되었습니다."
+            message = isEditMode ? "평가가 수정되었습니다." : "평가가 등록되었습니다."
         } else {
             if let error = viewModel.errorCode {
                 message = error.message
@@ -214,7 +243,6 @@ private extension MealReviewView {
 }
 
 // MARK: - Preview
-
 
 struct MealReviewPreview {
     static var previews: some View {

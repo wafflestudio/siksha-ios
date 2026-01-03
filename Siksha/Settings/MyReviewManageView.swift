@@ -346,11 +346,20 @@ struct ReviewCardView: View {
                 .customFont(font: .text11(weight: .Bold))
                 .foregroundColor(.gray600)
                 
-                Button("수정하기") {
-                    // Edit action
+                NavigationLink(destination: {
+                    let tempMeal = Meal()
+                    tempMeal.id = review.menuId
+                    tempMeal.nameKr = review.menuName
+                    let mealInfoVM = MealInfoViewModel(meal: tempMeal)
+                    mealInfoVM.updateMealFromId()
+                    
+                    return MealReviewView(tempMeal, mealInfoViewModel: mealInfoVM, editingReview: review)
+                        .environment(\.menuViewModel, menuViewModel)
+                }) {
+                    Text("수정하기")
+                        .customFont(font: .text11(weight: .Bold))
+                        .foregroundColor(.orange500)
                 }
-                .customFont(font: .text11(weight: .Bold))
-                .foregroundColor(.orange500)
             }
             .padding(.top, 8)
         }
