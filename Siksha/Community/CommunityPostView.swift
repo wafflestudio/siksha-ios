@@ -249,7 +249,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     var divider: some View {
         Divider()
             .foregroundColor(.gray100)
-            .padding(EdgeInsets(top: 0, leading: 7.5, bottom: 0, trailing: 7.5))
+            .padding(.horizontal, 7.5)
     }
     
     var body: some View {
