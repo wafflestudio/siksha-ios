@@ -34,8 +34,6 @@ class DailyMenu: Object {
     private func addRestaurants(list: List<Restaurant>, _ json: JSON){
         json.forEach { (str, restJson) in
             let newRest = Restaurant(restJson)
-            print("restaurant object added: ")
-            print(newRest)
             list.append(newRest)
         }
     }

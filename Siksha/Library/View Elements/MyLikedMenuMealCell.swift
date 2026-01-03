@@ -27,10 +27,7 @@ struct MyLikedMenuMealCell: View {
     init(viewModel: MyLikedMenuViewModel,menu:MyLikedMenu) {
         self.viewModel = viewModel
         self.menu = menu
-        print("ETC:")
-        print(menu.etc)
         if menu.etc.contains("No meat") {
-            print("contains no meat")
             self.vegetarian = true
         }
         self.price = menu.price ?? 0
