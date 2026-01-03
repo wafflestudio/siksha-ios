@@ -209,7 +209,6 @@ struct RestaurantSectionView: View {
                 .padding(.init(top: 13, leading: 16, bottom: 13, trailing: 16))
             }
             
-            // 내용
             if isExpanded {
                 Rectangle()
                     .fill(Color.orange500)
@@ -263,6 +262,8 @@ struct ReviewCardView: View {
                             Text(review.menuName)
                                 .customFont(font: .text15(weight: .ExtraBold))
                                 .foregroundStyle(Color.blackColor)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
                             
                             Image("ArrowGray800")
                                 .frame(width: 20, height: 20)
@@ -289,14 +290,15 @@ struct ReviewCardView: View {
                 )
             })
             
-            Text(review.reviewText)
-                .customFont(font: .text12(weight: .Regular))
-                .lineLimit(nil)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.top, 8)
-                .padding(.leading, 4)
+            if !review.reviewText.isEmpty {
+                Text(review.reviewText)
+                    .customFont(font: .text12(weight: .Regular))
+                    .lineLimit(nil)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 8)
+                    .padding(.leading, 4)
+            }
             
-            // Tags
             if !review.tags.isEmpty {
                 HStack(spacing: 10) {
                     ForEach(review.tags, id: \.self) { tag in
@@ -312,7 +314,6 @@ struct ReviewCardView: View {
                 .padding(.leading, 4)
             }
             
-            // Food images
             if !review.imageUrls.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
@@ -335,7 +336,6 @@ struct ReviewCardView: View {
                 .padding(.leading, 4)
             }
             
-            // Bottom buttons
             HStack(spacing: 16) {
                 Spacer()
                 
