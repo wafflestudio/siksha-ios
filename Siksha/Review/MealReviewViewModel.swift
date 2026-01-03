@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import UIKit
 import Combine
 import RealmSwift
 import SwiftUI
@@ -49,23 +48,25 @@ class MealReviewViewModel: ObservableObject {
             .store(in: &cancellables)
         
         $scoreToSubmit
-            .filter { $0 > 0 }
             .debounce(for: 0.3, scheduler: RunLoop.main)
             .sink { [weak self] score in
                 guard let self = self else { return }
                 
-                if commentToSubmit.isEmpty || commentToSubmit == recommendedComment {
-                    self.getRecommendedComment(Int(score))
+                if score == 0 {
+                    self.commentRecommended = false
+                } else {
+                    if commentToSubmit.isEmpty || commentToSubmit == recommendedComment {
+                        self.getRecommendedComment(Int(score))
+                    }
                 }
             }
             .store(in: &cancellables)
         
-        $scoreToSubmit
-            .combineLatest($selectedKeywords)
-            .map { $0 > 0 && $1[KeywordRateType.taste]?.isEmpty == false && $1[KeywordRateType.composition]?.isEmpty == false && $1[KeywordRateType.price]?.isEmpty == false }
+        $commentToSubmit
+            .combineLatest($scoreToSubmit, $selectedKeywords)
+            .map { !$0.isEmpty && $1 > 0 && $2[KeywordRateType.taste]?.isEmpty == false && $2[KeywordRateType.composition]?.isEmpty == false && $2[KeywordRateType.price]?.isEmpty == false }
             .assign(to: \.canSubmit, on: self)
             .store(in: &cancellables)
-        
     }
     
     private func getRecommendedComment(_ score: Int) {

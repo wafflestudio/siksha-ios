@@ -98,9 +98,9 @@ private extension MealReviewView {
                         .customFont(font: .text14(weight: .Regular))
                         .foregroundColor(Color.blackColor)
                         .accentColor(.blackColor)
-                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
-                            if viewModel.commentRecommended {
-                                viewModel.commentRecommended = false
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                            if viewModel.commentToSubmit.isEmpty {
+                                viewModel.scoreToSubmit = viewModel.scoreToSubmit
                             }
                         }
                         .onChange(of: viewModel.commentToSubmit) { comment in
