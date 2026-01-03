@@ -69,6 +69,7 @@
 		<string>Inter-ExtraLight.ttf</string>
 		<string>Inter-ExtraBold.ttf</string>
 		<string>Inter-Bold.ttf</string>
+		<string>Inter-Black.ttf</string>
 		<string>NanumSquareOTFBold.otf</string>
 		<string>NanumSquareOTFExtraBold.otf</string>
 		<string>NanumSquareOTFLight.otf</string>
@@ -114,7 +115,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>UIDesignRequiresCompatibility</key>
-    <true/>
+	<key>UIDesignRequiresCompatibility</key>
+	<true/>
 </dict>
 </plist>
