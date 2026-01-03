@@ -34,4 +34,17 @@ class Meal: Object {
         self.likeCnt = json["like_cnt"].intValue
         json["etc"].arrayValue.map{ $0.stringValue }.forEach { self.etc.append($0) }
     }
+    static func fromMyLikedMenu(menu:MyLikedMenu) -> Meal{
+        let meal = Meal()
+        meal.id = menu.id
+        meal.code = menu.code
+        meal.nameKr = menu.nameKr
+        meal.nameEn = menu.nameEn ?? ""
+        meal.price = menu.price ?? 0
+        meal.score = menu.score ?? 0
+        meal.isLiked = menu.isLiked
+        meal.reviewCnt = menu.reviewCnt
+        meal.likeCnt = menu.likeCnt
+        return meal
+    }
 }

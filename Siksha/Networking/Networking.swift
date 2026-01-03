@@ -47,6 +47,10 @@ class Networking {
         let request = AF.request(SikshaAPI.getMenuFromId(menuId: menuId))
         return request.validate().publishDecodable(type:MenuIdResponse.self,decoder: JSONDecoder())
     }
+    func getMyLikedMenu()->DataResponsePublisher<MyLikedMenuResponse>{
+        let request = AF.request(SikshaAPI.getMyLikedMenu)
+        return request.validate().publishDecodable(type:MyLikedMenuResponse.self,decoder: JSONDecoder())
+    }
     func likeMenu(menuId:Int)->DataResponsePublisher<MenuIdResponse>{
         let request = AF.request(SikshaAPI.likeMenu(menuId: menuId))
         return request.validate().publishDecodable(type:MenuIdResponse.self,decoder: JSONDecoder())
