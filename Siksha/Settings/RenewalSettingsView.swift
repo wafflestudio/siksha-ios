@@ -10,7 +10,6 @@ import UIKit
 
 struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
-    
     @ObservedObject var userModel = UserManager.shared
     @ObservedObject var viewModel: RenewalSettingsViewModel
     @ObservedObject var orderViewModel = RestaurantOrderViewModel()
@@ -90,24 +89,38 @@ struct RenewalSettingsView: View {
             .renderingMode(.template)
             .foregroundColor(Color.gray500)
             .frame(width: 16, height: 16)
-//            .padding(.trailing, 12)
     }
     
     var myWritings: some View {
-        NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository))) {
-            HStack(alignment: .center) {
-                Text("내가 쓴 글")
-                    .customFont(font: .text15(weight: .Regular))
-                    .foregroundColor(blackColor)
-//                    .padding([.top, .bottom], 13)
-//                    .padding(.leading, 16)
-                
-                Spacer()
-                
-                arrow
+
+        VStack(spacing: 8) {
+            NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository))) {
+                HStack(alignment: .center) {
+                    Text("내가 쓴 글")
+                        .customFont(font: .text15(weight: .Regular))
+                        .foregroundColor(blackColor)
+                    
+                    Spacer()
+                    
+                    arrow
+                }
             }
-            .padding(EdgeInsets(top: 13, leading: 16, bottom: 13, trailing: 12))
+      
+            partitionBar
+            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository))) {
+                HStack(alignment: .center) {
+                    Text("내가 찜한 메뉴")
+                        .customFont(font: .text15(weight: .Regular))
+                        .foregroundColor(blackColor)
+                    
+                    Spacer()
+                    
+                    arrow
+                }
+            }
         }
+        .padding([.vertical, .trailing], 12)
+        .padding(.leading, 16)
         .background(
             RoundedRectangle(cornerRadius: 8)
                 .strokeBorder(borderColor, lineWidth: 1)

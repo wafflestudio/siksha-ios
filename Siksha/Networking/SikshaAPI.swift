@@ -57,6 +57,7 @@ enum SikshaAPI: URLRequestConvertible {
     case unlikeMenu(menuId: Int)
     case likeReview(reviewId: Int)
     case unlikeReview(reviewId: Int)
+    case getMyLikedMenu
     case getFestivalDates
     case getRestaurants
     case getReviews(menuId: Int, page: Int, perPage: Int)
@@ -93,7 +94,14 @@ enum SikshaAPI: URLRequestConvertible {
     case loadUserInfo
     case updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool)
     case deleteUser
-
+    case postUserDevice(fcmToken:String)
+    case deleteUserDevice(fcmToken:String)
+    case alarmOn(menuId:Int)
+    case alarmOff(menuId:Int)
+    case alarmOnAll
+    case alarmOffAll
+    case alarmTime(alarmTime:String)
+    case getAlarmTime
     static var baseURL = Config.shared.baseURL
     
     var needToken: Bool {
@@ -115,6 +123,14 @@ enum SikshaAPI: URLRequestConvertible {
         case .getCommentRecommendation:
             return false
         case .likeMenu, .unlikeMenu, .likeReview, .unlikeReview:
+            return true
+        case .unlikeMenu:
+            return true
+        case .getMyLikedMenu:
+            return true
+        case .alarmTime:
+            return true
+        case .getAlarmTime:
             return true
         case .testLogin:
             return false
@@ -141,6 +157,8 @@ enum SikshaAPI: URLRequestConvertible {
         case .getMenus:
             return .get
         case .getMenuFromId:
+            return .get
+        case .getMyLikedMenu:
             return .get
         case .getFestivalDates:
             return .get
@@ -213,6 +231,22 @@ enum SikshaAPI: URLRequestConvertible {
             return .patch
         case .deleteUser:
             return .delete
+        case .postUserDevice:
+            return .post
+        case .deleteUserDevice:
+            return .delete
+        case .alarmOn(menuId: let menuId):
+            return .post
+        case .alarmOff(menuId: let menuId):
+            return .post
+        case .alarmOnAll:
+            return .post
+        case .alarmOffAll:
+            return .post
+        case .getAlarmTime:
+            return .get
+        case .alarmTime:
+            return .post
         case .testLogin:
             return .post
         }
@@ -228,6 +262,8 @@ enum SikshaAPI: URLRequestConvertible {
             return "/menus"
         case let .getMenuFromId(menuId):
             return "/menus/\(menuId)"
+        case .getMyLikedMenu:
+            return "/menus/me"
         case let .likeMenu(menuId):
             return "/menus/\(menuId)/like"
         case let .unlikeMenu(menuId):
@@ -300,6 +336,22 @@ enum SikshaAPI: URLRequestConvertible {
             return "/auth/me/profile"
         case .deleteUser:
             return "/auth"
+        case .postUserDevice:
+            return "/auth/userDevice"
+        case .deleteUserDevice:
+            return "/auth/userDevice"
+        case .alarmOn(menuId: let menuId):
+            return "/menus/\(menuId)/alarm/on"
+        case .alarmOff(menuId: let menuId):
+            return "/menus/\(menuId)/alarm/off"
+        case .alarmOnAll:
+            return "/menus/alarm/on"
+        case .alarmOffAll:
+            return "/menus/alarm/off"
+        case .alarmTime:
+            return "/auth/alarm"
+        case .getAlarmTime:
+            return "/auth/alarm"
         case .testLogin:
             return "/auth/login/test"
         }
@@ -353,6 +405,13 @@ enum SikshaAPI: URLRequestConvertible {
             return ["post_id": postId,"reason":reason]
         case let .reportComment(commentId, reason):
             return ["comment_id" : commentId,"reason":reason]
+        case let .postUserDevice(fcmToken):
+            return ["fcm_token" : fcmToken]
+        case let .deleteUserDevice(fcmToken):
+            return ["fcm_token" : fcmToken]
+        
+        case let .alarmTime(alarmTime):
+            return ["type":alarmTime]
         case .testLogin:
             return ["identity": "test user"]
         default:
