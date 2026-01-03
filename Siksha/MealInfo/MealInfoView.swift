@@ -84,8 +84,7 @@ private extension MealInfoView {
                     label: {
                         Text("나의 평가 남기기")
                             .customFont(font: .text14(weight: .ExtraBold))
-                            .foregroundStyle(Color.whiteColor
-                            )
+                            .foregroundStyle(Color.textButton)
                             .padding(.vertical, 7)
                             .padding(.horizontal, 23)
                             .background(Color.orange500)
@@ -130,7 +129,11 @@ private extension MealInfoView {
             .padding(.horizontal, 20)
             .background {
                 RoundedRectangle(cornerRadius: 16)
-                    .strokeBorder(Color.gray200, lineWidth: 1)
+                    .fill(Color.backgroundSecondary)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .strokeBorder(Color.gray200, lineWidth: 1)
+                    )
             }
             
             VStack(spacing: 6) {
