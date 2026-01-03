@@ -46,7 +46,7 @@ struct RenewalReview: Codable, Identifiable {
     let userId: Int
     let score: Int
     let comment: String
-    let etc: String?
+    let etc: [String: [String]]?
     let createdAt: String
     let updatedAt: String
     let keywordReviews: [String?]
@@ -69,13 +69,13 @@ struct RenewalReview: Codable, Identifiable {
     
     var createdDate: Date? {
         let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        formatter.formatOptions = [.withInternetDateTime]
         return formatter.date(from: createdAt)
     }
     
     var updatedDate: Date? {
         let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        formatter.formatOptions = [.withInternetDateTime]
         return formatter.date(from: updatedAt)
     }
 }
