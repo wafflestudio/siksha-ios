@@ -22,8 +22,12 @@ struct MyLikedMenuView: View {
                 .foregroundColor(.white)
         }
     }
-    init(viewModel:MyLikedMenuViewModel){
+    init(viewModel:MyLikedMenuViewModel,isFromModal:Bool = false){
         self.viewModel = viewModel
+        if isFromModal{
+            viewModel.loadMyLikedMenu()
+        }
+
     }
     var body: some View {
         ZStack(alignment: .topTrailing) {
