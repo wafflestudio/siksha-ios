@@ -26,6 +26,7 @@ struct RenewalSettingsView: View {
     private let gray900 = Color.gray900
     
     var body: some View {
+        ScrollView {
             VStack(alignment: .center, spacing: 20) {
                 profileState
                 
@@ -43,9 +44,10 @@ struct RenewalSettingsView: View {
             }
             .padding(.top, 24)
             .padding([.leading, .trailing], 20)
-            .background(Color.backgroundPrimary)
-            .customNavigationBar(title: "icon")
-            .errorAlert(error: $viewModel.error)
+        }
+        .background(Color.backgroundPrimary)
+        .customNavigationBar(title: "icon")
+        .errorAlert(error: $viewModel.error)
     }
     
     var profileState: some View {
