@@ -153,7 +153,7 @@ class MyReviewViewModel: ObservableObject {
         }
     }
     
-    private func convertToRestaurantSection(_ restaurant: RenewalReviewRestaurant) -> RestaurantSection {
+    private func convertToRestaurantSection(_ restaurant: MyReviewRestaurant) -> RestaurantSection {
         let reviews = restaurant.reviews.map { review in
             RestaurantReview(
                 id: review.id,

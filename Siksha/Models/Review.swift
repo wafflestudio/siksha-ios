@@ -22,11 +22,11 @@ struct Review: Codable, Hashable {
     var updatedAt: Date
 }
 
-struct RenewalReviewRestaurant: Codable, Identifiable {
+struct MyReviewRestaurant: Codable, Identifiable {
     let restaurantId: Int
     let nameKr: String
     let nameEn: String?
-    let reviews: [RenewalReview]
+    let reviews: [MyReview]
     
     var id: Int { restaurantId }
     
@@ -38,7 +38,7 @@ struct RenewalReviewRestaurant: Codable, Identifiable {
     }
 }
 
-struct RenewalReview: Codable, Identifiable {
+struct MyReview: Codable, Identifiable {
     let id: Int
     let menuId: Int
     let nameKr: String

@@ -74,7 +74,7 @@ struct FestivalDatesResponse: Codable {
 struct MyReviewResponse: Codable {
     var totalCount: Int
     var hasNext: Bool
-    var result: [RenewalReviewRestaurant]
+    var result: [MyReviewRestaurant]
     
     enum CodingKeys: String, CodingKey {
         case totalCount = "total_count"
