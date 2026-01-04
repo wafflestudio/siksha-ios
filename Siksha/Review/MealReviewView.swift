@@ -45,6 +45,7 @@ struct MealReviewView: View {
             submitButton
                 .padding(.horizontal, 16)
         }
+        .background(Color.backgroundPrimary)
         .customNavigationBar(title: "나의 평가 남기기")
         .navigationBarItems(leading: backButton)
         .onAppear {
