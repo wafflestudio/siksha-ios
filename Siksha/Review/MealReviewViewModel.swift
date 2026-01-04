@@ -194,11 +194,11 @@ class MealReviewViewModel: ObservableObject {
         }
         
         if !review.imageUrls.isEmpty {
-            downloadImages(from: review.imageUrls)
+            downloadExistingImages(from: review.imageUrls)
         }
     }
     
-    private func downloadImages(from urls: [String]) {
+    private func downloadExistingImages(from urls: [String]) {
         let publishers = urls.compactMap { urlString -> AnyPublisher<UIImage?, Never>? in
             guard let url = URL(string: urlString) else { return nil }
             
@@ -223,7 +223,8 @@ class MealReviewViewModel: ObservableObject {
             return
         }
         
-        let imagesData = selectedImages.isEmpty ? nil : selectedImages.compactMap { $0.jpegData(compressionQuality: 0.5) }
+        // 전체 이미지를 Data로 변환 (기존 + 새로운 이미지 모두)
+        let allImagesData = selectedImages.compactMap { $0.jpegData(compressionQuality: 0.5) }
         
         Networking.shared.editReview(
             reviewId: reviewId,
@@ -233,15 +234,11 @@ class MealReviewViewModel: ObservableObject {
             taste: selectedKeywords[.taste] ?? "",
             price: selectedKeywords[.price] ?? "",
             foodComposition: selectedKeywords[.composition] ?? "",
-            images: imagesData
+            images: allImagesData.isEmpty ? nil : allImagesData
         )
         .receive(on: RunLoop.main)
         .sink { [weak self] result in
             guard let self = self else { return }
-
-            if let data = result.data {
-                print("  - data: \(String(data: data, encoding: .utf8) ?? "nil")")
-            }
             
             guard let response = result.response else {
                 self.postReviewSucceeded = false
