@@ -17,9 +17,9 @@ struct KeywordRateRow: View {
             Image(summary.type.imageString)
                 .resizable()
                 .scaledToFit()
-                .frame(width: 21, height: 16.5)
+                .frame(width: 24, height: 24)
                 .padding(.trailing, 6)
-                .padding(.leading, 18)
+                .padding(.leading, 14)
             
             Text(summary.keyword.isEmpty ? summary.type.title : summary.keyword)
                 .customFont(font: .text13(weight: .Bold))

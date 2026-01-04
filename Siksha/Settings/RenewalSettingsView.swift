@@ -10,7 +10,6 @@ import UIKit
 
 struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
-    
     @ObservedObject var userModel = UserManager.shared
     @ObservedObject var viewModel: RenewalSettingsViewModel
     @ObservedObject var orderViewModel = RestaurantOrderViewModel()
@@ -130,9 +129,7 @@ struct RenewalSettingsView: View {
             }
             
             partitionBar
-            
-            NavigationLink(destination: AccountManageView(viewModel: viewModel)) {
-                // TODO: - Destination 변경
+            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository))) {
                 HStack(alignment: .center) {
                     Text("내가 찜한 메뉴")
                         .font(.custom("NanumSquareOTFR", size: 15))
@@ -145,6 +142,7 @@ struct RenewalSettingsView: View {
                     arrow
                 }
             }
+            
         }
         .background(
             RoundedRectangle(cornerRadius: 8)

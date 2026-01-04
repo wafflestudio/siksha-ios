@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol {
+protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol,MyLikedMenuRepositoryProtocol,AuthRepositoryProtocol {
 
 }
 
@@ -41,4 +41,21 @@ protocol UserRepositoryProtocol {
     func deleteUser() -> AnyPublisher<Void, AppError>
     func getMyReview(page: Int, perPage: Int) -> AnyPublisher<MyReviewResponse, AppError>
     func deleteMyReview(reviewId: Int) -> AnyPublisher<Void, AppError>
+}
+
+protocol MyLikedMenuRepositoryProtocol{
+    func likeMenu(menuId: Int) -> AnyPublisher<Void, AppError>
+    func unlikeMenu(menuId: Int) -> AnyPublisher<Void, AppError>
+    func getMyLikedMenu() -> AnyPublisher<MyLikedMenuResponse,AppError>
+    func onAlarm(menuId:Int)->AnyPublisher<AlarmResponse,AppError>
+    func offAlarm(menuId:Int)->AnyPublisher<AlarmResponse,AppError>
+    func onAlarmAll()->AnyPublisher<Void,AppError>
+    func offAlarmAll()->AnyPublisher<Void,AppError>
+    func postAlarmTime(type:AlarmTime)->AnyPublisher<Void,AppError>
+    func getAlarmTime()->AnyPublisher<AlarmTimeResponse,AppError>
+}
+
+protocol AuthRepositoryProtocol{
+    func postUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>
+    func deleteUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>
 }
