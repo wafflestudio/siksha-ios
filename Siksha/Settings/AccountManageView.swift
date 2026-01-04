@@ -32,12 +32,11 @@ struct AccountManageView: View {
     var partitionBar: some View {
         Color.borderPrimary
             .frame(height: 1)
-            .padding([.leading, .trailing], 8)
     }
     
     var body: some View {
         VStack {
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 8) {
                 Button(action: {
                     viewModel.showSignOutAlert = true
                 }) {
@@ -45,8 +44,6 @@ struct AccountManageView: View {
                         Text("로그아웃")
                             .customFont(font: .text15(weight: .Regular))
                             .foregroundColor(Color.blackColor)
-                            .padding([.top, .bottom], 12)
-                            .padding(.leading, 16)
                         
                         Spacer()
                     }
@@ -63,11 +60,7 @@ struct AccountManageView: View {
                                             LoginView()
                                         }
                                     }
-                                    else{
-                                        
-                                    }
                                 }
-        
                             },
                             .cancel(Text("취소"))
                         ]
@@ -83,8 +76,6 @@ struct AccountManageView: View {
                         Text("회원탈퇴")
                             .customFont(font: .text15(weight: .Regular))
                             .foregroundColor(.accentLike)
-                            .padding([.top, .bottom], 12)
-                            .padding(.leading, 16)
                         
                         Spacer()
                     }
@@ -107,6 +98,9 @@ struct AccountManageView: View {
                     )
                 }
             }
+            .padding(.vertical, 12)
+            .padding(.leading, 18)
+            .padding(.trailing, 11)
             .background(
                 RoundedRectangle(cornerRadius: 8)
                     .strokeBorder(Color.gray200, lineWidth: 1)
@@ -114,8 +108,8 @@ struct AccountManageView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 8))
             )
             .padding(.top, 24)
-            .padding([.leading, .trailing], 20)
-
+            .padding(.horizontal, 20)
+            
             Spacer()
         }
         .background(Color.backgroundPrimary)
@@ -130,9 +124,9 @@ struct AccountManageView: View {
                   message: Text("로그아웃에 실패했습니다."),
                   dismissButton: .default(Text("확인")))
         }
-
+        
         .customNavigationBar(title: "계정관리")
-                    .navigationBarItems(leading: backButton)
+        .navigationBarItems(leading: backButton)
     }
 }
 
