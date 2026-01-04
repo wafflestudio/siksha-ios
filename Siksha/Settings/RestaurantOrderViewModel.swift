@@ -69,7 +69,7 @@ class RestaurantOrderViewModel: ObservableObject {
            
                 restJSON.forEach { json in
                     let id = json["id"].intValue
-                    let name = json["name_kr"].stringValue
+                    let name = json["nameKr"].stringValue
                         UserDefaults.standard.set(name, forKey: "restName\(id)")
                     if(!name.contains("[축제]")){
 

@@ -285,7 +285,7 @@ enum SikshaAPI: URLRequestConvertible {
         case .getFestivalDates:
             return "/menus/festival/dates"
         case .getRestaurants:
-            return "/restaurants/"
+            return "/restaurants"
         case .getReviews:
             return "/reviews"
         case .getScoreDistribution:

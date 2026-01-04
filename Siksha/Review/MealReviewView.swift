@@ -64,6 +64,7 @@ struct MealReviewView: View {
             submitButton
                 .padding(.horizontal, 16)
         }
+        .background(Color.backgroundPrimary)
         .customNavigationBar(title: isEditMode ? "나의 평가 수정하기" : "나의 평가 남기기")
         .navigationBarItems(leading: backButton)
         .onAppear {
@@ -123,9 +124,9 @@ private extension MealReviewView {
                         .customFont(font: .text14(weight: .Regular))
                         .foregroundColor(Color.blackColor)
                         .accentColor(.blackColor)
-                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)) { _ in
-                            if viewModel.commentRecommended {
-                                viewModel.commentRecommended = false
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                            if viewModel.commentToSubmit.isEmpty {
+                                viewModel.scoreToSubmit = viewModel.scoreToSubmit
                             }
                         }
                         .onChange(of: viewModel.commentToSubmit) { comment in

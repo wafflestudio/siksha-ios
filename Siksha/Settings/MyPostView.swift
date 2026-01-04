@@ -86,7 +86,7 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .foregroundColor(.white)
+                .foregroundColor(Color.iconWhiteIcon)
         }
     }
 
@@ -111,11 +111,11 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 ScrollView{
-                    divider
                     postList
                 }
             }
         }
+        .background(Color.backgroundPrimary)
         .customNavigationBar(title: "내가 쓴 글")
         .navigationBarItems(leading: backButton)
         .onAppear {

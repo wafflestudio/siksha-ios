@@ -60,9 +60,11 @@ struct AlarmView: View {
                         .foregroundStyle(Color.blackColor)
                         .customFont(font: .text15(weight: .Regular))
                     Spacer()
-                    Image("alarm-arrow")
+                    Image("ArrowSmall")
                         .resizable()
-                        .frame(width:16,height:16)
+                        .renderingMode(.template)
+                        .foregroundColor(Color.gray500)
+                        .frame(width: 16, height: 16)
                 }
             }
 

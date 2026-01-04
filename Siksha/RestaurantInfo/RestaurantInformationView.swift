@@ -9,7 +9,7 @@ import SwiftUI
 import NMapsMap
 
 struct RestaurantInformationView: View {
-    
+    @Environment(\.dismiss) var dismiss
     var restaurant: Restaurant
     
     let position: NMGLatLng?
@@ -29,14 +29,25 @@ struct RestaurantInformationView: View {
     var body: some View {
                         
         VStack(spacing: 0) {
-            HStack {
-                Spacer()
-                Text(restaurant.nameKr)
-                    .customFont(font: .text20(weight: .ExtraBold))
-                    .foregroundColor(Color.gray900)
-                Spacer()
+            ZStack(alignment: .top) {
+                HStack {
+                    Text(restaurant.nameKr)
+                        .customFont(font: .text20(weight: .ExtraBold))
+                        .foregroundColor(Color.gray900)
+                }
+                .padding(EdgeInsets(top: 23, leading: 0, bottom: 10.73, trailing: 0))
+                
+                HStack {
+                    Spacer()
+                    Button(action: { dismiss() }) {
+                        Image("Close")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(Color.gray900)
+                    }
+                    .padding(EdgeInsets(top: 24, leading: 0, bottom: 0, trailing: 17))
+                }
             }
-            .padding(EdgeInsets(top: 23, leading: 0, bottom: 10.73, trailing: 0))
             
             if position != nil {
                 Color.borderPrimary
@@ -47,7 +58,7 @@ struct RestaurantInformationView: View {
             ScrollView {
                 VStack(spacing: 0){
                     if let position = position {
-                        HStack {
+                        HStack(spacing: 4) {
                             Image("Location")
                                 .resizable()
                                 .frame(width: 24, height: 24)
@@ -83,13 +94,15 @@ struct RestaurantInformationView: View {
                     .padding(EdgeInsets(top: 24, leading: 16, bottom: 8, trailing: 16))
                     
                     Color.orange500
-                        .frame(height: 1)
+                        .frame(height: 1.4)
+                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                     
                     OperatingHoursTable(hours: Array(restaurant.operatingHours), isFestivalRestaurant: restaurant.nameKr.contains("[축제]"))
                 }
             }
         }
         .padding(.bottom)
+        .background(Color.backgroundSecondary)
     }
 }
 

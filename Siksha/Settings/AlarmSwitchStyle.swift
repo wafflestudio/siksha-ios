@@ -16,7 +16,7 @@ import SwiftUI
 
 struct AlarmSwitchStyle: ToggleStyle {
     private let onColor = LinearGradient(colors: [Color.orange500, Color(hex: 0xFF9DA4)], startPoint: .leading, endPoint: .trailing)
-    private let offColor = LinearGradient(colors: [Color.grayIcon], startPoint: .leading, endPoint: .trailing)
+    private let offColor = LinearGradient(colors: [Color.iconGrayIcon], startPoint: .leading, endPoint: .trailing)
     func makeBody(configuration: Configuration) -> some View {
         RoundedRectangle(cornerRadius: 59.14)
             .fill(configuration.isOn ? onColor : offColor)

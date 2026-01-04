@@ -256,6 +256,7 @@ struct MenuFilterView: View {
             }
         }
         .ignoresSafeArea()
+        .background(Color.backgroundSecondary)
         .filterCloseButton(filterType: menuFilterType, closeAction: dismiss)
         .alert("위치정보 이용에 대한 엑세스 권한이 없어요.", isPresented: $isDistanceAlertPresented, actions: {
             Button("취소", action: {}).keyboardShortcut(.defaultAction)

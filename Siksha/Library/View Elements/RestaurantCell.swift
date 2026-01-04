@@ -102,8 +102,9 @@ struct RestaurantCell: View {
             HStack(alignment: .center){
                 Image(TypeInfo(type:TypeSelection(rawValue: (selectedPage))!).icon)
                     .resizable()
-                    .renderingMode(.original)
-                    .frame(width: TypeInfo(type:TypeSelection(rawValue: (selectedPage))!).width, height: TypeInfo(type:TypeSelection(rawValue: (selectedPage))!).height)
+                    .renderingMode(.template)
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(Color.gray600)
                 Spacer()
                     .frame(width:4)
                 Text(MenuViewModel.getOperatingHours(restaurant: restaurant,dayType: dayType,selectedPage: selectedPage))
@@ -184,23 +185,44 @@ struct RestaurantCell: View {
 struct RestaurantCell_Previews: PreviewProvider {
     
     static var previews: some View {
-        let emptyRes = Restaurant()
-        let nonEmptyRes = Restaurant()
-        emptyRes.nameKr = "빈 식당"
-        nonEmptyRes.nameKr = "든 식당"
-        let menu = Meal()
-        menu.price = 3000
-        menu.nameKr = "식단"
-        menu.reviewCnt = 1
-        menu.score = 3
-        let menu2 = Meal()
-        menu2.price = 4000
-        menu2.nameKr = "식단2"
-        menu2.reviewCnt = 0
-        menu2.score = 4
-        nonEmptyRes.menus.append(menu)
-        nonEmptyRes.menus.append(menu2)
+        let dummyRestaurant = Restaurant()
+        dummyRestaurant.id = 1
+        dummyRestaurant.nameKr = "학생회관"
+        dummyRestaurant.nameEn = "Student Hall"
+        dummyRestaurant.code = "SH"
+        dummyRestaurant.addr = "학생회관 1층"
+        dummyRestaurant.lat = "37.123"
+        dummyRestaurant.lng = "127.123"
+        dummyRestaurant.operatingHours.append(objectsIn: [
+            "08:00 - 09:00\n11:30 - 13:30\n17:30 - 19:00",
+            "09:00 - 13:00\n17:00 - 18:30",
+            "Closed"
+        ])
+        
+        let dummyMeal1 = Meal()
+        dummyMeal1.id = 101
+        dummyMeal1.nameKr = "김치찌개"
+        dummyMeal1.nameEn = "Kimchi Stew"
+        dummyMeal1.price = 4500
+        dummyMeal1.score = 4.2
+        dummyMeal1.reviewCnt = 20
+        dummyMeal1.likeCnt = 10
+        dummyMeal1.isLiked = true
 
-        return RestaurantCell(nonEmptyRes,0,0)
+        let dummyMeal2 = Meal()
+        dummyMeal2.id = 102
+        dummyMeal2.nameKr = "제육볶음"
+        dummyMeal2.nameEn = "Spicy Pork"
+        dummyMeal2.price = 5000
+        dummyMeal2.score = 4.5
+        dummyMeal2.reviewCnt = 35
+        dummyMeal2.likeCnt = 22
+        dummyMeal2.isLiked = false
+
+        dummyRestaurant.menus.append(objectsIn: [dummyMeal1, dummyMeal2])
+        
+        return RestaurantCell(dummyRestaurant, 0, 0)
+            .previewLayout(.sizeThatFits)
+            .padding()
     }
 }

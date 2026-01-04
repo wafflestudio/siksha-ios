@@ -28,7 +28,7 @@ struct RenewalVOCView: View {
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .foregroundColor(.white)
+                .foregroundColor(Color.iconWhiteIcon)
         }
     }
     
@@ -42,7 +42,7 @@ struct RenewalVOCView: View {
                         .frame(width: 18, height: 18)
                     
                     Text("문의할 내용을 남겨주세요.")
-                        .font(.custom("NanumSquareOTFB", size: 18))
+                        .customFont(font: .text18(weight: .ExtraBold))
                         .foregroundStyle(Color.blackColor)
                 }
                 .frame(maxWidth: .infinity)
@@ -55,7 +55,7 @@ struct RenewalVOCView: View {
                         .frame(width: 24, height: 24)
                     
                     Text("ID \(viewModel.userId)")
-                        .font(.custom("NanumSquareOTFB", size: 12))
+                        .customFont(font: .text12(weight: .Bold))
                         .foregroundColor(Color.blackColor)
                     
                     Spacer()
@@ -70,8 +70,8 @@ struct RenewalVOCView: View {
                     HStack {
                         Spacer()
                         Text("\(viewModel.vocComment.count)자 / 500자")
-                            .font(.custom("NanumSquareOTFL", size: 11))
-                            .foregroundColor(fontColor)
+                            .customFont(font: .text11(weight: .Regular))
+                            .foregroundColor(.gray600)
                     }
                     .padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 8))
                 }
@@ -87,7 +87,7 @@ struct RenewalVOCView: View {
                             .foregroundColor(viewModel.vocComment.count > 0 && viewModel.postVOCStatus == .idle ? orangeColor : lightGrayColor)
                         
                         Text("완료")
-                            .font(.custom("NanumSquareOTFB", size: 18))
+                            .customFont(font: .text18(weight: .ExtraBold))
                             .foregroundColor(.textButton)
                     }
                 })
@@ -95,12 +95,12 @@ struct RenewalVOCView: View {
                 .frame(height: 56)
                 .padding(16)
             }
-    //        .edgesIgnoringSafeArea(.all)
+            .onTapGesture {
+                UIApplication.shared.endEditing()
+            }
             .background(Color.backgroundPrimary.onTapGesture {
                 UIApplication.shared.endEditing()
             })
-    //        .navigationBarTitle("", displayMode: .inline)
-    //        .navigationBarHidden(true)
             .alert(isPresented: $viewModel.showAlert, content: {
                 Alert(title: Text("1:1 문의하기"), message: Text(viewModel.alertMessage), dismissButton: .default(Text("확인"), action: {
                     if viewModel.postVOCStatus == .succeeded {
@@ -116,8 +116,13 @@ struct RenewalVOCView: View {
                 }))
             })
             .customNavigationBar(title: "1:1 문의하기")
-                        .navigationBarItems(leading: backButton)
+            .navigationBarItems(leading: backButton)
+            .background(Color.backgroundPrimary)
         }
         .ignoresSafeArea(.keyboard)
     }
+}
+
+#Preview {
+    RenewalVOCView(RenewalSettingsViewModel())
 }
