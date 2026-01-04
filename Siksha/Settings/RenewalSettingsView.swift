@@ -105,7 +105,21 @@ struct RenewalSettingsView: View {
                     arrow
                 }
             }
-      
+            
+            partitionBar
+            
+            NavigationLink(destination: MyReviewManageView(viewModel: MyReviewViewModel(repository: DomainManager.shared.domain.userRepository))) {
+                HStack(alignment: .center) {
+                    Text("나의 평가 관리")
+                        .customFont(font: .text15(weight: .Regular))
+                        .foregroundColor(blackColor)
+                    
+                    Spacer()
+                    
+                    arrow
+                }
+            }
+            
             partitionBar
             NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository))) {
                 HStack(alignment: .center) {

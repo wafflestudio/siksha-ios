@@ -155,8 +155,11 @@
 		741BE3382CE3514D00A09881 /* KakaoSDKShare in Frameworks */ = {isa = PBXBuildFile; productRef = 741BE3372CE3514D00A09881 /* KakaoSDKShare */; };
 		741BE33A2CE3514D00A09881 /* KakaoSDKTemplate in Frameworks */ = {isa = PBXBuildFile; productRef = 741BE3392CE3514D00A09881 /* KakaoSDKTemplate */; };
 		741BE33C2CE3514D00A09881 /* KakaoSDKUser in Frameworks */ = {isa = PBXBuildFile; productRef = 741BE33B2CE3514D00A09881 /* KakaoSDKUser */; };
+		746227902E76A28300C1BB32 /* MyReviewManageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7462278F2E76A27C00C1BB32 /* MyReviewManageView.swift */; };
+		746227922E7F0C5700C1BB32 /* MyReviewViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 746227912E7F0C5000C1BB32 /* MyReviewViewModel.swift */; };
 		747811C02CE0B7E600EEEB6C /* KakaoShareManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747811BF2CE0B7DB00EEEB6C /* KakaoShareManager.swift */; };
 		749AA1222CE3618E00AD61E5 /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 749AA1212CE3617B00AD61E5 /* WebView.swift */; };
+		74E03C712E9241DC00A5993C /* ToastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E03C702E9241D700A5993C /* ToastView.swift */; };
 		A615B4DC2D86AAA60095865F /* MenuFilters.swift in Sources */ = {isa = PBXBuildFile; fileRef = A615B4DB2D86AAA60095865F /* MenuFilters.swift */; };
 		A615B4DE2D86B91C0095865F /* MenuListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A615B4DD2D86B91C0095865F /* MenuListView.swift */; };
 		A62E8CB22E0D91A300052DAE /* Mixpanel in Frameworks */ = {isa = PBXBuildFile; productRef = A62E8CB12E0D91A300052DAE /* Mixpanel */; };
@@ -354,8 +357,11 @@
 		4EE5729E2B1B1B2300FECE44 /* CommunityPostPublishViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostPublishViewModel.swift; sourceTree = "<group>"; };
 		4EF807652B170AA200F009B2 /* CommunityPostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommunityPostViewModel.swift; sourceTree = "<group>"; };
 		7418F4E62E2CBF6300C24A92 /* Color+SikshaColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+SikshaColor.swift"; sourceTree = "<group>"; };
+		7462278F2E76A27C00C1BB32 /* MyReviewManageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReviewManageView.swift; sourceTree = "<group>"; };
+		746227912E7F0C5000C1BB32 /* MyReviewViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyReviewViewModel.swift; sourceTree = "<group>"; };
 		747811BF2CE0B7DB00EEEB6C /* KakaoShareManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KakaoShareManager.swift; sourceTree = "<group>"; };
 		749AA1212CE3617B00AD61E5 /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		74E03C702E9241D700A5993C /* ToastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToastView.swift; sourceTree = "<group>"; };
 		A615B4DB2D86AAA60095865F /* MenuFilters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuFilters.swift; sourceTree = "<group>"; };
 		A615B4DD2D86B91C0095865F /* MenuListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuListView.swift; sourceTree = "<group>"; };
 		A66B51A72BF09542007E5329 /* ProfileEditViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileEditViewModel.swift; sourceTree = "<group>"; };
@@ -567,6 +573,8 @@
 		1E3A572F25C6FDEC00DBB3F4 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				746227912E7F0C5000C1BB32 /* MyReviewViewModel.swift */,
+				7462278F2E76A27C00C1BB32 /* MyReviewManageView.swift */,
 				4E90A0802E7BEA0B0016BAAF /* MyLikedMenuViewModel.swift */,
 				C091FEE92C314FCC00D48F92 /* MyPostView.swift */,
 				C091FEEA2C314FCC00D48F92 /* MyPostViewModel.swift */,
@@ -677,6 +685,7 @@
 		1ECB250125F16D7900875E18 /* View Elements */ = {
 			isa = PBXGroup;
 			children = (
+				74E03C702E9241D700A5993C /* ToastView.swift */,
 				330C55122D4D04730011345D /* Sliders.swift */,
 				330C55102D4CCA3F0011345D /* SegmentedPicker.swift */,
 				4ED177EA2D33C39700374D0C /* FilterItem.swift */,
@@ -1020,6 +1029,7 @@
 				23DFD20F2664C2720049F8D7 /* DetailImageView.swift in Sources */,
 				330BAD1B2D4616CF003C4B8D /* MenuFilterView.swift in Sources */,
 				1E3A583725CACC9A00DBB3F4 /* RestaurantCell.swift in Sources */,
+				74E03C712E9241DC00A5993C /* ToastView.swift in Sources */,
 				4E23C5A62D17DCDA0088C1F6 /* ErrorAlert.swift in Sources */,
 				4E90A07F2E7BE6E60016BAAF /* MyLikedMenu.swift in Sources */,
 				4E79A1842C7DCBFE007CE49B /* ImageView.swift in Sources */,
@@ -1130,6 +1140,8 @@
 				1ECB258225F5572F00875E18 /* MealReviewViewModel.swift in Sources */,
 				23DFD2042664110B0049F8D7 /* RemoteImage.swift in Sources */,
 				1E3A575825C6FF2900DBB3F4 /* MenuViewModel.swift in Sources */,
+				746227922E7F0C5700C1BB32 /* MyReviewViewModel.swift in Sources */,
+				746227902E76A28300C1BB32 /* MyReviewManageView.swift in Sources */,
 				1E3A57D825C724B200DBB3F4 /* PageView.swift in Sources */,
 				1ECB248125F14C0F00875E18 /* LoginViewModel.swift in Sources */,
 			);
