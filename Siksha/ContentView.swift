@@ -67,47 +67,46 @@ struct ContentView: View {
     ]
     
     var body: some View {
-    
+        NavigationView {
+
             GeometryReader { geometry in
                 ZStack{
-                    NavigationView {
-                        ZStack{
-                            VStack(spacing:0) {
-                                
-                                tabItems[selectedTab].content
-                                
-                                tabBar(geometry)
-                                
-                                
-                            }
-                            .frame(width:geometry.size.width)
-                            .ignoresSafeArea(.all, edges: .bottom)
+                    ZStack{
+                        VStack(spacing:0) {
                             
-                                ZStack{
-                                    MyLikedMenuModal( viewModel: alarmViewModel)
-                                        .environmentObject(ContentViewModel.contentViewModel)
-                                        .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
-                                    
-                                }
-                                .ignoresSafeArea()
-                                .frame(maxWidth:.infinity,maxHeight:.infinity)
-                                .background(Color.backgroundDim)
-                                .zIndex(contentViewModel.showModal ? 10 : -10)
-                                .opacity(contentViewModel.showModal ? 1 :0)
-                            }
-                            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository)),isActive: $contentViewModel.showMyMenuViewFromPopup){
-                                EmptyView()
-                            }
+                            tabItems[selectedTab].content
+                            
+                            tabBar(geometry)
+                            
+                            
+                        }
+                        .frame(width:geometry.size.width)
+                        .ignoresSafeArea(.all, edges: .bottom)
                         
+                        ZStack{
+                            MyLikedMenuModal( viewModel: alarmViewModel)
+                                .environmentObject(ContentViewModel.contentViewModel)
+                                .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
+                            
+                        }
+                        .ignoresSafeArea()
+                        .frame(maxWidth:.infinity,maxHeight:.infinity)
+                        .background(Color.backgroundDim)
+                        .zIndex(contentViewModel.showModal ? 10 : -10)
+                        .opacity(contentViewModel.showModal ? 1 :0)
                     }
-                    .navigationViewStyle(StackNavigationViewStyle())
-                 
+                    NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository),isFromModal: true),isActive: $contentViewModel.showMyMenuViewFromPopup){
+                        EmptyView()
+                    }
+                    
+                    
+                    
                     if contentViewModel.showPopUp{
                         ZStack(alignment: .topTrailing) {
                             Image("notificationPopup")
-                               .offset(y: -(UIScreen.main.bounds.height/2-97))
-                               .offset(x: UIScreen.main.bounds.width/2-80)
-                               .opacity(contentViewModel.popUpOpacity)
+                                .offset(y: -(UIScreen.main.bounds.height/2-97))
+                                .offset(x: UIScreen.main.bounds.width/2-80)
+                                .opacity(contentViewModel.popUpOpacity)
                         }
                         .onAppear{
                             print("onappear")
@@ -130,6 +129,10 @@ struct ContentView: View {
                     UIApplication.shared.registerForRemoteNotifications()
                 }
             }
+            
+        }
+        .navigationViewStyle(StackNavigationViewStyle())
+
 
 
 /*
