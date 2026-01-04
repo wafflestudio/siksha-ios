@@ -28,19 +28,19 @@ struct TypeInfo: Identifiable {
 
         switch(type){
         case .breakfast:
-            self.icon = "Breakfast"
+            self.icon = "BreakfastTime"
             self.width = 20
-            self.height = 12
+            self.height = 20
             self.name = "아침"
         case .lunch:
-            self.icon = "Lunch"
+            self.icon = "LunchTime"
             self.width = 20
             self.height = 20
             self.name = "점심"
         case .dinner:
-            self.icon = "Dinner"
-            self.width = 14
-            self.height = 14
+            self.icon = "DinnerTime"
+            self.width = 20
+            self.height = 20
             self.name = "저녁"
         }
     }

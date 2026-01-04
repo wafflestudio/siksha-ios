@@ -23,9 +23,6 @@ struct MyReviewManageView: View {
     
     var body: some View {
         ZStack {
-            Color(.systemGray6)
-                .ignoresSafeArea()
-            
             Group {
                 if viewModel.isLoading {
                     VStack {
@@ -73,7 +70,7 @@ struct MyReviewManageView: View {
             }
             
             if showReviewDeleteAlert {
-                Color.black.opacity(0.4)
+                Color.backgroundDim
                     .ignoresSafeArea(.all)
                     .onTapGesture {
                         if !isDeleting {
@@ -93,6 +90,7 @@ struct MyReviewManageView: View {
                 isVisible: showToast
             )
         }
+        .background(Color.backgroundMain)
         .customNavigationBar(title: "나의 평가 관리")
         .navigationBarItems(leading: backButton)
         .onAppear {

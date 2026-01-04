@@ -21,12 +21,13 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 mainContent
                 keyboardToolbarContent
             }
-            .errorAlert(error: $viewModel.error)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(Color.backgroundPrimary)
             .contentShape(Rectangle())
+            .ignoresSafeArea(.keyboard)
+            .errorAlert(error: $viewModel.error)
             .customNavigationBar(title: "프로필 관리")
             .navigationBarItems(leading: backButton)
-            .ignoresSafeArea(.keyboard)
             .onTapGesture {
                 UIApplication.shared.endEditing()
                 viewModel.setPreviousNickname()
@@ -77,7 +78,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             .foregroundColor(.gray200)
             .overlay(
                 ClearableTextField("닉네임", text: $viewModel.nickname)
-                    .padding(.horizontal, 18)
+                    .padding(.horizontal, 13)
             )
     }
     
@@ -148,7 +149,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 RoundedRectangle(cornerRadius: 8.0)
                     .fill(viewModel.enableDoneButton ? Color.orange500 : Color.gray600)
                 Text("완료")
-                    .font(.custom("NanumSquareOTFEB", size: 18))
+                    .customFont(font: .text18(weight: .ExtraBold))
                     .foregroundStyle(Color.textButton)
             }
         }
@@ -164,7 +165,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 viewModel.resetNickname()
             }) {
                 Text("취소")
-                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .customFont(font: .text16(weight: .Bold))
                     .foregroundColor(Color.orange500)
                     .padding(.leading, 20)
             }
@@ -174,7 +175,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 viewModel.setPreviousNickname()
             }) {
                 Text("OK")
-                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .customFont(font: .text16(weight: .Bold))
                     .foregroundColor(.orange500)
                     .padding(.trailing, 20)
             }
@@ -196,7 +197,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .foregroundColor(.white)
+                .foregroundColor(Color.iconWhiteIcon)
         }
     }
     
@@ -212,9 +213,9 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                         .foregroundColor(Color.orange500)
                         .padding(.trailing, 10)
                     Text("이미 존재하는 닉네임입니다.")
-                        .font(.custom("NanumSquareOTFB", size: 12))
+                        .customFont(font: .text12(weight: .Bold))
                         .lineLimit(1)
-                        .foregroundColor(.white)
+                        .foregroundColor(.textButton)
                 }
             }
             .frame(width: 185, height: 30)
@@ -237,12 +238,13 @@ struct ClearableTextField: View {
         ZStack(alignment: .trailing) {
             TextField(title, text: $text)
                 .multilineTextAlignment(.center)
-                .font(.custom("NanumSquareOTFB", size: 15))
+                .customFont(font: .text15(weight: .Bold))
                 .foregroundStyle(Color.blackColor)
-                .padding(.horizontal, 20)
+                .padding(.leading, 16)
+                .padding(.trailing, 28)
             if (text != "") {
-                Image(systemName: "xmark.circle.fill")
-                    .frame(width: 18, height: 18)
+                Image("CloseSmall")
+                    .frame(width: 28, height: 28)
                     .foregroundColor(Color.iconCloseBg)
                     .onTapGesture {
                         text = ""

@@ -49,7 +49,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
-                .foregroundColor(.white)
+                .foregroundColor(Color.iconWhiteIcon)
         }
         .contentShape(Rectangle())
     }
@@ -124,8 +124,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             Image("etc")
                 .resizable()
                 .scaledToFit()
-                .frame(width: 16, height: 16)
-                .padding(17)
+                .frame(width: 33, height: 33)
                 .onTapGesture {
                     showActionSheet = .post(post:viewModel.postInfo)
                 }
@@ -136,23 +135,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         Button(action: {
             viewModel.togglePostLike()
         }) {
-            HStack(spacing: 5) {
-                Image("like")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 11.5, height: 11)
-                    .foregroundStyle(Color.orange500)
-                
-                Text("공감")
-                    .customFont(font: .text11(weight: .Bold))
-            }
-            .foregroundStyle(Color.orange500)
-            .padding(.vertical, 3.5)
-            .padding(.horizontal, 6.5)
-            .overlay(
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(Color.orange500, lineWidth: 1)
-            )
+            Image(viewModel.postInfo.isLiked ? "LikeButton-liked" : "LikeButton-default")
         }
     }
     var commentList: some View {
@@ -266,7 +249,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     var divider: some View {
         Divider()
             .foregroundColor(.gray100)
-            .padding(EdgeInsets(top: 0, leading: 7.5, bottom: 0, trailing: 7.5))
+            .padding(.horizontal, 7.5)
     }
     
     var body: some View {
@@ -349,6 +332,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 }
                 .ignoresSafeArea(edges: .bottom)
             }
+            .background(Color.backgroundPrimary)
           
                 if(showPostDeleteAlert){
                     Color.black.opacity(0.4)

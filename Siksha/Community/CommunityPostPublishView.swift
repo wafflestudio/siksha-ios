@@ -31,12 +31,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
         }) {
-            Image(systemName: "xmark")
+            Image("Close")
                 .resizable()
-                .foregroundColor(Color.white)
-                .frame(width: 12, height: 12)
-                .padding(.vertical, 15)
-                .padding(.trailing, 15)
+                .foregroundColor(Color.iconWhiteIcon)
+                .frame(width: 28, height: 28)
+                .padding(.leading, 9)
         }
         .contentShape(Rectangle())
     }
@@ -133,7 +132,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     var customDivider: some View {
         HStack {
             Color.borderPrimary
-                .frame(height: 2)
+                .frame(height: 1)
                 .frame(maxWidth: .infinity)
         }
     }
@@ -141,8 +140,9 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     var imageSection: some View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 8) {
+                HStack(spacing: 3) {
                     ForEach(viewModel.images, id: \.self) { image in
+                        ZStack(alignment: .topTrailing) {
                             Image(uiImage: image)
                                 .resizable()
                                 .renderingMode(.original)
@@ -150,23 +150,18 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                 .frame(width: 106, height: 106)
                                 .clipped()
                                 .cornerRadius(cornerRadius)
-                                .overlay(alignment: .topTrailing) {
-                                    Button(action: {
-                                        viewModel.removeImage(image)
-                                    }) {
-                                        ZStack {
-                                            Circle()
-                                                .foregroundColor(.gray700)
-                                                .frame(width: 18, height: 18)
-                                            
-                                            Image(systemName: "xmark")
-                                                .font(.system(size: 10, weight: .semibold))
-                                                .foregroundColor(.white)
-                                        }
-                                        .offset(x: 4, y: -4)
-                                    }
-                                }
-                                .padding(.top, 7)
+                                .padding(.top, 4)
+                                .padding(.trailing, 5)
+                            
+                            Button(action: {
+                                viewModel.removeImage(image)
+                            }) {
+                                Image("Cancel")
+                                    .frame(width: 18, height: 18)
+                                    .background(Color.white)
+                                    .clipShape(Circle())
+                            }
+                        }
                     }
                     
                     Button(action: {
@@ -182,6 +177,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                 .foregroundColor(.gray600)
                                 .frame(width: 28, height: 28)
                         }
+                        .padding(.top, 4)
+                        .padding(.trailing, 5)
                     }
                     .sheet(isPresented: $isShowingPhotoLibrary) {
                         ImagePickerCoordinatorView(selectedImages: $viewModel.images, maxSelection: 5)
@@ -298,8 +295,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             }) {
                 Text("OK")
-                    .font(.custom("Inter-SemiBold", size: 16))
-                    .foregroundColor(.orange)
+                    .customFont(font: .text16(weight: .Bold))
+                    .foregroundColor(.orange500)
                     .padding(.trailing, 20)
             }
         }
@@ -378,7 +375,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 .customNavigationBar(title: "글쓰기")
                 .navigationBarItems(leading: backButton)
                 .alert(isPresented: $viewModel.isErrorAlert, content: {
-                    Alert(title: Text("게시물 남기기"), message: Text(alertMessage), dismissButton: alertButton)
+                    Alert(title: Text("게시글 작성"), message: Text(alertMessage), dismissButton: alertButton)
                 })
                     VStack {
                         Spacer()
@@ -389,6 +386,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                     }
                     .edgesIgnoringSafeArea(.bottom)
             }
+            .background(Color.backgroundPrimary)
         }
         .ignoresSafeArea(.keyboard)
         .navigationBarBackButtonHidden(true)

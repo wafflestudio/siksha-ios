@@ -31,6 +31,8 @@ struct MenuListView: View {
             
             if viewModel.getMenuStatus == .loading {
                 loadingView
+            } else if viewModel.noFavorites {
+                noFavoritesView
             } else if viewModel.restaurantsLists.count > 0 {
                 TabView(selection: $viewModel.selectedPage) {
                     ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
@@ -71,7 +73,7 @@ private extension MenuListView {
     
     var mealSelectorView: some View {
         ZStack {
-            HStack(alignment: .bottom, spacing: 28) {
+            HStack(alignment: .bottom, spacing: 24) {
                 ForEach(typeInfos) { type in
                     typeButton(type: type)
                 }
@@ -177,7 +179,7 @@ private extension MenuListView {
                     Rectangle()
                         .foregroundStyle(.clear)
                         .background(
-                            LinearGradient(colors: [Color.gray50, Color.gray50.opacity(0)], startPoint: .leading, endPoint: .trailing)
+                            LinearGradient(colors: [.backgroundPrimary, .backgroundPrimary.opacity(0)], startPoint: .leading, endPoint: .trailing)
                         )
                         .frame(width: 16, height: 34)
                 }
@@ -188,6 +190,16 @@ private extension MenuListView {
             if let newType {
                 viewModel.analytics.track(.filterModalOpened(entryPoint: newType.entryPointString, pageName: viewModel.pageName))
             }
+        }
+    }
+    
+    var noFavoritesView: some View {
+        VStack {
+            Spacer()
+            Text("즐겨찾기에 추가된 식당이 없습니다.")
+                .customFont(font: .text15(weight: .Bold))
+                .foregroundColor(lightGrayColor)
+            Spacer()
         }
     }
     
@@ -207,16 +219,14 @@ private extension MenuListView {
         Button(action: {
             viewModel.selectedPage = type.id
         }) {
-            VStack {
+            VStack(spacing: 3) {
                 Image(type.icon)
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: type.width, height: type.height)
+                    .frame(width: 20, height: 20)
                     .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
-                    .padding(.leading, type.id == 2 ? 3 : 0)
-                    .padding(.bottom, type.id == 1 ? 0 : 2)
                 Text(type.name)
-                    .font(.custom(viewModel.selectedPage == type.id ? "NanumSquareOTFB" : "NanumSquareOTFR", size: 10))
+                    .font(.custom(viewModel.selectedPage == type.id ? "NanumSquareOTFB" : "NanumSquareOTFR", size: 11))
                     .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
             }
         }

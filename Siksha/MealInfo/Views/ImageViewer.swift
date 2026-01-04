@@ -42,15 +42,15 @@ struct ImageViewer: View {
                             Image("Close")
                                 .renderingMode(.template)
                                 .resizable()
-                                .frame(width: 24, height: 24)
+                                .frame(width: 28, height: 28)
                                 .foregroundStyle(Color.iconWhiteIcon)
-                                .padding(.leading, 31)
+                                .padding(.leading, 16)
                                 .contentShape(Rectangle())
                         }
                         Spacer()
                     }
                     if showNumber {
-                        Text("\(selection + 1) / \(imageURLs.count)")
+                        Text("\(selection + 1)/\(imageURLs.count)")
                             .foregroundStyle(Color.iconWhiteIcon)
                             .customFont(font: .text16(weight: .ExtraBold))
                     }

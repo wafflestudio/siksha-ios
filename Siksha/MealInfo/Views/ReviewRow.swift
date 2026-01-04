@@ -32,16 +32,16 @@ struct ReviewRow: View {
                         .frame(width: 17, height: 17)
                         .padding(.top, 7)
                         .padding(.leading, 15)
-                        .foregroundStyle(Color.whiteColor)
+                        .foregroundStyle(Color.backgroundSecondary)
                     
-                    Text(viewModel.hasComment ? viewModel.comment : "코멘트가 없습니다.")
-                        .customFont(font: .text13(weight: viewModel.hasComment ? .Regular : .Bold))
-                        .foregroundStyle(viewModel.hasComment ? Color.blackColor : Color.gray400)
+                    Text(viewModel.comment)
+                        .customFont(font: .text13(weight: .Regular))
+                        .foregroundStyle(Color.blackColor)
                         .padding(10)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .background {
                             Rectangle()
-                                .fill(Color.whiteColor)
+                                .fill(Color.backgroundSecondary)
                                 .cornerRadius(8)
                         }
                         .padding(.leading, 29)

@@ -97,16 +97,14 @@ struct OperatingHoursTable: View {
 
 struct OperatingHoursTable_Previews: PreviewProvider {
     static var previews: some View {
-        var operatingHours = ["", "", ""]
-        operatingHours[0] = "11:30 - 13:30\n17:30 - 19:30"
-        operatingHours[1] = "11:30 - 13:30\n17:30 - 18:30"
+        var operatingHours: [String] {
+            var hours = ["", "", ""]
+            hours[0] = "11:30 - 13:30\n17:30 - 19:30"
+            hours[1] = "11:30 - 13:30\n17:30 - 18:30"
+            return hours
+        }
 
-        
-        return
         VStack(spacing:0){
-            Color(.black)
-                .frame(height:1)
-                .padding(.zero)
             OperatingHoursTable(hours: operatingHours, isFestivalRestaurant: false)
         }
         .preferredColorScheme(.light)
