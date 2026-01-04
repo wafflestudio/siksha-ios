@@ -61,8 +61,8 @@ public class MealInfoViewModel: ObservableObject {
                     
                     let realm = try! Realm()
                     try! realm.write {
-                        self.meal.isLiked = response.is_liked
-                        self.meal.likeCnt = response.like_cnt
+                        self.meal.isLiked = response.isLiked
+                        self.meal.likeCnt = response.likeCnt
                     }
                 }
                 .store(in: &cancellables)
@@ -82,8 +82,8 @@ public class MealInfoViewModel: ObservableObject {
                     
                     let realm = try! Realm()
                     try! realm.write {
-                        self.meal.isLiked = response.is_liked
-                        self.meal.likeCnt = response.like_cnt
+                        self.meal.isLiked = response.isLiked
+                        self.meal.likeCnt = response.likeCnt
                     }
                 }
                 .store(in: &cancellables)

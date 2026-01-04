@@ -58,11 +58,6 @@ struct MenuIdResponse: Codable {
     }
 }
 
-struct MenuLikeResponse: Codable{
-    var is_liked: Bool
-    var like_cnt: Int
-}
-
 struct FestivalDatesResponse: Codable {
     var festivalDates: [String]
     
