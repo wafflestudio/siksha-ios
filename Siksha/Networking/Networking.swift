@@ -179,6 +179,14 @@ class Networking {
         return request.validate().publishDecodable(type: UserInfoResponse.self)
     }
     
+    func editReview(reviewId: Int, menuId: Int, score: Int, comment: String, taste: String, price: String, foodComposition: String, images: [Data]?) -> DataResponsePublisher<Data> {
+        let endpoint = SikshaAPI.editReview(reviewId: reviewId, menuId: menuId, score: score, comment: comment, taste: taste, price: price, foodComposition: foodComposition, images: images)
+        
+        return AF.upload(multipartFormData: endpoint.multipartFormData!, with: endpoint)
+            .validate()
+            .publishData()
+    }
+    
     func submitVOC(comment: String, platform: String) -> DataResponsePublisher<Data> {
         let request = AF.request(SikshaAPI.submitVOC(comment: comment, platform: platform))
         

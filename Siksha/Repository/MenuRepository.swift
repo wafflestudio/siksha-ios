@@ -78,4 +78,9 @@ final class MenuRepository {
         
         return menus[0]
     }
+    
+    func getMenuFromID(_ id: String) -> DailyMenu? {
+        return realm.object(ofType: DailyMenu.self, forPrimaryKey: id)
+    }
+    
 }

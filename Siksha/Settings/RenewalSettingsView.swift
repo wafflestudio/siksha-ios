@@ -101,7 +101,7 @@ struct RenewalSettingsView: View {
             NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository))) {
                 HStack(alignment: .center) {
                     Text("내가 쓴 글")
-                        .font(.custom("NanumSquareOTF", size: 16))
+                        .font(.custom("NanumSquareOTF", size: 15))
                         .foregroundColor(blackColor)
                         .padding([.top, .bottom], 12)
                         .padding(.leading, 16)
@@ -111,7 +111,23 @@ struct RenewalSettingsView: View {
                     arrow
                 }
             }
-      
+            
+            partitionBar
+            
+            NavigationLink(destination: MyReviewManageView(viewModel: MyReviewViewModel(repository: DomainManager.shared.domain.userRepository))) {
+                HStack(alignment: .center) {
+                    Text("나의 평가 관리")
+                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .foregroundColor(blackColor)
+                        .padding([.top, .bottom], 12)
+                        .padding(.leading, 16)
+                    
+                    Spacer()
+                    
+                    arrow
+                }
+            }
+            
             partitionBar
             NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository))) {
                 HStack(alignment: .center) {
@@ -139,7 +155,7 @@ struct RenewalSettingsView: View {
     var partitionBar: some View {
         partitionColor
             .frame(height: 1)
-            .padding(.leading, 7)
+            .padding(.leading, 14)
             .padding(.trailing, 9)
     }
     

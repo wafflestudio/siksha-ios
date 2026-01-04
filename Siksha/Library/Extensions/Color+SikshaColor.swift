@@ -63,6 +63,7 @@ extension Color {
     static let elementChip = Color("SemanticColor/Element/Chip")
     static let elementControl = Color("SemanticColor/Element/Control")
     static let elementTooltip = Color("SemanticColor/Element/Tooltip")
+    static let elementTooltip2 = Color("SemanticColor/Element/Tooltip2")
     
     // MARK: - Icon Colors
     static let iconCloseBg = Color("SemanticColor/Icon/Close_bg")

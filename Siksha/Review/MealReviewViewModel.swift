@@ -31,6 +31,7 @@ class MealReviewViewModel: ObservableObject {
     
     private var imagesData = [Data]()
     private var recommendedComment = ""
+    private var isEditMode = false
     
     init() {
         $postReviewSucceeded
@@ -54,7 +55,7 @@ class MealReviewViewModel: ObservableObject {
             .sink { [weak self] score in
                 guard let self = self else { return }
                 
-                if commentToSubmit.isEmpty || commentToSubmit == recommendedComment {
+                if !isEditMode && (commentToSubmit.isEmpty || commentToSubmit == recommendedComment) {
                     self.getRecommendedComment(Int(score))
                 }
             }
@@ -89,7 +90,6 @@ class MealReviewViewModel: ObservableObject {
             return
         }
         
-        // TODO: 아래 더미데이터 교체
         Networking.shared.submitReview(
             menuId: meal.id,
             score: scoreToSubmit,
@@ -166,6 +166,89 @@ class MealReviewViewModel: ObservableObject {
                     meal.score = newScore
                     meal.reviewCnt = newReviewCnt
                 }
+            } else {
+                self.errorCode = .init(rawValue: response.statusCode)
+                self.postReviewSucceeded = false
+            }
+        }
+        .store(in: &cancellables)
+    }
+    
+
+    // MARK: - 리뷰 수정 관련 메소드
+    
+    func loadExistingReview(_ review: RestaurantReview) {
+        self.isEditMode = true
+        self.scoreToSubmit = review.rating
+        self.commentToSubmit = review.reviewText
+        
+        if review.tags.count >= 1 {
+            self.selectedKeywords[.taste] = review.tags[0]
+        }
+        if review.tags.count >= 2 {
+            self.selectedKeywords[.price] = review.tags[1]
+        }
+        if review.tags.count >= 3 {
+            self.selectedKeywords[.composition] = review.tags[2]
+        }
+        
+        if !review.imageUrls.isEmpty {
+            downloadImages(from: review.imageUrls)
+        }
+    }
+    
+    private func downloadImages(from urls: [String]) {
+        let publishers = urls.compactMap { urlString -> AnyPublisher<UIImage?, Never>? in
+            guard let url = URL(string: urlString) else { return nil }
+            
+            return URLSession.shared.dataTaskPublisher(for: url)
+                .map { UIImage(data: $0.data) }
+                .replaceError(with: nil)
+                .eraseToAnyPublisher()
+        }
+        
+        Publishers.MergeMany(publishers)
+            .collect()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] images in
+                self?.selectedImages = images.compactMap { $0 }
+            }
+            .store(in: &cancellables)
+    }
+    
+    func editReview(reviewId: Int) {
+        guard let meal = meal else {
+            self.postReviewSucceeded = false
+            return
+        }
+        
+        let imagesData = selectedImages.isEmpty ? nil : selectedImages.compactMap { $0.jpegData(compressionQuality: 0.5) }
+        
+        Networking.shared.editReview(
+            reviewId: reviewId,
+            menuId: meal.id,
+            score: scoreToSubmit,
+            comment: commentToSubmit.count > 0 ? commentToSubmit : "",
+            taste: selectedKeywords[.taste] ?? "",
+            price: selectedKeywords[.price] ?? "",
+            foodComposition: selectedKeywords[.composition] ?? "",
+            images: imagesData
+        )
+        .receive(on: RunLoop.main)
+        .sink { [weak self] result in
+            guard let self = self else { return }
+
+            if let data = result.data {
+                print("  - data: \(String(data: data, encoding: .utf8) ?? "nil")")
+            }
+            
+            guard let response = result.response else {
+                self.postReviewSucceeded = false
+                return
+            }
+            
+            if 200..<300 ~= response.statusCode {
+                self.postReviewSucceeded = true
             } else {
                 self.errorCode = .init(rawValue: response.statusCode)
                 self.postReviewSucceeded = false
