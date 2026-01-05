@@ -129,6 +129,7 @@ struct ContentView: View {
                 .onAppear{
                     print("onappear")
                     if UserDefaults.standard.integer(forKey: "alarmPopupCount") < 3{
+                        UserDefaults.standard.set(UserDefaults.standard.integer(forKey: "alarmPopupCount") + 1,forKey: "alarmPopupCount")
                        hidePopupWorkItem = DispatchWorkItem {
                             withAnimation(.easeInOut(duration: 1.0)) {
                                 contentViewModel.popUpOpacity = 0.0
