@@ -69,6 +69,8 @@ struct MyLikedMenuView: View {
        
         .onDisappear{
             viewModel.unLikedMenuCleanup()
+            ContentViewModel.contentViewModel.showPopUp = false
+
         }
         .background(Color.backgroundMain)
         .errorAlert(error: $viewModel.error)
