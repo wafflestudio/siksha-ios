@@ -125,8 +125,11 @@ struct ContentView: View {
                     
                 }
                 .onAppear{
-                    print("CONTENTVIEW")
-                    UIApplication.shared.registerForRemoteNotifications()
+                    if !UserDefaults.standard.bool(forKey: "alreadySentFCM"){
+                        
+                        print("CONTENTVIEW")
+                        UIApplication.shared.registerForRemoteNotifications()
+                    }
                 }
             }
             
