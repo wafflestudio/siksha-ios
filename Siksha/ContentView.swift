@@ -67,75 +67,78 @@ struct ContentView: View {
     ]
     
     var body: some View {
-        NavigationView {
-
-            GeometryReader { geometry in
-                ZStack{
+        ZStack{
+            NavigationView {
+                
+                GeometryReader { geometry in
                     ZStack{
-                        VStack(spacing:0) {
-                            
-                            tabItems[selectedTab].content
-                            
-                            tabBar(geometry)
-                            
-                            
-                        }
-                        .frame(width:geometry.size.width)
-                        .ignoresSafeArea(.all, edges: .bottom)
-                        
                         ZStack{
-                            MyLikedMenuModal( viewModel: alarmViewModel)
-                                .environmentObject(ContentViewModel.contentViewModel)
-                                .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
-                            
-                        }
-                        .ignoresSafeArea()
-                        .frame(maxWidth:.infinity,maxHeight:.infinity)
-                        .background(Color.backgroundDim)
-                        .zIndex(contentViewModel.showModal ? 10 : -10)
-                        .opacity(contentViewModel.showModal ? 1 :0)
-                    }
-                    NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository),isFromModal: true),isActive: $contentViewModel.showMyMenuViewFromPopup){
-                        EmptyView()
-                    }
-                    
-                    
-                    
-                    if contentViewModel.showPopUp{
-                        ZStack(alignment: .topTrailing) {
-                            Image("notificationPopup")
-                                .offset(y: -(UIScreen.main.bounds.height/2-97))
-                                .offset(x: UIScreen.main.bounds.width/2-80)
-                                .opacity(contentViewModel.popUpOpacity)
-                        }
-                        .onAppear{
-                            print("onappear")
-                            if UserDefaults.standard.integer(forKey: "alarmPopupCount") < 3{
-                                withAnimation(.easeInOut(duration: 1.0).delay(0.5)) {
-                                    contentViewModel.popUpOpacity = 1.0
-                                }
+                            VStack(spacing:0) {
                                 
-                                withAnimation(.easeInOut(duration: 1.0).delay(5.0)) {
-                                    contentViewModel.popUpOpacity = 0.0
-                                    UserDefaults.standard.set(UserDefaults.standard.integer(forKey: "alarmPopupCount") + 1,forKey: "alarmPopupCount")
-                                }
+                                tabItems[selectedTab].content
+                                
+                                tabBar(geometry)
+                                
+                                
                             }
+                            .frame(width:geometry.size.width)
+                            .ignoresSafeArea(.all, edges: .bottom)
+                            
+                            ZStack{
+                                MyLikedMenuModal( viewModel: alarmViewModel)
+                                    .environmentObject(ContentViewModel.contentViewModel)
+                                    .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
+                                
+                            }
+                            .ignoresSafeArea()
+                            .frame(maxWidth:.infinity,maxHeight:.infinity)
+                            .background(Color.backgroundDim)
+                            .zIndex(contentViewModel.showModal ? 10 : -10)
+                            .opacity(contentViewModel.showModal ? 1 :0)
+                        }
+                        NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository),isFromModal: true),isActive: $contentViewModel.showMyMenuViewFromPopup){
+                            EmptyView()
+                        }
+                        
+                        
+                        
+                    
+                        
+                    }
+                    .onAppear{
+                        if !UserDefaults.standard.bool(forKey: "alreadySentFCM"){
+                            
+                            print("CONTENTVIEW")
+                            UIApplication.shared.registerForRemoteNotifications()
                         }
                     }
-                    
                 }
+                
+            }
+            .navigationViewStyle(StackNavigationViewStyle())
+            if contentViewModel.showPopUp{
+                ZStack(alignment: .topTrailing) {
+                    Image("notificationPopup")
+                        .offset(y: -(UIScreen.main.bounds.height/2-97))
+                        .offset(x: UIScreen.main.bounds.width/2-80)
+                        .opacity(contentViewModel.popUpOpacity)
+                }
+                
                 .onAppear{
-                    if !UserDefaults.standard.bool(forKey: "alreadySentFCM"){
+                    print("onappear")
+                    if UserDefaults.standard.integer(forKey: "alarmPopupCount") < 3{
+                        withAnimation(.easeInOut(duration: 1.0).delay(0.5)) {
+                            contentViewModel.popUpOpacity = 1.0
+                        }
                         
-                        print("CONTENTVIEW")
-                        UIApplication.shared.registerForRemoteNotifications()
+                        withAnimation(.easeInOut(duration: 1.0).delay(5.0)) {
+                            contentViewModel.popUpOpacity = 0.0
+                            UserDefaults.standard.set(UserDefaults.standard.integer(forKey: "alarmPopupCount") + 1,forKey: "alarmPopupCount")
+                        }
                     }
                 }
             }
-            
         }
-        .navigationViewStyle(StackNavigationViewStyle())
-
 
 
 /*
