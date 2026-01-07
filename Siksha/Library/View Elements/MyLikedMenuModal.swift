@@ -106,7 +106,8 @@ struct MyLikedMenuModal: View {
                     Button(action:{
                         contentViewModel.showMyMenuViewFromPopup = true
                         contentViewModel.showModal = false
-                        
+                        UserDefaults.standard.set(true, forKey: "isAlreadyDisplayedMyLikedMenuModal")
+
                     })
                     {
                         Text("직접 설정하기")
