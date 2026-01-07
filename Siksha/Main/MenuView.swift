@@ -70,17 +70,6 @@ struct MenuView: View {
         .alert(isPresented: $viewModel.showNetworkAlert, content: {
             Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))
         })
-//        .onAppear {
-//            if viewModel.reloadOnAppear {
-//                viewModel.getMenu(date: viewModel.selectedDate)
-//            } else {
-//                viewModel.reloadOnAppear = true
-//            }
-//            viewModel.loadFilters()
-//        }
-//        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-//            viewModel.getMenu(date: viewModel.selectedDate)
-//        }
         .sheet(isPresented: isFilterModalPresented){
             MenuFilterView(menuViewModel: viewModel, menuFilterType: selectedFilterType ?? .all)
                 .presentationDetents([.height(selectedModalHeight)])
