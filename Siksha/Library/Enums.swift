@@ -71,7 +71,7 @@ enum ReviewErrorCode: Int {
     case noNetwork = 0
     case authenticationFailed = 422
     case signatureVerifyFailed = 401
-    case multipleReview = 403
+    case multipleReview = 409
     case invalidId = 404
     
     var message: String {
@@ -89,6 +89,7 @@ enum ReviewErrorCode: Int {
         }
     }
 }
+
 enum FontType{
     enum FontWeight: String{
         case Light = "NanumSquareOTFL"
