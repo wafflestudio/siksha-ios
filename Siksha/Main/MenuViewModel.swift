@@ -279,7 +279,7 @@ final class MenuViewModel: NSObject, ObservableObject {
             .sink { [weak self] (menu,isFestival) in
                 guard let self = self else { return }
                 
-                if let menu = menu {
+                if let menu {
                     let restOrder = (UserDefaults.standard.dictionary(forKey: isFavoriteTab ? "favRestaurantOrder" : "restaurantOrder") as? [String : Int]) ?? [String : Int]()
                     
                     let br = Array(menu.getRestaurants(.breakfast))
