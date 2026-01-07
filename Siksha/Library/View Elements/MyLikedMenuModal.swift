@@ -108,41 +108,37 @@ struct MyLikedMenuModal: View {
                         contentViewModel.showModal = false
                         
                     })
-                    {Text("직접 설정하기")
-                        
-                            .padding(EdgeInsets(top: 11, leading: 33.25, bottom: 11, trailing: 33.25))
+                    {
+                        Text("직접 설정하기")
+                            .padding(.vertical, 11)
                             .foregroundStyle(Color.gray600)
                             .frame(maxWidth:.infinity)
                             .background(Color.gray100)
-                            .cornerRadius(6)
+                            .cornerRadius(8)
+                            .customFont(font: .text16(weight: .Bold))
                     }
                     Button(action:{
-
-                        if isYesSelected{
+                        if isYesSelected {
                             AppDelegate.alarmViewModel = viewModel
                             AppDelegate.requestNotificationPermission()
                             contentViewModel.showModal = false
-
-                        }
-                        else{
+                        } else {
                             UserDefaults.standard.set(false, forKey: "isAlarmEnabled")
                             contentViewModel.showModal = false
-
-                            
                         }
+                        
                         UserDefaults.standard.set(true, forKey: "isAlreadyDisplayedMyLikedMenuModal")
                     }){
                         Text("완료")
-                        
-                            .padding(EdgeInsets(top: 11, leading: 33.25, bottom: 11, trailing: 33.25))
+                            .padding(.vertical, 11)
                             .foregroundStyle(Color.textButton)
                             .frame(maxWidth:.infinity)
                             .background(isConfirmedEnabled ? Color.orange500 : Color.gray600)
-                            .cornerRadius(6)
+                            .cornerRadius(8)
+                            .customFont(font: .text16(weight: .Bold))
                     }
                     .disabled(!isConfirmedEnabled)
                 }
-                
             }
             .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
             .frame(maxWidth:.infinity)
@@ -150,7 +146,6 @@ struct MyLikedMenuModal: View {
         }
         .padding(EdgeInsets(top: 0, leading: 0, bottom: 24, trailing: 0))
         .background(Color.backgroundSecondary)
-
         .cornerRadius(16)
         .frame(maxWidth:.infinity,alignment: .topLeading)
         .errorAlert(error: $viewModel.error)
