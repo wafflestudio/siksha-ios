@@ -326,6 +326,13 @@ final class MenuViewModel: NSObject, ObservableObject {
                     } else {
                         self.noFavorites = false
                     }
+                } else {
+                    self.restaurantsLists = []
+                    if isFavoriteTab {
+                        self.checkNoFavorites()
+                    } else {
+                        self.noFavorites = false
+                    }
                 }
             }
             .store(in: &cancellables)
