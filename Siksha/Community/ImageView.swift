@@ -63,6 +63,7 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
             .frame(maxWidth: .infinity)
         }
         .background(.black)
+        .swipeDownToDismiss()
     }
 }
 
