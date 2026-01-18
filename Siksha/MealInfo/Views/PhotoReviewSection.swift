@@ -38,7 +38,9 @@ struct PhotoReviewSection: View {
             guard $0 != nil else { return }
             isImageExpanded = true
         }
-        .fullScreenCover(isPresented: $isImageExpanded) {
+        .fullScreenCover(isPresented: $isImageExpanded, onDismiss: {
+            tappedImageUrlString = nil
+        }) {
             if let urlString = tappedImageUrlString {
                 ImageViewer(imageURLs: [URL(string: urlString)!], showNumber: false)
             }
