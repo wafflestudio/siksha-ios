@@ -68,12 +68,12 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                     Color.white
                                 }
                                 .tag(index)
-                                .onTapGesture {
-                                    showImages = true
-                                }
                                 .frame(width: UIScreen.main.bounds.width - 39, height: UIScreen.main.bounds.width - 39)
                             }
                         }
+                        .simultaneousGesture(
+                            TapGesture().onEnded { showImages = true }
+                        )
                         .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
                         .frame(width: UIScreen.main.bounds.width - 39, height: UIScreen.main.bounds.width - 39)
                     
