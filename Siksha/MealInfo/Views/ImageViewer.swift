@@ -58,6 +58,7 @@ struct ImageViewer: View {
                 Spacer()
             }
         }
+        .swipeDownToDismiss()
     }
     
     struct ImageView: View {

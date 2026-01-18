@@ -89,6 +89,7 @@
 		330BAD1B2D4616CF003C4B8D /* MenuFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330BAD1A2D4616CF003C4B8D /* MenuFilterView.swift */; };
 		330C55112D4CCA480011345D /* SegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330C55102D4CCA3F0011345D /* SegmentedPicker.swift */; };
 		330C55132D4D047A0011345D /* Sliders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 330C55122D4D04730011345D /* Sliders.swift */; };
+		33B4F79E2F1C8B4A0043784B /* SwipeDownToDismissModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33B4F79D2F1C8B4A0043784B /* SwipeDownToDismissModifier.swift */; };
 		33C4561F2DDB6CA600BEFAB2 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = 33C4561E2DDB6CA600BEFAB2 /* GoogleSignIn */; };
 		33C456212DDB6CA600BEFAB2 /* GoogleSignInSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 33C456202DDB6CA600BEFAB2 /* GoogleSignInSwift */; };
 		33DDF0E62DC213B800E202F1 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 33DDF0E52DC213B800E202F1 /* GoogleService-Info.plist */; };
@@ -309,6 +310,7 @@
 		330BAD1A2D4616CF003C4B8D /* MenuFilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuFilterView.swift; sourceTree = "<group>"; };
 		330C55102D4CCA3F0011345D /* SegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegmentedPicker.swift; sourceTree = "<group>"; };
 		330C55122D4D04730011345D /* Sliders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Sliders.swift; sourceTree = "<group>"; };
+		33B4F79D2F1C8B4A0043784B /* SwipeDownToDismissModifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwipeDownToDismissModifier.swift; sourceTree = "<group>"; };
 		33DDF0D92DC0B6E600E202F1 /* FirebaseRemoteConfig.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = FirebaseRemoteConfig.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		33DDF0E52DC213B800E202F1 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		4E1BDE232A7F75BC00046ADC /* CommunityView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommunityView.swift; sourceTree = "<group>"; };
@@ -609,6 +611,7 @@
 				1ECB251C25F1739D00875E18 /* Config.swift */,
 				A6CBB8662C8204CA0067723D /* KeyboardResponder.swift */,
 				A6ACE1102DA050AF00057585 /* MeasureFrameModifier.swift */,
+				33B4F79D2F1C8B4A0043784B /* SwipeDownToDismissModifier.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -1093,6 +1096,7 @@
 				4EB660BC2A74DEAA00E52314 /* CommunityPostPublishView.swift in Sources */,
 				23258E9C26496D9D00146BC5 /* HorizontalGraph.swift in Sources */,
 				C091FEE52C314F9600D48F92 /* RenewalSettingsViewModel.swift in Sources */,
+				33B4F79E2F1C8B4A0043784B /* SwipeDownToDismissModifier.swift in Sources */,
 				1E3A573A25C6FE2700DBB3F4 /* Extensions.swift in Sources */,
 				4EA4F0882E4DFBB80056438B /* MapMarker.swift in Sources */,
 				07D241CA2E94AFF300B56593 /* StarRateView.swift in Sources */,
