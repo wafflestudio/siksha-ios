@@ -122,7 +122,7 @@ public class MealInfoViewModel: ObservableObject {
         
         getImageStatus = .loading
         
-        Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 3)
+        Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 6)
             .receive(on: RunLoop.main)
             .handleEvents(receiveOutput: { [weak self] response in
                 guard let self = self else { return }
