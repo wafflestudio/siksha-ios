@@ -14,6 +14,7 @@ struct Provider: AppIntentTimelineProvider {
             date: Date(),
             restaurantName: "75-1동 4층 푸드코트",
             mealTime: .breakfast,
+            menus: [],
             configuration: ConfigurationAppIntent()
         )
     }
@@ -23,6 +24,7 @@ struct Provider: AppIntentTimelineProvider {
             date: Date(),
             restaurantName: "75-1동 4층 푸드코트",
             mealTime: .breakfast,
+            menus: [],
             configuration: configuration
         )
     }
@@ -38,6 +40,7 @@ struct Provider: AppIntentTimelineProvider {
                 date: entryDate,
                 restaurantName: "75-1동 4층 푸드코트",
                 mealTime: .breakfast,
+                menus: [],
                 configuration: configuration
             )
             entries.append(entry)
@@ -55,12 +58,21 @@ enum MealTime {
     case breakfast
     case lunch
     case dinner
+    
+    var imageName: String {
+        switch self {
+            case .breakfast: return "BreakfastTime"
+            case .lunch: return "LunchTime"
+            case .dinner: return "DinnerTime"
+        }
+    }
 }
 
 struct SimpleEntry: TimelineEntry {
     let date: Date
     let restaurantName: String
     let mealTime: MealTime
+    let menus: [String]
     let configuration: ConfigurationAppIntent
 }
 
@@ -68,14 +80,55 @@ struct SikshaWidgetEntryView : View {
     var entry: Provider.Entry
 
     var body: some View {
-        VStack {
-            Text(entry.restaurantName)
-                .lineLimit(1)
-            Text("Time:")
-            Text(entry.date, style: .time)
-
-            Text("Favorite Emoji:")
-            Text(entry.configuration.favoriteEmoji)
+        VStack(spacing: 0) {
+            HStack(spacing: 6) {
+                Text(entry.restaurantName)
+                    .customFont(font: .text13(weight: .ExtraBold))
+                    .lineLimit(1)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
+                Image(entry.mealTime.imageName)
+                    .renderingMode(.template)
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundStyle(Color.orange500)
+                    .frame(width: 20, height: 20)
+            }
+            
+            Spacer()
+                .frame(height: 4)
+            
+            Rectangle()
+                .fill(Color.orange500)
+                .frame(height: 1)
+            
+            if entry.menus.isEmpty {
+                VStack(spacing: 0) {
+                    Spacer()
+                    Text("등록된 메뉴가 없어요")
+                        .customFont(font: .text12(weight: .Regular))
+                        .foregroundStyle(Color.gray600)
+                    Spacer()
+                }
+            } else {
+                VStack(spacing: 8) {
+                    ForEach(0..<4) {
+                        if entry.menus.count > $0 {
+                            Text(entry.menus[$0])
+                                .lineLimit(1)
+                                .customFont(font: .text12(weight: .Regular))
+                                .foregroundStyle(Color.gray900)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                }
+                .padding(.top, 10)
+                
+                Spacer(minLength: 0)
+            }
+            
+            Spacer(minLength: 0)
         }
     }
 }
@@ -86,8 +139,10 @@ struct SikshaWidget: Widget {
     var body: some WidgetConfiguration {
         AppIntentConfiguration(kind: kind, intent: ConfigurationAppIntent.self, provider: Provider()) { entry in
             SikshaWidgetEntryView(entry: entry)
-                .containerBackground(.fill.tertiary, for: .widget)
+                .containerBackground(Color.whiteColor, for: .widget)
+                .padding(14)
         }
+        .contentMarginsDisabled()
     }
 }
 
@@ -111,9 +166,11 @@ extension ConfigurationAppIntent {
     SimpleEntry(date: .now,
                 restaurantName: "75-1동 4층 푸드코트",
                 mealTime: .breakfast,
+                menus: [],
                 configuration: .smiley)
     SimpleEntry(date: .now,
                 restaurantName: "75-1동 4층 푸드코트",
-                mealTime: .breakfast,
+                mealTime: .dinner,
+                menus: ["1인 목살스테이크 샐러드", "치즈미트토마토파스타", "김치 필라프", "뚝배기불고기+비빔밥+김치필라프"],
                 configuration: .starEyes)
 }

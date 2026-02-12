@@ -85,6 +85,7 @@
 		078DDE212F3DADFE0011D308 /* SikshaWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = SikshaWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		078DDE222F3DADFE0011D308 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		078DDE242F3DADFE0011D308 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
+		078DDE382F3DB41B0011D308 /* SikshaWidgetExtension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SikshaWidgetExtension.entitlements; sourceTree = "<group>"; };
 		1E3A56E725C6FCE600DBB3F4 /* Siksha.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Siksha.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A56FD25C6FCE900DBB3F4 /* SikshaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SikshaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E3A570825C6FCE900DBB3F4 /* SikshaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SikshaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -96,6 +97,29 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
+			);
+			target = 078DDE202F3DADFE0011D308 /* SikshaWidgetExtension */;
+		};
+		078DDE3D2F3DBA770011D308 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Assets.xcassets,
+				"Font/Inter-Black.ttf",
+				"Font/Inter-Bold.ttf",
+				"Font/Inter-ExtraBold.ttf",
+				"Font/Inter-ExtraLight.ttf",
+				"Font/Inter-Light.ttf",
+				"Font/Inter-Medium.ttf",
+				"Font/Inter-Regular.ttf",
+				"Font/Inter-SemiBold.ttf",
+				"Font/Inter-Thin.ttf",
+				Font/NanumSquareOTFBold.otf,
+				Font/NanumSquareOTFExtraBold.otf,
+				Font/NanumSquareOTFLight.otf,
+				Font/NanumSquareOTFRegular.otf,
+				Library/Enums.swift,
+				"Library/Extensions/Color+SikshaColor.swift",
+				Library/Font.swift,
 			);
 			target = 078DDE202F3DADFE0011D308 /* SikshaWidgetExtension */;
 		};
@@ -124,7 +148,7 @@
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		078DDE262F3DADFE0011D308 /* SikshaWidget */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (078DDE362F3DADFF0011D308 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SikshaWidget; sourceTree = "<group>"; };
-		3333F86F2F13F2DC004B13CA /* Siksha */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (3333F9072F13F2DC004B13CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Siksha; sourceTree = "<group>"; };
+		3333F86F2F13F2DC004B13CA /* Siksha */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (3333F9072F13F2DC004B13CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, 078DDE3D2F3DBA770011D308 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Siksha; sourceTree = "<group>"; };
 		3333F90A2F13F2E6004B13CA /* SikshaTests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (3333F90C2F13F2E6004B13CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SikshaTests; sourceTree = "<group>"; };
 		3333F90F2F13F2F1004B13CA /* SikshaUITests */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (3333F9112F13F2F1004B13CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = SikshaUITests; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -185,6 +209,7 @@
 		1E3A56DE25C6FCE600DBB3F4 = {
 			isa = PBXGroup;
 			children = (
+				078DDE382F3DB41B0011D308 /* SikshaWidgetExtension.entitlements */,
 				3333F86F2F13F2DC004B13CA /* Siksha */,
 				3333F90A2F13F2E6004B13CA /* SikshaTests */,
 				3333F90F2F13F2F1004B13CA /* SikshaUITests */,
@@ -492,9 +517,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = SikshaWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -513,6 +539,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wafflestudio.siksha.dev.SikshaWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
@@ -531,9 +558,10 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_WIDGET_BACKGROUND_COLOR_NAME = WidgetBackground;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_ENTITLEMENTS = SikshaWidgetExtension.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_USER_SCRIPT_SANDBOXING = YES;
@@ -552,6 +580,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wafflestudio.siksha.SikshaWidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
