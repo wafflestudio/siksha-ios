@@ -365,5 +365,5 @@ struct ReviewCardView: View {
 }
 
 #Preview {
-    MyReviewManageView(viewModel: MyReviewViewModel(repository: DomainManager.shared.domain.userRepository))
+    MyReviewManageView(viewModel: MyReviewViewModel(repository: AppContainer.shared.domain.userRepository))
 }

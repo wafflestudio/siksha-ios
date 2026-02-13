@@ -182,5 +182,5 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
 }
 
 #Preview {
-    AlertView(RenewalSettingsViewModel(), CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: 1))
+    AlertView(RenewalSettingsViewModel(), CommunityPostViewModel(communityRepository: AppContainer.shared.domain.communityRepository, postId: 1))
 }

@@ -50,7 +50,7 @@ struct ContentView: View {
     @State var selectedTab = 1
     @EnvironmentObject var appState: AppState
     @ObservedObject var contentViewModel = ContentViewModel.contentViewModel
-    @StateObject var alarmViewModel = MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository)
+    @StateObject var alarmViewModel = MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository)
     @State private var hidePopupWorkItem: DispatchWorkItem?
     
     struct TabItem: Identifiable {
@@ -62,7 +62,7 @@ struct ContentView: View {
     let tabItems = [
         TabItem(id: 0, content: AnyView(MenuView(isFavoriteTab: true).id("favorite")), buttonImage: ["Favorite", "Favorite-disabled"]),
         TabItem(id: 1, content: AnyView(MenuView().id("main")), buttonImage: ["Main", "Main-disabled"]),
-        TabItem(id: 2, content: AnyView(CommunityView(viewModel: CommunityViewModel(communityRepository: DomainManager.shared.domain.communityRepository))), buttonImage: ["Community", "Community-disabled"]),
+        TabItem(id: 2, content: AnyView(CommunityView(viewModel: CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository))), buttonImage: ["Community", "Community-disabled"]),
         TabItem(id: 3, content: AnyView(RenewalSettingsView(viewModel: RenewalSettingsViewModel())), buttonImage: ["Settings", "Settings-disabled"])
     ]
     
@@ -91,7 +91,7 @@ struct ContentView: View {
                             .opacity(contentViewModel.showModal ? 1 : 0)
                         }
                         
-                        NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository),isFromModal: true), isActive: $contentViewModel.showMyMenuViewFromPopup) {
+                        NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository),isFromModal: true), isActive: $contentViewModel.showMyMenuViewFromPopup) {
                             EmptyView()
                         }
                     }

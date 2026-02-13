@@ -418,7 +418,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
 
 struct CommunityPostPublishView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityPostPublishView(needRefresh: .constant(false), viewModel: CommunityPostPublishViewModel(boardId: 1, communityRepository: DomainManager.shared.domain.communityRepository, postInfo: .init(title: "title", content: "content", isLiked: false, likeCount: 5, commentCount: 4, imageURLs: [
+        CommunityPostPublishView(needRefresh: .constant(false), viewModel: CommunityPostPublishViewModel(boardId: 1, communityRepository: AppContainer.shared.domain.communityRepository, postInfo: .init(title: "title", content: "content", isLiked: false, likeCount: 5, commentCount: 4, imageURLs: [
             "https://images.unsplash.com/photo-1751193978006-4c19abfb5f3f?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             "https://images.unsplash.com/photo-1754404053324-8f910c2b7e2d?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
             "https://plus.unsplash.com/premium_photo-1754067486503-e3f98909b13a?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"

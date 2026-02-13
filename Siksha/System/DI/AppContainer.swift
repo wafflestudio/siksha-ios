@@ -1,18 +1,18 @@
 //
-//  DomainManager.swift
+//  AppContainer.swift
 //  Siksha
 //
 //  Created by 한상현 on 2023/09/11.
 //
 
-final class DomainManager {
-    static let shared = DomainManager()
+final class AppContainer {
+    static let shared = AppContainer()
     
-    let domain: Domain
+    let domain: RepositoryProvider
     
     init() {
         let networkModule = AlamofireNetworking()
         let repository = Repository(networkModule: networkModule)
-        self.domain = Domain(repository: repository)
+        self.domain = RepositoryProvider(repository: repository)
     }
 }

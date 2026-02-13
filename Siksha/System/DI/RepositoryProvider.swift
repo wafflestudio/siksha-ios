@@ -7,13 +7,7 @@
 
 import Foundation
 
-protocol DomainProtocol {
-    var communityRepository: CommunityRepositoryProtocol { get }
-    var userRepository: UserRepositoryProtocol { get }
-    var authRepository: AuthRepositoryProtocol { get }
-}
-
-final class Domain: DomainProtocol {
+final class RepositoryProvider {
     private let repository: RepositoryProtocol
     
     init(repository: RepositoryProtocol) {

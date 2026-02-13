@@ -58,7 +58,7 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                         needRefresh: $needRefresh,
                         viewModel: CommunityPostPublishViewModel(
                             boardId:selectedBoardId ?? 0,
-                            communityRepository: DomainManager.shared.domain.communityRepository
+                            communityRepository: AppContainer.shared.domain.communityRepository
                         )
                     ),
                     tag: 1,
@@ -152,7 +152,7 @@ struct CommunityPostPreView: View {
         NavigationLink {
             CommunityPostView(
                 viewModel: CommunityPostViewModel(
-                    communityRepository: DomainManager.shared.domain.communityRepository,
+                    communityRepository: AppContainer.shared.domain.communityRepository,
                     postId: info.id
                 ),
                 needPostViewRefresh: needRefresh

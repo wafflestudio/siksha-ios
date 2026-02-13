@@ -15,7 +15,7 @@ struct TopPostCell: View{
         NavigationLink {
             CommunityPostView(
                 viewModel: CommunityPostViewModel(
-                    communityRepository: DomainManager.shared.domain.communityRepository,
+                    communityRepository: AppContainer.shared.domain.communityRepository,
                     postId: post.id
                 ),
                 needPostViewRefresh:needRefresh

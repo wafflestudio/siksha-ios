@@ -31,7 +31,7 @@ class UserManager: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let userRepository: UserRepositoryProtocol
     
-    private init(userRepository: UserRepositoryProtocol = DomainManager.shared.domain.userRepository) {
+    private init(userRepository: UserRepositoryProtocol = AppContainer.shared.domain.userRepository) {
         self.userRepository = userRepository
     }
 

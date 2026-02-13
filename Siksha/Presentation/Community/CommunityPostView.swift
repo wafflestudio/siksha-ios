@@ -424,7 +424,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             CommunityPostPublishView(
                 needRefresh: self.$needRefresh, needPostViewRefresh: self.$needPostViewRefresh, viewModel: CommunityPostPublishViewModel(
                     boardId: viewModel.postInfo.boardId,
-                    communityRepository: DomainManager.shared.domain.communityRepository,
+                    communityRepository: AppContainer.shared.domain.communityRepository,
                     postInfo: viewModel.postInfo
                 )
             )

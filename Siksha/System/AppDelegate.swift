@@ -144,7 +144,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let token = UserDefaults.standard.string(forKey: "fcmToken")
         guard let token = token else { return }
         print("FCM:",token)
-        DomainManager.shared.domain.authRepository.postUserDevice(fcmToken: token)
+        AppContainer.shared.domain.authRepository.postUserDevice(fcmToken: token)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {
@@ -163,7 +163,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let token = UserDefaults.standard.string(forKey: "fcmToken")
         guard let token = token else { return }
         print("FCM:",token)
-        DomainManager.shared.domain.authRepository.deleteUserDevice(fcmToken: token)
+        AppContainer.shared.domain.authRepository.deleteUserDevice(fcmToken: token)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
                 if case .failure(let error) = completion {

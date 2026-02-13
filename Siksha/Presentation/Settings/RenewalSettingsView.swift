@@ -96,7 +96,7 @@ struct RenewalSettingsView: View {
     var myWritings: some View {
 
         VStack(spacing: 8) {
-            NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository))) {
+            NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: AppContainer.shared.domain.communityRepository))) {
                 HStack(alignment: .center) {
                     Text("내가 쓴 글")
                         .customFont(font: .text15(weight: .Regular))
@@ -110,7 +110,7 @@ struct RenewalSettingsView: View {
             
             partitionBar
             
-            NavigationLink(destination: MyReviewManageView(viewModel: MyReviewViewModel(repository: DomainManager.shared.domain.userRepository))) {
+            NavigationLink(destination: MyReviewManageView(viewModel: MyReviewViewModel(repository: AppContainer.shared.domain.userRepository))) {
                 HStack(alignment: .center) {
                     Text("나의 평가 관리")
                         .customFont(font: .text15(weight: .Regular))
@@ -123,7 +123,7 @@ struct RenewalSettingsView: View {
             }
             
             partitionBar
-            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: DomainManager.shared.domain.myLikedMenuRepository))) {
+            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository))) {
                 HStack(alignment: .center) {
                     Text("내가 찜한 메뉴")
                         .customFont(font: .text15(weight: .Regular))

@@ -13,8 +13,8 @@ import FirebaseMessaging
 class RenewalSettingsViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
-    private let repository: UserRepositoryProtocol = DomainManager.shared.domain.userRepository
-    private let authRepository:AuthRepositoryProtocol = DomainManager.shared.domain.authRepository
+    private let repository: UserRepositoryProtocol = AppContainer.shared.domain.userRepository
+    private let authRepository:AuthRepositoryProtocol = AppContainer.shared.domain.authRepository
     @Published var error: AppError?
 
     @Published var noMenuHide = false
