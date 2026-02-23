@@ -26,12 +26,10 @@ enum NetworkDecoder {
                 return date
             }
             
-            throw AppError.networkError("failed to decode date")
+            throw NetworkError.decodingError
         })
 
 
         return decoder
     }
 }
-
-//2026-02-23T06:30:11.001Z
