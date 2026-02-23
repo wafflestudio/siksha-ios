@@ -8,7 +8,7 @@
 import Foundation
 
 struct DailyMenus {
-    let date: Date
+    let date: String
     let dateType: DateType
     let breakfast: [RestaurantModel]
     let lunch: [RestaurantModel]

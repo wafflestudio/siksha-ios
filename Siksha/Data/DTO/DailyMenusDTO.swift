@@ -8,7 +8,7 @@
 import Foundation
 
 struct DailyMenusDTO: Decodable {
-    let date: Date
+    let date: String
     let dateType: String
     let br: [RestaurantDTO]
     let lu: [RestaurantDTO]
