@@ -9,24 +9,35 @@ import Foundation
 import RealmSwift
 import Combine
 import SwiftyJSON
+import Alamofire
 
 enum MenuError: Error {
     case networkFailure
 }
 
-final class MenuRepository {
+protocol MenuRepositoryProtocol {
+    func dailyMenus(from start: String, to end: String) async throws -> DailyMenusResponseDTO
+}
+
+final class MenuRepository: MenuRepositoryProtocol {
     private var cancellables = Set<AnyCancellable>()
-    
     private let realm = try! Realm()
     
-    init() {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        
-        // delete menus that have been passed already
-//        try! realm.write{
-//            realm.delete(realm.objects(DailyMenu.self).filter{ formatter.date(from: $0.date)?.timeIntervalSince(Date()) ?? -1 < -3600*24 })
-//        }
+    // string format example: "2026-02-23"
+    func dailyMenus(from start: String, to end: String) async throws -> DailyMenusResponseDTO {
+            try await AF
+                .request(
+                    SikshaAPI.getMenus(
+                        startDate: start,
+                        endDate: end,
+                        noMenuHide: false
+                    )
+                )
+                .serializingDecodable(
+                    DailyMenusResponseDTO.self,
+                    decoder: NetworkDecoder.make()
+                )
+                .value
     }
     
     func fetchFestivalDates() -> AnyPublisher<[Date], Never> {
