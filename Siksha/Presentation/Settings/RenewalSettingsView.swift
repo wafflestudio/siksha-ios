@@ -213,6 +213,21 @@ struct RenewalSettingsView: View {
                     arrow
                 }
             }
+            #if DEBUG
+            partitionBar
+            
+            NavigationLink(destination: DevMenuView()) {
+                HStack(alignment: .center) {
+                    Text("개발자 메뉴")
+                        .customFont(font: .text15(weight: .Regular))
+                        .foregroundColor(blackColor)
+                    
+                    Spacer()
+                    
+                    arrow
+                }
+            }
+            #endif
         }
         .padding([.vertical, .trailing], 12)
         .padding(.leading, 16)
