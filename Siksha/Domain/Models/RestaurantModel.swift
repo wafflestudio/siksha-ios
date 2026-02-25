@@ -15,5 +15,5 @@ struct RestaurantModel {
     let address: String?
     let coordinate: Coordinate?
     let menus: [MenuModel]
-    let operatingHours: [DateType: [String]]
+    let operatingHours: [String]
 }
