@@ -9,35 +9,37 @@ import Foundation
 import RealmSwift
 import Combine
 import SwiftyJSON
-import Alamofire
 
 enum MenuError: Error {
     case networkFailure
 }
 
 protocol MenuRepositoryProtocol {
-    func dailyMenus(from start: String, to end: String) async throws -> DailyMenusResponseDTO
+    func getMenus(from start: String, to end: String) async throws -> [DailyMenuModel]
 }
 
 final class MenuRepository: MenuRepositoryProtocol {
     private var cancellables = Set<AnyCancellable>()
     private let realm = try! Realm()
     
-    // string format example: "2026-02-23"
-    func dailyMenus(from start: String, to end: String) async throws -> DailyMenusResponseDTO {
-            try await AF
-                .request(
-                    SikshaAPI.getMenus(
-                        startDate: start,
-                        endDate: end,
-                        noMenuHide: false
-                    )
-                )
-                .serializingDecodable(
-                    DailyMenusResponseDTO.self,
-                    decoder: NetworkDecoder.make()
-                )
-                .value
+    private let remote: MenuRemoteDataSource
+    private let local: MenuLocalDataSource
+    
+    init(
+        remote: MenuRemoteDataSource = MenuRemoteDataSourceImpl(),
+        local: MenuLocalDataSource = MenuLocalDataSourceImpl()
+    ) {
+        self.remote = MenuRemoteDataSourceImpl()
+        self.local = MenuLocalDataSourceImpl()
+    }
+    
+    func getMenus(from start: String, to end: String) async throws -> [DailyMenuModel] {
+        let dto = try await remote.fetchDailyMenus(from: start, to: end)
+        let realmObjects = dto.result.map { $0.toRealmObject() }
+        try local.saveDailyMenus(realmObjects)
+        
+        return try local.fetchDailyMenus(from: start, to: end)
+            .map { $0.toModel() }
     }
     
     func fetchFestivalDates() -> AnyPublisher<[Date], Never> {

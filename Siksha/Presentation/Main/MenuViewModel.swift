@@ -57,9 +57,18 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     @Published var noFavorites: Bool = false
     
+    @Published var menuList: [DailyMenuModel] = []
+    
+    private let dateRange: CurrentValueSubject<(start: String, end: String), Never>
+    
     private var todayString: String {
         formatter.dateFormat = "yyyy-MM-dd"
         return formatter.string(from: Date())
+    }
+    
+    private var tommorowString: String {
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: Date(timeIntervalSinceNow: 60 * 60 * 24))
     }
     
     var priceLabel:String{
@@ -103,6 +112,10 @@ final class MenuViewModel: NSObject, ObservableObject {
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
         selectedDate = formatter.string(from: Date())
+        
+        let today = Date()
+        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today
+        dateRange = CurrentValueSubject((formatter.string(from: today), formatter.string(from: tomorrow)))
         
         isFestivalAvailable = UserDefaults.standard.bool(forKey: "isFestivalAvailable")
         isFestivalAppIconEnabled = UserDefaults.standard.bool(forKey: "isFestivalAppIconEnabled")
