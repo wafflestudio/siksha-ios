@@ -14,3 +14,15 @@ struct DailyMenusDTO: Decodable {
     let lu: [RestaurantDTO]
     let dn: [RestaurantDTO]
 }
+
+extension DailyMenusDTO {
+    func toRealmObject() -> DailyMenu {
+        DailyMenu(
+            date: date,
+            dateType: dateType,
+            br: br.map { $0.toRealmObject() },
+            lu: lu.map { $0.toRealmObject() },
+            dn: dn.map { $0.toRealmObject() }
+        )
+    }
+}

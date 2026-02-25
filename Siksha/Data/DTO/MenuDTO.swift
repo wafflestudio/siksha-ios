@@ -12,7 +12,7 @@ struct MenuDTO: Decodable {
     let updatedAt: Date
     let id: Int
     let code: String
-    let nameKr: String
+    let nameKr: String?
     let nameEn: String?
     let price: Int?
     let score: Double?
@@ -20,4 +20,21 @@ struct MenuDTO: Decodable {
     let likeCnt: Int
     let isLiked: Bool
     let etc: [String]
+}
+
+extension MenuDTO {
+    func toRealmObject() -> Meal {
+        return Meal(
+            id: id,
+            code: code,
+            nameKr: nameKr ?? "",
+            nameEn: nameEn ?? "",
+            price: price ?? 0,
+            score: score ?? 0,
+            reviewCnt: reviewCnt,
+            isLiked: isLiked,
+            likeCnt: likeCnt,
+            etc: etc
+        )
+    }
 }
