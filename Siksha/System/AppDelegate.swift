@@ -57,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupMixpanel()
         
         let config = Realm.Configuration(
-            schemaVersion: 3, // 새로운 스키마 버전 설정
+            schemaVersion: 4, // 새로운 스키마 버전 설정
             migrationBlock: { migration, oldSchemaVersion in
                 if oldSchemaVersion < 3{
                     migration.enumerateObjects(ofType: DailyMenu.className()){
@@ -73,7 +73,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 }
                 
-            }
+            },
+            deleteRealmIfMigrationNeeded: true // migration 필요시 realm 데이터 삭제
         )
                 
         // 2. Realm이 새로운 Object를 쓸 수 있도록 설정

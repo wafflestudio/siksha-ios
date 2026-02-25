@@ -48,6 +48,14 @@ class Restaurant: Object {
         return CLLocation(latitude: latitude, longitude: longitude)
     }
     
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+    
+    override init() {
+        super.init()
+    }
+    
     convenience init(_ json: JSON) {
         self.init()
         self.id = json["id"].intValue
@@ -75,10 +83,44 @@ class Restaurant: Object {
         addMenus(json["menus"])
     }
     
+    init(id: Int, code: String, nameKr: String, nameEn: String, addr: String, lat: String, lng: String, operatingHours: [String], menus: [Meal]) {
+        super.init()
+        self.id = id
+        self.code = code
+        self.nameKr = nameKr
+        self.nameEn = nameEn
+        self.addr = addr
+        self.lat = lat
+        self.lng = lng
+        self.operatingHours.append(objectsIn: operatingHours)
+        self.menus.append(objectsIn: menus)
+    }
+    
     private func addMenus(_ json: JSON) {
         json.forEach { (str, mealJson) in
             let newMeal = Meal(mealJson)
             self.menus.append(newMeal)
         }
+    }
+}
+
+extension Restaurant {
+    func toModel() -> RestaurantModel {
+        var coordinates: Coordinate? = nil
+        if let latitude = Double(lat),
+           let longitude = Double(lng) {
+            coordinates = Coordinate(latitude: latitude, longitude: longitude)
+        }
+        
+        return RestaurantModel(
+            id: id,
+            code: code,
+            nameKr: nameKr,
+            nameEn: nameEn,
+            address: addr,
+            coordinate: coordinates,
+            menus: Array(menus).map { $0.toModel() },
+            operatingHours: Array(operatingHours)
+        )
     }
 }

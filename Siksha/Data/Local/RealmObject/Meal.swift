@@ -21,6 +21,14 @@ class Meal: Object {
     @objc dynamic var likeCnt: Int = 0
     var etc = List<String>()
     
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+    
+    override init() {
+        super.init()
+    }
+    
     convenience init(_ json: JSON) {
         self.init()
         self.id = json["id"].intValue
@@ -34,6 +42,7 @@ class Meal: Object {
         self.likeCnt = json["like_cnt"].intValue
         json["etc"].arrayValue.map{ $0.stringValue }.forEach { self.etc.append($0) }
     }
+    
     static func fromMyLikedMenu(menu:MyLikedMenu) -> Meal{
         let meal = Meal()
         meal.id = menu.id
@@ -46,5 +55,36 @@ class Meal: Object {
         meal.reviewCnt = menu.reviewCnt
         meal.likeCnt = menu.likeCnt
         return meal
+    }
+    
+    init(id: Int, code: String, nameKr: String, nameEn: String, price: Int, score: Double, reviewCnt: Int, isLiked: Bool, likeCnt: Int, etc: [String]) {
+        super.init()
+        
+        self.id = id
+        self.code = code
+        self.nameKr = nameKr
+        self.nameEn = nameEn
+        self.price = price
+        self.score = score
+        self.reviewCnt = reviewCnt
+        self.isLiked = isLiked
+        self.etc.append(objectsIn: etc)
+    }
+}
+
+extension Meal {
+    func toModel() -> MenuModel {
+        MenuModel(
+            id: id,
+            code: code,
+            nameKr: nameKr,
+            nameEn: nameEn,
+            price: price,
+            score: score,
+            reviewCount: reviewCnt,
+            isLiked: isLiked,
+            likeCount: likeCnt,
+            imageURLStrings: Array(etc)
+        )
     }
 }
