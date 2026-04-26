@@ -147,15 +147,30 @@ extension CommunityViewModel {
     }
     
     var postsListPublisher: [PostInfo] {
+        let blockedNicknames = BlockManager.shared.blockedNicknames()
+        let blockedPostIds = BlockManager.shared.blockedPostIds()
         return self.currPostList
-            .map { PostInfo(post: $0 )}
+            .filter { post in
+                if post.anonymous { return !blockedPostIds.contains(post.id) }
+                guard let nickname = post.nickname, !nickname.isEmpty else { return true }
+                return !blockedNicknames.contains(nickname)
+            }
+            .map { PostInfo(post: $0) }
     }
     
     var hasNextPublisher: Bool {
         return self.hasNext
     }
-    var trendingPostsListPublisher: [PostInfo]{
-        return self.trendingPostList.map{PostInfo(post: $0 )}
+    var trendingPostsListPublisher: [PostInfo] {
+        let blockedNicknames = BlockManager.shared.blockedNicknames()
+        let blockedPostIds = BlockManager.shared.blockedPostIds()
+        return self.trendingPostList
+            .filter { post in
+                if post.anonymous { return !blockedPostIds.contains(post.id) }
+                guard let nickname = post.nickname, !nickname.isEmpty else { return true }
+                return !blockedNicknames.contains(nickname)
+            }
+            .map { PostInfo(post: $0) }
     }
 }
 
