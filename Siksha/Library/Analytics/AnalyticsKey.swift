@@ -30,6 +30,7 @@ enum PageName: String {
 
 enum FilterType: String, CaseIterable {
     case isOpenNow      = "is_open_now"
+    case isFavorite     = "is_favorite"
     case hasReviews     = "has_reviews"
     case distance       = "distance"
     case price          = "price"
@@ -42,6 +43,7 @@ struct AppliedFilterOptions {
     var priceMax: Int?
     var minRating: Float?
     var isOpenNow: Bool?
+    var isFavorite: Bool?
     var hasReviews: Bool?
     var maxDistanceKm: Double?
 
@@ -49,12 +51,14 @@ struct AppliedFilterOptions {
                 priceMax: Int? = nil,
                 minRating: Float? = nil,
                 isOpenNow: Bool? = nil,
+                isFavorite: Bool? = nil,
                 hasReviews: Bool? = nil,
                 maxDistanceKm: Double? = nil) {
         self.priceMin = priceMin
         self.priceMax = priceMax
         self.minRating = minRating
         self.isOpenNow = isOpenNow
+        self.isFavorite = isFavorite
         self.hasReviews = hasReviews
         self.maxDistanceKm = maxDistanceKm
     }
@@ -66,6 +70,7 @@ struct AppliedFilterOptions {
         if let priceMax { dict["price_max"] = priceMax }
         if let minRating { dict["min_rating"] = minRating }
         if let isOpenNow { dict["is_open_now"] = isOpenNow }
+        if let isFavorite { dict["is_favorite"] = isFavorite }
         if let hasReviews { dict["has_reviews"] = hasReviews }
         if let maxDistanceKm { dict["max_distance_km"] = maxDistanceKm }
         return dict

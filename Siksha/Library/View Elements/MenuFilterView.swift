@@ -48,6 +48,7 @@ class MenuFilterViewModel: ObservableObject {
     @Published var lowerPrice: Double = 2500
     @Published var upperPrice: Double = 10000
     @Published var isOpen: Bool = false
+    @Published var isFavorite: Bool = false
     @Published var hasReview: Bool = false
     @Published var minimumRating: Float = 0.0
     @Published var selectedCategories: [String] = []
@@ -81,6 +82,9 @@ struct MenuFilterView: View {
         }
         if let isOpen = menuViewModel.selectedFilters.isOpen {
             menuFilterViewModel.isOpen = isOpen
+        }
+        if let isFavorite = menuViewModel.selectedFilters.isFavorite {
+            menuFilterViewModel.isFavorite = isFavorite
         }
         if let hasReivew = menuViewModel.selectedFilters.hasReview {
             menuFilterViewModel.hasReview = hasReivew
@@ -136,6 +140,15 @@ struct MenuFilterView: View {
                                 selectedOption: $menuFilterViewModel.isOpen,
                                 options: [false, true],
                                 format: { $0 ? "영업 중" : "전체" },
+                                isRateFilter: false
+                            )
+                        }
+                        
+                        PickerFilterSection(title: "즐겨찾기") {
+                            SegmentedPicker(
+                                selectedOption: $menuFilterViewModel.isFavorite,
+                                options: [false, true],
+                                format: { $0 ? "즐겨찾기한 식당만" : "전체" },
                                 isRateFilter: false
                             )
                         }
@@ -277,6 +290,7 @@ struct MenuFilterView: View {
             menuFilterViewModel.lowerPrice = minPrice
             menuFilterViewModel.upperPrice = maxPrice
             menuFilterViewModel.isOpen = false
+            menuFilterViewModel.isFavorite = false
             menuFilterViewModel.hasReview = false
             menuFilterViewModel.minimumRating = 0
             menuFilterViewModel.selectedCategories = []
@@ -335,6 +349,7 @@ struct MenuFilterView: View {
             }
             menuViewModel.selectedFilters.minimumRating = menuFilterViewModel.minimumRating > 0 ? menuFilterViewModel.minimumRating : nil
             menuViewModel.selectedFilters.isOpen = menuFilterViewModel.isOpen ? true : nil
+            menuViewModel.selectedFilters.isFavorite = menuFilterViewModel.isFavorite ? true : nil
             menuViewModel.selectedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
             menuViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.isEmpty ? nil : menuFilterViewModel.selectedCategories
         }
@@ -349,6 +364,7 @@ struct MenuFilterView: View {
             }(),
             minRating: menuViewModel.selectedFilters.minimumRating,
             isOpenNow: menuViewModel.selectedFilters.isOpen,
+            isFavorite: menuViewModel.selectedFilters.isFavorite,
             hasReviews: menuViewModel.selectedFilters.hasReview,
             maxDistanceKm: {
                 if let m = menuViewModel.selectedFilters.distance {

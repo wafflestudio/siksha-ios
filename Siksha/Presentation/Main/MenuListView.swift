@@ -37,6 +37,7 @@ struct MenuListView: View {
                 TabView(selection: $viewModel.selectedPage) {
                     ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
                         RestaurantsView(viewModel.restaurantsLists[index],viewModel.selectedPage,viewModel.selectedMenu?.dateType ?? 0)
+                            .environment(\.menuViewModel, viewModel)
                             .tag(index)
                     }
                 }
@@ -134,6 +135,21 @@ private extension MenuListView {
                             viewModel.saveFilters()
                             viewModel.analytics.track(
                                 .instantFilterToggled(filter: .isOpenNow, value: viewModel.selectedFilters.isOpen ?? true, pageName: viewModel.pageName)
+                            )
+                        }
+                        
+                        FilterItem(
+                            text: "즐겨찾기",
+                            isOn:viewModel.selectedFilters.isFavorite ?? false,
+                            isCheck: true
+                        )
+                        .onTapGesture {
+                            var updatedFilters = viewModel.selectedFilters
+                            updatedFilters.isFavorite = updatedFilters.isFavorite == true ? nil : true
+                            viewModel.selectedFilters = updatedFilters
+                            viewModel.saveFilters()
+                            viewModel.analytics.track(
+                                .instantFilterToggled(filter: .isFavorite, value: viewModel.selectedFilters.isFavorite ?? true, pageName: viewModel.pageName)
                             )
                         }
                         
@@ -245,7 +261,7 @@ struct MenuListView_Previews: PreviewProvider {
     struct ContainerView: View {
         @State var selectedFilterType: MenuFilterType? = .all
         var body: some View {
-            MenuListView(viewModel: MenuViewModel(isFavoriteTab: false), selectedFilterType: $selectedFilterType)
+            MenuListView(viewModel: MenuViewModel(), selectedFilterType: $selectedFilterType)
         }
     }
     

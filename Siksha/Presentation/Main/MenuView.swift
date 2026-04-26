@@ -10,15 +10,11 @@ import SwiftUI
 struct MenuView: View {
     @Environment(\.safeAreaInsets) private var safeAreaInsets
     
-    @StateObject private var viewModel: MenuViewModel
+    @StateObject private var viewModel = MenuViewModel()
     @State private var selectedFilterType: MenuFilterType? = nil
     @State private var viewHeight: CGFloat = 0
     
     private let lightGrayColor = Color.gray600
-    
-    init(isFavoriteTab: Bool = false) {
-        _viewModel = StateObject(wrappedValue: MenuViewModel(isFavoriteTab: isFavoriteTab))
-    }
     
     private var isFilterModalPresented: Binding<Bool> {
         Binding(
