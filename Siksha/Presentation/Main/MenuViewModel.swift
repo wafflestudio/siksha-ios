@@ -54,8 +54,6 @@ final class MenuViewModel: NSObject, ObservableObject {
     @Published var isFestival: Bool = false
     @Published var isFestivalAppIconEnabled: Bool
     
-    @Published var noFavorites: Bool = false
-    
     @Published var menuList: [DailyMenuModel] = []
     
     private let dateRange: CurrentValueSubject<(start: String, end: String), Never>
@@ -216,7 +214,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func subscribeToIsFestival() {
-        $isFestival.sink{
+        $isFestival.sink {
             isFestival in
             UserDefaults.standard.set(isFestival,forKey: "isFestival")
         }.store(in: &cancellables)
@@ -294,80 +292,27 @@ final class MenuViewModel: NSObject, ObservableObject {
                     let restOrder = (UserDefaults.standard.dictionary(forKey: selectedFilters.isFavorite ?? false ? "favRestaurantOrder" : "restaurantOrder") as? [String : Int]) ?? [String : Int]()
                     
                     let br = Array(menu.getRestaurants(.breakfast))
-//                        .filter {
-//                            if self.isShowingFavorites {
-//                                return UserDefaults.standard.bool(forKey: "fav\($0.id)")
-//                            } else {
-//                                return true
-//                            }
-//                        }
-                        .filter{ restaurant in
+                        .filter { restaurant in
                             restaurant.nameKr.contains("[축제]") == isFestival
                         }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     
                     let lu = Array(menu.getRestaurants(.lunch))
-//                        .filter {
-//                            if self.isShowingFavorites {
-//                                return UserDefaults.standard.bool(forKey: "fav\($0.id)")
-//                            } else {
-//                                return true
-//                            }
-//                        }
-                        .filter{ restaurant in
+                        .filter { restaurant in
                             restaurant.nameKr.contains("[축제]") == isFestival
                         }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
-                    let dn = Array(menu.getRestaurants(.dinner))
-//                        .filter {
-//                            if self.isShowingFavorites {
-//                                return UserDefaults.standard.bool(forKey: "fav\($0.id)")
-//                            } else {
-//                                return true
-//                            }
-//                        }
-                        .filter{ restaurant in
-                            restaurant.nameKr.contains("[축제]") == isFestival
-                        }
-                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
-                    self.restaurantsLists = [br, lu, dn]
                     
-                    if selectedFilters.isFavorite ?? false && br.count == 0 && lu.count == 0 && dn.count == 0 {
-                        self.checkNoFavorites()
-                    } else {
-                        self.noFavorites = false
-                    }
+                    let dn = Array(menu.getRestaurants(.dinner))
+                        .filter { restaurant in
+                            restaurant.nameKr.contains("[축제]") == isFestival
+                        }
+                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
+                    
+                    self.restaurantsLists = [br, lu, dn]
                 } else {
                     self.restaurantsLists = []
-                    if selectedFilters.isFavorite ?? false {
-                        self.checkNoFavorites()
-                    } else {
-                        self.noFavorites = false
-                    }
                 }
-            }
-            .store(in: &cancellables)
-    }
-    
-    func checkNoFavorites() {
-        Networking.shared.getRestaurants()
-            .receive(on: RunLoop.main)
-            .sink { [weak self] result in
-                guard let self = self else { return }
-                guard let data = result.data,
-                      let restJSON = try? JSON(data: data)["result"].array else {
-                    self.noFavorites = false
-                    return
-                }
-                var hasFavorite = false
-                restJSON.forEach { json in
-                    let id = json["id"].intValue
-                    if UserDefaults.standard.bool(forKey: "fav\(id)") {
-                        hasFavorite = true
-                        return
-                    }
-                }
-                self.noFavorites = !hasFavorite
             }
             .store(in: &cancellables)
     }
