@@ -112,16 +112,16 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
 extension CommunityPostViewModel {
     var commentsListPublisher: [CommentInfo] {
         let blockedNicknames = BlockManager.shared.blockedNicknames()
-        let blockedCommentIds = BlockManager.shared.blockedCommentIds()
         return self.commentsList
             .filter { comment in
-                if comment.anonymous { return !blockedCommentIds.contains(comment.id) }
+                // App Store policy: completely hide all anonymous comments on iOS
+                guard !comment.anonymous else { return false }
                 guard let nickname = comment.nickname, !nickname.isEmpty else { return true }
                 return !blockedNicknames.contains(nickname)
             }
             .map { CommentInfo(comment: $0) }
     }
-    
+
     var postInfo: PostInfo {
         return PostInfo(post: self.post)
     }
@@ -168,7 +168,6 @@ extension CommunityPostViewModel {
                  self.commentsList = response.comments
                  self.currentPage = 1
                  self.hasNext = response.hasNext
-
              }
          }
          catch{

@@ -10,17 +10,14 @@ import SwiftUI
 struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
     @State private var tag: Int? = nil
     @State private var needRefresh = false
-    private let topPosts: [PostInfo] = (1..<5).map {
-        return PostInfo(title: "name\($0)",
-                     content: "content\($0)",
-                     isLiked: $0 % 2 == 0,
-                     likeCount: $0,
-                     commentCount: $0,
-                     imageURLs: nil,
-                     isAnonymous: false,
-                     isMine: false)
-    }
-    
+
+    // MARK: - Anonymous policy popup state
+    /// Persisted across app launches via UserDefaults. Once the user closes the popup,
+    /// it will never be shown again (@AppStorage automatically syncs with UserDefaults).
+    @AppStorage("hasSeenAnonymousPolicyPopup") private var hasSeenAnonymousPolicyPopup = false
+    /// Transient flag that drives the overlay within the current view lifecycle.
+    @State private var showAnonymousPolicyPopup = false
+
     @ObservedObject var viewModel: ViewModel
 
     var body: some View {
@@ -81,6 +78,29 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
         .errorAlert(error: $viewModel.error)
         .onAppear {
             self.viewModel.loadBasicInfos()
+            // Show the one-time anonymous policy popup on the user's first visit.
+            // hasSeenAnonymousPolicyPopup is backed by @AppStorage, so this check
+            // is false exactly once across all app launches.
+            if !hasSeenAnonymousPolicyPopup {
+                showAnonymousPolicyPopup = true
+            }
+        }
+        .overlay {
+            if showAnonymousPolicyPopup {
+                PolicyPopupView(
+                    title: "앱스토어 정책 안내",
+                    message: "iOS에서는 앱스토어 정책에 의해\n익명 게시글과 댓글의 작성 및 열람이 불가합니다.",
+                    onClose: {
+                        // Persist the flag first so a crash/force-quit during
+                        // the dismiss animation still counts as "seen".
+                        hasSeenAnonymousPolicyPopup = true
+                        withAnimation(.easeOut(duration: 0.18)) {
+                            showAnonymousPolicyPopup = false
+                        }
+                    }
+                )
+                .transition(.opacity)
+            }
         }
         .onChange(of: needRefresh, perform: { refresh in
             if refresh{
