@@ -288,8 +288,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     
     var KeyboardToolbar: some View {
         HStack {
-            anonymousButton
-                .padding(.leading, 20)
+//            anonymousButton
+//                .padding(.leading, 20)
             Spacer()
             Button(action: {
                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -348,7 +348,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
 
                     if keyboardResponder.currentHeight == 0 {
                         HStack {
-                            anonymousButton
+//                            anonymousButton
                             Spacer()
                         }
                         .padding(.vertical, 11)
