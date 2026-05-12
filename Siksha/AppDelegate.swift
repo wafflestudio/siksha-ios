@@ -11,9 +11,35 @@ import GoogleSignIn
 import NMapsMap
 import RealmSwift
 import FirebaseCore
+import Mixpanel
+import FirebaseMessaging
+import Combine
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    static private var cancellables = Set<AnyCancellable>()
+    static var alarmViewModel:MyLikedMenuViewModel?
+    static func requestNotificationPermission(){
+        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
+  
+                UNUserNotificationCenter.current().requestAuthorization(
+                    options: authOptions,
+                    completionHandler: { result, _ in
+                        if result{
+                            DispatchQueue.main.async {
+                                UIApplication.shared.registerForRemoteNotifications()
+                            }
+                        }
+                        else{
+                            DispatchQueue.main.async{
+                                AppDelegate.alarmViewModel?.noAlarmPermission = true
+                            }
+                        }
+                            
+                    })
+
+            }
+       
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
@@ -28,10 +54,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         FirebaseApp.configure()
         
         KakaoSDK.initSDK(appKey: kakaoAppKey)
+        setupMixpanel()
         
         let config = Realm.Configuration(
-            schemaVersion: 2, // 새로운 스키마 버전 설정
+            schemaVersion: 3, // 새로운 스키마 버전 설정
             migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 3{
+                    migration.enumerateObjects(ofType: DailyMenu.className()){
+                        oldObject,newObject in
+                        newObject!["dateType"] = 0
+                    }
+                }
                 if oldSchemaVersion < 2 {
                     // 1-1. 마이그레이션 수행
                     migration.enumerateObjects(ofType: Meal.className()) { oldObject, newObject in
@@ -39,18 +72,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         newObject!["likeCnt"] = 0 // Provide a default value for 'likeCnt'
                     }
                 }
+                
             }
         )
                 
         // 2. Realm이 새로운 Object를 쓸 수 있도록 설정
         Realm.Configuration.defaultConfiguration = config
 
-        // Feature Flag
-        FeatureFlag.shared.enable(feature: .community)
-        
         UserManager.shared.loadUserInfo()
         
+
+        
+     
+
         return true
+    }
+    
+    private func setupMixpanel() {
+        let mixpanelToken = Config.shared.mixpanelToken
+        
+        Mixpanel.initialize(
+            token: mixpanelToken,
+            trackAutomaticEvents: false
+        )
+        
+        #if DEBUG
+        Mixpanel.mainInstance().loggingEnabled = true
+        #endif
     }
 
     // MARK: UISceneSession Lifecycle
@@ -67,7 +115,68 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // If any sessions were discarded while the application was not running, this will be called shortly after application:didFinishLaunchingWithOptions.
         // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
     }
+ 
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        if UserDefaults.standard.bool(forKey: "alreadySentFCM"){
+            AppDelegate.alarmViewModel?.enableAlarm()
+            return
+        }
+         Messaging.messaging().apnsToken = deviceToken
+        Messaging.messaging().token {  token, error in
+            if let error = error{
+                AppDelegate.alarmViewModel?.failedAlarm()
 
+            }
+            else{
+                UserDefaults.standard.set(token, forKey: "fcmToken")
+                AppDelegate.sendFCMToken()
+            }
+        }
+     }
+     func application(
+        _ application: UIApplication,
+        didFailToRegisterForRemoteNotificationsWithError error: any Error
+    ){
+        AppDelegate.alarmViewModel?.failedAlarm()
+        
+    }
+    static func sendFCMToken(){
+        let token = UserDefaults.standard.string(forKey: "fcmToken")
+        guard let token = token else { return }
+        print("FCM:",token)
+        DomainManager.shared.domain.authRepository.postUserDevice(fcmToken: token)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    print(error)
+                    AppDelegate.alarmViewModel?.failedAlarm()
+                    print("Token Registration fail")
+                }
+            }, receiveValue: {
+                alarmViewModel?.enableAlarm()
+                UserDefaults.standard.set(true, forKey: "alreadySentFCM")
+                print("Token Registration success")
+            })
+            .store(in: &cancellables)
+    }
+    static func deleteFCMToken(){
+        let token = UserDefaults.standard.string(forKey: "fcmToken")
+        guard let token = token else { return }
+        print("FCM:",token)
+        DomainManager.shared.domain.authRepository.deleteUserDevice(fcmToken: token)
+            .receive(on: RunLoop.main)
+            .sink(receiveCompletion: { completion in
+                if case .failure(let error) = completion {
+                    print(error)
+
+                    print("Token Delete fail")
+                }
+            }, receiveValue: {
+                print("Token Delete success")
+            })
+            .store(in: &cancellables)
+
+    }
 
 }
 

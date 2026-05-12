@@ -28,10 +28,41 @@ struct NavigationBarModifier: ViewModifier {
                     } else {
                         Text(title)
                             .foregroundColor(.white)
-                            .font(.custom("NanumSquareOTFEB", size: 16))
+                            .customFont(font: .text16(weight: .ExtraBold))
                     }
                 }
             }
+            .toolbarBackground(Color.backgroundGNB, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .navigationViewStyle(StackNavigationViewStyle())
     }
+}
+
+private struct Preview: View {
+    @Environment(\.presentationMode) var presentationMode
+    
+    var body: some View {
+        NavigationView {
+            Text("navigation")
+                .modifier(NavigationBarModifier(title: "navigation"))
+                .navigationBarItems(leading: backButton)
+        }
+    }
+    
+    var backButton: some View {
+        Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+        }) {
+            Image("NavigationBack")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .foregroundColor(.white)
+        }
+    }
+}
+
+#Preview {
+    Preview()
 }

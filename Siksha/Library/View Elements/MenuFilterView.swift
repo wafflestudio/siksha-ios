@@ -8,7 +8,7 @@
 import SwiftUI
 import CoreLocation
 
-public enum MenuFilterType {
+enum MenuFilterType {
     case all
     case distance
     case price
@@ -24,6 +24,22 @@ public enum MenuFilterType {
         case .minimumRating:
             return 220
         }
+    }
+}
+
+extension MenuFilterType {
+    var entryPoint: EntryPoint {
+        switch self {
+        case .all:            return .mainFilter
+        case .distance:       return .distanceFilter
+        case .price:          return .priceFilter
+        case .minimumRating:  return .ratingFilter
+        case .category:       return .categoryFilter
+        }
+    }
+    
+    var entryPointString: String {
+        entryPoint.rawValue
     }
 }
 
@@ -82,14 +98,15 @@ struct MenuFilterView: View {
             switch menuFilterType {
             case .all:
                 Capsule()
-                    .fill(Color("Gray200"))
+                    .fill(Color.elementControl)
                     .frame(width: 46, height: 4)
                     .padding(.top, 15)
                     .padding(.bottom, 10)
                 
                 ZStack {
                     Text("필터")
-                        .font(.custom("NanumSquareOTFB", size: 14))
+                        .customFont(font: .text14(weight: .Bold))
+                        .foregroundStyle(Color.blackColor)
                     
                     HStack {
                         Spacer()
@@ -98,7 +115,7 @@ struct MenuFilterView: View {
                             Image("Close")
                                 .resizable()
                                 .frame(width: 32, height: 32)
-                                .foregroundStyle(Color("Gray900"))
+                                .foregroundStyle(Color.gray900)
                         }
                         .padding(.trailing, 16)
                     }
@@ -199,45 +216,47 @@ struct MenuFilterView: View {
             ZStack {
                 if menuFilterType == .all {
                     Rectangle()
-                        .fill(Color.white)
+                        .fill(Color.backgroundSecondary)
                         .frame(height: 111)
                         .shadow(color: Color.black.opacity(0.05), radius: 3, y: -1)
-                        .zIndex(0)                    
+                        .zIndex(0)
                 }
                 
                 HStack {
                     Text("초기화")
-                        .font(.custom("NanumSquareOTFB", size: 16))
+                        .customFont(font: .text16(weight: .Bold))
                         .frame(maxWidth: .infinity)
                         .frame(height: 38)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.textButton)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color("Gray500"))
+                                .fill(Color.gray500)
                         )
                         .onTapGesture {
                             resetFilters()
+                            menuViewModel.analytics.track(.filterReset(entryPoint: menuFilterType.entryPointString, pageName: menuViewModel.pageName))
                         }
                     
                     Text("적용")
-                        .font(.custom("NanumSquareOTFB", size: 16))
+                        .customFont(font: .text16(weight: .Bold))
                         .frame(maxWidth: .infinity)
                         .frame(height: 38)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.textButton)
                         .background(
                             RoundedRectangle(cornerRadius: 20)
-                                .fill(Color("main"))
+                                .fill(Color.orange500)
                         )
                         .onTapGesture {
                             applyFilters()
                         }
                 }
                 .padding(EdgeInsets(top: menuFilterType == .all ? 19 : 0, leading: 16, bottom: menuFilterType == .all ? 54 : 45, trailing: 16))
-                .background(Color.white)
+                .background(Color.backgroundSecondary)
                 .zIndex(1)
             }
         }
         .ignoresSafeArea()
+        .background(Color.backgroundSecondary)
         .filterCloseButton(filterType: menuFilterType, closeAction: dismiss)
         .alert("위치정보 이용에 대한 엑세스 권한이 없어요.", isPresented: $isDistanceAlertPresented, actions: {
             Button("취소", action: {}).keyboardShortcut(.defaultAction)
@@ -321,8 +340,26 @@ struct MenuFilterView: View {
         }
         menuViewModel.saveFilters()
         
+        let applied = AppliedFilterOptions(
+            priceMin: menuViewModel.selectedFilters.priceRange?.lowerBound,
+            priceMax: {
+                if let range = menuViewModel.selectedFilters.priceRange,
+                   range.upperBound != Int(maxPrice) { return range.upperBound }
+                return nil
+            }(),
+            minRating: menuViewModel.selectedFilters.minimumRating,
+            isOpenNow: menuViewModel.selectedFilters.isOpen,
+            hasReviews: menuViewModel.selectedFilters.hasReview,
+            maxDistanceKm: {
+                if let m = menuViewModel.selectedFilters.distance {
+                    return Double(m) / 1000.0
+                }
+                return nil
+            }()
+        )
+        menuViewModel.analytics.track(.filterModalApplied(entryPoint: menuFilterType.entryPointString, applied: applied.asDictionary, pageName: menuViewModel.pageName))
+        
         dismiss()
-        print("Filters applied!")
     }
 }
 
@@ -349,9 +386,10 @@ fileprivate struct SectionHeader: View {
     
     var body: some View {
         Text(title)
-            .font(.custom("NanumSquareOTFEB", size: 16))
+            .customFont(font: .text16(weight: .ExtraBold))
             .frame(height: 27.5)
             .frame(maxWidth: .infinity, alignment: .leading)
+            .foregroundStyle(Color.blackColor)
     }
 }
 
@@ -361,14 +399,14 @@ fileprivate struct CategoryButton: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
-            .stroke(isSelected ? Color("main") : Color("Gray200"))
+            .stroke(isSelected ? Color.orange500 : Color.gray200)
             .frame(height: 34)
             .overlay(
                 Text(category)
-                    .font(.custom("NanumSquareOTFB", size: 13))
-                    .foregroundColor(.black)
+                    .customFont(font: .text13(weight: .Bold))
+                    .foregroundColor(Color.blackColor)
             )
-            .background(isSelected ? Color("MainActiveColor") : .clear, in: RoundedRectangle(cornerRadius: 30))
+            .background(isSelected ? Color.orangeTint : .clear, in: RoundedRectangle(cornerRadius: 30))
     }
 }
 
@@ -426,7 +464,7 @@ fileprivate struct MenuFilterViewCloseButtonModifier: ViewModifier {
                     Image("Close")
                         .resizable()
                         .frame(width: 32, height: 32)
-                        .foregroundStyle(Color("Gray900"))
+                        .foregroundStyle(Color.gray900)
                 }
                 .padding(.top, 14)
                 .padding(.trailing, 16)

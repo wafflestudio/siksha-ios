@@ -5,25 +5,22 @@
 //  Created by Chaehyun Park on 2023/08/06.
 //
 
-import SwiftUI
 import Kingfisher
+import SwiftUI
 
 struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
-    enum chosenType:Identifiable{
-        var id:Int{
-            switch self{
+    private enum chosenType: Identifiable {
+        case post(post: PostInfo)
+        case comment(comment: CommentInfo)
+        
+        var id: Int {
+            switch self {
             case .post(let post):
                 return post.id
             case .comment(let comment):
                 return -comment.id
             }
-    
         }
-        
-      
-        
-        case post(post:PostInfo)
-        case comment(comment:CommentInfo)
     }
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -35,13 +32,13 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @State private var needRefresh = false
     @State private var imageIndex = 0
     @State private var showImages = false
-    @State private var showAlert:chosenType? = nil
+    @State private var showAlert: chosenType? = nil
     @State private var showPostMenu = false
     @State private var showPostDeleteAlert = false
-    @State private var editComment:CommentInfo? = nil
+    @State private var editComment: CommentInfo? = nil
     @State private var deleteCommentId = 0
-    @State private var showActionSheet:chosenType? = nil
-    @Binding var needPostViewRefresh:Bool
+    @State private var showActionSheet: chosenType? = nil
+    @Binding var needPostViewRefresh: Bool
     
     var backButton: some View {
         Button(action: {
@@ -50,8 +47,9 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 7, height: 15)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 30))
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .foregroundColor(Color.iconWhiteIcon)
         }
         .contentShape(Rectangle())
     }
@@ -59,125 +57,97 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     var imageSection: some View {
         Group {
             if let imageURLs = viewModel.postInfo.imageURLs {
-                ZStack(alignment:.topTrailing){
-                    Text("\(imageIndex + 1)/\(imageURLs.count)")
-                        .frame(width:28,height: 17)
-                        .background(Color("LightFontColor"))
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                        .font(.custom("NanumSquareOTFR", size: 10))
-                        .offset(x: -15,y: 15)
-                        .zIndex(1)
-                    
-                        TabView(selection:$imageIndex) {
-                            ForEach(Array(imageURLs.enumerated()), id: \.0) { index,imageURLString in
-                                AsyncImage(url: URL(string: imageURLString)) { image in
-                                    image
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fit)
-                                } placeholder: {
-                                    Color.white
-                                }
-                                .frame(width: UIScreen.main.bounds.width * 0.9)
-                                .tag(index)
-                                .onTapGesture {
-                                    showImages = true
-                                }
+                ZStack(alignment: .topTrailing) {
+                    TabView(selection: $imageIndex) {
+                        ForEach(Array(imageURLs.enumerated()), id: \.0) { index, imageURLString in
+                            AsyncImage(url: URL(string: imageURLString)) { image in
+                                image
+                                    .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                            } placeholder: {
+                                Color.white
                             }
+                            .tag(index)
+                            .frame(width: UIScreen.main.bounds.width - 39, height: UIScreen.main.bounds.width - 39)
                         }
-                        .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
-                        .frame(width: UIScreen.main.bounds.width * 0.9, height: 300)
+                    }
+                    .simultaneousGesture(
+                        TapGesture().onEnded { showImages = true }
+                    )
+                    .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                    .frame(width: UIScreen.main.bounds.width - 39, height: UIScreen.main.bounds.width - 39)
+                    
+                    Text("\(imageIndex + 1)/\(imageURLs.count)")
+                        .customFont(font: .text11(weight: .Bold))
+                        .foregroundStyle(Color.textButton)
+                        .padding(.vertical, 1)
+                        .padding(.horizontal, 6)
+                        .background(Color.iconCloseBg)
+                        .cornerRadius(10)
+                        .padding(11)
                 }
             } else {
                 EmptyView()
             }
         }
     }
-        
+    
     var relativeDate: String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
         return formatter.localizedString(for: viewModel.postInfo.createdAt, relativeTo: Date())
     }
     
-    var postHeader:some View{
-        HStack{
+    var postHeader: some View {
+        HStack(spacing: 8) {
             if let profileUrl = viewModel.postInfo.profileUrl {
-                KFImage(URL(string:profileUrl))
+                KFImage(URL(string: profileUrl))
                     .resizable()
-                    .frame(width: 33,height:33)
+                    .frame(width: 32, height: 32)
                     .clipShape(Circle())
-            }
-            else{
+            } else {
                 Image("LogoEllipse")
                     .resizable()
-                    .frame(width: 33,height:33)
+                    .frame(width: 32, height: 32)
                     .clipShape(Circle())
             }
             
-            VStack(alignment: .leading){
+            VStack(alignment: .leading, spacing: 0) {
                 Text(viewModel.postInfo.isAnonymous ? "익명" : "\(viewModel.postInfo.nickname ?? "")")
-                    .font(Font.custom("NanumSquareOTFB", size: 11))
+                    .customFont(font: .text12(weight: .Bold))
+                    .foregroundColor(.blackColor)
                 Text(relativeDate)
-                    .font(Font.custom("NanumSquareOTFR", size: 10))
-                    .foregroundColor(Color("ReviewLowColor"))
+                    .customFont(font: .text12(weight: .Regular))
+                    .foregroundColor(.gray600)
             }
             Spacer()
-            /*Menu{
-             if (viewModel.postInfo.isMine) {
-             Button("수정", action: {
-             isEditingPost = true
-             })
-             Button("삭제", action: {
-             viewModel.deletePost { success in
-             if success {
-             self.needPostViewRefresh = true
-             
-             self.presentationMode.wrappedValue.dismiss()
-             } else {
-             
-             }
-             }
-             })
-             }
-             Button("URL 복사하기", action: {})
-             if (UserManager.shared.nickname != viewModel.postInfo.nickname) {
-             Button("신고하기", action: {
-             reportAlertIsShown = true
-             })
-             }
-             Button("취소", action: {})
-             } label:{
-             Image("etc")
-             .frame(width:13,height:13)
-             }*/
             Image("etc")
-                .frame(width:13,height:13)
-                .padding(EdgeInsets(top: 15, leading: 0, bottom: 15, trailing: 0))
+                .resizable()
+                .scaledToFit()
+                .frame(width: 33, height: 33)
                 .onTapGesture {
-                    showActionSheet = .post(post:viewModel.postInfo)
+                    showActionSheet = .post(post: viewModel.postInfo)
                 }
-        }.padding(EdgeInsets(top: 16, leading: 21, bottom: 0, trailing: 19))
+        }
     }
-    var likeButton: some View{
+    
+    var likeButton: some View {
         Button(action: {
             viewModel.togglePostLike()
         }) {
-                Image(viewModel.postInfo.isLiked ? "LikeButton-liked" : "LikeButton-default")
-          
+            Image(viewModel.postInfo.isLiked ? "LikeButton-liked" : "LikeButton-default")
         }
     }
+    
     var commentList: some View {
-        LazyVStack(spacing:0){
+        LazyVStack(spacing: 0) {
             ForEach(viewModel.commentsListPublisher) { comment in
-                CommentCell(comment: comment, viewModel: viewModel,onMenuPressed: {
+                CommentCell(comment: comment, viewModel: viewModel, onMenuPressed: {
                     showActionSheet = .comment(comment: comment)
                     commentContent = comment.content
                 })
-              
-                    
-                Divider()
-                    .padding(EdgeInsets(top: 0, leading: 7.5, bottom: 0, trailing: 7.5))
+                
+                divider
             }
             
             if self.viewModel.hasNextPublisher == true {
@@ -194,161 +164,152 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         }
         .errorAlert(error: $viewModel.error)
     }
-  
-
-    var postDeleteAlert: some View{
-        VStack(spacing:0){
+    
+    var postDeleteAlert: some View {
+        VStack(spacing: 0) {
             Spacer()
-                .frame(height:18.34)
+                .frame(height: 18.34)
             Text("게시글 삭제")
-                .font(.custom("Inter-SemiBold", size: 16))
+                .customFont(font: .text16(weight: .ExtraBold))
+                .foregroundStyle(Color.blackColor)
             Spacer()
-                .frame(height:10.23)
+                .frame(height: 7.23)
             Text("게시글을 정말 삭제하시겠습니까?")
-                .font(.custom("Inter-Regular", size: 12))
+                .customFont(font: .text13(weight: .Regular))
             Spacer()
-                .frame(height:16.84)
+                .frame(height: 13.84)
             Divider()
-            HStack(spacing:0){
-                Button(action:{showPostDeleteAlert = false},label:{Text("취소")
-                        .font(.custom("Inter-Bold", size: 16))
-                    .frame(maxWidth:.infinity)})
-                .foregroundColor(Color("MainThemeColor"))
-                .frame(maxWidth: .infinity,alignment: .center)
+                .foregroundStyle(Color.borderPrimary)
+            HStack(spacing: 0) {
+                Button(action: { showPostDeleteAlert = false }, label: { Text("취소")
+                        .customFont(font: .text16(weight: .ExtraBold))
+                        .frame(maxWidth: .infinity)
+                })
+                .foregroundColor(.orange500)
+                .frame(maxWidth: .infinity, alignment: .center)
                 Divider()
-                Button(action:{
+                    .foregroundStyle(Color.borderPrimary)
+                Button(action: {
                     viewModel.deletePost { success in
                         if success {
                             self.needPostViewRefresh = true
                             self.presentationMode.wrappedValue.dismiss()
-                        } else {
-                            
-                        }
+                        } else {}
                     }
-                },label:{Text("삭제")    .font(.custom("Inter-Regular", size: 16))
-                    .frame(maxWidth:.infinity)})
-                .frame(maxWidth: .infinity,alignment: .center)
-                
-                
-                
+                }, label: { Text("삭제").customFont(font: .text16(weight: .Regular))
+                        .frame(maxWidth: .infinity).foregroundStyle(Color.gray700)
+                })
+                .frame(maxWidth: .infinity, alignment: .center)
             }
-        }.frame(height:130.27,alignment: .center)
-        
+        }
+        .background(Color.backgroundSecondary)
+        .frame(width: 315, height: 130.3, alignment: .center)
     }
-    var commentDeleteAlert: some View{
-        VStack(spacing:0){
+    
+    var commentDeleteAlert: some View {
+        VStack(spacing: 0) {
             Spacer()
-                .frame(height:18.34)
+                .frame(height: 18.34)
             Text("댓글 삭제")
-                .font(.custom("Inter-SemiBold", size: 16))
+                .customFont(font: .text16(weight: .ExtraBold))
+                .foregroundStyle(Color.blackColor)
             Spacer()
-                .frame(height:10.23)
+                .frame(height: 7.23)
             Text("댓글을 정말 삭제하시겠습니까?")
-                .font(.custom("Inter-Regular", size: 12))
+                .customFont(font: .text13(weight: .Regular))
             Spacer()
-                .frame(height:16.84)
+                .frame(height: 13.84)
             Divider()
-            HStack(spacing:0){
-                Button(action:{deleteCommentId = -1
-                },label:{Text("취소")
-                        .font(.custom("Inter-Bold", size: 16))
-                    .frame(maxWidth:.infinity)})
-                .foregroundColor(Color("MainThemeColor"))
-                .frame(maxWidth: .infinity,alignment: .center)
+                .foregroundStyle(Color.borderPrimary)
+            HStack(spacing: 0) {
+                Button(action: { deleteCommentId = -1
+                }, label: { Text("취소")
+                        .customFont(font: .text16(weight: .ExtraBold))
+                        .frame(maxWidth: .infinity)
+                }).foregroundColor(.orange500).foregroundColor(Color("Orange500"))
+                    .frame(maxWidth: .infinity, alignment: .center)
                 Divider()
-                Button(action:{
-                    viewModel.deleteComment(id:deleteCommentId){completion in
+                    .foregroundStyle(Color.borderPrimary)
+                Button(action: {
+                    viewModel.deleteComment(id: deleteCommentId) { _ in
                         viewModel.loadBasicInfos()
                         deleteCommentId = -1
                     }
-                },label:{Text("삭제")    .font(.custom("Inter-Regular", size: 16))
-                    .frame(maxWidth:.infinity)})
-                .frame(maxWidth: .infinity,alignment: .center)
-                
-                
-                
+                }, label: { Text("삭제").customFont(font: .text16(weight: .Regular))
+                        .frame(maxWidth: .infinity).foregroundStyle(Color.gray700)
+                })
+                .frame(maxWidth: .infinity, alignment: .center)
             }
-        }.frame(height:130.27,alignment: .center)
-           
-        
+        }
+        .background(Color.backgroundSecondary)
+        .frame(width: 315, height: 130.3, alignment: .center)
     }
+    
+    var divider: some View {
+        Divider()
+            .foregroundColor(.gray100)
+            .padding(.horizontal, 7.5)
+    }
+    
     var body: some View {
-        /*NavigationLink(
-            destination: CommunityPostPublishView(
-                needRefresh: self.$needRefresh, viewModel: CommunityPostPublishViewModel(
-                    boardId: viewModel.postInfo.boardId,
-                    communityRepository:DomainManager.shared.domain.communityRepository,
-                    postInfo: viewModel.postInfo
-                )
-            ),
-            isActive: $isEditingPost
-        ) {
-            EmptyView()
-        }*/
-        
-        ZStack(alignment:.bottomTrailing) {
-            VStack(spacing: 0){
-                
+        ZStack(alignment: .bottomTrailing) {
+            VStack(spacing: 0) {
                 ScrollView(.vertical, showsIndicators: false) {
-                    VStack(spacing:0) {
+                    VStack(spacing: 0) {
                         postHeader
-                        VStack(alignment: .leading) {
-                            
+                            .padding(.bottom, 18)
+                            .padding(.horizontal, 19.5)
+                            .padding(.top, 16.5)
+                        
+                        VStack(alignment: .leading, spacing: 0) {
                             Text(viewModel.postInfo.title)
-                                .font(.custom("NanumSquareOTFEB", size: 16))
+                                .customFont(font: .text16(weight: .ExtraBold))
+                                .foregroundStyle(Color.blackColor)
                             Spacer()
-                                .frame(height:12)
+                                .frame(height: 12)
                             Text(viewModel.postInfo.content)
-                                .font(.custom("NanumSquareOTFR", size: 12))
-                            Spacer()
-                                .frame(height:19)
+                                .customFont(font: .text13(weight: .Regular))
+                                .foregroundStyle(Color.gray900)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            if viewModel.postInfo.imageURLs?.isEmpty == false {
+                                Spacer()
+                                    .frame(height: 18)
+                            }
+                            
                             imageSection
                             
                             Spacer()
-                                .frame(height: viewModel.postInfo.imageURLs?.isEmpty ?? true ? 1 : 12.5)
-                            HStack {
-                                HStack(alignment: .center) {
-                                    
-                                    Image(viewModel.postInfo.isLiked ? "PostLike-liked" : "PostLike-default")
-                                        .frame(width: 11.5, height: 10)
-                                        .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
-                                    
-                                    Spacer()
-                                        .frame(width: 4)
-                                    Text(String(viewModel.postInfo.likeCount))
-                                        .font(.custom("Inter-Regular", size: 10))
-                                        .foregroundColor(Color("MainThemeColor"))
-                                }
-                                
-                                HStack(alignment: .center) {
-                                    Image("Comment")
-                                        .frame(width: 11.5, height: 11)
-                                    Spacer()
-                                        .frame(width: 4)
-                                    Text(String(viewModel.postInfo.commentCount))
-                                        .font(.custom("Inter-Regular", size: 10))
-                                        .foregroundColor(Color.init("ReviewMediumColor"))
-                                        .frame(height: 11, alignment: .center)
-                                }
-                                
-                                Spacer()
-                                
-                                
-                                
-                            }.padding(EdgeInsets(top: 0, leading: 1.5, bottom: 0, trailing: 0))
-                            Spacer()
-                                .frame(height:14)
-                            likeButton
+                                .frame(height: 15)
                             
+                            HStack(spacing: 4) {
+                                Image("like")
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 11.5, height: 11)
+                                    .foregroundStyle(Color.orange500)
+                                
+                                Text(String(viewModel.postInfo.likeCount))
+                                    .customFont(font: .text11(weight: .Bold))
+                                    .foregroundColor(.orange500)
+                                Image("Comment")
+                                    .resizable()
+                                    .frame(width: 12, height: 11)
+                                    .scaledToFit()
+                                Text(String(viewModel.postInfo.commentCount))
+                                    .customFont(font: .text11(weight: .Bold))
+                                    .foregroundColor(.gray700)
+                            }
+                            
+                            Spacer()
+                                .frame(height: 15)
+                            likeButton
                         }
-                        .padding(EdgeInsets(top: 15, leading: 22, bottom: 12.5, trailing: 19))
+                        .padding(.horizontal, 19.5)
+                        .padding(.bottom, 12)
                         
-                        Divider()
-                            .foregroundColor(Color("Low"))
-                            .padding(EdgeInsets(top: 0, leading: 7.5, bottom: 0, trailing: 7.5))
-
+                        divider
                         commentList
-                            .padding(EdgeInsets(top: 0, leading: 0, bottom: 30, trailing: 0))
                         
                         Spacer()
                     }
@@ -357,152 +318,150 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 .onTapGesture {
                     self.endTextEditing()
                 }
-            }
-            .padding(.bottom, 20)
-            
-            ZStack {
-                Rectangle()
-                    .frame(maxWidth: .infinity)
-                    .frame(height: 50)
-                    .foregroundColor(.white)
-
-                CommunityReplyBar(onCommentSubmit: { commentText, isAnonymous in
-                    viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText, isAnonymous: isAnonymous)
-                })
-            }
-            .ignoresSafeArea(edges: .bottom)
-
-
-          
-                if(showPostDeleteAlert){
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea(.all)
-                        .onTapGesture {
-                            showPostDeleteAlert = false
-                        }
-                    ZStack(alignment: .center){
-                        postDeleteAlert
-                            .background(Color.white)
-                            .cornerRadius(26)
-                        
-                    }.frame(maxWidth:.infinity,maxHeight: .infinity)
-                        .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
-                       
+                
+                ZStack {
+                    Rectangle()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 50)
+                        .foregroundColor(.backgroundPrimary)
+                    
+                    CommunityReplyBar(onCommentSubmit: { commentText, isAnonymous in
+                        viewModel.submitComment(postId: viewModel.postInfo.id, content: commentText, isAnonymous: isAnonymous)
+                    })
                 }
-            if(deleteCommentId > 0){
+                .ignoresSafeArea(edges: .bottom)
+            }
+            .background(Color.backgroundPrimary)
+            
+            if showPostDeleteAlert {
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea(.all)
+                    .onTapGesture {
+                        showPostDeleteAlert = false
+                    }
+                ZStack(alignment: .center) {
+                    postDeleteAlert
+                        .background(Color.white)
+                        .cornerRadius(26)
+                    
+                }.frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
+            }
+            if deleteCommentId > 0 {
                 Color.black.opacity(0.4)
                     .ignoresSafeArea(.all)
                     .onTapGesture {
                         deleteCommentId = -1
                     }
-                ZStack(alignment: .center){
+                ZStack(alignment: .center) {
                     commentDeleteAlert
                         .background(Color.white)
                         .cornerRadius(26)
                     
-                }.frame(maxWidth:.infinity,maxHeight: .infinity)
+                }.frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(EdgeInsets(top: 0, leading: 30, bottom: 0, trailing: 30))
-                   
             }
-         
-                
+        }
+        .customNavigationBar(title: viewModel.boardNamePublisher)
+        .navigationBarItems(leading: backButton)
+        .actionSheet(item: $showActionSheet) { item in
+            switch item {
+            case .post(let post):
+                let editButton = ActionSheet.Button.default(Text("수정하기"), action: {
+                    isEditingPost = true
+                    showPostMenu = false
+                })
+                let deleteButton = ActionSheet.Button.default(Text("삭제하기"), action: {
+                    showPostMenu = false
+                    showPostDeleteAlert = true
+                })
+                let reportButton = ActionSheet.Button.default(Text("신고하기"), action: {
+                    showPostMenu = false
+                    showAlert = item
+                })
+                let copyURLButton = ActionSheet.Button.default(Text("URL 복사하기"), action: {
+                    showPostMenu = false
+                    UIPasteboard.general.string = ""
+                })
+                let blockButton = ActionSheet.Button.default(Text("차단하기"), action: {
+                    viewModel.blockPostAuthor(postInfo: post)
+                    needPostViewRefresh = true
+                    presentationMode.wrappedValue.dismiss()
+                })
+                if viewModel.postInfo.isMine {
+                    return ActionSheet(title: Text("게시글 메뉴"), buttons: [
+                        editButton, deleteButton, reportButton, copyURLButton,
+                        .cancel(Text("취소"))
+                    ])
+                } else {
+                    return ActionSheet(title: Text("게시글 메뉴"), buttons: [
+                        reportButton, copyURLButton, blockButton,
+                        .cancel(Text("취소"))
+                    ])
+                }
+            case .comment(let comment):
+                let editButton = ActionSheet.Button.default(Text("수정하기"), action: {
+                    editComment = comment
+                    showActionSheet = nil
+                })
+                let deleteButton = ActionSheet.Button.default(Text("삭제하기"), action: {
+                    deleteCommentId = comment.id
+                    showActionSheet = nil
+                })
+                let reportButton = ActionSheet.Button.default(Text("신고하기"), action: {
+                    showAlert = item
+                })
+                let blockButton = ActionSheet.Button.default(Text("차단하기"), action: {
+                    viewModel.blockCommentAuthor(commentInfo: comment)
+                    showActionSheet = nil
+                })
+                if comment.isMine {
+                    return ActionSheet(title: Text("댓글 메뉴"), buttons: [
+                        editButton, deleteButton,
+                        .cancel(Text("취소"))
+                    ])
+                } else {
+                    return ActionSheet(title: Text("댓글 메뉴"), buttons: [
+                        reportButton, blockButton,
+                        .cancel(Text("취소"))
+                    ])
+                }
             }
-            .customNavigationBar(title: viewModel.boardNamePublisher)
-                .navigationBarItems(leading: backButton)
-                .actionSheet(item:$showActionSheet){item in
-                    switch(item){
-                    case .post(let post):
-                        let editButton = ActionSheet.Button.default(Text("수정"), action: {
-                                    isEditingPost = true
-                                    showPostMenu = false
-                                })
-                                let deleteButton = ActionSheet.Button.default(Text("삭제"), action: {
-                                    showPostMenu = false
-                                        showPostDeleteAlert = true
-                                })
-                                let reportButton = ActionSheet.Button.default(Text("신고"), action: {
-                                    showPostMenu = false
-                                    showAlert = item
-                                })
-                                if(viewModel.postInfo.isMine){
-                                    return ActionSheet(title: Text("게시글 메뉴"), buttons: [
-                                       editButton,deleteButton,
-                                        .cancel(Text("취소"))
-                                    ])
-                                }
-                                else{
-                                    return ActionSheet(title: Text("게시글 메뉴"), buttons: [
-                                       reportButton,
-                                        .cancel(Text("취소"))
-                                    ])
-                                }
-                    case .comment(let comment):
-                        let editButton = ActionSheet.Button.default(Text("수정"), action: {
-                                    editComment = comment
-                                    showActionSheet = nil
-                                })
-                                let deleteButton = ActionSheet.Button.default(Text("삭제"), action: {
-                                    deleteCommentId = comment.id
-                                    showActionSheet = nil
-                                })
-                                let reportButton = ActionSheet.Button.default(Text("신고"), action: {
-                                    showAlert = item
-
-                                })
-                        if(comment.isMine){
-                                    return ActionSheet(title: Text("댓글 메뉴"), buttons: [
-                                       editButton,deleteButton,
-                                        .cancel(Text("취소"))
-                                    ])
-                                }
-                                else{
-                                    return ActionSheet(title: Text("댓글 메뉴"), buttons: [
-                                       reportButton,
-                                        .cancel(Text("취소"))
-                                    ])
-                                }
-                    }
-                }
-               
-                .fullScreenCover(isPresented: $isEditingPost){
-                    CommunityPostPublishView(
-                        needRefresh: self.$needRefresh, needPostViewRefresh: self.$needPostViewRefresh, viewModel: CommunityPostPublishViewModel(
-                            boardId: viewModel.postInfo.boardId,
-                            communityRepository:DomainManager.shared.domain.communityRepository,
-                            postInfo: viewModel.postInfo
-                        )
-                    )
-                }
-                .fullScreenCover(isPresented: $showImages){
-                    ImageView(viewModel: viewModel, imageIndex: imageIndex)
-                    
-                }
-                .fullScreenCover(item: $showAlert){item in
-                    switch item{
-                    case .post:
-                        AlertView(RenewalSettingsViewModel(), viewModel,commentId: nil)
-                    case .comment(let comment):
-                        AlertView(RenewalSettingsViewModel(),viewModel,commentId: comment.id)
-                    }
-                }
-                .fullScreenCover(item:$editComment) {comment in
-                    EditCommentView( editedContent: comment.content, onSave: { newContent in
-                        viewModel.editComment(commentId: comment.id, content: newContent)
-                        editComment = nil
-                    }, onCancel: {
-                        editComment = nil
-                    })
-                }
-                
-                .refreshable {
-                    await viewModel.asyncRefresh()
-                }
-            
-            
+        }
+        .fullScreenCover(isPresented: $isEditingPost) {
+            CommunityPostPublishView(
+                needRefresh: self.$needRefresh, needPostViewRefresh: self.$needPostViewRefresh, viewModel: CommunityPostPublishViewModel(
+                    boardId: viewModel.postInfo.boardId,
+                    communityRepository: DomainManager.shared.domain.communityRepository,
+                    postInfo: viewModel.postInfo
+                )
+            )
+        }
+        .fullScreenCover(isPresented: $showImages) {
+            ImageView(viewModel: viewModel, imageIndex: imageIndex)
+        }
+        .fullScreenCover(item: $showAlert) { item in
+            switch item {
+            case .post:
+                AlertView(RenewalSettingsViewModel(), viewModel, commentId: nil)
+            case .comment(let comment):
+                AlertView(RenewalSettingsViewModel(), viewModel, commentId: comment.id)
+            }
+        }
+        .fullScreenCover(item: $editComment) { comment in
+            EditCommentView(editedContent: comment.content, onSave: { newContent in
+                viewModel.editComment(commentId: comment.id, content: newContent)
+                editComment = nil
+            }, onCancel: {
+                editComment = nil
+            })
         }
         
-        
+        .refreshable {
+            await viewModel.asyncRefresh()
+        }
     }
+}
 
 extension View {
     func endTextEditing() {
@@ -511,24 +470,16 @@ extension View {
     }
 }
 
-
-/*struct CommunityPostView_Previews: PreviewProvider {
- static var previews: some View {
- CommunityPostView(viewModel: StubCommunityPostViewModel(), boardName: StubCommunityViewModel().getSelectedBoardName(), needPostViewRefresh:)
- }
- }*/
-
+#Preview {
+    CommunityPostView(viewModel: StubCommunityPostViewModel(), needPostViewRefresh: .constant(false))
+}
+    
 class StubCommunityPostViewModel: CommunityPostViewModelType {
     var error: AppError?
     
-    func asyncRefresh() async {
-        
-    }
+    func asyncRefresh() async {}
     
-    func deleteComment(id: Int, completion: @escaping (Bool) -> Void) {
-        
-    }
-    
+    func deleteComment(id: Int, completion: @escaping (Bool) -> Void) {}
     
     var boardNamePublisher: String
     
@@ -562,55 +513,42 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
             isLiked: false,
             likeCount: 1,
             commentCount: 2,
-            imageURLs: nil,
-            isAnonymous: false,
-            isMine: false
+            imageURLs: ["https://images.unsplash.com/photo-1755148500082-8f39dea5dc0a?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"],
+            isAnonymous: true,
+            isMine: true
         )
     }
     
     func reportPost(reason: String, completion: @escaping (Bool, String?) -> Void) {
-        self.reportAlert = true
+        reportAlert = true
         completion(true, nil)
     }
     
     func reportComment(commentId: Int, reason: String, completion: @escaping (Bool, String?) -> Void) {
-        self.reportAlert = true
+        reportAlert = true
         completion(true, nil)
     }
     
-    func editPost() {
-        
-    }
+    func editPost() {}
     
     func deletePost(completion: @escaping (Bool) -> Void) {
         completion(true)
     }
     
-    func togglePostLike() {
-        
-    }
+    func togglePostLike() {}
     
-    func loadBasicInfos() {
-        
-    }
+    func loadBasicInfos() {}
     
-    func loadMoreComments() {
-        
-    }
+    func loadMoreComments() {}
     
-    func submitComment(postId: Int, content: String, isAnonymous: Bool) {
-        
-    }
+    func submitComment(postId: Int, content: String, isAnonymous: Bool) {}
     
-    func editComment(commentId id: Int, content: String) {
-        
-    }
+    func editComment(commentId id: Int, content: String) {}
     
-    func deleteComment(id: Int) {
-        
-    }
+    func deleteComment(id: Int) {}
     
-    func toggleCommentLike(id: Int) {
-        
-    }
+    func toggleCommentLike(id: Int) {}
+
+    func blockPostAuthor(postInfo: PostInfo) {}
+    func blockCommentAuthor(commentInfo: CommentInfo) {}
 }

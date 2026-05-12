@@ -132,4 +132,70 @@ extension Repository: UserRepositoryProtocol {
         let endpoint = SikshaAPI.updateUserProfile(nickname: nickname, image: image, changeToDefaultImage: changeToDefaultImage)
         return self.networkModule.request(endpoint: endpoint)
     }
+    
+    func getMyReview(page: Int, perPage: Int) -> AnyPublisher<MyReviewResponse, AppError> {
+        let endpoint = SikshaAPI.getMyReview(page: page, perPage: perPage)
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    
+    func deleteMyReview(reviewId: Int) -> AnyPublisher<Void, AppError> {
+        let endpoint = SikshaAPI.deleteMyReview(reviewId: reviewId)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+    }
+    
+}
+extension Repository: MyLikedMenuRepositoryProtocol{
+    func likeMenu(menuId: Int) -> AnyPublisher<Void, AppError> {
+        let endpoint = SikshaAPI.likeMenu(menuId: menuId)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+    }
+    func unlikeMenu(menuId: Int) -> AnyPublisher<Void, AppError> {
+        let endpoint = SikshaAPI.unlikeMenu(menuId: menuId)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+    }
+    
+    func getMyLikedMenu() -> AnyPublisher<MyLikedMenuResponse, AppError> {
+        let endpoint = SikshaAPI.getMyLikedMenu
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    func onAlarm(menuId:Int)->AnyPublisher<AlarmResponse,AppError>{
+        let endpoint = SikshaAPI.alarmOn(menuId: menuId)
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    func offAlarm(menuId:Int)->AnyPublisher<AlarmResponse,AppError>{
+        let endpoint = SikshaAPI.alarmOff(menuId: menuId)
+        return self.networkModule.request(endpoint: endpoint)
+    }
+    func onAlarmAll()->AnyPublisher<Void,AppError>{
+        let endpoint = SikshaAPI.alarmOnAll
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+    }
+    func offAlarmAll()->AnyPublisher<Void,AppError>{
+        let endpoint = SikshaAPI.alarmOffAll
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+    }
+    
+    
+}
+extension Repository: AuthRepositoryProtocol{
+    func postUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>{
+        let endpoint = SikshaAPI.postUserDevice(fcmToken: fcmToken)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+
+    }
+    func deleteUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>{
+        let endpoint = SikshaAPI.deleteUserDevice(fcmToken: fcmToken)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+
+    }
+    func postAlarmTime(type:AlarmTime)->AnyPublisher<Void,AppError>{
+        let endpoint = SikshaAPI.alarmTime(alarmTime: type.rawValue)
+        return self.networkModule.requestWithNoContent(endpoint: endpoint)
+
+    }
+    func getAlarmTime()->AnyPublisher<AlarmTimeResponse,AppError>{
+        let endpoint = SikshaAPI.getAlarmTime
+        return self.networkModule.request(endpoint: endpoint)
+
+    }
 }

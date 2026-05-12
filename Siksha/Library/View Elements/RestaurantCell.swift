@@ -10,20 +10,22 @@ import SwiftUI
 // MARK: - Restaurant Cell
 
 struct RestaurantCell: View {
-    private let fontColor = Color("DefaultFontColor")
-    private let titleColor = Color("TitleFontColor")
-    private let lightGrayColor = Color("LightGrayColor")
-    private let orangeColor = Color.init("main")
+    private let lightGrayColor = Color.gray600
+    private let orangeColor = Color.orange500
     
     var restaurant: Restaurant
     var meals: [Meal]
+    var selectedPage:Int
+    var dayType:Int
     @State var isFavorite: Bool = false
     @State var showRestaurant: Bool = false
     @StateObject private var kakaoShareManager = KakaoShareManager()
     @Environment(\.menuViewModel) var viewModel: MenuViewModel?
     
-    init(_ restaurant: Restaurant) {
+    init(_ restaurant: Restaurant,_ selectedPage:Int,_ dayType:Int) {
         self.restaurant = restaurant
+        self.selectedPage = selectedPage
+        self.dayType = dayType
         self.meals = Array(restaurant.menus)
         self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
     }
@@ -33,21 +35,23 @@ struct RestaurantCell: View {
             // Restaurant Name
             HStack(alignment: .center) {
                 Text(restaurant.nameKr)
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(orangeColor)
-                
+                    .customFont(font: .text16(weight: .ExtraBold))
+                    .foregroundColor(.blackColor)
+                Spacer()
+                    .frame(width:6)
                 Button(action: {
                     self.showRestaurant = true
                 }) {
                     Image("Info")
                         .resizable()
                         .renderingMode(.original)
-                        .frame(width: 17, height: 17)
+                        .frame(width: 20, height: 20)
                 }
                 .sheet(isPresented: $showRestaurant, content: {
                     RestaurantInformationView(restaurant)
                 })
-                
+                Spacer()
+                    .frame(width:4)
                 Button(action: {
                     isFavorite.toggle()
                     UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
@@ -58,24 +62,26 @@ struct RestaurantCell: View {
                     Image(isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
                         .renderingMode(.original)
-                        .frame(width: 18, height: 17)
+                        .frame(width: 20, height: 20)
                 })
-                
+                Spacer()
+                    .frame(width:4)
                 Button(action: {
                     kakaoShareManager.shareKakao(restaurant: restaurant, selectedDateString: viewModel?.selectedDate ?? "오늘")
+                
                 }) {
                     Image(.kakaoShare)
                         .resizable()
                         .renderingMode(.original)
-                        .frame(width: 17, height: 17)
+                        .frame(width: 20, height: 20)
                         .foregroundColor(orangeColor)
                 }.sheet(isPresented: $kakaoShareManager.showWebView) {
                     if let urlString = kakaoShareManager.urlToLoad {
                         KakaoShareWebView(urlString: urlString, showWebView: $kakaoShareManager.showWebView, restaurant: restaurant, selectedDate: viewModel?.selectedDate ?? "오늘")
                     }
                 }.interactiveDismissDisabled(false)
-                
                 Spacer()
+                /*Spacer()
                 
                 Text("Price")
                     .font(.custom("NanumSquareOTF", size: 12))
@@ -90,19 +96,55 @@ struct RestaurantCell: View {
                 Text("Like")
                     .font(.custom("NanumSquareOTF", size: 12))
                     .foregroundColor(orangeColor)
-                    .frame(width: 35)
+                    .frame(width: 35)*/
             }
-            .padding(EdgeInsets(top: 16, leading: 16, bottom: 10, trailing: 16))
-            
-            HStack {
+            .padding(EdgeInsets(top: 17, leading: 13,bottom: 11.5,trailing: 0))
+            HStack(alignment: .center){
+                Image(TypeInfo(type:TypeSelection(rawValue: (selectedPage))!).icon)
+                    .resizable()
+                    .renderingMode(.template)
+                    .frame(width: 16, height: 16)
+                    .foregroundColor(Color.gray600)
+                Spacer()
+                    .frame(width:4)
+                Text(MenuViewModel.getOperatingHours(restaurant: restaurant,dayType: dayType,selectedPage: selectedPage))
+                    .customFont(font: .text12(weight: .Bold))
+                    .foregroundColor(lightGrayColor)
+                Spacer()
+                Text("Price")
+                    .customFont(font: .text12(weight: .Regular))
+                    .multilineTextAlignment(.center)
+                    .frame(width:28)
+                    .foregroundColor(orangeColor)
+                Spacer()
+                    .frame(width:16)
+                Text("Rate")
+                    .customFont(font: .text12(weight: .Regular))
+                    .multilineTextAlignment(.center)
+                    .frame(width:26)
+                    .foregroundColor(orangeColor)
+                Spacer()
+                    .frame(width:16)
+                Text("Like")
+                    .customFont(font: .text12(weight: .Regular))
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(orangeColor)
+                    .frame(width:25)
+
+            }.padding([.leading,.trailing],13)
+            .padding([.bottom],6.5)
+
+            /*HStack {
                 orangeColor
-                    .frame(height: 1)
-                    .frame(maxWidth: .infinity)
-            }
-            .padding([.leading, .trailing], 12)
-            
-            
-            VStack(spacing: 20) {
+                    .frame(maxWidth:.infinity)
+                    .overlay(RoundedRectangle(cornerRadius: 1.5).stroke(orangeColor,lineWidth:1.5 ))
+            }*/
+            Capsule()
+                .frame(height:1.5)
+                .foregroundColor(orangeColor)
+                .padding([.trailing], 14.5)
+                .padding([.leading],11.5)
+            VStack(spacing: 13) {
                 if meals.count > 0 {
                     ForEach(meals, id: \.id) { meal in
                         let mealInfoViewModel = MealInfoViewModel(meal: meal)
@@ -126,13 +168,14 @@ struct RestaurantCell: View {
                     .padding([.top, .bottom], 12)
                 }
             }
-            .padding(EdgeInsets(top: 14, leading: 16, bottom: 16, trailing: 16))
+            .padding(EdgeInsets(top: 13, leading: 13, bottom: 17, trailing: 13))
         }
-        .background(Color.white)
+        .padding(.zero)
+        .background(Color.backgroundSecondary)
         .cornerRadius(8)
         .overlay(
             RoundedRectangle(cornerRadius: 8)
-                .stroke(Color.init(white: 232/255), lineWidth: 1)
+                .stroke(Color.gray200, lineWidth: 1)
         )
     }
 }
@@ -142,23 +185,44 @@ struct RestaurantCell: View {
 struct RestaurantCell_Previews: PreviewProvider {
     
     static var previews: some View {
-        let emptyRes = Restaurant()
-        let nonEmptyRes = Restaurant()
-        emptyRes.nameKr = "빈 식당"
-        nonEmptyRes.nameKr = "든 식당"
-        let menu = Meal()
-        menu.price = 3000
-        menu.nameKr = "식단"
-        menu.reviewCnt = 1
-        menu.score = 3
-        let menu2 = Meal()
-        menu2.price = 4000
-        menu2.nameKr = "식단2"
-        menu2.reviewCnt = 0
-        menu2.score = 4
-        nonEmptyRes.menus.append(menu)
-        nonEmptyRes.menus.append(menu2)
+        let dummyRestaurant = Restaurant()
+        dummyRestaurant.id = 1
+        dummyRestaurant.nameKr = "학생회관"
+        dummyRestaurant.nameEn = "Student Hall"
+        dummyRestaurant.code = "SH"
+        dummyRestaurant.addr = "학생회관 1층"
+        dummyRestaurant.lat = "37.123"
+        dummyRestaurant.lng = "127.123"
+        dummyRestaurant.operatingHours.append(objectsIn: [
+            "08:00 - 09:00\n11:30 - 13:30\n17:30 - 19:00",
+            "09:00 - 13:00\n17:00 - 18:30",
+            "Closed"
+        ])
+        
+        let dummyMeal1 = Meal()
+        dummyMeal1.id = 101
+        dummyMeal1.nameKr = "김치찌개"
+        dummyMeal1.nameEn = "Kimchi Stew"
+        dummyMeal1.price = 4500
+        dummyMeal1.score = 4.2
+        dummyMeal1.reviewCnt = 20
+        dummyMeal1.likeCnt = 10
+        dummyMeal1.isLiked = true
 
-        return RestaurantCell(nonEmptyRes)
+        let dummyMeal2 = Meal()
+        dummyMeal2.id = 102
+        dummyMeal2.nameKr = "제육볶음"
+        dummyMeal2.nameEn = "Spicy Pork"
+        dummyMeal2.price = 5000
+        dummyMeal2.score = 4.5
+        dummyMeal2.reviewCnt = 35
+        dummyMeal2.likeCnt = 22
+        dummyMeal2.isLiked = false
+
+        dummyRestaurant.menus.append(objectsIn: [dummyMeal1, dummyMeal2])
+        
+        return RestaurantCell(dummyRestaurant, 0, 0)
+            .previewLayout(.sizeThatFits)
+            .padding()
     }
 }

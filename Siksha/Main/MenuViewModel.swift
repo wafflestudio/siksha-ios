@@ -15,6 +15,7 @@ import FirebaseRemoteConfig
 
 final class MenuViewModel: NSObject, ObservableObject {
     let isFavoriteTab: Bool
+    let analytics: AnalyticsService
     
     private var remoteConfig = RemoteConfig.remoteConfig()
     private var settings = RemoteConfigSettings()
@@ -47,7 +48,6 @@ final class MenuViewModel: NSObject, ObservableObject {
     @Published var showDistanceAlert: Bool = false
     
     @Published var selectedPage: Int = 0
-    @Published var pageViewReload: Bool = false
     
     @Published var reloadOnAppear: Bool = true
     
@@ -96,8 +96,9 @@ final class MenuViewModel: NSObject, ObservableObject {
         return "카테고리"
     }
     
-    init(isFavoriteTab: Bool = false) {
+    init(isFavoriteTab: Bool = false, analytics: AnalyticsService = MixpanelAnalytics()) {
         self.isFavoriteTab = isFavoriteTab
+        self.analytics = analytics
         
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
@@ -278,7 +279,7 @@ final class MenuViewModel: NSObject, ObservableObject {
             .sink { [weak self] (menu,isFestival) in
                 guard let self = self else { return }
                 
-                if let menu = menu {
+                if let menu {
                     let restOrder = (UserDefaults.standard.dictionary(forKey: isFavoriteTab ? "favRestaurantOrder" : "restaurantOrder") as? [String : Int]) ?? [String : Int]()
                     
                     let br = Array(menu.getRestaurants(.breakfast))
@@ -325,8 +326,14 @@ final class MenuViewModel: NSObject, ObservableObject {
                     } else {
                         self.noFavorites = false
                     }
+                } else {
+                    self.restaurantsLists = []
+                    if isFavoriteTab {
+                        self.checkNoFavorites()
+                    } else {
+                        self.noFavorites = false
+                    }
                 }
-                self.pageViewReload = true
             }
             .store(in: &cancellables)
     }
@@ -577,8 +584,30 @@ final class MenuViewModel: NSObject, ObservableObject {
             }
             .store(in: &cancellables)
     }
+    static func getOperatingHours(restaurant:Restaurant,dayType:Int,selectedPage:Int)->String{
+      
+        let operatingHours = restaurant.operatingHours[dayType].split(separator: "\n").map { String($0) }
+        if operatingHours.count == 3{
+            return operatingHours[selectedPage]
+        }
+        if operatingHours.count == 2{
+            if selectedPage == TypeSelection.breakfast.rawValue{
+                return "정보 없음"
+            }
+            return operatingHours[selectedPage-1]
+        }
+        if operatingHours.count == 1{
+            return operatingHours[0]
+        }
+        return "정보 없음"
+        
+    }
 }
 
 extension MenuViewModel: CLLocationManagerDelegate {
     
+}
+
+extension MenuViewModel {
+    var pageName: String { isFavoriteTab ? PageName.favoritesList.rawValue : PageName.storeList.rawValue }
 }

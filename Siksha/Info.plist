@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -67,7 +69,7 @@
 		<string>Inter-ExtraLight.ttf</string>
 		<string>Inter-ExtraBold.ttf</string>
 		<string>Inter-Bold.ttf</string>
-		<string>Inter-Black.tff</string>
+		<string>Inter-Black.ttf</string>
 		<string>NanumSquareOTFBold.otf</string>
 		<string>NanumSquareOTFExtraBold.otf</string>
 		<string>NanumSquareOTFLight.otf</string>
@@ -111,9 +113,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIDesignRequiresCompatibility</key>
+	<true/>
 </dict>
 </plist>

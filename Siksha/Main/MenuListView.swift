@@ -12,10 +12,10 @@ struct MenuListView: View {
     @Binding var selectedFilterType: MenuFilterType?
     @State private var isAtLeadingEdge: Bool = true
     
-    private let backgroundColor = Color("AppBackgroundColor")
-    private let lightGrayColor = Color("Gray600")
-    private let orangeColor = Color("main")
-    private let fontColor = Color("DefaultFontColor")
+    private let backgroundColor = Color.backgroundMain
+    private let lightGrayColor = Color.gray600
+    private let orangeColor = Color.orange500
+    private let fontColor = Color.gray700
     private let typeInfos: [TypeInfo] = [
         TypeInfo(type: .breakfast),
         TypeInfo(type: .lunch),
@@ -31,10 +31,12 @@ struct MenuListView: View {
             
             if viewModel.getMenuStatus == .loading {
                 loadingView
+            } else if viewModel.noFavorites {
+                noFavoritesView
             } else if viewModel.restaurantsLists.count > 0 {
                 TabView(selection: $viewModel.selectedPage) {
                     ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
-                        RestaurantsView(viewModel.restaurantsLists[index])
+                        RestaurantsView(viewModel.restaurantsLists[index],viewModel.selectedPage,viewModel.selectedMenu?.dateType ?? 0)
                             .tag(index)
                     }
                 }
@@ -71,7 +73,7 @@ private extension MenuListView {
     
     var mealSelectorView: some View {
         ZStack {
-            HStack(alignment: .bottom, spacing: 28) {
+            HStack(alignment: .bottom, spacing: 24) {
                 ForEach(typeInfos) { type in
                     typeButton(type: type)
                 }
@@ -130,6 +132,9 @@ private extension MenuListView {
                                 viewModel.selectedFilters.isOpen = true
                             }
                             viewModel.saveFilters()
+                            viewModel.analytics.track(
+                                .instantFilterToggled(filter: .isOpenNow, value: viewModel.selectedFilters.isOpen ?? true, pageName: viewModel.pageName)
+                            )
                         }
                         
                         FilterItem(
@@ -144,6 +149,7 @@ private extension MenuListView {
                                 viewModel.selectedFilters.hasReview = true
                             }
                             viewModel.saveFilters()
+                            viewModel.analytics.track(.instantFilterToggled(filter: .hasReviews, value: viewModel.selectedFilters.hasReview ?? true, pageName: viewModel.pageName))
                         }
                         
                         FilterItem(
@@ -154,15 +160,6 @@ private extension MenuListView {
                         .onTapGesture {
                             selectedFilterType = .minimumRating
                         }
-                        
-                        //                FilterItem(
-                        //                    text: viewModel.categoryLabel,
-                        //                    isOn:viewModel.selectedFilters.categories != nil,
-                        //                    isCheck: false
-                        //                )
-                        //                .onTapGesture {
-                        //                    selectedFilterType = .category
-                        //                }
                     }
                     .background(
                         GeometryReader {
@@ -182,21 +179,35 @@ private extension MenuListView {
                     Rectangle()
                         .foregroundStyle(.clear)
                         .background(
-                            LinearGradient(colors: [Color("Gray50"), Color("Gray50").opacity(0)], startPoint: .leading, endPoint: .trailing)
+                            LinearGradient(colors: [.backgroundPrimary, .backgroundPrimary.opacity(0)], startPoint: .leading, endPoint: .trailing)
                         )
                         .frame(width: 16, height: 34)
                 }
             }
         }
         .padding(EdgeInsets(top: 17, leading: 9, bottom: 9, trailing: 9))
-
+        .onChange(of: selectedFilterType) { newType in
+            if let newType {
+                viewModel.analytics.track(.filterModalOpened(entryPoint: newType.entryPointString, pageName: viewModel.pageName))
+            }
+        }
+    }
+    
+    var noFavoritesView: some View {
+        VStack {
+            Spacer()
+            Text("즐겨찾기에 추가된 식당이 없습니다.")
+                .customFont(font: .text15(weight: .Bold))
+                .foregroundColor(lightGrayColor)
+            Spacer()
+        }
     }
     
     var emptyView: some View {
         VStack {
             Spacer()
             Text("식단 정보가 없습니다")
-                .font(.custom("NanumSquareOTFB", size: 15))
+                .customFont(font: .text15(weight: .Bold))
                 .foregroundColor(fontColor)
             Spacer()
         }
@@ -208,16 +219,14 @@ private extension MenuListView {
         Button(action: {
             viewModel.selectedPage = type.id
         }) {
-            VStack {
+            VStack(spacing: 3) {
                 Image(type.icon)
                     .renderingMode(.template)
                     .resizable()
-                    .frame(width: type.width, height: type.height)
+                    .frame(width: 20, height: 20)
                     .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
-                    .padding(.leading, type.id == 2 ? 3 : 0)
-                    .padding(.bottom, type.id == 1 ? 0 : 2)
                 Text(type.name)
-                    .font(.custom(viewModel.selectedPage == type.id ? "NanumSquareOTFB" : "NanumSquareOTFR", size: 10))
+                    .font(.custom(viewModel.selectedPage == type.id ? "NanumSquareOTFB" : "NanumSquareOTFR", size: 11))
                     .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
             }
         }

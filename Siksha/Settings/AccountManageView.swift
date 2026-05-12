@@ -23,28 +23,27 @@ struct AccountManageView: View {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 7, height: 15)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .foregroundColor(Color.iconWhiteIcon)
         }
     }
     
     var partitionBar: some View {
-        Color.init(white: 232/255)
+        Color.borderPrimary
             .frame(height: 1)
-            .padding([.leading, .trailing], 8)
     }
     
     var body: some View {
         VStack {
-            VStack(alignment: .leading, spacing: 0) {
+            VStack(alignment: .leading, spacing: 8) {
                 Button(action: {
                     viewModel.showSignOutAlert = true
                 }) {
                     HStack(alignment: .center) {
                         Text("로그아웃")
-                            .font(.custom("NanumSquareOTFR", size: 15))
-                            .foregroundColor(.black)
-                            .padding([.top, .bottom], 12)
-                            .padding(.leading, 16)
+                            .customFont(font: .text15(weight: .Regular))
+                            .foregroundColor(Color.blackColor)
                         
                         Spacer()
                     }
@@ -55,9 +54,12 @@ struct AccountManageView: View {
                         message: Text("앱에서 로그아웃합니다."),
                         buttons: [
                             .destructive(Text("로그아웃")){
-                                viewModel.logOutAccount()
-                                viewControllerHolder?.present(style: .fullScreen) {
-                                    LoginView()
+                                viewModel.logOutAccount(){ result in
+                                    if result{
+                                        viewControllerHolder?.present(style: .fullScreen) {
+                                            LoginView()
+                                        }
+                                    }
                                 }
                             },
                             .cancel(Text("취소"))
@@ -72,10 +74,8 @@ struct AccountManageView: View {
                 }) {
                     HStack(alignment: .center) {
                         Text("회원탈퇴")
-                            .font(.custom("NanumSquareOTFR", size: 15))
-                            .foregroundColor(Color.init(white: 87/255))
-                            .padding([.top, .bottom], 12)
-                            .padding(.leading, 16)
+                            .customFont(font: .text15(weight: .Regular))
+                            .foregroundColor(.accentLike)
                         
                         Spacer()
                     }
@@ -98,24 +98,35 @@ struct AccountManageView: View {
                     )
                 }
             }
+            .padding(.vertical, 12)
+            .padding(.leading, 18)
+            .padding(.trailing, 11)
             .background(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.init(white: 232/255), lineWidth: 1)
+                    .strokeBorder(Color.gray200, lineWidth: 1)
+                    .background(Color.backgroundSecondary)
+                    .clipShape(RoundedRectangle(cornerRadius: 8))
             )
             .padding(.top, 24)
-            .padding([.leading, .trailing], 20)
-
+            .padding(.horizontal, 20)
+            
             Spacer()
         }
-        .padding([.leading, .trailing], 8)
+        .background(Color.backgroundPrimary)
         
         .alert(isPresented: $viewModel.removeAccountFailed) {
             Alert(title: Text("회원 탈퇴"),
                   message: Text("회원 탈퇴에 실패했습니다."),
                   dismissButton: .default(Text("확인")))
         }
+        .alert(isPresented: $viewModel.logoutFailed) {
+            Alert(title: Text("로그아웃"),
+                  message: Text("로그아웃에 실패했습니다."),
+                  dismissButton: .default(Text("확인")))
+        }
+        
         .customNavigationBar(title: "계정관리")
-                    .navigationBarItems(leading: backButton)
+        .navigationBarItems(leading: backButton)
     }
 }
 

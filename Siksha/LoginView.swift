@@ -55,6 +55,17 @@ struct LoginView: View {
                                 .foregroundColor(.black)
                                 .cornerRadius(5.5)
                         })
+                        
+                        #if DEBUG
+                        
+                        Button(action: {
+                            viewModel.requestTestLogin()
+                        }, label: {
+                            Text("테스트 로그인")
+                        })
+                        
+                        
+                        #endif
                     }
                     
                     Spacer()
@@ -62,7 +73,7 @@ struct LoginView: View {
             }
             .frame(width: geometry.size.width, height: geometry.size.height + geometry.safeAreaInsets.bottom + geometry.safeAreaInsets.top)
             .padding(.top, -geometry.safeAreaInsets.top)
-            .background(Color("main"))
+            .background(Color("Color/Foundation/Orange/500"))
             .alert(isPresented: $viewModel.signInFailed, content: {
                 Alert(title: Text("로그인"), message: Text("로그인을 실패했습니다. 다시 시도해주세요."), dismissButton: .default(Text("확인")))
             })

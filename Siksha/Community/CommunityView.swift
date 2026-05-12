@@ -8,84 +8,99 @@
 import SwiftUI
 
 struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
-    @State var tag: Int? = nil
-    @State var needRefresh = false
-    let dividerColor = Color("DividerColor")
-    
-    let topPosts: [PostInfo] = (1..<5).map {
-        return PostInfo(title: "name\($0)",
-                     content: "content\($0)",
-                     isLiked: $0 % 2 == 0,
-                     likeCount: $0,
-                     commentCount: $0,
-                     imageURLs: nil,
-                     isAnonymous: false,
-                     isMine: false)
-    }
-    
-    @ObservedObject private var viewModel: ViewModel
-    
-    init(viewModel: ViewModel) {
-        self.viewModel = viewModel
-        
-    }
+    @State private var tag: Int? = nil
+    @State private var needRefresh = false
+
+    // MARK: - Anonymous policy popup state
+    /// Persisted across app launches via UserDefaults. Once the user closes the popup,
+    /// it will never be shown again (@AppStorage automatically syncs with UserDefaults).
+    @AppStorage("hasSeenAnonymousPolicyPopup") private var hasSeenAnonymousPolicyPopup = false
+    /// Transient flag that drives the overlay within the current view lifecycle.
+    @State private var showAnonymousPolicyPopup = false
+
+    @ObservedObject var viewModel: ViewModel
 
     var body: some View {
-        
-            ZStack(alignment: .bottomTrailing) {
-                VStack(spacing:0){
-                    BoardSelect(viewModel: viewModel)
-                    if !viewModel.trendingPostsListPublisher.isEmpty {
-                        Divider()
-                            .foregroundColor(dividerColor)
-                            .frame(height:1)
-                            .padding(.zero)
-                        TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh).padding(EdgeInsets(top: 10, leading: 20, bottom: 10, trailing: 20))
+        ZStack(alignment: .bottomTrailing) {
+            VStack(spacing: 0) {
+                Spacer().frame(height: 18)
+                BoardList(viewModel: viewModel)
+                
+                if !viewModel.trendingPostsListPublisher.isEmpty {
+                    Spacer().frame(height: 13)
+                    TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh)
+                }
+                Spacer().frame(height: 18)
+                
+                if viewModel.loadInitialPostsStatus == .loading && (viewModel.postsListPublisher.isEmpty || viewModel.isChangingBoard) {
+                    loadingView
+                } else {
+                    ScrollView(showsIndicators: false) {
+                        postList
                     }
-                    if viewModel.loadInitialPostsStatus == .loading && (self.viewModel.postsListPublisher.isEmpty || self.viewModel.isChangingBoard) {
-                        VStack {
-                            Spacer()
-                            ActivityIndicator(isAnimating: .constant(true), style: .large)
-                            Spacer()
-                        }
-                        .frame(maxWidth: .infinity)
-                    } else {
-                        ScrollView{
-                            divider
-                            postList
-                        }
-                        .refreshable {
-                            await viewModel.asyncRefresh()
-                        }
+                    .refreshable {
+                        await viewModel.asyncRefresh()
                     }
                 }
-                .customNavigationBar(title: "icon")
                 
-                Button {
-                    self.tag = 1
-                } label: {
-                    Image("CircleWriteButton")
-                        .frame(width:50, height:50)
-                        .background(Color.init("MainThemeColor"))
+                Spacer(minLength: 0)
+            }
+            .customNavigationBar(title: "icon")
+            
+            Button {
+                tag = 1
+            } label: {
+                NavigationLink(
+                    destination: CommunityPostPublishView(
+                        needRefresh: $needRefresh,
+                        viewModel: CommunityPostPublishViewModel(
+                            boardId:selectedBoardId ?? 0,
+                            communityRepository: DomainManager.shared.domain.communityRepository
+                        )
+                    ),
+                    tag: 1,
+                    selection: self.$tag
+                ){
+                    Image("Pencil")
+                        .resizable()
+                        .frame(width: 28, height: 28)
+                        .foregroundColor(.white)
+                        .frame(width: 50, height: 50)
+                        .background(Color.orange500)
                         .clipShape(Circle())
                 }
-                .offset(x: -30, y: -22)
-                .disabled(selectedBoardId == nil
-                )
-                NavigationLink(destination: CommunityPostPublishView( needRefresh: $needRefresh, viewModel: CommunityPostPublishViewModel(boardId:selectedBoardId ?? 0,communityRepository: DomainManager.shared.domain.communityRepository)),
-                               tag: 1,
-                               selection: self.$tag){
-                    EmptyView()
-                }
-                               .disabled(selectedBoardId == nil
-                               )
-
-            
-            
+            }
+            .disabled(selectedBoardId == nil)
+            .padding(.trailing, 29)
+            .padding(.bottom, 24)
         }
+        .background(Color.backgroundPrimary)
         .errorAlert(error: $viewModel.error)
         .onAppear {
             self.viewModel.loadBasicInfos()
+            // Show the one-time anonymous policy popup on the user's first visit.
+            // hasSeenAnonymousPolicyPopup is backed by @AppStorage, so this check
+            // is false exactly once across all app launches.
+            if !hasSeenAnonymousPolicyPopup {
+                showAnonymousPolicyPopup = true
+            }
+        }
+        .overlay {
+            if showAnonymousPolicyPopup {
+                PolicyPopupView(
+                    title: "앱스토어 정책 안내",
+                    message: "iOS에서는 앱스토어 정책에 의해\n익명 게시글과 댓글의 작성 및 열람이 불가합니다.",
+                    onClose: {
+                        // Persist the flag first so a crash/force-quit during
+                        // the dismiss animation still counts as "seen".
+                        hasSeenAnonymousPolicyPopup = true
+                        withAnimation(.easeOut(duration: 0.18)) {
+                            showAnonymousPolicyPopup = false
+                        }
+                    }
+                )
+                .transition(.opacity)
+            }
         }
         .onChange(of: needRefresh, perform: { refresh in
             if refresh{
@@ -94,33 +109,34 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 needRefresh = false
             }
         })
-        
-        
-       
-      
-       
-       
-        
-        
-        
-      
+    }
+    
+    var loadingView: some View {
+        VStack {
+            Spacer()
+            ActivityIndicator(isAnimating: .constant(true), style: .large)
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
     }
     
     var divider: some View {
         Divider()
-            .foregroundColor(dividerColor)
+            .foregroundColor(.gray100)
             .frame(height:1)
             .padding(EdgeInsets(top: 0, leading: 7.5, bottom: 0, trailing: 7.5))
     }
     
     var postList: some View {
         LazyVStack(spacing: 0) {
+            divider
             ForEach(self.viewModel.postsListPublisher) { postInfo in
                 if postInfo.isAvailable {
-                 
-                        CommunityPostPreView(info: postInfo, boardName: viewModel.getSelectedBoardName(), needRefresh: $needRefresh)
-                         
-                    
+                    CommunityPostPreView(
+                        info: postInfo,
+                        boardName: viewModel.getSelectedBoardName(),
+                        needRefresh: $needRefresh
+                    )
                     divider
                 }
             }
@@ -139,75 +155,63 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
         }
     }
     
-    var writeButton: some View {
-        Image("writeButton")
-    }
-    var selectedBoardId:Int?{
-        get{
-         
-                let boards = viewModel.boardsListPublisher.filter{board in board.isSelected}
-            return boards.isEmpty ? nil : boards[0].id
-            
-           
-            
-            }
+    var selectedBoardId: Int? {
+        let boards = viewModel.boardsListPublisher.filter {
+            board in board.isSelected
+        }
+        return boards.isEmpty ? nil : boards[0].id
     }
 }
 
 struct CommunityPostPreView: View {
-    private let contentColor = Color("ReviewHighColor")
-    private let likeColor = Color("MainThemeColor")
-    private let replyColor = Color("ReviewMediumColor")
-    private let defaultImageColor = Color("DefaultImageColor")
-    
     let info: PostInfo
     let boardName: String
-    let needRefresh:Binding<Bool>
+    let needRefresh: Binding<Bool>
+    
     var body: some View {
-        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: DomainManager.shared.domain.communityRepository, postId: info.id), needPostViewRefresh:needRefresh)) {
-            
-            HStack {
-                VStack(alignment: .leading) {
+        NavigationLink {
+            CommunityPostView(
+                viewModel: CommunityPostViewModel(
+                    communityRepository: DomainManager.shared.domain.communityRepository,
+                    postId: info.id
+                ),
+                needPostViewRefresh: needRefresh
+            )
+        } label: {
+            HStack(spacing: 14) {
+                VStack(alignment: .leading, spacing: 6) {
                     Text(info.title)
-                        .font(.custom("NanumSquareOTFEB", size: 15))
-                        .foregroundColor(.black)
+                        .customFont(font: .text13(weight: .ExtraBold))
+                        .foregroundColor(.blackColor)
                         .lineLimit(1)
-                    Spacer()
-                        .frame(width: 10)
+                    
                     Text(info.content)
-                        .font(.custom("NanumSquareOTFR", size: 12))
-                        .foregroundColor(contentColor)
+                        .customFont(font: .text13(weight: .Regular))
+                        .foregroundColor(.gray900)
                         .lineLimit(1)
-                    Spacer()
-                        .frame(width: 10)
-                    HStack {
-                        HStack(alignment: .center) {
-                            Image(info.isLiked ? "PostLike-liked" : "PostLike-default")
-                                .frame(width: 11.5, height: 10)
-                                .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
-                            Spacer()
-                                .frame(width: 4)
-                            Text(String(info.likeCount))
-                                .font(.custom("NanumSquareOTFRegular", size: 10))
-                            
-                                .foregroundColor(likeColor)
-                        }
-                        HStack(alignment: .center) {
-                            Image("Comment")
-                                .frame(width: 11.5, height: 11)
-                            Spacer()
-                                .frame(width: 4)
-                            Text(String(info.commentCount))
-                                .font(.custom("NanumSquareOTFRegular", size: 10))
-                                .foregroundColor(Color.init("ReviewMediumColor"))
-                                .frame(height: 11, alignment: .center)
-                            
-                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    HStack(spacing: 4) {
+                        Image("PostLike-default")
+                            .resizable()
+                            .frame(width: 11.5, height: 11)
+                            .scaledToFit()
+                        Text(String(info.likeCount))
+                            .customFont(font: .text11(weight: .Bold))
+                            .foregroundColor(.orange500)
+                            .padding(.trailing, 7)
+                        Image("Comment")
+                            .resizable()
+                            .frame(width: 12, height: 11)
+                            .scaledToFit()
+                        Text(String(info.commentCount))
+                            .customFont(font: .text11(weight: .Bold))
+                            .foregroundColor(.gray700)
                     }
                 }
-                Spacer()
                 
-                if let firstImageURL = info.imageURLs?.first, let url = URL(string: firstImageURL) {
+                if let firstImageURL = info.imageURLs?.first,
+                    let url = URL(string: firstImageURL) {
                     AsyncImage(url: url) { image in
                         image
                             .resizable()
@@ -219,7 +223,7 @@ struct CommunityPostPreView: View {
                     .clipped()
                 }
             }
-            .padding(EdgeInsets(top: 15, leading: 20, bottom: 14, trailing: 20))
+            .padding(EdgeInsets(top: 15, leading: 20, bottom: 13, trailing: 20))
         }
     }
 }
@@ -240,10 +244,31 @@ class StubCommunityViewModel: CommunityViewModelType {
         
     }
     
-    var trendingPostsListPublisher: [PostInfo] = []
+    var trendingPostsListPublisher: [PostInfo] = [
+        .init(
+            title: "제목",
+            content: "내용",
+            isLiked: true,
+            likeCount: 12,
+            commentCount: 2,
+            imageURLs: nil,
+            isAnonymous: true,
+            isMine: false
+        ),
+        .init(
+            title: "제목22222",
+            content: "내용",
+            isLiked: true,
+            likeCount: 12,
+            commentCount: 2,
+            imageURLs: nil,
+            isAnonymous: true,
+            isMine: false
+        )
+    ]
     
     var hasNextPublisher: Bool {
-        return true
+        return false
     }
     
     var postsListPublisher: [PostInfo] = (1..<5).map {

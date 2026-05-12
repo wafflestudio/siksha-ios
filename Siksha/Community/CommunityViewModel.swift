@@ -147,15 +147,30 @@ extension CommunityViewModel {
     }
     
     var postsListPublisher: [PostInfo] {
+        let blockedNicknames = BlockManager.shared.blockedNicknames()
         return self.currPostList
-            .map { PostInfo(post: $0 )}
+            .filter { post in
+                // App Store policy: completely hide all anonymous posts on iOS
+                guard !post.anonymous else { return false }
+                guard let nickname = post.nickname, !nickname.isEmpty else { return true }
+                return !blockedNicknames.contains(nickname)
+            }
+            .map { PostInfo(post: $0) }
     }
     
     var hasNextPublisher: Bool {
         return self.hasNext
     }
-    var trendingPostsListPublisher: [PostInfo]{
-        return self.trendingPostList.map{PostInfo(post: $0 )}
+    var trendingPostsListPublisher: [PostInfo] {
+        let blockedNicknames = BlockManager.shared.blockedNicknames()
+        return self.trendingPostList
+            .filter { post in
+                // App Store policy: completely hide all anonymous posts on iOS
+                guard !post.anonymous else { return false }
+                guard let nickname = post.nickname, !nickname.isEmpty else { return true }
+                return !blockedNicknames.contains(nickname)
+            }
+            .map { PostInfo(post: $0) }
     }
 }
 

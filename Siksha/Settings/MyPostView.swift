@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct MyPostPreView: View {
-    private let contentColor = Color("ReviewHighColor")
-    private let likeColor = Color("MainThemeColor")
-    private let replyColor = Color("ReviewMediumColor")
-    private let defaultImageColor = Color("DefaultImageColor")
+    private let contentColor = Color.gray900
+    private let likeColor = Color.orange500
+    private let replyColor = Color.gray700
+    private let defaultImageColor = Color.gray100
     
     let info: PostInfo
     let boardName: String
@@ -49,7 +49,7 @@ struct MyPostPreView: View {
                                 .frame(width: 4)
                             Text(String(info.commentCount))
                                 .font(.custom("Inter-Regular", size: 9))
-                                .foregroundColor(Color.init("ReviewMediumColor"))
+                                .foregroundColor(Color.init("Color/Foundation/Gray/700"))
                                 .frame(height: 11, alignment: .center)
                             
                         }
@@ -70,13 +70,12 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     
     @State var tag: Int? = nil
     @State var needRefresh = false
-    let dividerColor = Color("ReviewLowColor")
+    let dividerColor = Color("Color/Foundation/Gray/100")
     
     @ObservedObject private var viewModel: ViewModel
     
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
-        
     }
     
     var backButton: some View {
@@ -85,44 +84,49 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 7, height: 15)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .foregroundColor(Color.iconWhiteIcon)
         }
     }
 
     var body: some View {
-        if self.viewModel.postsListPublisher.count == 0 {
-            VStack(alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/){
-                Spacer()
-                Text("내가 쓴 글이 없어요")
-                    .font(.custom("NanumSquareOTF", size: 15))
-                    .foregroundColor(Color(white: 166/255))
-                Spacer()
-            }
-            .errorAlert(error: $viewModel.error)
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .customNavigationBar(title: "내가 쓴 글")
-                .navigationBarItems(leading: backButton)
-           
-            .onChange(of: needRefresh, perform: { refresh in
-                if refresh{
-                    self.viewModel.loadPosts()
-                    needRefresh = false
+        Group {
+            if viewModel.isInitialLoading {
+                VStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
                 }
-            })
-        } else {
-            ScrollView{
-                divider
-                postList
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if self.viewModel.postsListPublisher.count == 0 {
+                VStack(alignment: .center){
+                    Spacer()
+                    Text("내가 쓴 글이 없어요")
+                        .font(.custom("NanumSquareOTF", size: 15))
+                        .foregroundColor(Color(white: 166/255))
+                    Spacer()
+                }
+                .errorAlert(error: $viewModel.error)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ScrollView{
+                    postList
+                }
             }
-            .customNavigationBar(title: "내가 쓴 글")
-                .navigationBarItems(leading: backButton)
-                .onChange(of: needRefresh, perform: { refresh in
-                    if refresh{
-                        self.viewModel.loadPosts()
-                        needRefresh = false
-                    }
-                })
         }
+        .background(Color.backgroundPrimary)
+        .customNavigationBar(title: "내가 쓴 글")
+        .navigationBarItems(leading: backButton)
+        .onAppear {
+            viewModel.loadPosts()
+        }
+        .onChange(of: needRefresh, perform: { refresh in
+            if refresh{
+                self.viewModel.loadPosts()
+                needRefresh = false
+            }
+        })
     }
     
     var divider: some View {
@@ -161,6 +165,7 @@ struct MyPostView_Previews: PreviewProvider {
 
 class StubMyPostViewModel: MyPostViewModelType {
     var error: AppError?
+    var isInitialLoading: Bool = false
     
     var hasNextPublisher: Bool {
         return false

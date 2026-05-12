@@ -19,7 +19,7 @@ struct ImagePickerCoordinatorView {
         self.presentationMode.wrappedValue.dismiss()
         
         // Navigation Bar 배경색 세팅
-        UINavigationBar.changeBackgroundColor(color: UIColor(named: "main") ?? .clear)
+        UINavigationBar.changeBackgroundColor(color: UIColor(named: "Color/Foundation/Orange/500") ?? .clear)
     }
 
 }
@@ -70,12 +70,10 @@ extension ImagePickerCoordinatorView {
             let newImages = getAssetThumbnail(assets: assets)
             parent.selectedImages.append(contentsOf: newImages)
             parent.onImagesSelected?(newImages)
-            parent.dismiss()
         }
         
         public func imagePicker(_ imagePicker: ImagePickerController, didCancelWithAssets assets: [PHAsset]) {
             print("Canceled with selections: \(assets)")
-            parent.dismiss()
         }
         
         public func imagePicker(_ imagePicker: ImagePickerController, didReachSelectionLimit count: Int) {

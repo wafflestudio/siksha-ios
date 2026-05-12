@@ -14,7 +14,7 @@ struct MenuView: View {
     @State private var selectedFilterType: MenuFilterType? = nil
     @State private var viewHeight: CGFloat = 0
     
-    private let lightGrayColor = Color("Gray600")
+    private let lightGrayColor = Color.gray600
     
     init(isFavoriteTab: Bool = false) {
         _viewModel = StateObject(wrappedValue: MenuViewModel(isFavoriteTab: isFavoriteTab))
@@ -44,7 +44,7 @@ struct MenuView: View {
     }
     
     private let dimBackgroundColor = Color(.sRGB, white: 0, opacity: 0.6)
-    private let orangeColor = Color("main")
+    private let orangeColor = Color("Color/Foundation/Orange/500")
     
     var body: some View {
         VStack(spacing: 0) {
@@ -52,24 +52,16 @@ struct MenuView: View {
 //                festivalBanner
 //            }
             
-            if viewModel.noFavorites {
-                Spacer()
-                Text("즐겨찾기에 추가된 식당이 없습니다.")
-                    .font(.custom("NanumSquareOTFB", size: 15))
-                    .foregroundColor(lightGrayColor)
-                Spacer()
-            } else {
-                daySelectorView
+            daySelectorView
+            
+            ZStack(alignment: .top) {
+                MenuListView(
+                    viewModel: viewModel,
+                    selectedFilterType: $selectedFilterType
+                )
                 
-                ZStack(alignment: .top) {
-                    MenuListView(
-                        viewModel: viewModel,
-                        selectedFilterType: $selectedFilterType
-                    )
-                    
-                    if viewModel.showCalendar {
-                        calendarOverlay
-                    }
+                if viewModel.showCalendar {
+                    calendarOverlay
                 }
             }
         }
@@ -78,17 +70,6 @@ struct MenuView: View {
         .alert(isPresented: $viewModel.showNetworkAlert, content: {
             Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))
         })
-//        .onAppear {
-//            if viewModel.reloadOnAppear {
-//                viewModel.getMenu(date: viewModel.selectedDate)
-//            } else {
-//                viewModel.reloadOnAppear = true
-//            }
-//            viewModel.loadFilters()
-//        }
-//        .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-//            viewModel.getMenu(date: viewModel.selectedDate)
-//        }
         .sheet(isPresented: isFilterModalPresented){
             MenuFilterView(menuViewModel: viewModel, menuFilterType: selectedFilterType ?? .all)
                 .presentationDetents([.height(selectedModalHeight)])
@@ -114,46 +95,45 @@ private extension MenuView {
     
     var daySelectorView: some View {
         HStack(alignment: .center) {
-            Button(action: {
-                viewModel.selectedDate = viewModel.prevDate
-            }, label: {
-                Image(viewModel.showCalendar ? "PrevDate-disabled" : "PrevDate")
-                    .resizable()
-                    .frame(width: 10, height: 16)
-            })
-            .disabled(viewModel.showCalendar)
-            .padding(.leading, 16)
-            
+            if !viewModel.showCalendar{
+                Button(action: {
+                    viewModel.selectedDate = viewModel.prevDate
+                }, label: {
+                    Image("PrevDate")
+                        .resizable()
+                        .frame(width: 10, height: 16)
+                })
+                .disabled(viewModel.showCalendar)
+                .padding(.leading, 16)
+            }
             Spacer()
             
             Button(action: {
                 viewModel.showCalendar.toggle()
             }, label: {
                 HStack(alignment: .center, spacing: 0) {
-                    Image("Calendar")
-                        .renderingMode(.original)
-                        .frame(width: 20, height: 22)
-                        .padding(EdgeInsets(top: 0, leading: 0, bottom: 2, trailing: 4))
+                
                     Text(viewModel.selectedFormatted)
-                        .font(.custom("NanumSquareOTFEB", size: 15))
-                        .foregroundColor(orangeColor)
+                        .customFont(font: .text15(weight: .ExtraBold))
+                        .foregroundColor(Color.textAccent)
                 }
             })
             
             Spacer()
-            
-            Button(action: {
-                viewModel.selectedDate = viewModel.nextDate
-            }, label: {
-                Image(viewModel.showCalendar ? "NextDate-disabled" : "NextDate")
-                    .resizable()
-                    .frame(width: 10, height: 16)
-            })
-            .disabled(viewModel.showCalendar)
-            .padding(.trailing, 16)
+            if !viewModel.showCalendar{
+                Button(action: {
+                    viewModel.selectedDate = viewModel.nextDate
+                }, label: {
+                    Image("NextDate")
+                        .resizable()
+                        .frame(width: 10, height: 16)
+                })
+                .padding(.trailing, 16)
+            }
             
         }
         .frame(height: 50)
+        .background(Color.backgroundSecondary)
     }
     
     var calendarOverlay: some View {
@@ -168,7 +148,7 @@ private extension MenuView {
             CalendarView(selectedDate: $viewModel.selectedDate)
                 .frame(height: 300)
                 .padding(EdgeInsets(top: 4, leading: 10, bottom: 15, trailing: 10))
-                .background(Color.white)
+                .background(Color.backgroundSecondary)
                 .transition(.opacity.animation(.easeInOut(duration: 0.3)))
                 .zIndex(2)
         }

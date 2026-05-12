@@ -32,32 +32,30 @@ struct OperatingHoursCell: View {
     var body: some View {
         HStack(alignment: .top) {
             Text(type)
-                .font(.custom("NanumSquareOTFR", size: 14))
-                .padding(EdgeInsets(top: 0, leading: 3, bottom: 0, trailing: 0))
-
-            
+                .customFont(font: .text14(weight: .Bold))
             Spacer()
-            
+        
             if hours.count > 0 {
-                VStack(alignment: .trailing, spacing: 8) {
+                VStack(alignment: .trailing, spacing: 4) {
                     ForEach(hours, id: \.0) { hourType, hour in
-                        HStack(spacing: 10) {
-                            Text(hourType)
-                                .font(.custom("NanumSquareOTFR", size: 12))
-                                .foregroundColor(.init("main"))
-                            
+                        HStack(spacing: 0.5) {
+                            Image(hourType)
+                                .resizable()
+                                .frame(width:20,height:20)
                             Text(hour)
-                                .font(.custom("NanumSquareOTFR", size: 14))
-                                .frame(width: 90, alignment: .trailing)
+                                .customFont(font: .text14(weight: .Regular))
+                                .foregroundStyle(Color.gray900)
                         }
+                        .padding(.zero)
                     }
-                }
+                }.padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 6))
             } else {
                 Text("정보가 없습니다")
-                    .font(.custom("NanumSquareOTFR", size: 14))
+                    .customFont(font: .text14(weight: .Regular))
+                    .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 7))
             }
         }
-        .padding(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+        .padding(EdgeInsets(top: 12, leading: 16, bottom: 12, trailing: 16))
     }
 }
 
@@ -67,7 +65,7 @@ struct OperatingHoursTable: View {
     private let hoHours: [String]
     private let isFestivalRestaurant: Bool
     
-    private let dividerColor = Color.init(red: 236/255, green: 236/255, blue: 236/255)
+    private let dividerColor = Color.borderPrimary
     
     init(hours: [String], isFestivalRestaurant: Bool) {
         self.wdHours = hours[0].split(separator: "\n").map { String($0) }
@@ -77,7 +75,7 @@ struct OperatingHoursTable: View {
     }
     
     var body: some View {
-        VStack {
+        VStack(spacing:0) {
             OperatingHoursCell(type: "주중", hours: wdHours, isFestivalRestaurant: self.isFestivalRestaurant)
             
             dividerColor
@@ -99,11 +97,16 @@ struct OperatingHoursTable: View {
 
 struct OperatingHoursTable_Previews: PreviewProvider {
     static var previews: some View {
-        var operatingHours = ["", "", ""]
-        operatingHours[0] = "11:30 - 13:30\n17:30 - 19:30"
-        operatingHours[1] = "11:30 - 13:30\n17:30 - 18:30"
+        var operatingHours: [String] {
+            var hours = ["", "", ""]
+            hours[0] = "11:30 - 13:30\n17:30 - 19:30"
+            hours[1] = "11:30 - 13:30\n17:30 - 18:30"
+            return hours
+        }
 
-        
-        return OperatingHoursTable(hours: operatingHours, isFestivalRestaurant: false)
+        VStack(spacing:0){
+            OperatingHoursTable(hours: operatingHours, isFestivalRestaurant: false)
+        }
+        .preferredColorScheme(.light)
     }
 }

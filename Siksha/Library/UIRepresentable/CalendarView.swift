@@ -57,23 +57,23 @@ class CalendarDelegate: NSObject, JTACMonthViewDelegate, JTACMonthViewDataSource
     func configureCell(cell: DateCell, cellState: CellState) {
         if cellState.dateBelongsTo != .thisMonth {
             cell.background.layer.backgroundColor = UIColor.clear.cgColor
-            cell.dateLabel.textColor = .white
+            cell.dateLabel.textColor = .clear
             return
         }
         
         formatter.dateFormat = "yyyy-MM-dd"
         let todayString = formatter.string(from: Date())
-        let todayColor = UIColor(white: 223/255, alpha: 1)
-        let textColor = UIColor(white: 102/255, alpha: 1)
-        let selectedColor = UIColor(red: 254/255, green: 140/255, blue: 89/255, alpha: 1)
+        let todayColor = UIColor(named: "SemanticColor/Element/Control")
+        let textColor = UIColor(named: "Color/Foundation/Gray/700")
+        let selectedColor = UIColor(named: "Color/Foundation/Orange/500")
         
         if cellState.isSelected {
-            cell.background.layer.backgroundColor = selectedColor.cgColor
+            cell.background.layer.backgroundColor = selectedColor!.cgColor
             cell.dateLabel.font = UIFont(name: "NanumSquareOTFB", size: 14)
-            cell.dateLabel.textColor = .white
+            cell.dateLabel.textColor = UIColor(named:"SemanticColor/Background/Secondary")
         } else {
             if formatter.string(from: cellState.date) == todayString {
-                cell.background.layer.backgroundColor = todayColor.cgColor
+                cell.background.layer.backgroundColor = todayColor!.cgColor
                 cell.dateLabel.font = UIFont(name: "NanumSquareOTFB", size: 14)
                 cell.dateLabel.textColor = textColor
             } else {
@@ -146,8 +146,8 @@ class DateHeader: JTACMonthReusableView {
         
         leftButton.frame = CGRect(x: 0, y: 0, width: 10, height: 16)
         rightButton.frame = CGRect(x: 0, y: 0, width: 10, height: 16)
-        leftButton.setBackgroundImage(UIImage(named: "PrevDate"), for: .normal)
-        rightButton.setBackgroundImage(UIImage(named: "NextDate"), for: .normal)
+        leftButton.setBackgroundImage(UIImage(named: "Prevdate-orange"), for: .normal)
+        rightButton.setBackgroundImage(UIImage(named: "NextDate-orange"), for: .normal)
         
         super.init(frame: frame)
         
@@ -159,7 +159,7 @@ class DateHeader: JTACMonthReusableView {
         monthTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 5).isActive = true
         monthTitle.textAlignment = .center
         monthTitle.translatesAutoresizingMaskIntoConstraints = false
-        monthTitle.textColor = UIColor(red: 254/255, green: 140/255, blue: 89/255, alpha: 1)
+        monthTitle.textColor = UIColor(named:"Color/Foundation/Orange/500")
         monthTitle.font = UIFont(name: "NanumSquareOTFEB", size: 15)
         
         leftButton.translatesAutoresizingMaskIntoConstraints = false
@@ -175,7 +175,7 @@ class DateHeader: JTACMonthReusableView {
         for i in 0..<7 {
             weekDay.append(UILabel())
             weekDay[i].text = dayName[i]
-            weekDay[i].textColor = .init(white: 51/255, alpha: 1)
+            weekDay[i].textColor = UIColor(named: "Color/Foundation/Base/BlackColor")
             weekDay[i].font = UIFont(name: "NanumSquareOTFB", size: 13)
         }
         

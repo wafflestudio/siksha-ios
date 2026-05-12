@@ -9,7 +9,7 @@ import SwiftUI
 import NMapsMap
 
 struct RestaurantInformationView: View {
-    
+    @Environment(\.dismiss) var dismiss
     var restaurant: Restaurant
     
     let position: NMGLatLng?
@@ -29,67 +29,80 @@ struct RestaurantInformationView: View {
     var body: some View {
                         
         VStack(spacing: 0) {
-            HStack {
-                Spacer()
-                Text(restaurant.nameKr)
-                    .font(.custom("NanumSquareOTFB", size: 20))
-                    .foregroundColor(.black)
-                Spacer()
+            ZStack(alignment: .top) {
+                HStack {
+                    Text(restaurant.nameKr)
+                        .customFont(font: .text20(weight: .ExtraBold))
+                        .foregroundColor(Color.gray900)
+                }
+                .padding(EdgeInsets(top: 23, leading: 0, bottom: 10.73, trailing: 0))
+                
+                HStack {
+                    Spacer()
+                    Button(action: { dismiss() }) {
+                        Image("Close")
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(Color.gray900)
+                    }
+                    .padding(EdgeInsets(top: 24, leading: 0, bottom: 0, trailing: 17))
+                }
             }
-            .padding(EdgeInsets(top: 14, leading: 16, bottom: 10, trailing: 16))
-
+            
             if position != nil {
-                Color.init("main")
+                Color.borderPrimary
                     .frame(height: 1)
                     .frame(maxWidth: .infinity)
-                    .padding([.leading, .trailing], 16)
             }
             
             ScrollView {
-                if let position = position {
-                    HStack {
-                        Text("식당 위치")
-                            .font(.custom("NanumSquareOTFR", size: 14))
-                            .foregroundColor(.black)
-                        Spacer()
+                VStack(spacing: 0){
+                    if let position = position {
+                        HStack(spacing: 4) {
+                            Image("Location")
+                                .resizable()
+                                .frame(width: 24, height: 24)
+                            
+                            Text("식당 위치")
+                                .customFont(font: .text16(weight: .Bold))
+                                .foregroundColor(Color.blackColor)
+                            Spacer()
+                        }
+                        .padding(EdgeInsets(top: 13, leading: 16, bottom: 8, trailing: 16))
                         
-                        Image("Location")
-                            .resizable()
-                            .frame(width: 16, height: 16)
-                        Text(restaurant.addr)
-                            .font(.custom("NanumSquareOTFR", size: 14))
-                            .foregroundColor(Color("LightFontColor"))
+                        MapView(coordinate: position, markerText: restaurant.addr)
+                            .cornerRadius(10.0)
+                            .frame(height: 250)
+                            .padding(EdgeInsets(top: 0, leading: 16, bottom: 31, trailing: 16))
+                        Color.borderPrimary
+                            .frame(height: 10)
+                            .frame(maxWidth: .infinity)
                     }
-                    .padding(EdgeInsets(top: 16, leading: 16, bottom: 12, trailing: 16))
                     
-                    MapView(coordinate: position, markerText: restaurant.addr)
-                        .cornerRadius(10.0)
-                        .frame(height: 250)
-                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 24, trailing: 16))
-                    Color.init("DarkBackgroundColor")
-                        .frame(height: 10)
-                        .frame(maxWidth: .infinity)
+                    
+                    HStack(alignment: .center, spacing: 0) {
+                        Image("Schedule")
+                            .resizable()
+                            .frame(width: 24,height: 24)
+                        Spacer()
+                            .frame(width:4)
+                        Text("영업 시간")
+                            .customFont(font: .text16(weight: .Bold))
+                            .foregroundStyle(Color.blackColor)
+                        Spacer()
+                    }
+                    .padding(EdgeInsets(top: 24, leading: 16, bottom: 8, trailing: 16))
+                    
+                    Color.orange500
+                        .frame(height: 1.4)
+                        .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+                    
+                    OperatingHoursTable(hours: Array(restaurant.operatingHours), isFestivalRestaurant: restaurant.nameKr.contains("[축제]"))
                 }
-
-
-                HStack(alignment: .center, spacing: 0) {
-                    Text("영업 시간")
-                        .font(.custom("NanumSquareOTFR", size: 14))
-                    Spacer()
-                }
-                .padding(EdgeInsets(top: 24, leading: 16, bottom: 8, trailing: 16))
-                
-                Color.init("main")
-                    .frame(height: 1)
-                    .frame(maxWidth: .infinity)
-                    .padding([.leading, .trailing], 16)
-                
-                OperatingHoursTable(hours: Array(restaurant.operatingHours), isFestivalRestaurant: restaurant.nameKr.contains("[축제]"))
-                
-                Spacer()
             }
         }
         .padding(.bottom)
+        .background(Color.backgroundSecondary)
     }
 }
 

@@ -7,18 +7,10 @@
 import SwiftUI
 
 struct FavoriteRestaurantOrderView: View {
-    private let backgroundColor = Color.init("AppBackgroundColor")
+    private let backgroundColor = Color.backgroundSecondary
     
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel: RestaurantOrderViewModel
-    
-    private var leading: CGFloat {
-        if UIScreen.main.bounds.width > 380 {
-            return -44
-        } else {
-            return -40
-        }
-    }
     
     var backButton: some View {
         Button(action: {
@@ -26,63 +18,69 @@ struct FavoriteRestaurantOrderView: View {
         }) {
             Image("NavigationBack")
                 .resizable()
-                .frame(width: 10, height: 16)
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .foregroundColor(Color.iconWhiteIcon)
         }
+        .contentShape(Rectangle())
     }
     
     init(_ viewModel: RestaurantOrderViewModel) {
-        UITableView.appearance().separatorStyle = .none
-        UITableView.appearance().backgroundColor = .clear
-        
         self.viewModel = viewModel
     }
     
     var body: some View {
-        VStack(alignment: .leading) {
-            // Description
+        VStack(alignment: .center, spacing: 0) {
             HStack {
                 Spacer()
                 Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
-                    .font(.custom("NanumSquareOTFR", size: 14))
-                    .foregroundColor(.init("DefaultFontColor"))
+                    .customFont(font: .text13(weight: .Regular))
+                    .foregroundColor(.gray700)
                 Spacer()
             }
-            .padding(.top, 20)
-            .padding(.bottom, 5)
+            .padding(.top, 14)
+            .padding(.bottom, 14)
+            .background(backgroundColor)
             
             if viewModel.favRestaurantIds.count > 0 {
-                List() {
-                    ForEach(viewModel.favRestaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
-                        RestaurantOrderRow(text: row)
-                            .padding(EdgeInsets(top: 4, leading: 12, bottom: 4, trailing: 12))
-                            .listRowInsets(EdgeInsets())
-                            .background(backgroundColor)
+                List {
+                    Section {
+                        ForEach(viewModel.favRestaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
+                            RestaurantOrderRow(text: row)
+                                .listRowInsets(EdgeInsets())
+                                .alignmentGuide(.listRowSeparatorLeading) { d in
+                                    d[.leading]
+                                }
+                                .listRowSeparatorTint(Color.borderPrimary)
+                        }
+                        .onMove(perform: move)
+                    } header: {
+                        Spacer(minLength: 0).listRowInsets(EdgeInsets())
                     }
-                    .onMove(perform: move)
                 }
-                .environment(\.editMode, .constant(.active))
+                .environment(\.defaultMinListHeaderHeight, 20)
             } else {
                 VStack {
                     Spacer()
                     
                     Text("즐겨찾기에 추가된 식당이 없습니다.")
-                        .font(.custom("NanumSquareOTFB", size: 15))
-                        .foregroundColor(.init("DefaultFontColor"))
+                        .customFont(font: .text15(weight: .Bold))
+                        .foregroundColor(.gray600)
                     
                     Spacer()
                 }
                 .frame(maxWidth: .infinity)
             }
-        } // VStack
-        .customNavigationBar(title: "즐겨찾기 순서 변경")
-        .navigationBarItems(leading: backButton)
+        }
         .contentShape(Rectangle())
-        .background(backgroundColor)
+        .customNavigationBar(title: "즐겨찾기 식당 순서 변경")
+        .navigationBarItems(leading: backButton)
+        .background(Color.backgroundMain)
         .onAppear {
-            
+            viewModel.bind()
             viewModel.loadRestaurants()
         }
-    } // View
+    }
     
     func move(from source: IndexSet, to destination: Int) {
         viewModel.favRestaurantIds.move(fromOffsets: source, toOffset: destination)
@@ -91,6 +89,6 @@ struct FavoriteRestaurantOrderView: View {
 
 struct FavoriteMenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        RestaurantOrderView(RestaurantOrderViewModel())
+        FavoriteRestaurantOrderView(RestaurantOrderViewModel())
     }
 }
