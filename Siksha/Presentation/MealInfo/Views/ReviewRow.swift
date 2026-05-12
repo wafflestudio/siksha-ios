@@ -139,6 +139,9 @@ struct keywordTag: View {
 struct ReviewProfileInfoView: View {
     let viewModel: ReviewRowViewModel
     
+    @State private var showActionSheet = false
+    @Environment(\.openURL) var openURL
+    
     var body: some View {
         HStack(alignment: .top, spacing: 7) {
             Image("BigLogoEllipse")
@@ -148,20 +151,45 @@ struct ReviewProfileInfoView: View {
                 .clipShape(Circle())
                 .padding(.top, 1)
                 
-                VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 2) {
+                HStack(alignment: .center) {
                     Text(viewModel.nickname)
                         .customFont(font: .text12(weight: .Bold))
                         .foregroundStyle(Color.blackColor)
-                        .frame(maxWidth: .infinity, alignment: .leading)
                     
                     StarRateView(rate: viewModel.score, spacing: 1)
                         .frame(height: 10)
-                    .padding(.bottom, 4)
+                        .padding(.bottom, 4)
+                        
+                    Spacer()
+                    
+                    Button(action: {
+                        showActionSheet = true
+                    }) {
+                        Image("etc")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                    }
                 }
+            }
                 
             Text(viewModel.legibleDate)
-                    .customFont(font: .text12(weight: .Bold))
-                    .foregroundStyle(Color.gray600)
-            }
+                .customFont(font: .text12(weight: .Bold))
+                .foregroundStyle(Color.gray600)
         }
+        .actionSheet(isPresented: $showActionSheet) {
+            ActionSheet(
+                title: Text("메뉴"),
+                buttons: [
+                    .default(Text("신고하기")) {
+                        if let url = URL(string: "https://forms.gle/FhVV5BtNT3GbJh5Z9") {
+                            openURL(url)
+                        }
+                    },
+                    .cancel(Text("취소"))
+                ]
+            )
+        }
+    }
 }

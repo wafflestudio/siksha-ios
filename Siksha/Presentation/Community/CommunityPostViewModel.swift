@@ -73,6 +73,8 @@ protocol CommunityPostViewModelType: ObservableObject {
     func toggleCommentLike(id: Int)
     func reportPost(reason: String, completion: @escaping (Bool, String?) -> Void)
     func reportComment(commentId:Int,reason:String, completion: @escaping (Bool, String?) -> Void)
+    func blockPostAuthor(postInfo: PostInfo)
+    func blockCommentAuthor(commentInfo: CommentInfo)
 }
 
 final class CommunityPostViewModel: CommunityPostViewModelType {
@@ -109,10 +111,17 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
 
 extension CommunityPostViewModel {
     var commentsListPublisher: [CommentInfo] {
+        let blockedNicknames = BlockManager.shared.blockedNicknames()
         return self.commentsList
-            .map { CommentInfo(comment: $0 )}
+            .filter { comment in
+                // App Store policy: completely hide all anonymous comments on iOS
+                guard !comment.anonymous else { return false }
+                guard let nickname = comment.nickname, !nickname.isEmpty else { return true }
+                return !blockedNicknames.contains(nickname)
+            }
+            .map { CommentInfo(comment: $0) }
     }
-    
+
     var postInfo: PostInfo {
         return PostInfo(post: self.post)
     }
@@ -159,7 +168,6 @@ extension CommunityPostViewModel {
                  self.commentsList = response.comments
                  self.currentPage = 1
                  self.hasNext = response.hasNext
-
              }
          }
          catch{
@@ -391,6 +399,24 @@ extension CommunityPostViewModel {
                 completion(true, nil)
             })
             .store(in: &cancellables)
+    }
+
+    func blockPostAuthor(postInfo: PostInfo) {
+        if postInfo.isAnonymous {
+            BlockManager.shared.blockPost(id: postInfo.id)
+        } else if let nickname = postInfo.nickname, !nickname.isEmpty {
+            BlockManager.shared.blockNickname(nickname)
+        }
+        objectWillChange.send()
+    }
+
+    func blockCommentAuthor(commentInfo: CommentInfo) {
+        if commentInfo.isAnonymous {
+            BlockManager.shared.blockComment(id: commentInfo.id)
+        } else if !commentInfo.nickname.isEmpty {
+            BlockManager.shared.blockNickname(commentInfo.nickname)
+        }
+        objectWillChange.send()
     }
 
 }

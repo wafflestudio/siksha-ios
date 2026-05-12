@@ -383,6 +383,11 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     showPostMenu = false
                     UIPasteboard.general.string = ""
                 })
+                let blockButton = ActionSheet.Button.default(Text("차단하기"), action: {
+                    viewModel.blockPostAuthor(postInfo: post)
+                    needPostViewRefresh = true
+                    presentationMode.wrappedValue.dismiss()
+                })
                 if viewModel.postInfo.isMine {
                     return ActionSheet(title: Text("게시글 메뉴"), buttons: [
                         editButton, deleteButton, reportButton, copyURLButton,
@@ -390,7 +395,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     ])
                 } else {
                     return ActionSheet(title: Text("게시글 메뉴"), buttons: [
-                        reportButton, copyURLButton,
+                        reportButton, copyURLButton, blockButton,
                         .cancel(Text("취소"))
                     ])
                 }
@@ -405,7 +410,10 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 })
                 let reportButton = ActionSheet.Button.default(Text("신고하기"), action: {
                     showAlert = item
-                    
+                })
+                let blockButton = ActionSheet.Button.default(Text("차단하기"), action: {
+                    viewModel.blockCommentAuthor(commentInfo: comment)
+                    showActionSheet = nil
                 })
                 if comment.isMine {
                     return ActionSheet(title: Text("댓글 메뉴"), buttons: [
@@ -414,7 +422,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     ])
                 } else {
                     return ActionSheet(title: Text("댓글 메뉴"), buttons: [
-                        reportButton,
+                        reportButton, blockButton,
                         .cancel(Text("취소"))
                     ])
                 }
@@ -540,4 +548,7 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
     func deleteComment(id: Int) {}
     
     func toggleCommentLike(id: Int) {}
+
+    func blockPostAuthor(postInfo: PostInfo) {}
+    func blockCommentAuthor(commentInfo: CommentInfo) {}
 }

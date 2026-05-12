@@ -24,8 +24,8 @@ struct CommunityReplyBar: View {
                 .frame(maxWidth: .infinity)
                 .overlay(
                     HStack(spacing: 0) {
-                        anonymousButton
-                            .padding(EdgeInsets(top: 11.5, leading: 12, bottom: 7.5, trailing: 8))
+//                        anonymousButton
+//                            .padding(EdgeInsets(top: 11.5, leading: 12, bottom: 7.5, trailing: 8))
                         TextField(
                             "댓글을 입력하세요.",
                             text: $commentText,
