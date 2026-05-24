@@ -55,7 +55,7 @@ struct RestaurantCell: View {
                 Button(action: {
                     isFavorite.toggle()
                     UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                    if viewModel?.isFavoriteTab == true {
+                    if viewModel?.selectedFilters.isFavorite ?? false == true {
                         viewModel?.getMenuStatus = .needRerender
                     }
                 }, label: {

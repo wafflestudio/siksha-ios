@@ -14,7 +14,6 @@ import SwiftyJSON
 import FirebaseRemoteConfig
 
 final class MenuViewModel: NSObject, ObservableObject {
-    let isFavoriteTab: Bool
     let analytics: AnalyticsService
     
     private var remoteConfig = RemoteConfig.remoteConfig()
@@ -54,8 +53,6 @@ final class MenuViewModel: NSObject, ObservableObject {
     @Published var isFestivalAvailable: Bool
     @Published var isFestival: Bool = false
     @Published var isFestivalAppIconEnabled: Bool
-    
-    @Published var noFavorites: Bool = false
     
     @Published var menuList: [DailyMenuModel] = []
     
@@ -105,8 +102,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         return "카테고리"
     }
     
-    init(isFavoriteTab: Bool = false, analytics: AnalyticsService = MixpanelAnalytics()) {
-        self.isFavoriteTab = isFavoriteTab
+    init(analytics: AnalyticsService = MixpanelAnalytics()) {
         self.analytics = analytics
         
         formatter.locale = Locale(identifier: "ko_kr")
@@ -218,7 +214,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func subscribeToIsFestival() {
-        $isFestival.sink{
+        $isFestival.sink {
             isFestival in
             UserDefaults.standard.set(isFestival,forKey: "isFestival")
         }.store(in: &cancellables)
@@ -293,83 +289,30 @@ final class MenuViewModel: NSObject, ObservableObject {
                 guard let self = self else { return }
                 
                 if let menu {
-                    let restOrder = (UserDefaults.standard.dictionary(forKey: isFavoriteTab ? "favRestaurantOrder" : "restaurantOrder") as? [String : Int]) ?? [String : Int]()
+                    let restOrder = (UserDefaults.standard.dictionary(forKey: selectedFilters.isFavorite ?? false ? "favRestaurantOrder" : "restaurantOrder") as? [String : Int]) ?? [String : Int]()
                     
                     let br = Array(menu.getRestaurants(.breakfast))
-                        .filter {
-                            if self.isFavoriteTab {
-                                return UserDefaults.standard.bool(forKey: "fav\($0.id)")
-                            } else {
-                                return true
-                            }
-                        }
-                        .filter{ restaurant in
+                        .filter { restaurant in
                             restaurant.nameKr.contains("[축제]") == isFestival
                         }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
                     
                     let lu = Array(menu.getRestaurants(.lunch))
-                        .filter {
-                            if self.isFavoriteTab {
-                                return UserDefaults.standard.bool(forKey: "fav\($0.id)")
-                            } else {
-                                return true
-                            }
-                        }
-                        .filter{ restaurant in
+                        .filter { restaurant in
                             restaurant.nameKr.contains("[축제]") == isFestival
                         }
                         .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
-                    let dn = Array(menu.getRestaurants(.dinner))
-                        .filter {
-                            if self.isFavoriteTab {
-                                return UserDefaults.standard.bool(forKey: "fav\($0.id)")
-                            } else {
-                                return true
-                            }
-                        }
-                        .filter{ restaurant in
-                            restaurant.nameKr.contains("[축제]") == isFestival
-                        }
-                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
-                    self.restaurantsLists = [br, lu, dn]
                     
-                    if isFavoriteTab && br.count == 0 && lu.count == 0 && dn.count == 0 {
-                        self.checkNoFavorites()
-                    } else {
-                        self.noFavorites = false
-                    }
+                    let dn = Array(menu.getRestaurants(.dinner))
+                        .filter { restaurant in
+                            restaurant.nameKr.contains("[축제]") == isFestival
+                        }
+                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
+                    
+                    self.restaurantsLists = [br, lu, dn]
                 } else {
                     self.restaurantsLists = []
-                    if isFavoriteTab {
-                        self.checkNoFavorites()
-                    } else {
-                        self.noFavorites = false
-                    }
                 }
-            }
-            .store(in: &cancellables)
-    }
-    
-    func checkNoFavorites() {
-        Networking.shared.getRestaurants()
-            .receive(on: RunLoop.main)
-            .sink { [weak self] result in
-                guard let self = self else { return }
-                guard let data = result.data,
-                      let restJSON = try? JSON(data: data)["result"].array else {
-                    self.noFavorites = false
-                    return
-                }
-                var hasFavorite = false
-                restJSON.forEach { json in
-                    let id = json["id"].intValue
-                    if UserDefaults.standard.bool(forKey: "fav\(id)") {
-                        hasFavorite = true
-                        return
-                    }
-                }
-                self.noFavorites = !hasFavorite
             }
             .store(in: &cancellables)
     }
@@ -396,6 +339,11 @@ final class MenuViewModel: NSObject, ObservableObject {
             
             // 영업 중인지 체크 (휴일 등은 추후 처리)
             if filter.isOpen == true && !isRestaurantOpen(restaurant) {
+                isRestaurantEmpty = true
+            }
+            
+            // 즐겨찾기한 식당인지 체크
+            if filter.isFavorite == true && !UserDefaults.standard.bool(forKey: "fav\(restaurant.id)") {
                 isRestaurantEmpty = true
             }
             
@@ -622,5 +570,5 @@ extension MenuViewModel: CLLocationManagerDelegate {
 }
 
 extension MenuViewModel {
-    var pageName: String { isFavoriteTab ? PageName.favoritesList.rawValue : PageName.storeList.rawValue }
+    var pageName: String { selectedFilters.isFavorite ?? false ? PageName.favoritesList.rawValue : PageName.storeList.rawValue }
 }

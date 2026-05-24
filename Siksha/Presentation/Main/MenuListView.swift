@@ -31,12 +31,11 @@ struct MenuListView: View {
             
             if viewModel.getMenuStatus == .loading {
                 loadingView
-            } else if viewModel.noFavorites {
-                noFavoritesView
             } else if viewModel.restaurantsLists.count > 0 {
                 TabView(selection: $viewModel.selectedPage) {
                     ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
                         RestaurantsView(viewModel.restaurantsLists[index],viewModel.selectedPage,viewModel.selectedMenu?.dateType ?? 0)
+                            .environment(\.menuViewModel, viewModel)
                             .tag(index)
                     }
                 }
@@ -138,6 +137,21 @@ private extension MenuListView {
                         }
                         
                         FilterItem(
+                            text: "즐겨찾기",
+                            isOn:viewModel.selectedFilters.isFavorite ?? false,
+                            isCheck: true
+                        )
+                        .onTapGesture {
+                            var updatedFilters = viewModel.selectedFilters
+                            updatedFilters.isFavorite = updatedFilters.isFavorite == true ? nil : true
+                            viewModel.selectedFilters = updatedFilters
+                            viewModel.saveFilters()
+                            viewModel.analytics.track(
+                                .instantFilterToggled(filter: .isFavorite, value: viewModel.selectedFilters.isFavorite ?? true, pageName: viewModel.pageName)
+                            )
+                        }
+                        
+                        FilterItem(
                             text: "리뷰",
                             isOn:viewModel.selectedFilters.hasReview ?? false,
                             isCheck: true
@@ -193,16 +207,6 @@ private extension MenuListView {
         }
     }
     
-    var noFavoritesView: some View {
-        VStack {
-            Spacer()
-            Text("즐겨찾기에 추가된 식당이 없습니다.")
-                .customFont(font: .text15(weight: .Bold))
-                .foregroundColor(lightGrayColor)
-            Spacer()
-        }
-    }
-    
     var emptyView: some View {
         VStack {
             Spacer()
@@ -245,7 +249,7 @@ struct MenuListView_Previews: PreviewProvider {
     struct ContainerView: View {
         @State var selectedFilterType: MenuFilterType? = .all
         var body: some View {
-            MenuListView(viewModel: MenuViewModel(isFavoriteTab: false), selectedFilterType: $selectedFilterType)
+            MenuListView(viewModel: MenuViewModel(), selectedFilterType: $selectedFilterType)
         }
     }
     
