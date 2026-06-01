@@ -60,6 +60,11 @@ enum SikshaAPI: URLRequestConvertible {
     case getMyLikedMenu
     case getFestivalDates
     case getRestaurants
+    case getPersonalRestaurants
+    case setRestaurantLike(restaurantId: Int, like: Bool)
+    case setRestaurantVisible(restaurantId: Int, visible: Bool)
+    case getRestaurantOrder
+    case setRestaurantOrder(order: [Int])
     case getReviews(menuId: Int, page: Int, perPage: Int)
     case getScoreDistribution(menuId: Int)
     case getKeywordDistribution(menuId: Int)
@@ -120,6 +125,8 @@ enum SikshaAPI: URLRequestConvertible {
             return false
         case .getRestaurants:
             return false
+        case .getPersonalRestaurants, .setRestaurantLike, .setRestaurantVisible, .getRestaurantOrder, .setRestaurantOrder:
+            return true
         case .getReviews:
             return true
         case .getScoreDistribution:
@@ -168,6 +175,16 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .getRestaurants:
             return .get
+        case .getPersonalRestaurants:
+            return .get
+        case .setRestaurantLike:
+            return .patch
+        case .setRestaurantVisible:
+            return .patch
+        case .getRestaurantOrder:
+            return .get
+        case .setRestaurantOrder:
+            return .patch
         case .getReviews:
             return .get
         case .getScoreDistribution, .getKeywordDistribution:
@@ -286,6 +303,14 @@ enum SikshaAPI: URLRequestConvertible {
             return "/menus/festival/dates"
         case .getRestaurants:
             return "/restaurants"
+        case .getPersonalRestaurants:
+            return "/restaurants/personal"
+        case let .setRestaurantLike(restaurantId, _):
+            return "/restaurants/like/\(restaurantId)"
+        case let .setRestaurantVisible(restaurantId, _):
+            return "/restaurants/visible/\(restaurantId)"
+        case .getRestaurantOrder, .setRestaurantOrder:
+            return "/restaurants/order"
         case .getReviews:
             return "/reviews"
         case .getScoreDistribution:
@@ -379,6 +404,12 @@ enum SikshaAPI: URLRequestConvertible {
             return ["start_date": startDate, "end_date": endDate, "except_empty": noMenuHide]
         case let .getReviews(menuId, page, perPage):
             return ["menu_id": menuId, "page": page, "size": perPage]
+        case let .setRestaurantLike(_, like):
+            return ["like": like]
+        case let .setRestaurantVisible(_, visible):
+            return ["visible": visible]
+        case let .setRestaurantOrder(order):
+            return ["order": order]
         case let .getScoreDistribution(menuId):
             return ["menu_id": menuId]
         case let .getKeywordDistribution(menuId):

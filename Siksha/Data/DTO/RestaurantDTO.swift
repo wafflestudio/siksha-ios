@@ -21,6 +21,40 @@ struct RestaurantDTO: Decodable {
     let menus: [MenuDTO]
 }
 
+struct PersonalRestaurantsResponseDTO: Decodable {
+    let count: Int
+    let result: [PersonalRestaurantDTO]
+}
+
+struct PersonalRestaurantDTO: Decodable {
+    let createdAt: Date
+    let updatedAt: Date
+    let id: Int
+    let code: String
+    let nameKr: String?
+    let nameEn: String?
+    let addr: String?
+    let lat: Double?
+    let lng: Double?
+    let liked: Bool
+    let visible: Bool
+    let etc: RestaurantEtcDTO?
+}
+
+struct RestaurantLikeResponseDTO: Decodable {
+    let id: Int
+    let liked: Bool
+}
+
+struct RestaurantVisibleResponseDTO: Decodable {
+    let id: Int
+    let visible: Bool
+}
+
+struct RestaurantOrderResponseDTO: Decodable {
+    let order: [Int]
+}
+
 struct RestaurantEtcDTO: Decodable {
     let operatingHours: OperatingHoursDTO?
 }
