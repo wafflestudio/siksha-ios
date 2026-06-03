@@ -14,7 +14,7 @@ struct KeywordSelectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 3) {
-                Image(type.imageString)
+                type.image
                     .resizable()
                     .frame(width: 16, height: 16)
                     .padding(3)
