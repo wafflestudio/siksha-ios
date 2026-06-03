@@ -14,7 +14,7 @@ struct KeywordRateRow: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            Image(summary.type.imageString)
+            summary.type.image
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
