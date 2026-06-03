@@ -106,7 +106,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     .frame(width: 32, height: 32)
                     .clipShape(Circle())
             } else {
-                Image("LogoEllipse")
+                Image(.Icons.Common.profileImagePlaceholder)
                     .resizable()
                     .frame(width: 32, height: 32)
                     .clipShape(Circle())

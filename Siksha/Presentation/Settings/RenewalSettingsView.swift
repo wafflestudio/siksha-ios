@@ -61,7 +61,7 @@ struct RenewalSettingsView: View {
                         .clipShape(Circle())
                         .frame(width: 48, height: 48)
                 } else {
-                    Image("LogoEllipse")
+                    Image(.Icons.Common.profileImagePlaceholder)
                         .resizable()
                         .frame(width: 48, height: 48)
                 }

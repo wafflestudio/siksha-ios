@@ -42,7 +42,7 @@ struct RestaurantCell: View {
                 Button(action: {
                     self.showRestaurant = true
                 }) {
-                    Image("Info")
+                    Image(.Icons.Common.information)
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 20, height: 20)
@@ -70,7 +70,7 @@ struct RestaurantCell: View {
                     kakaoShareManager.shareKakao(restaurant: restaurant, selectedDateString: viewModel?.selectedDate ?? "오늘")
                 
                 }) {
-                    Image(.kakaoShare)
+                    Image(.Icons.Common.share)
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 20, height: 20)

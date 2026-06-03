@@ -60,9 +60,9 @@ struct ContentView: View {
     }
     
     let tabItems = [
-        TabItem(id: 0, content: AnyView(MenuView().id("main")), buttonImage: ["Main", "Main-disabled"]),
-        TabItem(id: 1, content: AnyView(CommunityView(viewModel: CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository))), buttonImage: ["Community", "Community-disabled"]),
-        TabItem(id: 2, content: AnyView(RenewalSettingsView(viewModel: RenewalSettingsViewModel())), buttonImage: ["Settings", "Settings-disabled"])
+        TabItem(id: 0, content: AnyView(MenuView().id("main")), buttonImage: ["Icons/Tabbar/main_orange", "Icons/Tabbar/main_grey"]),
+        TabItem(id: 1, content: AnyView(CommunityView(viewModel: CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository))), buttonImage: ["Icons/Tabbar/community_orange", "Icons/Tabbar/community_grey"]),
+        TabItem(id: 2, content: AnyView(RenewalSettingsView(viewModel: RenewalSettingsViewModel())), buttonImage: ["Icons/Tabbar/settings_orange", "Icons/Tabbar/settings_grey"])
     ]
     
     var body: some View {

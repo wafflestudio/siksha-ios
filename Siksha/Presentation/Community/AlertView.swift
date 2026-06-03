@@ -83,7 +83,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                     .padding(EdgeInsets(top: 44, leading: 16, bottom: 20, trailing: 16))
                     
                     HStack {
-                        Image("LogoEllipse")
+                        Image(.Icons.Common.profileImagePlaceholder)
                             .renderingMode(.original)
                             .resizable()
                             .frame(width: 24, height: 24)

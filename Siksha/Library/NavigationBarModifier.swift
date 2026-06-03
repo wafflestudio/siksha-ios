@@ -22,7 +22,7 @@ struct NavigationBarModifier: ViewModifier {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     if title == "icon" {
-                        Image("sikshaSplash")
+                        Image(.Logos.sikshaSplash)
                             .resizable()
                             .frame(width: 39, height: 23)
                     } else {

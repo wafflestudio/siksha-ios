@@ -22,7 +22,7 @@ struct LoginView: View {
                 VStack {
                     Spacer()
                     
-                    Image("sikshaSplash")
+                    Image(.Logos.sikshaSplash)
                         .resizable()
                         .frame(width: 85.5, height: 49.5)
                     
@@ -32,7 +32,7 @@ struct LoginView: View {
                         Button(action : {
                             handleKakaoLogin()
                         }){
-                            Image("kakaoButton")
+                            Image(.Images.Login.kakaoButton)
                                 .frame(width: 300, height: 45)
                                 .foregroundColor(.black)
                                 .cornerRadius(5.5)
@@ -41,7 +41,7 @@ struct LoginView: View {
                         Button(action : {
                             handleGoogleLogin()
                         }){
-                            Image("googleButton")
+                            Image(.Images.Login.googleButton)
                                 .frame(width: 300, height: 45)
                                 .foregroundColor(.black)
                                 .cornerRadius(5.5)
@@ -50,7 +50,7 @@ struct LoginView: View {
                         Button(action: {
                             handleAppleLogin()
                         }, label: {
-                            Image("appleButton")
+                            Image(.Images.Login.appleButton)
                                 .frame(width: 300, height: 45)
                                 .foregroundColor(.black)
                                 .cornerRadius(5.5)
@@ -63,7 +63,6 @@ struct LoginView: View {
                         }, label: {
                             Text("테스트 로그인")
                         })
-                        
                         
                         #endif
                     }
