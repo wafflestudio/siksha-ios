@@ -93,7 +93,7 @@ private extension MenuListView {
     
     var filterSelectorView: some View {
         HStack(spacing: 5) {
-            Image("Filter")
+            Image(.Icons.Common.filterSliders)
                 .resizable()
                 .frame(width: 34, height: 34)
                 .onTapGesture {
