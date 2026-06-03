@@ -30,47 +30,80 @@ struct RestaurantOrderView: View {
     }
     
     var body: some View {
-        VStack(alignment: .center, spacing: 0) {
-            HStack {
-                Spacer()
-                Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
-                    .customFont(font: .text13(weight: .Regular))
-                    .foregroundColor(.gray700)
-                Spacer()
-            }
-            .padding(.top, 14)
-            .padding(.bottom, 14)
-            .background(backgroundColor)
-            
-            List {
-                Section {
-                    ForEach(viewModel.restaurantIds.map { UserDefaults.standard.string(forKey: "restName\($0)") ?? "" }, id: \.self) { row in
-                        RestaurantOrderRow(text: row)
-                            .listRowInsets(EdgeInsets())
-                            .alignmentGuide(.listRowSeparatorLeading) { d in
-                                d[.leading]
+        ZStack {
+            VStack(alignment: .center, spacing: 0) {
+                HStack {
+                    Spacer()
+                    Text("우측 손잡이를 드래그하여 순서를 바꿔보세요.")
+                        .customFont(font: .text13(weight: .Regular))
+                        .foregroundColor(.gray700)
+                    Spacer()
+                }
+                .padding(.top, 14)
+                .padding(.bottom, 14)
+                .background(backgroundColor)
+                
+                switch viewModel.networkStatus {
+                case .idle, .loading:
+                    Spacer()
+                    ProgressView()
+                    Spacer()
+                case .failed:
+                    Spacer()
+                    Text("식당 정보를 불러오지 못했습니다.")
+                        .customFont(font: .text15(weight: .Bold))
+                        .foregroundColor(.gray600)
+                    Spacer()
+                case .succeeded:
+                    List {
+                        Section {
+                            ForEach(viewModel.personalRestaurants, id: \.id) { restaurant in
+                                RestaurantOrderRow(
+                                    text: restaurant.nameKr ?? restaurant.code,
+                                    isLiked: restaurant.liked,
+                                    isVisible: restaurant.visible,
+                                    onLikeTap: {
+                                        Task {
+                                            await viewModel.togglePersonalRestaurantLike(restaurantId: restaurant.id)
+                                        }
+                                    },
+                                    onVisibilityTap: {
+                                        Task {
+                                            await viewModel.togglePersonalRestaurantVisibility(restaurantId: restaurant.id)
+                                        }
+                                    }
+                                )
+                                .listRowInsets(EdgeInsets())
+                                .alignmentGuide(.listRowSeparatorLeading) { d in
+                                    d[.leading]
+                                }
+                                .listRowSeparatorTint(Color.borderPrimary)
                             }
-                            .listRowSeparatorTint(Color.borderPrimary)
+                            .onMove(perform: move)
+                        } header: {
+                            Spacer(minLength: 0).listRowInsets(EdgeInsets())
+                        }
                     }
-                    .onMove(perform: move)
-                } header: {
-                    Spacer(minLength: 0).listRowInsets(EdgeInsets())
+                    .environment(\.defaultMinListHeaderHeight, 20)
                 }
             }
-            .environment(\.defaultMinListHeaderHeight, 20)
+
+            ToastView(
+                message: viewModel.toastMessage,
+                bottomMargin: 60,
+                isVisible: viewModel.isToastVisible
+            )
         }
         .contentShape(Rectangle())
         .background(Color.backgroundMain)
         .customNavigationBar(title: "식당 순서 변경")
         .navigationBarItems(leading: backButton)
-        .onAppear {
-            viewModel.bind()
-            viewModel.loadRestaurants()
+        .task {
+            await viewModel.loadPersonalRestaurants()
         }
     }
-    
     func move(from source: IndexSet, to destination: Int) {
-        viewModel.restaurantIds.move(fromOffsets: source, toOffset: destination)
+        viewModel.movePersonalRestaurant(from: source, to: destination)
     }
 }
 

@@ -166,20 +166,6 @@ struct RenewalSettingsView: View {
             
             partitionBar
             
-            NavigationLink(destination: FavoriteRestaurantOrderView(orderViewModel)) {
-                HStack(alignment: .center) {
-                    Text("즐겨찾기 식당 순서 변경")
-                        .customFont(font: .text15(weight: .Regular))
-                        .foregroundColor(blackColor)
-                    
-                    Spacer()
-                    
-                    arrow
-                }
-            }
-            
-            partitionBar
-            
             Button(action: {
                 // change button
                 viewModel.noMenuHide.toggle()

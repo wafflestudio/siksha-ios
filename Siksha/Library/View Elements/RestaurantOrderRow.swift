@@ -8,17 +8,38 @@ import SwiftUI
 
 struct RestaurantOrderRow: View {
     var text: String
+    var isLiked: Bool = true
+    var isVisible: Bool = true
+    var onLikeTap: () -> Void = {}
+    var onVisibilityTap: () -> Void = {}
     
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
             ZStack(alignment: .leading) {
                 Color.elementTooltip2.cornerRadius(12).shadow(color: .black.opacity(0.16), radius: 1.5, x: 0, y: 0)
                 
-                Text(text)
-                    .customFont(font: .text13(weight: .Bold))
-                    .foregroundColor(Color.gray800)
-                    .padding(.leading, 12)
-                    .padding(.vertical, 11)
+                HStack(alignment: .center, spacing: 4) {
+                    Button(action: onLikeTap) {
+                        Image(isLiked ? "Favorite-selected" : "Favorite-default")
+                            .resizable()
+                            .renderingMode(.original)
+                            .frame(width: 20, height: 20)
+                    }
+                    .buttonStyle(.plain)
+                    Text(text)
+                        .customFont(font: .text13(weight: .Bold))
+                        .foregroundColor(Color.gray800)
+                        .padding(.vertical, 11)
+                    Spacer()
+                    Button(action: onVisibilityTap) {
+                        Image(isVisible ? .Icons.Common.eyeOpened : .Icons.Common.eyeClosed)
+                            .resizable()
+                            .frame(width: 24, height: 24)
+                            .foregroundStyle(isVisible ? Color.orange400 : Color.gray500)
+                    }
+                    .buttonStyle(.plain)
+                }
+                .padding(.horizontal, 12)
             }
             .frame(height: 40)
             .padding(.vertical, 6)
@@ -37,6 +58,10 @@ struct RestaurantOrderRow: View {
 
 struct MenuRow_Previews: PreviewProvider {
     static var previews: some View {
-        RestaurantOrderRow(text: "302동 식당")
+        RestaurantOrderRow(
+            text: "302동 식당",
+            isLiked: false,
+            isVisible: false
+        )
     }
 }
