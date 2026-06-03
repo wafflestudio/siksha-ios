@@ -70,6 +70,7 @@ extension Color {
     static let iconLike = Color("SemanticColor/Icon/Like")
     static let iconWhiteIcon = Color("SemanticColor/Icon/WhiteIcon")
     static let iconGrayIcon = Color("SemanticColor/Icon/GrayIcon")
+    static let iconStar = Color("SemanticColor/Icon/Star")
     
     // MARK: - Text Colors
     static let textAccent = Color("SemanticColor/Text/Accent")

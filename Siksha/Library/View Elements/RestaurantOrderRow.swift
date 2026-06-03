@@ -20,10 +20,8 @@ struct RestaurantOrderRow: View {
                 
                 HStack(alignment: .center, spacing: 4) {
                     Button(action: onLikeTap) {
-                        Image(isLiked ? "Favorite-selected" : "Favorite-default")
-                            .resizable()
-                            .renderingMode(.original)
-                            .frame(width: 20, height: 20)
+                        Image(isLiked ? .Icons.Common.Star.filled20 : .Icons.Common.Star.unfilled20)
+                            .foregroundStyle(isLiked ? Color.orange500 : Color.iconStar)
                     }
                     .buttonStyle(.plain)
                     Text(text)
