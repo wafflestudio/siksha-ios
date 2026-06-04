@@ -197,12 +197,13 @@ final class MenuViewModel: NSObject, ObservableObject {
     @MainActor
     private func applyRemoteConfig(_ config: RemoteConfigModel) {
         isFestivalAvailable = config.festivalFeatureEnabled
+        UserDefaults.standard.set(config.festivalFeatureEnabled, forKey: "isFestivalAvailable")
         isFestivalAppIconEnabled = config.festivalAppIconEnabled
+        refreshFestivalSwitchState()
     }
     
     private func subscribe() {
         subscribeToIsFestivalAppIconEnabled()
-        subscribeToIsFestivalAvailable()
         subscribeToIsFestival()
         subscribeToSelectedDate()
         subscribeToGetMenuStatus()
@@ -224,21 +225,6 @@ final class MenuViewModel: NSObject, ObservableObject {
                             print("Failed to set app icon: \(error)")
                         }
                     }
-                }
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func subscribeToIsFestivalAvailable() {
-        $isFestivalAvailable
-            .removeDuplicates()
-            .sink { [weak self] available in
-                guard let self = self else { return }
-                UserDefaults.standard.set(available, forKey: "isFestivalAvailable")
-                
-                if !available {
-                    self.isFestival = false
-                    self.showFestivalSwitch = false
                 }
             }
             .store(in: &cancellables)
@@ -271,7 +257,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 
                 self.getMenu(date: dateString)
                 
-                checkShowFestivalSwitch(selected)
+                self.refreshFestivalSwitchState(selectedDate: selected)
             }
             .store(in: &cancellables)
     }
@@ -372,11 +358,17 @@ final class MenuViewModel: NSObject, ObservableObject {
         selectedMenu = filterMenus(DailyMenu(value: managedMenu), filter: filters)
     }
     
-    func checkShowFestivalSwitch(_ date: Date) {
-        self.showFestivalSwitch = self.isFestivalAvailable && self.festivalDates.contains(date)
+    private func refreshFestivalSwitchState(selectedDate selected: Date? = nil) {
+        let selected = selected ?? currentSelectedDate()
+        showFestivalSwitch = isFestivalAvailable && festivalDates.contains(selected)
         if !showFestivalSwitch {
-            self.isFestival = false
+            isFestival = false
         }
+    }
+
+    private func currentSelectedDate() -> Date {
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: selectedDate) ?? Date()
     }
     
     private func filterMenus(_ menus: DailyMenu, filter: MenuFilters) -> DailyMenu {
@@ -600,9 +592,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         do {
             let dates = try await festivalRepository.fetchFestivalDates()
             festivalDates = dates
-            formatter.dateFormat = "yyyy-MM-dd"
-            let selected = formatter.date(from: selectedDate) ?? Date()
-            checkShowFestivalSwitch(selected)
+            refreshFestivalSwitchState()
         } catch {
             print("Failed to load festival dates: \(error)")
         }
