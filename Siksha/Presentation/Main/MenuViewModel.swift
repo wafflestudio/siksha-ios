@@ -25,6 +25,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     private let repository = MenuRepository()
+    private let festivalRepository: FestivalRepositoryProtocol
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
@@ -107,11 +108,13 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     init(
         analytics: AnalyticsService = MixpanelAnalytics(),
+        festivalRepository: FestivalRepositoryProtocol = FestivalRepositoryImpl(),
         fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
             repository: RestaurantRepositoryImpl()
         )
     ) {
         self.analytics = analytics
+        self.festivalRepository = festivalRepository
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         
         formatter.locale = Locale(identifier: "ko_kr")
@@ -147,7 +150,9 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
         
         loadFilters()
-        loadFestivalDates()
+        Task {
+            await loadFestivalDates()
+        }
         subscribe()
         Task {
             await loadPersonalRestaurants()
@@ -576,17 +581,17 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
     }
     
-    func loadFestivalDates() {
-        repository.fetchFestivalDates()
-            .receive(on: RunLoop.main)
-            .sink { [weak self] dates in
-                guard let self = self else { return }
-                self.festivalDates = dates
-                self.formatter.dateFormat = "yyyy-MM-dd"
-                let selected = self.formatter.date(from: selectedDate) ?? Date()
-                self.checkShowFestivalSwitch(selected)
-            }
-            .store(in: &cancellables)
+    @MainActor
+    func loadFestivalDates() async {
+        do {
+            let dates = try await festivalRepository.fetchFestivalDates()
+            festivalDates = dates
+            formatter.dateFormat = "yyyy-MM-dd"
+            let selected = formatter.date(from: selectedDate) ?? Date()
+            checkShowFestivalSwitch(selected)
+        } catch {
+            print("Failed to load festival dates: \(error)")
+        }
     }
     static func getOperatingHours(restaurant:Restaurant,dayType:Int,selectedPage:Int)->String{
       
