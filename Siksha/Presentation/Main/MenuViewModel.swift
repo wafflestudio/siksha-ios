@@ -25,8 +25,11 @@ final class MenuViewModel: NSObject, ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     private let repository = MenuRepository()
+    private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
+    private var personalRestaurantById: [Int: PersonalRestaurantModel] = [:]
+    private var personalRestaurantOrder: [Int: Int] = [:]
     
     @Published var showCalendar: Bool = false
     @Published var showFestivalSwitch: Bool = false
@@ -102,8 +105,14 @@ final class MenuViewModel: NSObject, ObservableObject {
         return "카테고리"
     }
     
-    init(analytics: AnalyticsService = MixpanelAnalytics()) {
+    init(
+        analytics: AnalyticsService = MixpanelAnalytics(),
+        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
+            repository: RestaurantRepositoryImpl()
+        )
+    ) {
         self.analytics = analytics
+        self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
@@ -140,6 +149,9 @@ final class MenuViewModel: NSObject, ObservableObject {
         loadFilters()
         loadFestivalDates()
         subscribe()
+        Task {
+            await loadPersonalRestaurants()
+        }
     }
     
     private func setupRemoteConfigListener() {
@@ -253,14 +265,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 guard let self = self else { return }
                 
                 self.showCalendar = false
-                
-                let managedMenu = self.repository.getMenu(date: selectedDate)
-                
-                if managedMenu == nil {
-                    self.selectedMenu = nil
-                } else {
-                    self.selectedMenu = filterMenus(DailyMenu(value: managedMenu), filter: filters)
-                }
+                self.applyCurrentMenu(filters: filters)
                 
                 if self.selectedDate == self.todayString {
                     UserDefaults.standard.set(true, forKey: "canSubmitReview")
@@ -289,25 +294,23 @@ final class MenuViewModel: NSObject, ObservableObject {
                 guard let self = self else { return }
                 
                 if let menu {
-                    let restOrder = (UserDefaults.standard.dictionary(forKey: selectedFilters.isFavorite ?? false ? "favRestaurantOrder" : "restaurantOrder") as? [String : Int]) ?? [String : Int]()
-                    
                     let br = Array(menu.getRestaurants(.breakfast))
                         .filter { restaurant in
                             restaurant.nameKr.contains("[축제]") == isFestival
                         }
-                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
+                        .sorted { self.restaurantSortIndex($0) < self.restaurantSortIndex($1) }
                     
                     let lu = Array(menu.getRestaurants(.lunch))
                         .filter { restaurant in
                             restaurant.nameKr.contains("[축제]") == isFestival
                         }
-                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
+                        .sorted { self.restaurantSortIndex($0) < self.restaurantSortIndex($1) }
                     
                     let dn = Array(menu.getRestaurants(.dinner))
                         .filter { restaurant in
                             restaurant.nameKr.contains("[축제]") == isFestival
                         }
-                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
+                        .sorted { self.restaurantSortIndex($0) < self.restaurantSortIndex($1) }
                     
                     self.restaurantsLists = [br, lu, dn]
                 } else {
@@ -315,6 +318,39 @@ final class MenuViewModel: NSObject, ObservableObject {
                 }
             }
             .store(in: &cancellables)
+    }
+    
+    @MainActor
+    private func loadPersonalRestaurants() async {
+        do {
+            let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
+            updatePersonalRestaurants(restaurants)
+            applyCurrentMenu(filters: selectedFilters)
+        } catch {
+            print("Failed to load personal restaurants: \(error)")
+        }
+    }
+    
+    private func updatePersonalRestaurants(_ restaurants: [PersonalRestaurantModel]) {
+        var byId: [Int: PersonalRestaurantModel] = [:]
+        var order: [Int: Int] = [:]
+        
+        for (index, restaurant) in restaurants.enumerated() {
+            byId[restaurant.id] = restaurant
+            order[restaurant.id] = index
+        }
+        
+        personalRestaurantById = byId
+        personalRestaurantOrder = order
+    }
+    
+    private func applyCurrentMenu(filters: MenuFilters) {
+        guard let managedMenu = repository.getMenu(date: selectedDate) else {
+            selectedMenu = nil
+            return
+        }
+        
+        selectedMenu = filterMenus(DailyMenu(value: managedMenu), filter: filters)
     }
     
     func checkShowFestivalSwitch(_ date: Date) {
@@ -334,6 +370,10 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     private func filterRestaurants(restaurants: List<Restaurant>, filter: MenuFilters) -> List<Restaurant> {
         let filteredArray: [Restaurant] = Array(restaurants).compactMap { (restaurant: Restaurant) -> Restaurant? in
+            guard let personalRestaurant = personalRestaurantById[restaurant.id],
+                  personalRestaurant.visible else {
+                return nil
+            }
             
             var isRestaurantEmpty = false
             
@@ -342,8 +382,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 isRestaurantEmpty = true
             }
             
-            // 즐겨찾기한 식당인지 체크
-            if filter.isFavorite == true && !UserDefaults.standard.bool(forKey: "fav\(restaurant.id)") {
+            if filter.isFavorite == true && !personalRestaurant.liked {
                 isRestaurantEmpty = true
             }
             
@@ -395,6 +434,10 @@ final class MenuViewModel: NSObject, ObservableObject {
         let newList = List<Restaurant>()
         filteredArray.forEach { newList.append($0) }
         return newList
+    }
+    
+    private func restaurantSortIndex(_ restaurant: Restaurant) -> Int {
+        personalRestaurantOrder[restaurant.id] ?? Int.max
     }
     
     private func checkLocationAuthorization() {
