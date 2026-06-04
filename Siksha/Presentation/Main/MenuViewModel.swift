@@ -23,9 +23,12 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let repository = MenuRepository()
     private let festivalRepository: FestivalRepositoryProtocol
     private let fetchRemoteConfigUseCase: FetchRemoteConfigUseCase
+    private let observeRemoteConfigUseCase: ObserveRemoteConfigUseCase
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
+    private var remoteConfigFetchTask: Task<Void, Never>?
+    private var remoteConfigUpdatesTask: Task<Void, Never>?
     private var personalRestaurantById: [Int: PersonalRestaurantModel] = [:]
     private var personalRestaurantOrder: [Int: Int] = [:]
     
@@ -109,6 +112,9 @@ final class MenuViewModel: NSObject, ObservableObject {
         fetchRemoteConfigUseCase: FetchRemoteConfigUseCase = DefaultFetchRemoteConfigUseCase(
             repository: RemoteConfigRepositoryImpl()
         ),
+        observeRemoteConfigUseCase: ObserveRemoteConfigUseCase = DefaultObserveRemoteConfigUseCase(
+            repository: RemoteConfigRepositoryImpl()
+        ),
         fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
             repository: RestaurantRepositoryImpl()
         )
@@ -116,6 +122,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         self.analytics = analytics
         self.festivalRepository = festivalRepository
         self.fetchRemoteConfigUseCase = fetchRemoteConfigUseCase
+        self.observeRemoteConfigUseCase = observeRemoteConfigUseCase
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         
         formatter.locale = Locale(identifier: "ko_kr")
@@ -131,9 +138,10 @@ final class MenuViewModel: NSObject, ObservableObject {
         
         super.init()
 
-        Task {
-            await loadRemoteConfig()
+        remoteConfigFetchTask = Task { [weak self] in
+            await self?.loadRemoteConfig()
         }
+        startObservingRemoteConfigUpdates()
         
         isFestival = isFestivalAvailable && UserDefaults.standard.bool(forKey: "isFestival")
         locationManager.delegate = self
@@ -158,16 +166,38 @@ final class MenuViewModel: NSObject, ObservableObject {
             await loadPersonalRestaurants()
         }
     }
+
+    deinit {
+        remoteConfigFetchTask?.cancel()
+        remoteConfigUpdatesTask?.cancel()
+    }
     
     @MainActor
     private func loadRemoteConfig() async {
         do {
             let config = try await fetchRemoteConfigUseCase.execute()
-            isFestivalAvailable = config.festivalFeatureEnabled
-            isFestivalAppIconEnabled = config.festivalAppIconEnabled
+            applyRemoteConfig(config)
         } catch {
             print("Failed to load remote config: \(error)")
         }
+    }
+
+    private func startObservingRemoteConfigUpdates() {
+        remoteConfigUpdatesTask = Task { [weak self] in
+            guard let updates = self?.observeRemoteConfigUseCase.execute() else {
+                return
+            }
+
+            for await config in updates {
+                await self?.applyRemoteConfig(config)
+            }
+        }
+    }
+
+    @MainActor
+    private func applyRemoteConfig(_ config: RemoteConfigModel) {
+        isFestivalAvailable = config.festivalFeatureEnabled
+        isFestivalAppIconEnabled = config.festivalAppIconEnabled
     }
     
     private func subscribe() {

@@ -9,4 +9,5 @@ import Foundation
 
 protocol RemoteConfigRepositoryProtocol {
     func fetchRemoteConfig() async throws -> RemoteConfigModel
+    func observeRemoteConfigUpdates() -> AsyncStream<RemoteConfigModel>
 }
