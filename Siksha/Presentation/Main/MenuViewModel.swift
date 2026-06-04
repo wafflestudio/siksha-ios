@@ -11,14 +11,10 @@ import Combine
 import RealmSwift
 import CoreLocation
 import SwiftyJSON
-import FirebaseRemoteConfig
 
 final class MenuViewModel: NSObject, ObservableObject {
     let analytics: AnalyticsService
-    
-    private var remoteConfig = RemoteConfig.remoteConfig()
-    private var settings = RemoteConfigSettings()
-    
+
     private var festivalDates: [Date] = []
     
     private let MAX_PRICE = 10000
@@ -26,6 +22,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     private let repository = MenuRepository()
     private let festivalRepository: FestivalRepositoryProtocol
+    private let fetchRemoteConfigUseCase: FetchRemoteConfigUseCase
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
@@ -109,12 +106,16 @@ final class MenuViewModel: NSObject, ObservableObject {
     init(
         analytics: AnalyticsService = MixpanelAnalytics(),
         festivalRepository: FestivalRepositoryProtocol = FestivalRepositoryImpl(),
+        fetchRemoteConfigUseCase: FetchRemoteConfigUseCase = DefaultFetchRemoteConfigUseCase(
+            repository: RemoteConfigRepositoryImpl()
+        ),
         fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
             repository: RestaurantRepositoryImpl()
         )
     ) {
         self.analytics = analytics
         self.festivalRepository = festivalRepository
+        self.fetchRemoteConfigUseCase = fetchRemoteConfigUseCase
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         
         formatter.locale = Locale(identifier: "ko_kr")
@@ -129,10 +130,9 @@ final class MenuViewModel: NSObject, ObservableObject {
         isFestivalAppIconEnabled = UserDefaults.standard.bool(forKey: "isFestivalAppIconEnabled")
         
         super.init()
-        
-        self.setupRemoteConfigListener()
+
         Task {
-            await activateRemoteConfig()
+            await loadRemoteConfig()
         }
         
         isFestival = isFestivalAvailable && UserDefaults.standard.bool(forKey: "isFestival")
@@ -159,30 +159,14 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
     }
     
-    private func setupRemoteConfigListener() {
-        self.settings.minimumFetchInterval = 0
-        self.remoteConfig.configSettings = settings
-        remoteConfig.addOnConfigUpdateListener { configUpdate, error in
-            if let error {
-                print("Error: \(error)")
-                return
-            }
-            Task {
-                await self.activateRemoteConfig()
-            }
-        }
-    }
-    
-    private func activateRemoteConfig() async {
+    @MainActor
+    private func loadRemoteConfig() async {
         do {
-            try await remoteConfig.fetch()
-            try await remoteConfig.activate()
-            DispatchQueue.main.async {
-                self.isFestivalAvailable = self.remoteConfig["festivalFeatureEnabled"].boolValue
-                self.isFestivalAppIconEnabled = self.remoteConfig["festivalAppIconEnabled"].boolValue
-            }
+            let config = try await fetchRemoteConfigUseCase.execute()
+            isFestivalAvailable = config.festivalFeatureEnabled
+            isFestivalAppIconEnabled = config.festivalAppIconEnabled
         } catch {
-            print("Error: \(error)")
+            print("Failed to load remote config: \(error)")
         }
     }
     
