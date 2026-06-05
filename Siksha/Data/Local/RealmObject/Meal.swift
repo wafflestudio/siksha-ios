@@ -10,6 +10,7 @@ import SwiftyJSON
 import RealmSwift
 
 class Meal: Object {
+    @objc dynamic var realmKey: String = ""
     @objc dynamic var id: Int = 0
     @objc dynamic var code: String = ""
     @objc dynamic var nameKr: String = ""
@@ -22,16 +23,17 @@ class Meal: Object {
     var etc = List<String>()
     
     override static func primaryKey() -> String? {
-        return "id"
+        return "realmKey"
     }
     
     override init() {
         super.init()
     }
     
-    convenience init(_ json: JSON) {
+    convenience init(_ json: JSON, menuContext: String? = nil) {
         self.init()
         self.id = json["id"].intValue
+        self.realmKey = Self.makeRealmKey(id: id, menuContext: menuContext)
         self.code = json["code"].stringValue
         self.nameKr = json["name_kr"].stringValue
         self.nameEn = json["name_en"].stringValue
@@ -46,6 +48,7 @@ class Meal: Object {
     static func fromMyLikedMenu(menu:MyLikedMenu) -> Meal{
         let meal = Meal()
         meal.id = menu.id
+        meal.realmKey = makeRealmKey(id: menu.id)
         meal.code = menu.code
         meal.nameKr = menu.nameKr
         meal.nameEn = menu.nameEn ?? ""
@@ -61,6 +64,7 @@ class Meal: Object {
         super.init()
         
         self.id = id
+        self.realmKey = Self.makeRealmKey(id: id)
         self.code = code
         self.nameKr = nameKr
         self.nameEn = nameEn
@@ -69,6 +73,17 @@ class Meal: Object {
         self.reviewCnt = reviewCnt
         self.isLiked = isLiked
         self.etc.append(objectsIn: etc)
+    }
+    
+    func applyMenuContext(_ menuContext: String) {
+        realmKey = Self.makeRealmKey(id: id, menuContext: menuContext)
+    }
+    
+    private static func makeRealmKey(id: Int, menuContext: String? = nil) -> String {
+        if let menuContext {
+            return "\(menuContext):meal:\(id)"
+        }
+        return "meal:\(id)"
     }
 }
 
