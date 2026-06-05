@@ -31,12 +31,21 @@ struct MenuListView: View {
             
             if viewModel.getMenuStatus == .loading {
                 loadingView
-            } else if viewModel.restaurantsLists.count > 0 {
+            } else if viewModel.mealSections.count > 0 {
                 TabView(selection: $viewModel.selectedPage) {
-                    ForEach(viewModel.restaurantsLists.indices, id: \.self) { index in
-                        RestaurantsView(viewModel.restaurantsLists[index],viewModel.selectedPage,viewModel.selectedMenu?.dateType ?? 0)
+                    ForEach(viewModel.mealSections) { section in
+                        RestaurantsView(
+                            section.restaurantMenus,
+                            section.type.rawValue,
+                            viewModel.selectedMenu?.dateType ?? 0,
+                            onFavoriteTap: { restaurantId in
+                                Task {
+                                    await viewModel.toggleRestaurantLike(restaurantId)
+                                }
+                            }
+                        )
                             .environment(\.menuViewModel, viewModel)
-                            .tag(index)
+                            .tag(section.type.rawValue)
                     }
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))

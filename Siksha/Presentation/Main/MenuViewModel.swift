@@ -12,6 +12,20 @@ import RealmSwift
 import CoreLocation
 import SwiftyJSON
 
+struct RestaurantMenusDisplayModel: Identifiable {
+    let id: String
+    let restaurantId: Int
+    let restaurant: Restaurant
+    let menus: [Meal]
+    let isFavorite: Bool
+}
+
+struct MealSectionDisplayModel: Identifiable {
+    let id: Int
+    let type: TypeSelection
+    let restaurantMenus: [RestaurantMenusDisplayModel]
+}
+
 final class MenuViewModel: NSObject, ObservableObject {
     let analytics: AnalyticsService
 
@@ -25,12 +39,14 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let fetchRemoteConfigUseCase: FetchRemoteConfigUseCase
     private let observeRemoteConfigUseCase: ObserveRemoteConfigUseCase
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
+    private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
     private var remoteConfigFetchTask: Task<Void, Never>?
     private var remoteConfigUpdatesTask: Task<Void, Never>?
     private var personalRestaurantById: [Int: PersonalRestaurantModel] = [:]
     private var personalRestaurantOrder: [Int: Int] = [:]
+    private var updatingLikeRestaurantIds = Set<Int>()
     
     @Published var showCalendar: Bool = false
     @Published var showFestivalSwitch: Bool = false
@@ -43,7 +59,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     @Published var selectedMenu: DailyMenu? = nil
     @Published var selectedFilters: MenuFilters = MenuFilters()
-    @Published var restaurantsLists: [[Restaurant]] = []
+    @Published var mealSections: [MealSectionDisplayModel] = []
     
     @Published var getMenuStatus: MenuStatus = .idle
     
@@ -117,6 +133,9 @@ final class MenuViewModel: NSObject, ObservableObject {
         ),
         fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
             repository: RestaurantRepositoryImpl()
+        ),
+        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase = DefaultUpdateRestaurantPreferenceUseCase(
+            repository: RestaurantRepositoryImpl()
         )
     ) {
         self.analytics = analytics
@@ -124,6 +143,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         self.fetchRemoteConfigUseCase = fetchRemoteConfigUseCase
         self.observeRemoteConfigUseCase = observeRemoteConfigUseCase
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
+        self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
         
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
@@ -293,34 +313,11 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func subscribeToSelectedMenu() {
-        $selectedMenu
-            .combineLatest($isFestival)
-            .sink { [weak self] (menu,isFestival) in
+        $isFestival
+            .removeDuplicates()
+            .sink { [weak self] _ in
                 guard let self = self else { return }
-                
-                if let menu {
-                    let br = Array(menu.getRestaurants(.breakfast))
-                        .filter { restaurant in
-                            restaurant.nameKr.contains("[축제]") == isFestival
-                        }
-                        .sorted { self.restaurantSortIndex($0) < self.restaurantSortIndex($1) }
-                    
-                    let lu = Array(menu.getRestaurants(.lunch))
-                        .filter { restaurant in
-                            restaurant.nameKr.contains("[축제]") == isFestival
-                        }
-                        .sorted { self.restaurantSortIndex($0) < self.restaurantSortIndex($1) }
-                    
-                    let dn = Array(menu.getRestaurants(.dinner))
-                        .filter { restaurant in
-                            restaurant.nameKr.contains("[축제]") == isFestival
-                        }
-                        .sorted { self.restaurantSortIndex($0) < self.restaurantSortIndex($1) }
-                    
-                    self.restaurantsLists = [br, lu, dn]
-                } else {
-                    self.restaurantsLists = []
-                }
+                self.rebuildMealSections(filters: self.selectedFilters)
             }
             .store(in: &cancellables)
     }
@@ -352,10 +349,12 @@ final class MenuViewModel: NSObject, ObservableObject {
     private func applyCurrentMenu(filters: MenuFilters) {
         guard let managedMenu = repository.getMenu(date: selectedDate) else {
             selectedMenu = nil
+            mealSections = []
             return
         }
         
-        selectedMenu = filterMenus(DailyMenu(value: managedMenu), filter: filters)
+        selectedMenu = DailyMenu(value: managedMenu)
+        rebuildMealSections(filters: filters)
     }
     
     private func refreshFestivalSwitchState(selectedDate selected: Date? = nil) {
@@ -371,16 +370,91 @@ final class MenuViewModel: NSObject, ObservableObject {
         return formatter.date(from: selectedDate) ?? Date()
     }
     
-    private func filterMenus(_ menus: DailyMenu, filter: MenuFilters) -> DailyMenu {
-        var menus = menus
-        menus.br = filterRestaurants(restaurants: menus.br, filter: filter)
-        menus.lu = filterRestaurants(restaurants: menus.lu, filter: filter)
-        menus.dn = filterRestaurants(restaurants: menus.dn, filter: filter)
-        return menus
+    @MainActor
+    func toggleRestaurantLike(_ restaurantId: Int) async {
+        guard !updatingLikeRestaurantIds.contains(restaurantId),
+              let restaurant = personalRestaurantById[restaurantId] else {
+            return
+        }
+        
+        updatingLikeRestaurantIds.insert(restaurantId)
+        defer {
+            updatingLikeRestaurantIds.remove(restaurantId)
+        }
+        
+        do {
+            let status = try await updateRestaurantPreferenceUseCase.setLiked(
+                restaurant: restaurant,
+                liked: !restaurant.liked
+            )
+            updatePersonalRestaurant(status)
+            rebuildMealSections(filters: selectedFilters)
+        } catch {
+            print("Failed to update restaurant like: \(error)")
+        }
     }
     
-    private func filterRestaurants(restaurants: List<Restaurant>, filter: MenuFilters) -> List<Restaurant> {
-        let filteredArray: [Restaurant] = Array(restaurants).compactMap { (restaurant: Restaurant) -> Restaurant? in
+    private func updatePersonalRestaurant(_ status: RestaurantPreferenceStatusModel) {
+        guard let restaurant = personalRestaurantById[status.id] else {
+            return
+        }
+        
+        personalRestaurantById[status.id] = PersonalRestaurantModel(
+            id: restaurant.id,
+            code: restaurant.code,
+            nameKr: restaurant.nameKr,
+            nameEn: restaurant.nameEn,
+            address: restaurant.address,
+            coordinate: restaurant.coordinate,
+            liked: status.liked,
+            visible: status.visible,
+            operatingHours: restaurant.operatingHours
+        )
+    }
+    
+    private func rebuildMealSections(filters: MenuFilters) {
+        guard let selectedMenu else {
+            mealSections = []
+            return
+        }
+        
+        mealSections = [
+            MealSectionDisplayModel(
+                id: TypeSelection.breakfast.rawValue,
+                type: .breakfast,
+                restaurantMenus: makeRestaurantMenusDisplayModels(
+                    type: .breakfast,
+                    restaurants: selectedMenu.br,
+                    filter: filters
+                )
+            ),
+            MealSectionDisplayModel(
+                id: TypeSelection.lunch.rawValue,
+                type: .lunch,
+                restaurantMenus: makeRestaurantMenusDisplayModels(
+                    type: .lunch,
+                    restaurants: selectedMenu.lu,
+                    filter: filters
+                )
+            ),
+            MealSectionDisplayModel(
+                id: TypeSelection.dinner.rawValue,
+                type: .dinner,
+                restaurantMenus: makeRestaurantMenusDisplayModels(
+                    type: .dinner,
+                    restaurants: selectedMenu.dn,
+                    filter: filters
+                )
+            )
+        ]
+    }
+    
+    private func makeRestaurantMenusDisplayModels(
+        type: TypeSelection,
+        restaurants: List<Restaurant>,
+        filter: MenuFilters
+    ) -> [RestaurantMenusDisplayModel] {
+        Array(restaurants).compactMap { (restaurant: Restaurant) -> RestaurantMenusDisplayModel? in
             guard let personalRestaurant = personalRestaurantById[restaurant.id],
                   personalRestaurant.visible else {
                 return nil
@@ -432,19 +506,15 @@ final class MenuViewModel: NSObject, ObservableObject {
             let noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide") // 메뉴가 없으면 레스토랑 hide
             if noMenuHide && filteredMenus.isEmpty { return nil }
             
-            // 새 메뉴 List에 필터링된 메뉴들을 추가
-            let newMenus = List<Meal>()
-            for menu in filteredMenus {
-                newMenus.append(menu)
-            }
-            restaurant.menus = newMenus
-            
-            return restaurant
+            return RestaurantMenusDisplayModel(
+                id: "\(type.rawValue)-\(restaurant.id)",
+                restaurantId: restaurant.id,
+                restaurant: restaurant,
+                menus: filteredMenus,
+                isFavorite: personalRestaurant.liked
+            )
         }
-        
-        let newList = List<Restaurant>()
-        filteredArray.forEach { newList.append($0) }
-        return newList
+        .sorted { restaurantSortIndex($0.restaurant) < restaurantSortIndex($1.restaurant) }
     }
     
     private func restaurantSortIndex(_ restaurant: Restaurant) -> Int {

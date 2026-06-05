@@ -13,24 +13,25 @@ struct RestaurantCell: View {
     private let lightGrayColor = Color.gray600
     private let orangeColor = Color.orange500
     
-    var restaurant: Restaurant
-    var meals: [Meal]
-    var selectedPage:Int
-    var dayType:Int
-    @State var isFavorite: Bool = false
+    let item: RestaurantMenusDisplayModel
+    let selectedPage:Int
+    let dayType:Int
+    let onFavoriteTap: (Int) -> Void
     @State var showRestaurant: Bool = false
     @StateObject private var kakaoShareManager = KakaoShareManager()
     @Environment(\.menuViewModel) var viewModel: MenuViewModel?
     
-    init(_ restaurant: Restaurant,_ selectedPage:Int,_ dayType:Int) {
-        self.restaurant = restaurant
+    init(item: RestaurantMenusDisplayModel, selectedPage:Int, dayType:Int, onFavoriteTap: @escaping (Int) -> Void) {
+        self.item = item
         self.selectedPage = selectedPage
         self.dayType = dayType
-        self.meals = Array(restaurant.menus)
-        self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
+        self.onFavoriteTap = onFavoriteTap
     }
     
     var body: some View {
+        let restaurant = item.restaurant
+        let meals = item.menus
+        
         VStack(spacing: 0) {
             // Restaurant Name
             HStack(alignment: .center) {
@@ -53,13 +54,9 @@ struct RestaurantCell: View {
                 Spacer()
                     .frame(width:4)
                 Button(action: {
-                    isFavorite.toggle()
-                    UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                    if viewModel?.selectedFilters.isFavorite ?? false == true {
-                        viewModel?.getMenuStatus = .needRerender
-                    }
+                    onFavoriteTap(item.restaurantId)
                 }, label: {
-                    Image(isFavorite ? "Favorite-selected" : "Favorite-default")
+                    Image(item.isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 20, height: 20)
@@ -220,8 +217,15 @@ struct RestaurantCell_Previews: PreviewProvider {
         dummyMeal2.isLiked = false
 
         dummyRestaurant.menus.append(objectsIn: [dummyMeal1, dummyMeal2])
+        let displayModel = RestaurantMenusDisplayModel(
+            id: "0-\(dummyRestaurant.id)",
+            restaurantId: dummyRestaurant.id,
+            restaurant: dummyRestaurant,
+            menus: [dummyMeal1, dummyMeal2],
+            isFavorite: true
+        )
         
-        return RestaurantCell(dummyRestaurant, 0, 0)
+        return RestaurantCell(item: displayModel, selectedPage: 0, dayType: 0, onFavoriteTap: { _ in })
             .previewLayout(.sizeThatFits)
             .padding()
     }
