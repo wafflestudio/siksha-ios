@@ -460,18 +460,14 @@ final class MenuViewModel: NSObject, ObservableObject {
                 return nil
             }
             
-            var isRestaurantEmpty = false
-            
-            // 영업 중인지 체크 (휴일 등은 추후 처리)
             if filter.isOpen == true && !isRestaurantOpen(restaurant) {
-                isRestaurantEmpty = true
+                return nil
             }
             
             if filter.isFavorite == true && !personalRestaurant.liked {
-                isRestaurantEmpty = true
+                return nil
             }
             
-            // 거리 필터 적용
             if let distance = filter.distance {
                 checkLocationAuthorization()
                 
@@ -482,11 +478,10 @@ final class MenuViewModel: NSObject, ObservableObject {
                     if let currentLocation = locationManager.location {
                         if let restaurantLocation = restaurant.location {
                             if currentLocation.distance(from: restaurantLocation) > Double(distance) {
-                                isRestaurantEmpty = true
+                                return nil
                             }
                         } else {
-                            // 레스토랑 위치 정보가 없으면 거리 필터 적용시 해당 레스토랑 제거
-                            isRestaurantEmpty = true
+                            return nil
                         }
                     } else {
                         selectedFilters.distance = nil
@@ -495,13 +490,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 }
             }
             
-            let filteredMenus: [Meal]
-            
-            if isRestaurantEmpty {
-                filteredMenus = []
-            } else {
-                filteredMenus = filterRestaurantMenus(restaurant.menus, filter: filter)
-            }
+            let filteredMenus = filterRestaurantMenus(restaurant.menus, filter: filter)
             
             let noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide") // 메뉴가 없으면 레스토랑 hide
             if noMenuHide && filteredMenus.isEmpty { return nil }
