@@ -50,8 +50,12 @@ struct ContentView: View {
     @State var selectedTab = 0
     @EnvironmentObject var appState: AppState
     @ObservedObject var contentViewModel = ContentViewModel.contentViewModel
+    @StateObject private var menuViewModel = MenuViewModel()
+    @StateObject private var communityViewModel = CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository)
+    @StateObject private var settingsViewModel = RenewalSettingsViewModel()
     @StateObject var alarmViewModel = MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository)
     @State private var hidePopupWorkItem: DispatchWorkItem?
+    @State private var previousSelectedTab = 0
     
     struct TabItem: Identifiable {
         var id: Int
@@ -59,11 +63,13 @@ struct ContentView: View {
         var buttonImage: [String]
     }
     
-    let tabItems = [
-        TabItem(id: 0, content: AnyView(MenuView().id("main")), buttonImage: ["Icons/Tabbar/main_orange", "Icons/Tabbar/main_grey"]),
-        TabItem(id: 1, content: AnyView(CommunityView(viewModel: CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository))), buttonImage: ["Icons/Tabbar/community_orange", "Icons/Tabbar/community_grey"]),
-        TabItem(id: 2, content: AnyView(RenewalSettingsView(viewModel: RenewalSettingsViewModel())), buttonImage: ["Icons/Tabbar/settings_orange", "Icons/Tabbar/settings_grey"])
-    ]
+    var tabItems: [TabItem] {
+        [
+            TabItem(id: 0, content: AnyView(MenuView(viewModel: menuViewModel).id("main")), buttonImage: ["Icons/Tabbar/main_orange", "Icons/Tabbar/main_grey"]),
+            TabItem(id: 1, content: AnyView(CommunityView(viewModel: communityViewModel)), buttonImage: ["Icons/Tabbar/community_orange", "Icons/Tabbar/community_grey"]),
+            TabItem(id: 2, content: AnyView(RenewalSettingsView(viewModel: settingsViewModel)), buttonImage: ["Icons/Tabbar/settings_orange", "Icons/Tabbar/settings_grey"])
+        ]
+    }
     
     var body: some View {
         ZStack {
@@ -135,6 +141,12 @@ struct ContentView: View {
                     }
                 }
             }
+        }
+        .onChange(of: selectedTab) { newTab in
+            if previousSelectedTab != 0 && newTab == 0 {
+                menuViewModel.refreshPersonalRestaurants()
+            }
+            previousSelectedTab = newTab
         }
     }
 }

@@ -47,6 +47,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private var personalRestaurantById: [Int: PersonalRestaurantModel] = [:]
     private var personalRestaurantOrder: [Int: Int] = [:]
     private var updatingLikeRestaurantIds = Set<Int>()
+    private var isLoadingPersonalRestaurants = false
     
     @Published var showCalendar: Bool = false
     @Published var showFestivalSwitch: Bool = false
@@ -323,12 +324,28 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     @MainActor
     private func loadPersonalRestaurants() async {
+        guard !isLoadingPersonalRestaurants else {
+            return
+        }
+        
+        isLoadingPersonalRestaurants = true
+        defer {
+            isLoadingPersonalRestaurants = false
+        }
+        
         do {
             let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
             updatePersonalRestaurants(restaurants)
             applyCurrentMenu(filters: selectedFilters)
         } catch {
             print("Failed to load personal restaurants: \(error)")
+        }
+    }
+    
+    @MainActor
+    func refreshPersonalRestaurants() {
+        Task {
+            await loadPersonalRestaurants()
         }
     }
     
