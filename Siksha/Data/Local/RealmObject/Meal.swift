@@ -72,6 +72,7 @@ class Meal: Object {
         self.score = score
         self.reviewCnt = reviewCnt
         self.isLiked = isLiked
+        self.likeCnt = likeCnt
         self.etc.append(objectsIn: etc)
     }
     

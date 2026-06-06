@@ -29,13 +29,13 @@ struct RestaurantCell: View {
     }
     
     var body: some View {
-        let restaurant = item.restaurant
-        let meals = item.menus
+        let restaurant = item.restaurantObject
+        let meals = item.menus.map { $0.mealObject }
         
         VStack(spacing: 0) {
             // Restaurant Name
             HStack(alignment: .center) {
-                Text(restaurant.nameKr)
+                Text(item.nameKr)
                     .customFont(font: .text16(weight: .ExtraBold))
                     .foregroundColor(.blackColor)
                 Spacer()
@@ -104,7 +104,7 @@ struct RestaurantCell: View {
                     .foregroundColor(Color.gray600)
                 Spacer()
                     .frame(width:4)
-                Text(MenuViewModel.getOperatingHours(restaurant: restaurant,dayType: dayType,selectedPage: selectedPage))
+                Text(MenuViewModel.getOperatingHours(operatingHours: item.operatingHours, dayType: dayType, selectedPage: selectedPage))
                     .customFont(font: .text12(weight: .Bold))
                     .foregroundColor(lightGrayColor)
                 Spacer()
@@ -182,51 +182,83 @@ struct RestaurantCell: View {
 struct RestaurantCell_Previews: PreviewProvider {
     
     static var previews: some View {
-        let dummyRestaurant = Restaurant()
-        dummyRestaurant.id = 1
-        dummyRestaurant.nameKr = "학생회관"
-        dummyRestaurant.nameEn = "Student Hall"
-        dummyRestaurant.code = "SH"
-        dummyRestaurant.addr = "학생회관 1층"
-        dummyRestaurant.lat = "37.123"
-        dummyRestaurant.lng = "127.123"
-        dummyRestaurant.operatingHours.append(objectsIn: [
-            "08:00 - 09:00\n11:30 - 13:30\n17:30 - 19:00",
-            "09:00 - 13:00\n17:00 - 18:30",
-            "Closed"
-        ])
-        
-        let dummyMeal1 = Meal()
-        dummyMeal1.id = 101
-        dummyMeal1.nameKr = "김치찌개"
-        dummyMeal1.nameEn = "Kimchi Stew"
-        dummyMeal1.price = 4500
-        dummyMeal1.score = 4.2
-        dummyMeal1.reviewCnt = 20
-        dummyMeal1.likeCnt = 10
-        dummyMeal1.isLiked = true
-
-        let dummyMeal2 = Meal()
-        dummyMeal2.id = 102
-        dummyMeal2.nameKr = "제육볶음"
-        dummyMeal2.nameEn = "Spicy Pork"
-        dummyMeal2.price = 5000
-        dummyMeal2.score = 4.5
-        dummyMeal2.reviewCnt = 35
-        dummyMeal2.likeCnt = 22
-        dummyMeal2.isLiked = false
-
-        dummyRestaurant.menus.append(objectsIn: [dummyMeal1, dummyMeal2])
         let displayModel = RestaurantMenusDisplayModel(
-            id: "0-\(dummyRestaurant.id)",
-            restaurantId: dummyRestaurant.id,
-            restaurant: dummyRestaurant,
-            menus: [dummyMeal1, dummyMeal2],
+            id: "0-1",
+            restaurantId: 1,
+            code: "SH",
+            nameKr: "학생회관",
+            nameEn: "Student Hall",
+            address: "학생회관 1층",
+            coordinate: Coordinate(latitude: 37.123, longitude: 127.123),
+            operatingHours: [
+                "08:00 - 09:00\n11:30 - 13:30\n17:30 - 19:00",
+                "09:00 - 13:00\n17:00 - 18:30",
+                "Closed"
+            ],
+            menus: [
+                MenuItemDisplayModel(
+                    id: 101,
+                    code: "A",
+                    nameKr: "김치찌개",
+                    nameEn: "Kimchi Stew",
+                    price: 4500,
+                    score: 4.2,
+                    reviewCount: 20,
+                    isLiked: true,
+                    likeCount: 10,
+                    imageURLStrings: []
+                ),
+                MenuItemDisplayModel(
+                    id: 102,
+                    code: "B",
+                    nameKr: "제육볶음",
+                    nameEn: "Spicy Pork",
+                    price: 5000,
+                    score: 4.5,
+                    reviewCount: 35,
+                    isLiked: false,
+                    likeCount: 22,
+                    imageURLStrings: []
+                )
+            ],
             isFavorite: true
         )
         
         return RestaurantCell(item: displayModel, selectedPage: 0, dayType: 0, onFavoriteTap: { _ in })
             .previewLayout(.sizeThatFits)
             .padding()
+    }
+}
+
+private extension RestaurantMenusDisplayModel {
+    var restaurantObject: Restaurant {
+        Restaurant(
+            id: restaurantId,
+            code: code,
+            nameKr: nameKr,
+            nameEn: nameEn,
+            addr: address,
+            lat: coordinate.map { String($0.latitude) } ?? "",
+            lng: coordinate.map { String($0.longitude) } ?? "",
+            operatingHours: operatingHours,
+            menus: menus.map { $0.mealObject }
+        )
+    }
+}
+
+private extension MenuItemDisplayModel {
+    var mealObject: Meal {
+        Meal(
+            id: id,
+            code: code,
+            nameKr: nameKr,
+            nameEn: nameEn,
+            price: price,
+            score: score,
+            reviewCnt: reviewCount,
+            isLiked: isLiked,
+            likeCnt: likeCount,
+            etc: imageURLStrings
+        )
     }
 }

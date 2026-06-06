@@ -6,9 +6,9 @@
 //
 
 enum FetchDailyMenuResult {
-    case succeeded(DailyMenu)
+    case succeeded(DailyMenuModel)
     case empty
-    case cached(DailyMenu)
+    case cached(DailyMenuModel)
     case failed
 }
 

@@ -12,6 +12,7 @@ import RealmSwift
 protocol MenuLocalDataSource {
     func saveDailyMenus(_ menus: [DailyMenu]) throws
     func fetchDailyMenus(from start: String, to end: String) throws -> [DailyMenu]
+    func fetchDailyMenu(date: String) throws -> DailyMenu?
     func deleteAll() throws
 }
 
@@ -40,6 +41,12 @@ final class MenuLocalDataSourceImpl: MenuLocalDataSource {
             .filter("date >= %@ AND date <= %@", start, end)
             .sorted(byKeyPath: "date", ascending: true)
         return Array(results)
+    }
+    
+    func fetchDailyMenu(date: String) throws -> DailyMenu? {
+        let realm = try getRealm()
+        
+        return realm.object(ofType: DailyMenu.self, forPrimaryKey: date)
     }
     
     func deleteAll() throws {

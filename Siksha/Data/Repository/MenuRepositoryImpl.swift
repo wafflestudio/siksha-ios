@@ -6,15 +6,12 @@
 //
 
 import Foundation
-import RealmSwift
 
 enum MenuError: Error {
     case networkFailure
 }
 
 final class MenuRepositoryImpl: MenuRepositoryProtocol {
-    private let realm = try! Realm()
-    
     private let remote: MenuRemoteDataSource
     private let local: MenuLocalDataSource
     
@@ -22,8 +19,8 @@ final class MenuRepositoryImpl: MenuRepositoryProtocol {
         remote: MenuRemoteDataSource = MenuRemoteDataSourceImpl(),
         local: MenuLocalDataSource = MenuLocalDataSourceImpl()
     ) {
-        self.remote = MenuRemoteDataSourceImpl()
-        self.local = MenuLocalDataSourceImpl()
+        self.remote = remote
+        self.local = local
     }
     
     func refreshMenu(date: String) async throws -> Bool {
@@ -47,12 +44,8 @@ final class MenuRepositoryImpl: MenuRepositoryProtocol {
             .map { $0.toModel() }
     }
 
-    func getMenu(date: String) -> DailyMenu? {
-        realm.object(ofType: DailyMenu.self, forPrimaryKey: date)
-    }
-    
-    func getMenuFromID(_ id: String) -> DailyMenu? {
-        return realm.object(ofType: DailyMenu.self, forPrimaryKey: id)
+    func getMenu(date: String) -> DailyMenuModel? {
+        try? local.fetchDailyMenu(date: date)?.toModel()
     }
     
 }

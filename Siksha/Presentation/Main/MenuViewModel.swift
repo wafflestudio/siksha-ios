@@ -8,15 +8,31 @@
 import Foundation
 import UIKit
 import Combine
-import RealmSwift
 import CoreLocation
-import SwiftyJSON
+
+struct MenuItemDisplayModel: Identifiable {
+    let id: Int
+    let code: String
+    let nameKr: String
+    let nameEn: String
+    let price: Int
+    let score: Double
+    let reviewCount: Int
+    let isLiked: Bool
+    let likeCount: Int
+    let imageURLStrings: [String]
+}
 
 struct RestaurantMenusDisplayModel: Identifiable {
     let id: String
     let restaurantId: Int
-    let restaurant: Restaurant
-    let menus: [Meal]
+    let code: String
+    let nameKr: String
+    let nameEn: String
+    let address: String
+    let coordinate: Coordinate?
+    let operatingHours: [String]
+    let menus: [MenuItemDisplayModel]
     let isFavorite: Bool
 }
 
@@ -58,7 +74,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     @Published var selectedFormatted: String = ""
     
-    @Published var selectedMenu: DailyMenu? = nil
+    @Published var selectedMenu: DailyMenuModel? = nil
     @Published var selectedFilters: MenuFilters = MenuFilters()
     @Published var mealSections: [MealSectionDisplayModel] = []
     
@@ -413,7 +429,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 type: .breakfast,
                 restaurantMenus: makeRestaurantMenusDisplayModels(
                     type: .breakfast,
-                    restaurants: selectedMenu.br,
+                    restaurants: selectedMenu.breakfast,
                     filter: filters
                 )
             ),
@@ -422,7 +438,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 type: .lunch,
                 restaurantMenus: makeRestaurantMenusDisplayModels(
                     type: .lunch,
-                    restaurants: selectedMenu.lu,
+                    restaurants: selectedMenu.lunch,
                     filter: filters
                 )
             ),
@@ -431,7 +447,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 type: .dinner,
                 restaurantMenus: makeRestaurantMenusDisplayModels(
                     type: .dinner,
-                    restaurants: selectedMenu.dn,
+                    restaurants: selectedMenu.dinner,
                     filter: filters
                 )
             )
@@ -440,10 +456,10 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     private func makeRestaurantMenusDisplayModels(
         type: TypeSelection,
-        restaurants: List<Restaurant>,
+        restaurants: [RestaurantModel],
         filter: MenuFilters
     ) -> [RestaurantMenusDisplayModel] {
-        Array(restaurants).compactMap { (restaurant: Restaurant) -> RestaurantMenusDisplayModel? in
+        restaurants.compactMap { (restaurant: RestaurantModel) -> RestaurantMenusDisplayModel? in
             guard let personalRestaurant = personalRestaurantById[restaurant.id],
                   personalRestaurant.visible else {
                 return nil
@@ -465,7 +481,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                     DispatchQueue.main.async { self.showDistanceAlert = true }
                 } else {
                     if let currentLocation = locationManager.location {
-                        if let restaurantLocation = restaurant.location {
+                        if let restaurantLocation = restaurant.coordinate?.location {
                             if currentLocation.distance(from: restaurantLocation) > Double(distance) {
                                 return nil
                             }
@@ -487,16 +503,21 @@ final class MenuViewModel: NSObject, ObservableObject {
             return RestaurantMenusDisplayModel(
                 id: "\(type.rawValue)-\(restaurant.id)",
                 restaurantId: restaurant.id,
-                restaurant: restaurant,
+                code: restaurant.code,
+                nameKr: restaurant.nameKr ?? "",
+                nameEn: restaurant.nameEn ?? "",
+                address: restaurant.address ?? "",
+                coordinate: restaurant.coordinate,
+                operatingHours: restaurant.operatingHours,
                 menus: filteredMenus,
                 isFavorite: personalRestaurant.liked
             )
         }
-        .sorted { restaurantSortIndex($0.restaurant) < restaurantSortIndex($1.restaurant) }
+        .sorted { restaurantSortIndex($0.restaurantId) < restaurantSortIndex($1.restaurantId) }
     }
     
-    private func restaurantSortIndex(_ restaurant: Restaurant) -> Int {
-        personalRestaurantOrder[restaurant.id] ?? Int.max
+    private func restaurantSortIndex(_ restaurantId: Int) -> Int {
+        personalRestaurantOrder[restaurantId] ?? Int.max
     }
     
     private func checkLocationAuthorization() {
@@ -517,7 +538,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     
-    private func filterRestaurantMenus(_ menus: List<Meal>, filter: MenuFilters) -> [Meal] {
+    private func filterRestaurantMenus(_ menus: [MenuModel], filter: MenuFilters) -> [MenuItemDisplayModel] {
         return menus.filter { menu in
             
             var meetsPrice = true
@@ -535,7 +556,7 @@ final class MenuViewModel: NSObject, ObservableObject {
             var meetsReview = true
             if let hasReview = filter.hasReview,
                hasReview == true {
-                meetsReview = menu.reviewCnt > 0
+                meetsReview = menu.reviewCount > 0
             }
             
             var meetsRate = true
@@ -549,10 +570,23 @@ final class MenuViewModel: NSObject, ObservableObject {
             }
             
             return meetsPrice && meetsReview && meetsRate && meetsCategories
+        }.map {
+            MenuItemDisplayModel(
+                id: $0.id,
+                code: $0.code,
+                nameKr: $0.nameKr,
+                nameEn: $0.nameEn,
+                price: $0.price,
+                score: $0.score,
+                reviewCount: $0.reviewCount,
+                isLiked: $0.isLiked,
+                likeCount: $0.likeCount,
+                imageURLStrings: $0.imageURLStrings
+            )
         }
     }
     
-    private func isRestaurantOpen(_ restaurant: Restaurant) -> Bool {
+    private func isRestaurantOpen(_ restaurant: RestaurantModel) -> Bool {
         var koreanCalendar = Calendar(identifier: .gregorian)
         koreanCalendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
         
@@ -628,7 +662,7 @@ final class MenuViewModel: NSObject, ObservableObject {
             
             switch result {
             case .succeeded(let menu):
-                selectedMenu = DailyMenu(value: menu)
+                selectedMenu = menu
                 rebuildMealSections(filters: selectedFilters)
                 getMenuStatus = .idle
             case .empty:
@@ -636,7 +670,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 mealSections = []
                 getMenuStatus = .idle
             case .cached(let menu):
-                selectedMenu = DailyMenu(value: menu)
+                selectedMenu = menu
                 rebuildMealSections(filters: selectedFilters)
                 showNetworkAlert = true
                 getMenuStatus = .idle
@@ -691,35 +725,54 @@ final class MenuViewModel: NSObject, ObservableObject {
             print("Failed to load festival dates: \(error)")
         }
     }
-    static func getOperatingHours(restaurant:Restaurant,dayType:Int,selectedPage:Int)->String{
+    static func getOperatingHours(operatingHours: [String], dayType: Int, selectedPage: Int) -> String {
       
-        guard restaurant.operatingHours.count > dayType,
+        guard operatingHours.count > dayType,
               dayType >= 0 else {
             return "정보 없음"
         }
         
-        let operatingHours = restaurant.operatingHours[dayType].split(separator: "\n").map { String($0) }
-        if operatingHours.count == 3{
-            guard operatingHours.indices.contains(selectedPage) else {
+        let dayOperatingHours = operatingHours[dayType].split(separator: "\n").map { String($0) }
+        if dayOperatingHours.count == 3{
+            guard dayOperatingHours.indices.contains(selectedPage) else {
                 return "정보 없음"
             }
-            return operatingHours[selectedPage]
+            return dayOperatingHours[selectedPage]
         }
-        if operatingHours.count == 2{
+        if dayOperatingHours.count == 2{
             if selectedPage == TypeSelection.breakfast.rawValue{
                 return "정보 없음"
             }
             let index = selectedPage - 1
-            guard operatingHours.indices.contains(index) else {
+            guard dayOperatingHours.indices.contains(index) else {
                 return "정보 없음"
             }
-            return operatingHours[index]
+            return dayOperatingHours[index]
         }
-        if operatingHours.count == 1{
-            return operatingHours[0]
+        if dayOperatingHours.count == 1{
+            return dayOperatingHours[0]
         }
         return "정보 없음"
         
+    }
+}
+
+private extension Coordinate {
+    var location: CLLocation {
+        CLLocation(latitude: latitude, longitude: longitude)
+    }
+}
+
+extension DateType {
+    var operatingHourType: Int {
+        switch self {
+        case .weekdays:
+            return 0
+        case .saturday:
+            return 1
+        case .holiday:
+            return 2
+        }
     }
 }
 
