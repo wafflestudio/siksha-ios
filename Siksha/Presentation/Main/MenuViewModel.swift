@@ -285,12 +285,11 @@ final class MenuViewModel: NSObject, ObservableObject {
     private func subscribeToGetMenuStatus() {
         $getMenuStatus
             .filter { $0 == .succeeded || $0 == .needRerender || $0 == .showCached }
-            .combineLatest($selectedFilters)
-            .sink { [weak self] (_, filters) in
+            .sink { [weak self] _ in
                 guard let self = self else { return }
                 
                 self.showCalendar = false
-                self.applyCurrentMenu(filters: filters)
+                self.applyCurrentMenu(filters: self.selectedFilters)
                 
                 if self.selectedDate == self.todayString {
                     UserDefaults.standard.set(true, forKey: "canSubmitReview")
@@ -639,7 +638,19 @@ final class MenuViewModel: NSObject, ObservableObject {
         self.selectedFilters = MenuFilters()
     }
     
-    func saveFilters() {
+    func updateFilters(_ update: (inout MenuFilters) -> Void) {
+        var filters = selectedFilters
+        update(&filters)
+        setFilters(filters)
+    }
+    
+    func setFilters(_ filters: MenuFilters) {
+        selectedFilters = filters
+        saveFilters()
+        applyCurrentMenu(filters: filters)
+    }
+    
+    private func saveFilters() {
         let encoder = JSONEncoder()
         if let filters = try? encoder.encode(selectedFilters) {
             UserDefaults.standard.setValue(filters, forKey: "menuFilters")

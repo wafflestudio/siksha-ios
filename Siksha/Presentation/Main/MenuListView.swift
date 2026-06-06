@@ -134,14 +134,12 @@ private extension MenuListView {
                             isCheck: true
                         )
                         .onTapGesture {
-                            if let _ = viewModel.selectedFilters.isOpen {
-                                viewModel.selectedFilters.isOpen?.toggle()
-                            } else {
-                                viewModel.selectedFilters.isOpen = true
+                            viewModel.updateFilters { filters in
+                                filters.isOpen = filters.isOpen == true ? nil : true
                             }
-                            viewModel.saveFilters()
+                            let isEnabled = viewModel.selectedFilters.isOpen == true
                             viewModel.analytics.track(
-                                .instantFilterToggled(filter: .isOpenNow, value: viewModel.selectedFilters.isOpen ?? true, pageName: viewModel.pageName)
+                                .instantFilterToggled(filter: .isOpenNow, value: isEnabled, pageName: viewModel.pageName)
                             )
                         }
                         
@@ -151,12 +149,12 @@ private extension MenuListView {
                             isCheck: true
                         )
                         .onTapGesture {
-                            var updatedFilters = viewModel.selectedFilters
-                            updatedFilters.isFavorite = updatedFilters.isFavorite == true ? nil : true
-                            viewModel.selectedFilters = updatedFilters
-                            viewModel.saveFilters()
+                            viewModel.updateFilters { filters in
+                                filters.isFavorite = filters.isFavorite == true ? nil : true
+                            }
+                            let isEnabled = viewModel.selectedFilters.isFavorite == true
                             viewModel.analytics.track(
-                                .instantFilterToggled(filter: .isFavorite, value: viewModel.selectedFilters.isFavorite ?? true, pageName: viewModel.pageName)
+                                .instantFilterToggled(filter: .isFavorite, value: isEnabled, pageName: viewModel.pageName)
                             )
                         }
                         
@@ -166,13 +164,11 @@ private extension MenuListView {
                             isCheck: true
                         )
                         .onTapGesture {
-                            if let _ = viewModel.selectedFilters.hasReview {
-                                viewModel.selectedFilters.hasReview?.toggle()
-                            } else {
-                                viewModel.selectedFilters.hasReview = true
+                            viewModel.updateFilters { filters in
+                                filters.hasReview = filters.hasReview == true ? nil : true
                             }
-                            viewModel.saveFilters()
-                            viewModel.analytics.track(.instantFilterToggled(filter: .hasReviews, value: viewModel.selectedFilters.hasReview ?? true, pageName: viewModel.pageName))
+                            let isEnabled = viewModel.selectedFilters.hasReview == true
+                            viewModel.analytics.track(.instantFilterToggled(filter: .hasReviews, value: isEnabled, pageName: viewModel.pageName))
                         }
                         
                         FilterItem(
