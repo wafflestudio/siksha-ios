@@ -1,5 +1,5 @@
 //
-//  MenuRepository.swift
+//  MenuRepositoryImpl.swift
 //  Siksha
 //
 //  Created by 박종석 on 2021/02/19.
@@ -12,13 +12,7 @@ enum MenuError: Error {
     case networkFailure
 }
 
-protocol MenuRepositoryProtocol {
-    func refreshMenu(date: String) async throws -> Bool
-    func getMenus(from start: String, to end: String) async throws -> [DailyMenuModel]
-    func getMenu(date: String) -> DailyMenu?
-}
-
-final class MenuRepository: MenuRepositoryProtocol {
+final class MenuRepositoryImpl: MenuRepositoryProtocol {
     private let realm = try! Realm()
     
     private let remote: MenuRemoteDataSource

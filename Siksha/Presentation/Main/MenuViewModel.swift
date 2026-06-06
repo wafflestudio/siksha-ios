@@ -126,7 +126,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     init(
         analytics: AnalyticsService = MixpanelAnalytics(),
         fetchDailyMenuUseCase: FetchDailyMenuUseCase = DefaultFetchDailyMenuUseCase(
-            repository: MenuRepository()
+            repository: MenuRepositoryImpl()
         ),
         festivalRepository: FestivalRepositoryProtocol = FestivalRepositoryImpl(),
         fetchRemoteConfigUseCase: FetchRemoteConfigUseCase = DefaultFetchRemoteConfigUseCase(
