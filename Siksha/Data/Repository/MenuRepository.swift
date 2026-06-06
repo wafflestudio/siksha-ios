@@ -7,19 +7,18 @@
 
 import Foundation
 import RealmSwift
-import Combine
-import SwiftyJSON
 
 enum MenuError: Error {
     case networkFailure
 }
 
 protocol MenuRepositoryProtocol {
+    func refreshMenu(date: String) async throws -> Bool
     func getMenus(from start: String, to end: String) async throws -> [DailyMenuModel]
+    func getMenu(date: String) -> DailyMenu?
 }
 
 final class MenuRepository: MenuRepositoryProtocol {
-    private var cancellables = Set<AnyCancellable>()
     private let realm = try! Realm()
     
     private let remote: MenuRemoteDataSource
@@ -33,6 +32,18 @@ final class MenuRepository: MenuRepositoryProtocol {
         self.local = MenuLocalDataSourceImpl()
     }
     
+    func refreshMenu(date: String) async throws -> Bool {
+        let dto = try await remote.fetchDailyMenus(from: date, to: date)
+        guard !dto.result.isEmpty else {
+            return false
+        }
+        
+        let realmObjects = dto.result.map { $0.toRealmObject() }
+        try local.saveDailyMenus(realmObjects)
+        
+        return true
+    }
+    
     func getMenus(from start: String, to end: String) async throws -> [DailyMenuModel] {
         let dto = try await remote.fetchDailyMenus(from: start, to: end)
         let realmObjects = dto.result.map { $0.toRealmObject() }
@@ -41,42 +52,9 @@ final class MenuRepository: MenuRepositoryProtocol {
         return try local.fetchDailyMenus(from: start, to: end)
             .map { $0.toModel() }
     }
-    
-    func fetchMenu(date: String) -> AnyPublisher<MenuStatus, Never> {
-        Networking.shared.getMenus(startDate: date, endDate: date, noMenuHide: false) // 메뉴가 없는 식당까지 모두 가져옴
-            // Save menus to db
-            .handleEvents(receiveOutput: { response in
-                guard let data = response.value,
-                      let jsonArray = try? JSON(data: data)["result"].array else {
-                    return
-                }
-                
-                try! self.realm.write {
-                    jsonArray.forEach { json in
-                        let newMenu = DailyMenu(json)
-                        
-                        self.realm.add(newMenu, update: .modified)
-                    }
-                }
-            })
-            .map { response in
-                if response.data == nil {
-                    return MenuStatus.showCached
-                } else {
-                    return MenuStatus.succeeded
-                }
-            }
-            .eraseToAnyPublisher()
-    }
-    
+
     func getMenu(date: String) -> DailyMenu? {
-        let menus = realm.objects(DailyMenu.self).filter("date CONTAINS '\(date)'")
-        
-        if menus.count == 0 {
-            return nil
-        }
-        
-        return menus[0]
+        realm.object(ofType: DailyMenu.self, forPrimaryKey: date)
     }
     
     func getMenuFromID(_ id: String) -> DailyMenu? {

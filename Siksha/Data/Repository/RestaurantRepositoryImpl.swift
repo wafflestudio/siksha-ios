@@ -63,7 +63,7 @@ private extension PersonalRestaurantDTO {
 
     var operatingHours: [String] {
         guard let operatingHours = etc?.operatingHours else {
-            return []
+            return ["", "", ""]
         }
         return [
             operatingHours.weekdays.joined(separator: "\n").replacingOccurrences(of: "-", with: " - "),

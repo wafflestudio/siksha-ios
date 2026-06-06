@@ -74,15 +74,24 @@ struct OperatingHoursDTO: Decodable {
     enum CodingKeys: String, CodingKey { case weekdays, saturday , holiday }
 }
 
+private func normalizedOperatingHours(_ operatingHours: OperatingHoursDTO?) -> [String] {
+    guard let operatingHours else {
+        return ["", "", ""]
+    }
+    
+    return [
+        formattedOperatingHours(operatingHours.weekdays),
+        formattedOperatingHours(operatingHours.saturday),
+        formattedOperatingHours(operatingHours.holiday)
+    ]
+}
+
+private func formattedOperatingHours(_ hours: [String]) -> String {
+    hours.joined(separator: "\n").replacingOccurrences(of: "-", with: " - ")
+}
+
 extension RestaurantDTO {
     func toRealmObject() -> Restaurant {
-        var operatingHours = [String]()
-        if let operatingHoursData = etc?.operatingHours {
-            operatingHours.append(operatingHoursData.weekdays.joined(separator: "\n").replacingOccurrences(of: "-", with: " - "))
-            operatingHours.append(operatingHoursData.saturday.joined(separator: "\n").replacingOccurrences(of: "-", with: " - "))
-            operatingHours.append(operatingHoursData.holiday.joined(separator: "\n").replacingOccurrences(of: "-", with: " - "))
-        }
-        
         return Restaurant(
             id: id,
             code: code,
@@ -91,7 +100,7 @@ extension RestaurantDTO {
             addr: addr ?? "",
             lat: lat?.description ?? "",
             lng: lng?.description ?? "",
-            operatingHours: operatingHours,
+            operatingHours: normalizedOperatingHours(etc?.operatingHours),
             menus: menus.map { $0.toRealmObject() }
         )
     }

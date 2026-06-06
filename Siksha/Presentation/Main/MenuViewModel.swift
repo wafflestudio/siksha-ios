@@ -34,7 +34,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let MAX_PRICE = 10000
     private var cancellables = Set<AnyCancellable>()
     
-    private let repository = MenuRepository()
+    private let fetchDailyMenuUseCase: FetchDailyMenuUseCase
     private let festivalRepository: FestivalRepositoryProtocol
     private let fetchRemoteConfigUseCase: FetchRemoteConfigUseCase
     private let observeRemoteConfigUseCase: ObserveRemoteConfigUseCase
@@ -125,6 +125,9 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     init(
         analytics: AnalyticsService = MixpanelAnalytics(),
+        fetchDailyMenuUseCase: FetchDailyMenuUseCase = DefaultFetchDailyMenuUseCase(
+            repository: MenuRepository()
+        ),
         festivalRepository: FestivalRepositoryProtocol = FestivalRepositoryImpl(),
         fetchRemoteConfigUseCase: FetchRemoteConfigUseCase = DefaultFetchRemoteConfigUseCase(
             repository: RemoteConfigRepositoryImpl()
@@ -140,6 +143,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         )
     ) {
         self.analytics = analytics
+        self.fetchDailyMenuUseCase = fetchDailyMenuUseCase
         self.festivalRepository = festivalRepository
         self.fetchRemoteConfigUseCase = fetchRemoteConfigUseCase
         self.observeRemoteConfigUseCase = observeRemoteConfigUseCase
@@ -227,7 +231,6 @@ final class MenuViewModel: NSObject, ObservableObject {
         subscribeToIsFestivalAppIconEnabled()
         subscribeToIsFestival()
         subscribeToSelectedDate()
-        subscribeToGetMenuStatus()
         subscribeToSelectedMenu()
     }
     
@@ -283,35 +286,6 @@ final class MenuViewModel: NSObject, ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func subscribeToGetMenuStatus() {
-        $getMenuStatus
-            .filter { $0 == .succeeded || $0 == .needRerender || $0 == .showCached }
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                
-                self.showCalendar = false
-                self.applyCurrentMenu(filters: self.selectedFilters)
-                
-                if self.selectedDate == self.todayString {
-                    UserDefaults.standard.set(true, forKey: "canSubmitReview")
-                } else {
-                    UserDefaults.standard.set(false, forKey: "canSubmitReview")
-                }
-                
-                self.getMenuStatus = .idle
-            }
-            .store(in: &cancellables)
-        
-        $getMenuStatus
-            .filter { $0 == .showCached }
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                
-                self.showNetworkAlert = true
-            }
-            .store(in: &cancellables)
-    }
-    
     private func subscribeToSelectedMenu() {
         $isFestival
             .removeDuplicates()
@@ -363,13 +337,12 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func applyCurrentMenu(filters: MenuFilters) {
-        guard let managedMenu = repository.getMenu(date: selectedDate) else {
+        guard selectedMenu != nil else {
             selectedMenu = nil
             mealSections = []
             return
         }
         
-        selectedMenu = DailyMenu(value: managedMenu)
         rebuildMealSections(filters: filters)
     }
     
@@ -632,16 +605,50 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func getMenu(date: String) {
-        guard self.getMenuStatus != .loading else {
-            return
+        Task { @MainActor [weak self] in
+            guard let self else {
+                return
+            }
+            
+            guard getMenuStatus != .loading else {
+                return
+            }
+            
+            getMenuStatus = .loading
+            
+            let result = await fetchDailyMenuUseCase.execute(date: date)
+            
+            guard date == selectedDate else {
+                getMenuStatus = .idle
+                getMenu(date: selectedDate)
+                return
+            }
+            
+            showCalendar = false
+            
+            switch result {
+            case .succeeded(let menu):
+                selectedMenu = DailyMenu(value: menu)
+                rebuildMealSections(filters: selectedFilters)
+                getMenuStatus = .idle
+            case .empty:
+                selectedMenu = nil
+                mealSections = []
+                getMenuStatus = .idle
+            case .cached(let menu):
+                selectedMenu = DailyMenu(value: menu)
+                rebuildMealSections(filters: selectedFilters)
+                showNetworkAlert = true
+                getMenuStatus = .idle
+            case .failed:
+                selectedMenu = nil
+                mealSections = []
+                showNetworkAlert = true
+                getMenuStatus = .failed
+            }
+            
+            UserDefaults.standard.set(selectedDate == todayString, forKey: "canSubmitReview")
         }
-        
-        self.getMenuStatus = .loading
-        
-        repository.fetchMenu(date: date)
-            .receive(on: RunLoop.main)
-            .assign(to: \.getMenuStatus, on: self)
-            .store(in: &cancellables)
     }
     
     func loadFilters() {
@@ -686,15 +693,27 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     static func getOperatingHours(restaurant:Restaurant,dayType:Int,selectedPage:Int)->String{
       
+        guard restaurant.operatingHours.count > dayType,
+              dayType >= 0 else {
+            return "정보 없음"
+        }
+        
         let operatingHours = restaurant.operatingHours[dayType].split(separator: "\n").map { String($0) }
         if operatingHours.count == 3{
+            guard operatingHours.indices.contains(selectedPage) else {
+                return "정보 없음"
+            }
             return operatingHours[selectedPage]
         }
         if operatingHours.count == 2{
             if selectedPage == TypeSelection.breakfast.rawValue{
                 return "정보 없음"
             }
-            return operatingHours[selectedPage-1]
+            let index = selectedPage - 1
+            guard operatingHours.indices.contains(index) else {
+                return "정보 없음"
+            }
+            return operatingHours[index]
         }
         if operatingHours.count == 1{
             return operatingHours[0]
