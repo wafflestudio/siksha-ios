@@ -12,7 +12,7 @@ struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @ObservedObject var userModel = UserManager.shared
     @ObservedObject var viewModel: RenewalSettingsViewModel
-    @ObservedObject var orderViewModel = RestaurantOrderViewModel()
+    @StateObject private var orderViewModel = RestaurantOrderViewModel()
     
     
     init(viewModel: RenewalSettingsViewModel) {
