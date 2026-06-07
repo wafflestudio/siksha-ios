@@ -126,11 +126,8 @@ struct LikedMenuRestaurantCell: View {
                 .padding([.leading],11.5)
             VStack(spacing: 13) {
                 ForEach(restaurant.menus, id: \.id) { menu in
-                    let mealInfoViewModel = MealInfoViewModel(meal: Meal.fromMyLikedMenu(menu: menu))
-                 
                     MyLikedMenuMealCell(viewModel: viewModel, menu: menu)
-                         
-                    }
+                }
                 
             }
             .padding(EdgeInsets(top: 13, leading: 13, bottom: 17, trailing: 13))
@@ -146,4 +143,3 @@ struct LikedMenuRestaurantCell: View {
 }
 
 // MARK: - Preview
-

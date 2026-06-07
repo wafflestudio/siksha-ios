@@ -45,21 +45,6 @@ class Meal: Object {
         json["etc"].arrayValue.map{ $0.stringValue }.forEach { self.etc.append($0) }
     }
     
-    static func fromMyLikedMenu(menu:MyLikedMenu) -> Meal{
-        let meal = Meal()
-        meal.id = menu.id
-        meal.realmKey = makeRealmKey(id: menu.id)
-        meal.code = menu.code
-        meal.nameKr = menu.nameKr
-        meal.nameEn = menu.nameEn ?? ""
-        meal.price = menu.price ?? 0
-        meal.score = menu.score ?? 0
-        meal.isLiked = menu.isLiked
-        meal.reviewCnt = menu.reviewCnt
-        meal.likeCnt = menu.likeCnt
-        return meal
-    }
-    
     init(id: Int, code: String, nameKr: String, nameEn: String, price: Int, score: Double, reviewCnt: Int, isLiked: Bool, likeCnt: Int, etc: [String]) {
         super.init()
         

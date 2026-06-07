@@ -36,10 +36,6 @@ public class MealInfoViewModel: ObservableObject {
         self.meal = meal
     }
     
-    convenience init(meal: Meal) {
-        self.init(meal: MenuItemDisplayModel(meal: meal))
-    }
-    
     func toggleLike(){
         guard getLikeStatus != .loading else{
             return
@@ -220,21 +216,6 @@ public class MealInfoViewModel: ObservableObject {
 }
 
 private extension MenuItemDisplayModel {
-    init(meal: Meal) {
-        self.init(
-            id: meal.id,
-            code: meal.code,
-            nameKr: meal.nameKr,
-            nameEn: meal.nameEn,
-            price: meal.price,
-            score: meal.score,
-            reviewCount: meal.reviewCnt,
-            isLiked: meal.isLiked,
-            likeCount: meal.likeCnt,
-            imageURLStrings: Array(meal.etc)
-        )
-    }
-    
     init(response: MenuIdResponse) {
         self.init(
             id: response.id,

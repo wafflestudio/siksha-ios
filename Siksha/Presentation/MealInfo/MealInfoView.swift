@@ -160,11 +160,18 @@ private extension MealInfoView {
 
 private struct MealInfoPreview {
     static var previews: some View {
-        let meal = Meal()
-        meal.id = 176933
-        meal.nameKr = "제육보쌈&막국수"
-        meal.score = 4.1
-        meal.reviewCnt = 40
+        let meal = MenuItemDisplayModel(
+            id: 176933,
+            code: "",
+            nameKr: "제육보쌈&막국수",
+            nameEn: "",
+            price: 0,
+            score: 4.1,
+            reviewCount: 40,
+            isLiked: false,
+            likeCount: 0,
+            imageURLStrings: []
+        )
         return MealInfoView(viewModel: MealInfoViewModel(meal: meal))
     }
 }

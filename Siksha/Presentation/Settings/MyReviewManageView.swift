@@ -242,9 +242,8 @@ struct ReviewCardView: View {
         VStack(alignment: .leading, spacing: 8) {
             NavigationLink(
                 destination: {
-                    let tempMeal = Meal()
-                    tempMeal.id = review.menuId
-                    let mealInfoVM = MealInfoViewModel(meal: tempMeal)
+                    let meal = review.menuDisplayModel
+                    let mealInfoVM = MealInfoViewModel(meal: meal)
                     mealInfoVM.updateMealFromId()
                     
                     return MealInfoView(viewModel: mealInfoVM)
@@ -345,18 +344,7 @@ struct ReviewCardView: View {
                 .foregroundColor(.gray600)
                 
                 NavigationLink(destination: {
-                    let meal = MenuItemDisplayModel(
-                        id: review.menuId,
-                        code: "",
-                        nameKr: review.menuName,
-                        nameEn: "",
-                        price: 0,
-                        score: Double(review.rating),
-                        reviewCount: 0,
-                        isLiked: false,
-                        likeCount: 0,
-                        imageURLStrings: []
-                    )
+                    let meal = review.menuDisplayModel
                     let mealInfoVM = MealInfoViewModel(meal: meal)
                     mealInfoVM.updateMealFromId()
                     
@@ -370,6 +358,23 @@ struct ReviewCardView: View {
             }
             .padding(.top, 8)
         }
+    }
+}
+
+private extension RestaurantReview {
+    var menuDisplayModel: MenuItemDisplayModel {
+        MenuItemDisplayModel(
+            id: menuId,
+            code: "",
+            nameKr: menuName,
+            nameEn: "",
+            price: 0,
+            score: Double(rating),
+            reviewCount: 0,
+            isLiked: false,
+            likeCount: 0,
+            imageURLStrings: []
+        )
     }
 }
 

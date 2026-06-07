@@ -78,11 +78,18 @@ struct MealCell: View {
 
 struct MealCell_Previews: PreviewProvider {
     static var previews: some View {
-        let meal = Meal()
-        meal.nameKr = "음식"
-        meal.reviewCnt = 1
-        meal.score = 4.1
-        meal.price = 4000
+        let meal = MenuItemDisplayModel(
+            id: 0,
+            code: "",
+            nameKr: "음식",
+            nameEn: "",
+            price: 4000,
+            score: 4.1,
+            reviewCount: 1,
+            isLiked: false,
+            likeCount: 0,
+            imageURLStrings: []
+        )
         
         return MealCell(viewModel: MealInfoViewModel(meal: meal))
     }

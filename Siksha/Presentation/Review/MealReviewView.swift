@@ -40,14 +40,6 @@ struct MealReviewView: View {
         UITextView.appearance().backgroundColor = .clear
     }
     
-    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel) {
-        self.init(MenuItemDisplayModel(meal: meal), mealInfoViewModel: mealInfoViewModel)
-    }
-    
-    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel, editingReview: RestaurantReview) {
-        self.init(MenuItemDisplayModel(meal: meal), mealInfoViewModel: mealInfoViewModel, editingReview: editingReview)
-    }
-    
     var body: some View {
         ScrollView {
             VStack(alignment: .center, spacing: 0) {
@@ -252,29 +244,22 @@ private extension MealReviewView {
     }
 }
 
-private extension MenuItemDisplayModel {
-    init(meal: Meal) {
-        self.init(
-            id: meal.id,
-            code: meal.code,
-            nameKr: meal.nameKr,
-            nameEn: meal.nameEn,
-            price: meal.price,
-            score: meal.score,
-            reviewCount: meal.reviewCnt,
-            isLiked: meal.isLiked,
-            likeCount: meal.likeCnt,
-            imageURLStrings: Array(meal.etc)
-        )
-    }
-}
-
 // MARK: - Preview
 
 struct MealReviewPreview {
     static var previews: some View {
-        let meal = Meal()
-        meal.nameKr = "올리브스테이크"
+        let meal = MenuItemDisplayModel(
+            id: 0,
+            code: "",
+            nameKr: "올리브스테이크",
+            nameEn: "",
+            price: 0,
+            score: 0,
+            reviewCount: 0,
+            isLiked: false,
+            likeCount: 0,
+            imageURLStrings: []
+        )
         
         return MealReviewView(meal, mealInfoViewModel: MealInfoViewModel(meal: meal))
     }
