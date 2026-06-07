@@ -9,29 +9,37 @@ import SwiftUI
 
 // MARK: - Restaurant Cell
 
-struct RestaurantCell: View {
+struct RestaurantCell<MenuRow: View>: View {
     private let lightGrayColor = Color.gray600
     private let orangeColor = Color.orange500
     
     let item: RestaurantMenusDisplayModel
     let selectedPage:Int
     let dayType:Int
+    let onInfoTap: () -> Void
+    let onShareTap: () -> Void
     let onFavoriteTap: (Int) -> Void
-    @State var showRestaurant: Bool = false
-    @StateObject private var kakaoShareManager = KakaoShareManager()
-    @Environment(\.menuViewModel) var viewModel: MenuViewModel?
+    let menuRow: (MenuItemDisplayModel) -> MenuRow
     
-    init(item: RestaurantMenusDisplayModel, selectedPage:Int, dayType:Int, onFavoriteTap: @escaping (Int) -> Void) {
+    init(
+        item: RestaurantMenusDisplayModel,
+        selectedPage: Int,
+        dayType: Int,
+        onInfoTap: @escaping () -> Void,
+        onShareTap: @escaping () -> Void,
+        onFavoriteTap: @escaping (Int) -> Void,
+        @ViewBuilder menuRow: @escaping (MenuItemDisplayModel) -> MenuRow
+    ) {
         self.item = item
         self.selectedPage = selectedPage
         self.dayType = dayType
+        self.onInfoTap = onInfoTap
+        self.onShareTap = onShareTap
         self.onFavoriteTap = onFavoriteTap
+        self.menuRow = menuRow
     }
     
     var body: some View {
-        let restaurant = item.restaurantObject
-        let meals = item.menus.map { $0.mealObject }
-        
         VStack(spacing: 0) {
             // Restaurant Name
             HStack(alignment: .center) {
@@ -41,16 +49,13 @@ struct RestaurantCell: View {
                 Spacer()
                     .frame(width:6)
                 Button(action: {
-                    self.showRestaurant = true
+                    onInfoTap()
                 }) {
                     Image(.Icons.Common.information)
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 20, height: 20)
                 }
-                .sheet(isPresented: $showRestaurant, content: {
-                    RestaurantInformationView(restaurant)
-                })
                 Spacer()
                     .frame(width:4)
                 Button(action: {
@@ -64,19 +69,14 @@ struct RestaurantCell: View {
                 Spacer()
                     .frame(width:4)
                 Button(action: {
-                    kakaoShareManager.shareKakao(restaurant: restaurant, selectedDateString: viewModel?.selectedDate ?? "오늘")
-                
+                    onShareTap()
                 }) {
                     Image(.Icons.Common.share)
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 20, height: 20)
                         .foregroundColor(orangeColor)
-                }.sheet(isPresented: $kakaoShareManager.showWebView) {
-                    if let urlString = kakaoShareManager.urlToLoad {
-                        KakaoShareWebView(urlString: urlString, showWebView: $kakaoShareManager.showWebView, restaurant: restaurant, selectedDate: viewModel?.selectedDate ?? "오늘")
-                    }
-                }.interactiveDismissDisabled(false)
+                }
                 Spacer()
                 /*Spacer()
                 
@@ -142,19 +142,10 @@ struct RestaurantCell: View {
                 .padding([.trailing], 14.5)
                 .padding([.leading],11.5)
             VStack(spacing: 13) {
-                if meals.count > 0 {
-                    ForEach(meals, id: \.id) { meal in
-                        let mealInfoViewModel = MealInfoViewModel(meal: meal)
-                        NavigationLink(
-                            destination: MealInfoView(viewModel: mealInfoViewModel)
-                                .environment(\.menuViewModel, viewModel)
-                                .onAppear {
-                                    viewModel?.reloadOnAppear = false
-                                },
-                            label: {
-                                MealCell(viewModel: mealInfoViewModel)
-                                    .id("\(meal.id)\(meal.score)")
-                            })
+                if item.menus.count > 0 {
+                    ForEach(item.menus, id: \.id) { menu in
+                        menuRow(menu)
+                            .id("\(menu.id)\(menu.score)")
                     }
                 } else {
                     HStack(alignment: .center) {
@@ -224,41 +215,20 @@ struct RestaurantCell_Previews: PreviewProvider {
             isFavorite: true
         )
         
-        return RestaurantCell(item: displayModel, selectedPage: 0, dayType: 0, onFavoriteTap: { _ in })
+        return RestaurantCell(
+            item: displayModel,
+            selectedPage: 0,
+            dayType: 0,
+            onInfoTap: {},
+            onShareTap: {},
+            onFavoriteTap: { _ in },
+            menuRow: { menu in
+                Text(menu.nameKr)
+                    .customFont(font: .text15(weight: .Regular))
+                    .foregroundColor(.blackColor)
+            }
+        )
             .previewLayout(.sizeThatFits)
             .padding()
-    }
-}
-
-private extension RestaurantMenusDisplayModel {
-    var restaurantObject: Restaurant {
-        Restaurant(
-            id: restaurantId,
-            code: code,
-            nameKr: nameKr,
-            nameEn: nameEn,
-            addr: address,
-            lat: coordinate.map { String($0.latitude) } ?? "",
-            lng: coordinate.map { String($0.longitude) } ?? "",
-            operatingHours: operatingHours,
-            menus: menus.map { $0.mealObject }
-        )
-    }
-}
-
-private extension MenuItemDisplayModel {
-    var mealObject: Meal {
-        Meal(
-            id: id,
-            code: code,
-            nameKr: nameKr,
-            nameEn: nameEn,
-            price: price,
-            score: score,
-            reviewCnt: reviewCount,
-            isLiked: isLiked,
-            likeCnt: likeCount,
-            etc: imageURLStrings
-        )
     }
 }

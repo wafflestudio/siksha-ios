@@ -8,13 +8,11 @@
 import Foundation
 import Combine
 import UIKit
-import RealmSwift
-import SwiftyJSON
 
 public class MealInfoViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var meal: Meal
+    @Published var meal: MenuItemDisplayModel
     @Published var mealReviews: [Review] = []
     @Published var hasMorePages = true
     
@@ -34,8 +32,12 @@ public class MealInfoViewModel: ObservableObject {
     @Published var isLiked = false
     @Published var loadedReviews: Bool = false
     
-    init(meal: Meal) {
-            self.meal = meal
+    init(meal: MenuItemDisplayModel) {
+        self.meal = meal
+    }
+    
+    convenience init(meal: Meal) {
+        self.init(meal: MenuItemDisplayModel(meal: meal))
     }
     
     func toggleLike(){
@@ -58,12 +60,7 @@ public class MealInfoViewModel: ObservableObject {
                     }
                     
                     self.getLikeStatus = .succeeded
-                    
-                    let realm = try! Realm()
-                    try! realm.write {
-                        self.meal.isLiked = response.isLiked
-                        self.meal.likeCnt = response.likeCnt
-                    }
+                    self.meal = self.meal.updatingLike(isLiked: response.isLiked, likeCount: response.likeCnt)
                 }
                 .store(in: &cancellables)
         }
@@ -79,12 +76,7 @@ public class MealInfoViewModel: ObservableObject {
                     }
                     
                     self.getLikeStatus = .succeeded
-                    
-                    let realm = try! Realm()
-                    try! realm.write {
-                        self.meal.isLiked = response.isLiked
-                        self.meal.likeCnt = response.likeCnt
-                    }
+                    self.meal = self.meal.updatingLike(isLiked: response.isLiked, likeCount: response.likeCnt)
                 }
                 .store(in: &cancellables)
         }
@@ -218,13 +210,43 @@ public class MealInfoViewModel: ObservableObject {
             .receive(on: RunLoop.main)
             .sink { [weak self] response in
                 guard let self = self,
-                      let response = response,
-                      let jsonData = try? JSONEncoder().encode(response),
-                      let json = try? JSON(data: jsonData) else {
+                      let response = response else {
                     return
                 }
-                self.meal = Meal(json)
+                self.meal = MenuItemDisplayModel(response: response)
             }
             .store(in: &cancellables)
+    }
+}
+
+private extension MenuItemDisplayModel {
+    init(meal: Meal) {
+        self.init(
+            id: meal.id,
+            code: meal.code,
+            nameKr: meal.nameKr,
+            nameEn: meal.nameEn,
+            price: meal.price,
+            score: meal.score,
+            reviewCount: meal.reviewCnt,
+            isLiked: meal.isLiked,
+            likeCount: meal.likeCnt,
+            imageURLStrings: Array(meal.etc)
+        )
+    }
+    
+    init(response: MenuIdResponse) {
+        self.init(
+            id: response.id,
+            code: response.code,
+            nameKr: response.nameKr ?? "",
+            nameEn: response.nameEn ?? "",
+            price: response.price ?? 0,
+            score: response.score ?? 0,
+            reviewCount: response.reviewCnt,
+            isLiked: response.isLiked,
+            likeCount: response.likeCnt,
+            imageURLStrings: response.etc
+        )
     }
 }

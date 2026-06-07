@@ -59,7 +59,7 @@ private extension MealInfoView {
             }
             
             HStack(spacing: 0) {
-                Text("찜 \(viewModel.meal.likeCnt)개")
+                Text("찜 \(viewModel.meal.likeCount)개")
                     .customFont(font: .text13(weight: .Bold))
                     .foregroundColor(Color.blackColor)
             }
@@ -121,7 +121,7 @@ private extension MealInfoView {
                 
                 Spacer().frame(height: 10)
                 
-                Text("후기 \(viewModel.meal.reviewCnt)개")
+                Text("후기 \(viewModel.meal.reviewCount)개")
                     .customFont(font: .text14(weight: .Regular))
                     .foregroundStyle(Color.blackColor)
             }

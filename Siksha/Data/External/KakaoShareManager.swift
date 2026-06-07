@@ -24,7 +24,7 @@ class KakaoShareManager: ObservableObject {
     
     let dateFormatter = DateFormatter()
     
-    func setTempArgs(restaurant: Restaurant, selectedDateString: String) {
+    func setTempArgs(restaurant: KakaoShareRestaurantModel, selectedDateString: String) {
         dateFormatter.dateFormat = "yyyy-MM-dd"
         let today = dateFormatter.string(from: Date())
         kakaoShareInfo["date"] = selectedDateString == today ? "오늘" : selectedDateString
@@ -51,7 +51,7 @@ class KakaoShareManager: ObservableObject {
         }
     }
     
-    func shareKakao(restaurant: Restaurant, selectedDateString: String) {
+    func shareKakao(restaurant: KakaoShareRestaurantModel, selectedDateString: String) {
         setTempArgs(restaurant: restaurant, selectedDateString: selectedDateString)
         
         // Check if KakaoTalk is installed
@@ -79,5 +79,17 @@ class KakaoShareManager: ObservableObject {
                 print(error)
             }
         }
+    }
+    
+    func shareKakao(restaurant: Restaurant, selectedDateString: String) {
+        shareKakao(
+            restaurant: KakaoShareRestaurantModel(
+                nameKr: restaurant.nameKr,
+                menus: restaurant.menus.map {
+                    KakaoShareRestaurantModel.Menu(nameKr: $0.nameKr, price: $0.price)
+                }
+            ),
+            selectedDateString: selectedDateString
+        )
     }
 }

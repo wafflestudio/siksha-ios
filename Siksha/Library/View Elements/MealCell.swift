@@ -22,7 +22,7 @@ struct MealCell: View {
     
     init(viewModel: MealInfoViewModel) {
         self.viewModel = viewModel
-        if viewModel.meal.etc.contains("No meat") {
+        if viewModel.meal.imageURLStrings.contains("No meat") {
             self.vegetarian = true
         }
     }
@@ -56,7 +56,7 @@ struct MealCell: View {
             }
             Spacer()
                 .frame(width:16)
-                Text(viewModel.meal.reviewCnt > 0 ? String(format: "%.1f", viewModel.meal.score) : "-")
+                Text(viewModel.meal.reviewCount > 0 ? String(format: "%.1f", viewModel.meal.score) : "-")
                     .customFont(font: .text14(weight: .Regular))
                     .foregroundColor(.blackColor)
                     .frame(width:23)

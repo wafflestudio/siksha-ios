@@ -10,24 +10,42 @@ import NMapsMap
 
 struct RestaurantInformationView: View {
     @Environment(\.dismiss) var dismiss
-    var restaurant: Restaurant
+    var restaurant: RestaurantInformationDisplayModel
     
     let position: NMGLatLng?
 
-    init(_ restaurant: Restaurant) {
+    init(_ restaurant: RestaurantInformationDisplayModel) {
         self.restaurant = restaurant
         
-        if let lat = Double(restaurant.lat), let lng = Double(restaurant.lng) {
-                    self.position = NMGLatLng(lat: lat, lng: lng)
-                } else {
-                    self.position = nil
-                }
+        if let coordinate = restaurant.coordinate {
+            self.position = NMGLatLng(lat: coordinate.latitude, lng: coordinate.longitude)
+        } else {
+            self.position = nil
+        }
+    }
+    
+    init(_ restaurant: Restaurant) {
+        self.init(
+            RestaurantInformationDisplayModel(
+                id: restaurant.id,
+                nameKr: restaurant.nameKr,
+                address: restaurant.addr,
+                coordinate: {
+                    guard let latitude = Double(restaurant.lat),
+                          let longitude = Double(restaurant.lng) else {
+                        return nil
+                    }
+                    return Coordinate(latitude: latitude, longitude: longitude)
+                }(),
+                operatingHours: Array(restaurant.operatingHours)
+            )
+        )
     }
     
     @State var selected = 0
     
     var body: some View {
-                        
+        
         VStack(spacing: 0) {
             ZStack(alignment: .top) {
                 HStack {
@@ -70,7 +88,7 @@ struct RestaurantInformationView: View {
                         }
                         .padding(EdgeInsets(top: 13, leading: 16, bottom: 8, trailing: 16))
                         
-                        MapView(coordinate: position, markerText: restaurant.addr)
+                        MapView(coordinate: position, markerText: restaurant.address)
                             .cornerRadius(10.0)
                             .frame(height: 250)
                             .padding(EdgeInsets(top: 0, leading: 16, bottom: 31, trailing: 16))
@@ -97,7 +115,7 @@ struct RestaurantInformationView: View {
                         .frame(height: 1.4)
                         .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
                     
-                    OperatingHoursTable(hours: Array(restaurant.operatingHours), isFestivalRestaurant: restaurant.nameKr.contains("[축제]"))
+                    OperatingHoursTable(hours: restaurant.operatingHours, isFestivalRestaurant: restaurant.nameKr.contains("[축제]"))
                 }
             }
         }
@@ -108,14 +126,17 @@ struct RestaurantInformationView: View {
 
 struct RestaurantInformationView_Previews: PreviewProvider {
     static var previews: some View {
-        let rest = Restaurant()
-        rest.nameKr = "302동 식당"
-        rest.addr = "서울대학교 302동"
-        rest.lat = "37.5666102"
-        rest.lng = "126.9783881"
-        rest.operatingHours.append("11:30 - 13:30 \n17:30 - 19:30 ")
-        rest.operatingHours.append("11:30 - 13:30")
-        rest.operatingHours.append("")
+        let rest = RestaurantInformationDisplayModel(
+            id: 1,
+            nameKr: "302동 식당",
+            address: "서울대학교 302동",
+            coordinate: Coordinate(latitude: 37.5666102, longitude: 126.9783881),
+            operatingHours: [
+                "11:30 - 13:30 \n17:30 - 19:30 ",
+                "11:30 - 13:30",
+                ""
+            ]
+        )
         
         return RestaurantInformationView(rest)
     }

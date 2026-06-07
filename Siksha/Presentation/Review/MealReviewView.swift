@@ -14,31 +14,38 @@ struct MealReviewView: View {
     @ObservedObject var mealInfoViewModel: MealInfoViewModel
     @State private var isShowingPhotoLibrary = false
     
-    let meal: Meal
+    let meal: MenuItemDisplayModel
     let existingReview: RestaurantReview?
     
     // 새 리뷰 등록 생성자
-    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel) {
+    init(_ meal: MenuItemDisplayModel, mealInfoViewModel: MealInfoViewModel) {
         self.meal = meal
         self.mealInfoViewModel = mealInfoViewModel
         self.existingReview = nil
         
-        _viewModel = StateObject(wrappedValue: MealReviewViewModel())
+        _viewModel = StateObject(wrappedValue: MealReviewViewModel(meal: meal))
         UITextView.appearance().backgroundColor = .clear
     }
     
     // 리뷰 수정 생성자
-    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel, editingReview: RestaurantReview) {
+    init(_ meal: MenuItemDisplayModel, mealInfoViewModel: MealInfoViewModel, editingReview: RestaurantReview) {
         self.meal = meal
         self.mealInfoViewModel = mealInfoViewModel
         self.existingReview = editingReview
         
-        let vm = MealReviewViewModel()
-        vm.meal = meal
+        let vm = MealReviewViewModel(meal: meal)
         vm.loadExistingReview(editingReview)
         _viewModel = StateObject(wrappedValue: vm)
         
         UITextView.appearance().backgroundColor = .clear
+    }
+    
+    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel) {
+        self.init(MenuItemDisplayModel(meal: meal), mealInfoViewModel: mealInfoViewModel)
+    }
+    
+    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel, editingReview: RestaurantReview) {
+        self.init(MenuItemDisplayModel(meal: meal), mealInfoViewModel: mealInfoViewModel, editingReview: editingReview)
     }
     
     var body: some View {
@@ -68,9 +75,7 @@ struct MealReviewView: View {
         .customNavigationBar(title: isEditMode ? "나의 평가 수정하기" : "나의 평가 남기기")
         .navigationBarItems(leading: backButton)
         .onAppear {
-            if viewModel.meal == nil {
-                viewModel.meal = self.meal
-            }
+            viewModel.meal = self.meal
         }
         .alert(isPresented: $viewModel.showAlert, content: {
             Alert(title: Text(isEditMode ? "나의 평가 수정하기" : "나의 평가 남기기"), message: alertMessage, dismissButton: alertButton)
@@ -211,6 +216,10 @@ private extension MealReviewView {
         var action: (() -> Void)? = nil
         if viewModel.postReviewSucceeded {
             action = {
+                if let meal = viewModel.meal {
+                    mealInfoViewModel.meal = meal
+                }
+                mealInfoViewModel.updateMealFromId()
                 mealInfoViewModel.mealReviews = []
                 mealInfoViewModel.loadReviews()
                 mealInfoViewModel.loadImages()
@@ -240,6 +249,23 @@ private extension MealReviewView {
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .foregroundColor(Color.white)
         }
+    }
+}
+
+private extension MenuItemDisplayModel {
+    init(meal: Meal) {
+        self.init(
+            id: meal.id,
+            code: meal.code,
+            nameKr: meal.nameKr,
+            nameEn: meal.nameEn,
+            price: meal.price,
+            score: meal.score,
+            reviewCount: meal.reviewCnt,
+            isLiked: meal.isLiked,
+            likeCount: meal.likeCnt,
+            imageURLStrings: Array(meal.etc)
+        )
     }
 }
 

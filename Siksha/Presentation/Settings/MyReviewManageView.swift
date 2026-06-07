@@ -345,13 +345,22 @@ struct ReviewCardView: View {
                 .foregroundColor(.gray600)
                 
                 NavigationLink(destination: {
-                    let tempMeal = Meal()
-                    tempMeal.id = review.menuId
-                    tempMeal.nameKr = review.menuName
-                    let mealInfoVM = MealInfoViewModel(meal: tempMeal)
+                    let meal = MenuItemDisplayModel(
+                        id: review.menuId,
+                        code: "",
+                        nameKr: review.menuName,
+                        nameEn: "",
+                        price: 0,
+                        score: Double(review.rating),
+                        reviewCount: 0,
+                        isLiked: false,
+                        likeCount: 0,
+                        imageURLStrings: []
+                    )
+                    let mealInfoVM = MealInfoViewModel(meal: meal)
                     mealInfoVM.updateMealFromId()
                     
-                    return MealReviewView(tempMeal, mealInfoViewModel: mealInfoVM, editingReview: review)
+                    return MealReviewView(meal, mealInfoViewModel: mealInfoVM, editingReview: review)
                         .environment(\.menuViewModel, menuViewModel)
                 }) {
                     Text("수정하기")

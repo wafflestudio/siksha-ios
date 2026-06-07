@@ -7,13 +7,12 @@
 
 import Foundation
 import Combine
-import RealmSwift
 import SwiftUI
 
 class MealReviewViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
-    @Published var meal: Meal? = nil
+    @Published var meal: MenuItemDisplayModel?
     @Published var scoreToSubmit: Int = 0
     @Published var commentToSubmit: String = ""
     @Published var commentRecommended: Bool = false
@@ -32,7 +31,9 @@ class MealReviewViewModel: ObservableObject {
     private var recommendedComment = ""
     private var isEditMode = false
     
-    init() {
+    init(meal: MenuItemDisplayModel? = nil) {
+        self.meal = meal
+        
         $postReviewSucceeded
             .dropFirst()
             .sink { [weak self] status in
@@ -109,18 +110,7 @@ class MealReviewViewModel: ObservableObject {
             
             if 200..<300 ~= response.statusCode {
                 self.postReviewSucceeded = true
-                
-                let score = meal.score
-                let reviewCnt = meal.reviewCnt
-                
-                let newScore = (score * Double(reviewCnt) + Double(self.scoreToSubmit)) / Double(reviewCnt + 1)
-                let newReviewCnt = reviewCnt + 1
-                
-                let realm = try! Realm()
-                try! realm.write {
-                    meal.score = newScore
-                    meal.reviewCnt = newReviewCnt
-                }
+                self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
             } else {
                 self.errorCode = .init(rawValue: response.statusCode)
                 self.postReviewSucceeded = false
@@ -155,18 +145,7 @@ class MealReviewViewModel: ObservableObject {
             
             if 200..<300 ~= response.statusCode {
                 self.postReviewSucceeded = true
-                
-                let score = meal.score
-                let reviewCnt = meal.reviewCnt
-                
-                let newScore = (score * Double(reviewCnt) + Double(self.scoreToSubmit)) / Double(reviewCnt + 1)
-                let newReviewCnt = reviewCnt + 1
-                
-                let realm = try! Realm()
-                try! realm.write {
-                    meal.score = newScore
-                    meal.reviewCnt = newReviewCnt
-                }
+                self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
             } else {
                 self.errorCode = .init(rawValue: response.statusCode)
                 self.postReviewSucceeded = false

@@ -10,38 +10,6 @@ import UIKit
 import Combine
 import CoreLocation
 
-struct MenuItemDisplayModel: Identifiable {
-    let id: Int
-    let code: String
-    let nameKr: String
-    let nameEn: String
-    let price: Int
-    let score: Double
-    let reviewCount: Int
-    let isLiked: Bool
-    let likeCount: Int
-    let imageURLStrings: [String]
-}
-
-struct RestaurantMenusDisplayModel: Identifiable {
-    let id: String
-    let restaurantId: Int
-    let code: String
-    let nameKr: String
-    let nameEn: String
-    let address: String
-    let coordinate: Coordinate?
-    let operatingHours: [String]
-    let menus: [MenuItemDisplayModel]
-    let isFavorite: Bool
-}
-
-struct MealSectionDisplayModel: Identifiable {
-    let id: Int
-    let type: TypeSelection
-    let restaurantMenus: [RestaurantMenusDisplayModel]
-}
-
 final class MenuViewModel: NSObject, ObservableObject {
     let analytics: AnalyticsService
 

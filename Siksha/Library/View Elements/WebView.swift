@@ -45,7 +45,7 @@ struct WebView: UIViewRepresentable {
 struct KakaoShareWebView: View {
     let urlString: String
     @Binding var showWebView: Bool
-    let restaurant: Restaurant
+    let restaurant: KakaoShareRestaurantModel
     let selectedDate: String
     
     var body: some View {
@@ -64,11 +64,11 @@ struct KakaoShareWebView: View {
 
 class KakaoShareNavigationDelegate: NSObject, WKNavigationDelegate {
     @Binding var showWebView: Bool
-    let restaurant: Restaurant
+    let restaurant: KakaoShareRestaurantModel
     let selectedDate: String
     let kakaoShareManager = KakaoShareManager()
     
-    init(showWebView: Binding<Bool>, restaurant: Restaurant, selectedDate: String) {
+    init(showWebView: Binding<Bool>, restaurant: KakaoShareRestaurantModel, selectedDate: String) {
         _showWebView = showWebView
         self.restaurant = restaurant
         self.selectedDate = selectedDate
