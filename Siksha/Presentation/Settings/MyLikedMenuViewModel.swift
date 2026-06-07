@@ -11,22 +11,36 @@ import SwiftUI
 
 class MyLikedMenuViewModel: ObservableObject{
     private let myLikedMenuRepository: MyLikedMenuRepositoryProtocol
+    private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
+    private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
     private var cancellables = Set<AnyCancellable>()
 
     @Published var error: AppError?
     @Published var noAlarmPermission = false
     @Published var isAlarmEnabled = UserDefaults.standard.bool(forKey: "isAlarmEnabled")
     @Published  var myLikedRestaurants: [MyLikedRestaurant] = []
-    @Published var alarmTime:AlarmTime = .DAILY
+    @Published private var personalRestaurantById: [Int: PersonalRestaurantModel] = [:]
+    @Published private var updatingFavoriteRestaurantIds: Set<Int> = []
+    @Published var alarmTime: AlarmTime = .DAILY
     private var init_error = 0
-    init(myLikedMenuRepository: MyLikedMenuRepositoryProtocol) {
+    init(
+        myLikedMenuRepository: MyLikedMenuRepositoryProtocol,
+        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
+            repository: RestaurantRepositoryImpl()
+        ),
+        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase = DefaultUpdateRestaurantPreferenceUseCase(
+            repository: RestaurantRepositoryImpl()
+        )
+    ) {
         self.myLikedMenuRepository = myLikedMenuRepository
+        self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
+        self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
     }
-    func failedAlarm(){
+    func failedAlarm() {
         print("errorALARM")
         error = AppError.unknownError("알람 오류가 발생했습니다.")
     }
-    func getAlarmTime(){
+    func getAlarmTime() {
         myLikedMenuRepository.getAlarmTime()
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -35,11 +49,19 @@ class MyLikedMenuViewModel: ObservableObject{
                 }
             }, receiveValue: {[weak self] response in
                 self?.alarmTime = AlarmTime(rawValue: response.alarmType)!
-                
             })
             .store(in: &cancellables)
     }
     func loadMyLikedMenu(){
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            
+            await refreshPersonalRestaurants()
+            loadMyLikedMenuItems()
+        }
+    }
+    
+    private func loadMyLikedMenuItems() {
         myLikedMenuRepository.getMyLikedMenu()
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { [weak self] completion in
@@ -54,8 +76,79 @@ class MyLikedMenuViewModel: ObservableObject{
                 self?.init_error = 0
             })
             .store(in: &cancellables)
-
     }
+    
+    func isFavoriteRestaurant(restaurantId: Int) -> Bool {
+        personalRestaurantById[restaurantId]?.liked ?? false
+    }
+    
+    func isUpdatingFavoriteRestaurant(restaurantId: Int) -> Bool {
+        updatingFavoriteRestaurantIds.contains(restaurantId)
+    }
+    
+    @MainActor
+    func toggleRestaurantFavorite(restaurantId: Int) async {
+        guard !updatingFavoriteRestaurantIds.contains(restaurantId),
+              let restaurant = personalRestaurantById[restaurantId] else {
+            return
+        }
+        
+        setUpdatingFavoriteRestaurant(restaurantId, isUpdating: true)
+        defer {
+            setUpdatingFavoriteRestaurant(restaurantId, isUpdating: false)
+        }
+        
+        do {
+            let status = try await updateRestaurantPreferenceUseCase.setLiked(
+                restaurant: restaurant,
+                liked: !restaurant.liked
+            )
+            updatePersonalRestaurant(status)
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+        }
+    }
+    
+    @MainActor
+    private func refreshPersonalRestaurants() async {
+        do {
+            let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
+            personalRestaurantById = Dictionary(uniqueKeysWithValues: restaurants.map { ($0.id, $0) })
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+        }
+    }
+    
+    private func updatePersonalRestaurant(_ status: RestaurantPreferenceStatusModel) {
+        guard let restaurant = personalRestaurantById[status.id] else {
+            return
+        }
+        
+        var restaurants = personalRestaurantById
+        restaurants[status.id] = PersonalRestaurantModel(
+            id: restaurant.id,
+            code: restaurant.code,
+            nameKr: restaurant.nameKr,
+            nameEn: restaurant.nameEn,
+            address: restaurant.address,
+            coordinate: restaurant.coordinate,
+            liked: status.liked,
+            visible: status.visible,
+            operatingHours: restaurant.operatingHours
+        )
+        personalRestaurantById = restaurants
+    }
+    
+    private func setUpdatingFavoriteRestaurant(_ restaurantId: Int, isUpdating: Bool) {
+        var restaurantIds = updatingFavoriteRestaurantIds
+        if isUpdating {
+            restaurantIds.insert(restaurantId)
+        } else {
+            restaurantIds.remove(restaurantId)
+        }
+        updatingFavoriteRestaurantIds = restaurantIds
+    }
+    
     private func isLikedMenu(menuId:Int)->Bool{
         for (i,_) in myLikedRestaurants.enumerated(){
             for (j,_) in myLikedRestaurants[i].menus.enumerated(){
@@ -270,7 +363,7 @@ class MyLikedMenuViewModel: ObservableObject{
         }
     }
     func toggleAlarmTime(){
-        let next_alarm_time =   alarmTime == AlarmTime.EVERY_MEAL ? AlarmTime.DAILY : AlarmTime.EVERY_MEAL
+        let next_alarm_time = alarmTime == AlarmTime.EVERY_MEAL ? AlarmTime.DAILY : AlarmTime.EVERY_MEAL
         myLikedMenuRepository.postAlarmTime(type: next_alarm_time )
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { [weak self] completionStatus in

@@ -14,20 +14,17 @@ struct LikedMenuRestaurantCell: View {
     private let orangeColor = Color.orange500
     
     var restaurant: MyLikedRestaurant
-    let viewModel: MyLikedMenuViewModel
-    @State var isFavorite: Bool = false
+    @ObservedObject var viewModel: MyLikedMenuViewModel
     @State var showRestaurant: Bool = false
     
     init(_ viewModel: MyLikedMenuViewModel, _ restaurant: MyLikedRestaurant) {
         self.viewModel = viewModel
         self.restaurant = restaurant
-        self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
     }
     
     var body: some View {
         VStack(spacing: 0) {
             // Restaurant Name
-            
             ViewThatFits{
                 HStack(alignment: .center) {
                     Text(restaurant.name)
@@ -37,14 +34,16 @@ struct LikedMenuRestaurantCell: View {
                     Spacer()
                         .frame(width:6)
                     Button(action: {
-                        isFavorite.toggle()
-                        UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
+                        Task {
+                            await viewModel.toggleRestaurantFavorite(restaurantId: restaurant.id)
+                        }
                     }, label: {
-                        Image(isFavorite ? "Favorite-selected" : "Favorite-default")
+                        Image(viewModel.isFavoriteRestaurant(restaurantId: restaurant.id) ? "Favorite-selected" : "Favorite-default")
                             .resizable()
                             .renderingMode(.original)
                             .frame(width: 20, height: 20)
                     })
+                    .disabled(viewModel.isUpdatingFavoriteRestaurant(restaurantId: restaurant.id))
                     Spacer()
                     Text("Price")
                         .customFont(font: .text12(weight: .Regular))
@@ -65,11 +64,10 @@ struct LikedMenuRestaurantCell: View {
                         .multilineTextAlignment(.center)
                         .foregroundColor(orangeColor)
                         .frame(width:25)
-                    
-                    
                 }
                 .padding(EdgeInsets(top: 13, leading: 13,bottom: 6.5,trailing: 13))
-                VStack(spacing:10){
+                
+                VStack(spacing:10) {
                     HStack(alignment: .center) {
                         Text(restaurant.name)
                             .customFont(font: .text16(weight: .ExtraBold))
@@ -77,19 +75,20 @@ struct LikedMenuRestaurantCell: View {
                         Spacer()
                             .frame(width:6)
                         Button(action: {
-                            isFavorite.toggle()
-                            UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
+                            Task {
+                                await viewModel.toggleRestaurantFavorite(restaurantId: restaurant.id)
+                            }
                         }, label: {
-                            Image(isFavorite ? "Favorite-selected" : "Favorite-default")
+                            Image(viewModel.isFavoriteRestaurant(restaurantId: restaurant.id) ? "Favorite-selected" : "Favorite-default")
                                 .resizable()
                                 .renderingMode(.original)
                                 .frame(width: 20, height: 20)
                         })
+                        .disabled(viewModel.isUpdatingFavoriteRestaurant(restaurantId: restaurant.id))
                         Spacer()
-                        
-                        
                     }
-                    HStack{
+                    
+                    HStack {
                         Spacer()
                         Text("Price")
                             .customFont(font: .text12(weight: .Regular))
@@ -110,15 +109,11 @@ struct LikedMenuRestaurantCell: View {
                             .multilineTextAlignment(.center)
                             .foregroundColor(orangeColor)
                             .frame(width:25)
-
                     }
-
-                }   .padding(EdgeInsets(top: 13, leading: 13,bottom: 6.5,trailing: 13))
-
+                }
+                .padding(EdgeInsets(top: 13, leading: 13,bottom: 6.5,trailing: 13))
             }
-     
-
-       
+            
             Capsule()
                 .frame(height:1.5)
                 .foregroundColor(orangeColor)
@@ -128,7 +123,6 @@ struct LikedMenuRestaurantCell: View {
                 ForEach(restaurant.menus, id: \.id) { menu in
                     MyLikedMenuMealCell(viewModel: viewModel, menu: menu)
                 }
-                
             }
             .padding(EdgeInsets(top: 13, leading: 13, bottom: 17, trailing: 13))
         }
