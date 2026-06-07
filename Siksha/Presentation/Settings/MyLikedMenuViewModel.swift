@@ -22,6 +22,7 @@ class MyLikedMenuViewModel: ObservableObject{
     @Published private var personalRestaurantById: [Int: PersonalRestaurantModel] = [:]
     @Published private var updatingFavoriteRestaurantIds: Set<Int> = []
     @Published var alarmTime: AlarmTime = .DAILY
+    private var personalRestaurantOrder: [Int: Int] = [:]
     private var init_error = 0
     init(
         myLikedMenuRepository: MyLikedMenuRepositoryProtocol,
@@ -72,8 +73,10 @@ class MyLikedMenuViewModel: ObservableObject{
                     self?.init_error += 1
                 }
             }, receiveValue: { [weak self] restaurants in
-                self?.myLikedRestaurants = restaurants.restaurants
-                self?.init_error = 0
+                guard let self else { return }
+                
+                self.myLikedRestaurants = sortByPersonalRestaurantOrder(restaurants.restaurants)
+                self.init_error = 0
             })
             .store(in: &cancellables)
     }
@@ -114,6 +117,7 @@ class MyLikedMenuViewModel: ObservableObject{
         do {
             let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
             personalRestaurantById = Dictionary(uniqueKeysWithValues: restaurants.map { ($0.id, $0) })
+            personalRestaurantOrder = Dictionary(uniqueKeysWithValues: restaurants.enumerated().map { ($0.element.id, $0.offset) })
         } catch {
             self.error = ErrorHelper.categorize(error)
         }
@@ -148,6 +152,19 @@ class MyLikedMenuViewModel: ObservableObject{
         }
         updatingFavoriteRestaurantIds = restaurantIds
     }
+    
+    private func sortByPersonalRestaurantOrder(_ restaurants: [MyLikedRestaurant]) -> [MyLikedRestaurant] {
+        restaurants.sorted {
+            let lhsIndex = personalRestaurantOrder[$0.id] ?? Int.max
+            let rhsIndex = personalRestaurantOrder[$1.id] ?? Int.max
+            
+            if lhsIndex == rhsIndex {
+                return $0.id < $1.id
+            }
+            return lhsIndex < rhsIndex
+        }
+    }
+    
     
     private func isLikedMenu(menuId:Int)->Bool{
         for (i,_) in myLikedRestaurants.enumerated(){
