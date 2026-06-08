@@ -9,33 +9,58 @@ import Foundation
 
 final class RestaurantRepositoryImpl: RestaurantRepositoryProtocol {
     private let remote: RestaurantRemoteDataSource
+    private let local: RestaurantLocalDataSource
 
-    init(remote: RestaurantRemoteDataSource = RestaurantRemoteDataSourceImpl()) {
+    init(
+        remote: RestaurantRemoteDataSource = RestaurantRemoteDataSourceImpl(),
+        local: RestaurantLocalDataSource = RestaurantLocalDataSourceImpl()
+    ) {
         self.remote = remote
+        self.local = local
     }
 
     func fetchPersonalRestaurants() async throws -> [PersonalRestaurantModel] {
-        try await remote.fetchPersonalRestaurants()
-            .result
-            .map { $0.toDomain() }
+        do {
+            let response = try await remote.fetchPersonalRestaurants()
+            local.savePersonalRestaurants(response.result)
+            return response.result.map { $0.toDomain() }
+        } catch {
+            guard let cachedRestaurants = local.fetchPersonalRestaurants() else {
+                throw error
+            }
+            return cachedRestaurants.map { $0.toDomain() }
+        }
     }
 
     func setRestaurantLike(restaurantId: Int, like: Bool) async throws -> RestaurantLikeStatusModel {
-        try await remote.setRestaurantLike(restaurantId: restaurantId, like: like)
+        let status = try await remote.setRestaurantLike(restaurantId: restaurantId, like: like)
             .toDomain()
+        local.updateRestaurantLike(restaurantId: status.id, liked: status.liked)
+        return status
     }
 
     func setRestaurantVisible(restaurantId: Int, visible: Bool) async throws -> RestaurantVisibilityStatusModel {
-        try await remote.setRestaurantVisible(restaurantId: restaurantId, visible: visible)
+        let status = try await remote.setRestaurantVisible(restaurantId: restaurantId, visible: visible)
             .toDomain()
+        local.updateRestaurantVisible(restaurantId: status.id, visible: status.visible)
+        return status
     }
 
     func fetchRestaurantOrder() async throws -> [Int] {
-        try await remote.fetchRestaurantOrder().order
+        do {
+            return try await remote.fetchRestaurantOrder().order
+        } catch {
+            guard let cachedRestaurants = local.fetchPersonalRestaurants() else {
+                throw error
+            }
+            return cachedRestaurants.map(\.id)
+        }
     }
 
     func setRestaurantOrder(order: [Int]) async throws -> [Int] {
-        try await remote.setRestaurantOrder(order: order).order
+        let order = try await remote.setRestaurantOrder(order: order).order
+        local.updateRestaurantOrder(order)
+        return order
     }
 }
 

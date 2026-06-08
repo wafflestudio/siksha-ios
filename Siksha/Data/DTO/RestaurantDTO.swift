@@ -26,7 +26,7 @@ struct PersonalRestaurantsResponseDTO: Decodable {
     let result: [PersonalRestaurantDTO]
 }
 
-struct PersonalRestaurantDTO: Decodable {
+struct PersonalRestaurantDTO: Codable {
     let createdAt: Date
     let updatedAt: Date
     let id: Int
@@ -55,11 +55,11 @@ struct RestaurantOrderResponseDTO: Decodable {
     let order: [Int]
 }
 
-struct RestaurantEtcDTO: Decodable {
+struct RestaurantEtcDTO: Codable {
     let operatingHours: OperatingHoursDTO?
 }
 
-struct OperatingHoursDTO: Decodable {
+struct OperatingHoursDTO: Codable {
     let weekdays: [String]
     let saturday: [String]
     let holiday: [String]
