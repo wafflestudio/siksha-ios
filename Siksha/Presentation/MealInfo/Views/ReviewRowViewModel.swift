@@ -10,6 +10,7 @@ import Combine
 
 class ReviewRowViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
+    private let mealInfoUseCase: MealInfoUseCase
     
     private let review: Review
     let showImage: Bool
@@ -52,9 +53,16 @@ class ReviewRowViewModel: ObservableObject {
     @Published var tappedIndex: Int = 0
     @Published var error: AppError?
     
-    init(review: Review, showImage: Bool) {
+    init(
+        review: Review,
+        showImage: Bool,
+        mealInfoUseCase: MealInfoUseCase = DefaultMealInfoUseCase(
+            repository: MealInfoRepositoryImpl()
+        )
+    ) {
         self.review = review
         self.showImage = showImage
+        self.mealInfoUseCase = mealInfoUseCase
         self.likeCount = review.likeCount
         self.isLiked = review.isLiked
     }
@@ -62,37 +70,43 @@ class ReviewRowViewModel: ObservableObject {
     private var getLikeStatus: NetworkStatus = .idle
     
     private func likeReview() {
-        Networking.shared.likeReview(reviewId: review.id)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] completion in
-                switch completion {
-                case .finished:
-                    self?.isLiked = true
-                    self?.likeCount += 1
-                    self?.getLikeStatus = .succeeded
-                case .failure(let error):
-                    self?.getLikeStatus = .failed
-                    self?.error = error
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                try await mealInfoUseCase.likeReview(reviewId: review.id)
+                await MainActor.run {
+                    self.isLiked = true
+                    self.likeCount += 1
+                    self.getLikeStatus = .succeeded
                 }
-            } receiveValue: { _ in }
-            .store(in: &cancellables)
+            } catch {
+                await MainActor.run {
+                    self.getLikeStatus = .failed
+                    self.error = ErrorHelper.categorize(error)
+                }
+            }
+        }
     }
     
     private func unlikeReview() {
-        Networking.shared.unlikeReview(reviewId: review.id)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] completion in
-                switch completion {
-                case .finished:
-                    self?.isLiked = false
-                    self?.likeCount -= 1
-                    self?.getLikeStatus = .succeeded
-                case .failure(let error):
-                    self?.getLikeStatus = .failed
-                    self?.error = error
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                try await mealInfoUseCase.unlikeReview(reviewId: review.id)
+                await MainActor.run {
+                    self.isLiked = false
+                    self.likeCount = max(0, self.likeCount - 1)
+                    self.getLikeStatus = .succeeded
                 }
-            } receiveValue: { _ in }
-            .store(in: &cancellables)
+            } catch {
+                await MainActor.run {
+                    self.getLikeStatus = .failed
+                    self.error = ErrorHelper.categorize(error)
+                }
+            }
+        }
     }
     
     func toggleLike(){

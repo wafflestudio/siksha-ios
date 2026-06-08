@@ -58,6 +58,36 @@ struct KakaoShareRestaurantModel {
 }
 
 extension MenuItemDisplayModel {
+    init(menu: MenuModel) {
+        self.init(
+            id: menu.id,
+            code: menu.code,
+            nameKr: menu.nameKr,
+            nameEn: menu.nameEn,
+            price: menu.price,
+            score: menu.score,
+            reviewCount: menu.reviewCount,
+            isLiked: menu.isLiked,
+            likeCount: menu.likeCount,
+            imageURLStrings: menu.imageURLStrings
+        )
+    }
+    
+    var menuModel: MenuModel {
+        MenuModel(
+            id: id,
+            code: code,
+            nameKr: nameKr,
+            nameEn: nameEn,
+            price: price,
+            score: score,
+            reviewCount: reviewCount,
+            isLiked: isLiked,
+            likeCount: likeCount,
+            imageURLStrings: imageURLStrings
+        )
+    }
+    
     func updatingLike(isLiked: Bool, likeCount: Int) -> MenuItemDisplayModel {
         MenuItemDisplayModel(
             id: id,
