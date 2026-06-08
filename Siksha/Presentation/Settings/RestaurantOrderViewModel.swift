@@ -160,6 +160,7 @@ class RestaurantOrderViewModel: ObservableObject {
             _ = try await setRestaurantOrderUseCase.execute(order: personalRestaurants.map(\.id))
         } catch {
             personalRestaurants = previousRestaurants
+            showToast(message: "식당 순서 변경에 실패했습니다.")
         }
     }
 
