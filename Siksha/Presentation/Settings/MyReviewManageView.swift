@@ -242,9 +242,8 @@ struct ReviewCardView: View {
         VStack(alignment: .leading, spacing: 8) {
             NavigationLink(
                 destination: {
-                    let tempMeal = Meal()
-                    tempMeal.id = review.menuId
-                    let mealInfoVM = MealInfoViewModel(meal: tempMeal)
+                    let meal = review.menuDisplayModel
+                    let mealInfoVM = MealInfoViewModel(meal: meal)
                     mealInfoVM.updateMealFromId()
                     
                     return MealInfoView(viewModel: mealInfoVM)
@@ -345,13 +344,11 @@ struct ReviewCardView: View {
                 .foregroundColor(.gray600)
                 
                 NavigationLink(destination: {
-                    let tempMeal = Meal()
-                    tempMeal.id = review.menuId
-                    tempMeal.nameKr = review.menuName
-                    let mealInfoVM = MealInfoViewModel(meal: tempMeal)
+                    let meal = review.menuDisplayModel
+                    let mealInfoVM = MealInfoViewModel(meal: meal)
                     mealInfoVM.updateMealFromId()
                     
-                    return MealReviewView(tempMeal, mealInfoViewModel: mealInfoVM, editingReview: review)
+                    return MealReviewView(meal, mealInfoViewModel: mealInfoVM, editingReview: review)
                         .environment(\.menuViewModel, menuViewModel)
                 }) {
                     Text("수정하기")
@@ -361,6 +358,23 @@ struct ReviewCardView: View {
             }
             .padding(.top, 8)
         }
+    }
+}
+
+private extension RestaurantReview {
+    var menuDisplayModel: MenuItemDisplayModel {
+        MenuItemDisplayModel(
+            id: menuId,
+            code: "",
+            nameKr: menuName,
+            nameEn: "",
+            price: 0,
+            score: Double(rating),
+            reviewCount: 0,
+            isLiked: false,
+            likeCount: 0,
+            imageURLStrings: []
+        )
     }
 }
 

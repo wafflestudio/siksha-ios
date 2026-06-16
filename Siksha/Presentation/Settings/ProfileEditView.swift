@@ -95,7 +95,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                         .clipShape(Circle())
                         .frame(width: 171, height: 171)
                 } else {
-                    Image("BigLogoEllipse")
+                    Image(.Icons.Common.profileImagePlaceholderBig)
                         .resizable()
                         .clipShape(Circle())
                         .frame(width: 171, height: 171)
@@ -208,7 +208,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                     .fill(Color.backgroundToast)
                 
                 HStack(spacing: 0) {
-                    Image("Error")
+                    Image(.Icons.Common.alertCircle)
                         .frame(width: 14, height: 14)
                         .foregroundColor(Color.orange500)
                         .padding(.trailing, 10)

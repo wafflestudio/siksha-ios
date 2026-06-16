@@ -11,6 +11,7 @@ import UIKit
 
 public class ReviewListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
+    private let mealInfoUseCase: MealInfoUseCase
     private var perPage = 10
     var currentPage: Int = 1
     
@@ -20,9 +21,16 @@ public class ReviewListViewModel: ObservableObject {
     @Published var hasMorePages = true
     @Published var getReviewStatus: NetworkStatus = .idle
     
-    init(mealID: Int, imageOnly: Bool = false) {
+    init(
+        mealID: Int,
+        imageOnly: Bool = false,
+        mealInfoUseCase: MealInfoUseCase = DefaultMealInfoUseCase(
+            repository: MealInfoRepositoryImpl()
+        )
+    ) {
         self.mealID = mealID
         self.imageOnly = imageOnly
+        self.mealInfoUseCase = mealInfoUseCase
     }
     
     func loadMoreReviewsIfNeeded(current: Review? = nil) {
@@ -62,24 +70,23 @@ public class ReviewListViewModel: ObservableObject {
         
         getReviewStatus = .loading
 
-        Networking.shared.getReviews(menuId: mealID, page: currentPage, perPage: perPage)
-            .map(\.value)
-            .receive(on: RunLoop.main)
-            .handleEvents(receiveOutput: { [weak self] response in
-                guard let self = self else { return }
-                guard let response = response else {
-                    self.getReviewStatus = .failed
-                    return
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let response = try await mealInfoUseCase.fetchReviews(menuId: mealID, page: currentPage, perPage: perPage)
+                await MainActor.run {
+                    self.hasMorePages = (self.currentPage < (response.totalCount + self.perPage - 1) / self.perPage)
+                    self.currentPage += 1
+                    self.getReviewStatus = .succeeded
+                    self.reviews += response.reviews
                 }
-                self.hasMorePages = (self.currentPage < (response.totalCount+self.perPage-1)/self.perPage)
-                self.currentPage += 1
-                self.getReviewStatus = .succeeded
-            })
-            .map(\.?.result)
-            .replaceNil(with: [])
-            .map { self.reviews + $0 }
-            .assign(to: \.reviews, on: self)
-            .store(in: &cancellables)
+            } catch {
+                await MainActor.run {
+                    self.getReviewStatus = .failed
+                }
+            }
+        }
     }
     
     private func loadMoreImageReviews() {
@@ -89,24 +96,23 @@ public class ReviewListViewModel: ObservableObject {
         
         getReviewStatus = .loading
         
-        Networking.shared.getReviewImages(menuId: mealID, page: currentPage, perPage: perPage)
-            .map(\.value)
-            .receive(on: RunLoop.main)
-            .handleEvents(receiveOutput: { [weak self] response in
-                guard let self = self else { return }
-                guard let response = response else {
-                    self.getReviewStatus = .failed
-                    return
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let response = try await mealInfoUseCase.fetchReviewImages(menuId: mealID, page: currentPage, perPage: perPage)
+                await MainActor.run {
+                    self.hasMorePages = response.hasNext
+                    self.currentPage += 1
+                    self.getReviewStatus = .succeeded
+                    self.reviews += response.reviews
                 }
-                self.hasMorePages = response.hasNext
-                self.currentPage += 1
-                self.getReviewStatus = .succeeded
-            })
-            .map(\.?.result)
-            .replaceNil(with: [])
-            .map { self.reviews + $0 }
-            .assign(to: \.reviews, on: self)
-            .store(in: &cancellables)
+            } catch {
+                await MainActor.run {
+                    self.getReviewStatus = .failed
+                }
+            }
+        }
     }
     
 }

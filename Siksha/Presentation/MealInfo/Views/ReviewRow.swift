@@ -144,7 +144,7 @@ struct ReviewProfileInfoView: View {
     
     var body: some View {
         HStack(alignment: .top, spacing: 7) {
-            Image("BigLogoEllipse")
+            Image(.Icons.Common.profileImagePlaceholder)
                 .resizable()
                 .scaledToFill()
                 .frame(width: 32, height: 32)

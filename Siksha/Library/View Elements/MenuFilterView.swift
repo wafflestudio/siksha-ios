@@ -328,46 +328,48 @@ struct MenuFilterView: View {
             }
         }
         
+        var updatedFilters = menuViewModel.selectedFilters
+        
         switch menuFilterType {
             /// 거리만, 가격만 필터 선택 시 다른 필터 바뀌는 거 방지
         case .distance:
-            menuViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
+            updatedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
         case .price:
             if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
-                menuViewModel.selectedFilters.priceRange = nil
+                updatedFilters.priceRange = nil
             } else {
                 let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
-                menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
+                updatedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
             }
         default:
-            menuViewModel.selectedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
+            updatedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
             if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
-                menuViewModel.selectedFilters.priceRange = nil
+                updatedFilters.priceRange = nil
             } else {
                 let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
-                menuViewModel.selectedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
+                updatedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
             }
-            menuViewModel.selectedFilters.minimumRating = menuFilterViewModel.minimumRating > 0 ? menuFilterViewModel.minimumRating : nil
-            menuViewModel.selectedFilters.isOpen = menuFilterViewModel.isOpen ? true : nil
-            menuViewModel.selectedFilters.isFavorite = menuFilterViewModel.isFavorite ? true : nil
-            menuViewModel.selectedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
-            menuViewModel.selectedFilters.categories = menuFilterViewModel.selectedCategories.isEmpty ? nil : menuFilterViewModel.selectedCategories
+            updatedFilters.minimumRating = menuFilterViewModel.minimumRating > 0 ? menuFilterViewModel.minimumRating : nil
+            updatedFilters.isOpen = menuFilterViewModel.isOpen ? true : nil
+            updatedFilters.isFavorite = menuFilterViewModel.isFavorite ? true : nil
+            updatedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
+            updatedFilters.categories = menuFilterViewModel.selectedCategories.isEmpty ? nil : menuFilterViewModel.selectedCategories
         }
-        menuViewModel.saveFilters()
+        menuViewModel.setFilters(updatedFilters)
         
         let applied = AppliedFilterOptions(
-            priceMin: menuViewModel.selectedFilters.priceRange?.lowerBound,
+            priceMin: updatedFilters.priceRange?.lowerBound,
             priceMax: {
-                if let range = menuViewModel.selectedFilters.priceRange,
+                if let range = updatedFilters.priceRange,
                    range.upperBound != Int(maxPrice) { return range.upperBound }
                 return nil
             }(),
-            minRating: menuViewModel.selectedFilters.minimumRating,
-            isOpenNow: menuViewModel.selectedFilters.isOpen,
-            isFavorite: menuViewModel.selectedFilters.isFavorite,
-            hasReviews: menuViewModel.selectedFilters.hasReview,
+            minRating: updatedFilters.minimumRating,
+            isOpenNow: updatedFilters.isOpen,
+            isFavorite: updatedFilters.isFavorite,
+            hasReviews: updatedFilters.hasReview,
             maxDistanceKm: {
-                if let m = menuViewModel.selectedFilters.distance {
+                if let m = updatedFilters.distance {
                     return Double(m) / 1000.0
                 }
                 return nil

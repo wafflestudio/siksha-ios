@@ -38,18 +38,18 @@ class DailyMenu: Object {
             dateType = 0
         }
         
-        addRestaurants(list: br, json["br"])
-        addRestaurants(list: lu, json["lu"])
-        addRestaurants(list: dn, json["dn"])
+        addRestaurants(list: br, json["br"], type: .breakfast)
+        addRestaurants(list: lu, json["lu"], type: .lunch)
+        addRestaurants(list: dn, json["dn"], type: .dinner)
     }
    
     init(date: String, dateType: String, br: [Restaurant], lu: [Restaurant], dn: [Restaurant]) {
         super.init()
         self.date = date
         self.dateType = getDateTypeInt(dateType)
-        self.br.append(objectsIn: br)
-        self.lu.append(objectsIn: lu)
-        self.dn.append(objectsIn: dn)
+        addRestaurants(list: self.br, restaurants: br, type: .breakfast)
+        addRestaurants(list: self.lu, restaurants: lu, type: .lunch)
+        addRestaurants(list: self.dn, restaurants: dn, type: .dinner)
     }
     
     private func getDateTypeInt(_ str: String) -> Int {
@@ -65,11 +65,22 @@ class DailyMenu: Object {
         }
     }
     
-    private func addRestaurants(list: List<Restaurant>, _ json: JSON){
+    private func addRestaurants(list: List<Restaurant>, _ json: JSON, type: TypeSelection){
         json.forEach { (str, restJson) in
-            let newRest = Restaurant(restJson)
+            let newRest = Restaurant(restJson, menuContext: menuContext(for: type))
             list.append(newRest)
         }
+    }
+    
+    private func addRestaurants(list: List<Restaurant>, restaurants: [Restaurant], type: TypeSelection) {
+        restaurants.forEach { restaurant in
+            restaurant.applyMenuContext(menuContext(for: type))
+            list.append(restaurant)
+        }
+    }
+    
+    private func menuContext(for type: TypeSelection) -> String {
+        "\(date):\(type.rawValue)"
     }
     
     func getRestaurants(_ type: TypeSelection) -> List<Restaurant> {

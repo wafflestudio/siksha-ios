@@ -68,9 +68,9 @@ struct OperatingHoursTable: View {
     private let dividerColor = Color.borderPrimary
     
     init(hours: [String], isFestivalRestaurant: Bool) {
-        self.wdHours = hours[0].split(separator: "\n").map { String($0) }
-        self.weHours = hours[1].split(separator: "\n").map { String($0) }
-        self.hoHours = hours[2].split(separator: "\n").map { String($0) }
+        self.wdHours = hours.indices.contains(0) ? hours[0].split(separator: "\n").map { String($0) } : []
+        self.weHours = hours.indices.contains(1) ? hours[1].split(separator: "\n").map { String($0) } : []
+        self.hoHours = hours.indices.contains(2) ? hours[2].split(separator: "\n").map { String($0) } : []
         self.isFestivalRestaurant = isFestivalRestaurant
     }
     

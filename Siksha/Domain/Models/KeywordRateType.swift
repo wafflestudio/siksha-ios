@@ -6,20 +6,21 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum KeywordRateType {
     case taste
     case price
     case composition
     
-    var imageString: String {
+    var image: Image {
         switch self {
         case .taste:
-            return "KeywordTaste"
+            return Image(.Icons.Review.keywordTaste)
         case .price:
-            return "KeywordMoney"
+            return Image(.Icons.Review.keywordMoney)
         case .composition:
-            return "KeywordYang"
+            return Image(.Icons.Review.keywordYang)
         }
     }
     

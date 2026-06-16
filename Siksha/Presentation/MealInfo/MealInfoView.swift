@@ -59,7 +59,7 @@ private extension MealInfoView {
             }
             
             HStack(spacing: 0) {
-                Text("찜 \(viewModel.meal.likeCnt)개")
+                Text("찜 \(viewModel.meal.likeCount)개")
                     .customFont(font: .text13(weight: .Bold))
                     .foregroundColor(Color.blackColor)
             }
@@ -121,7 +121,7 @@ private extension MealInfoView {
                 
                 Spacer().frame(height: 10)
                 
-                Text("후기 \(viewModel.meal.reviewCnt)개")
+                Text("후기 \(viewModel.meal.reviewCount)개")
                     .customFont(font: .text14(weight: .Regular))
                     .foregroundStyle(Color.blackColor)
             }
@@ -160,11 +160,18 @@ private extension MealInfoView {
 
 private struct MealInfoPreview {
     static var previews: some View {
-        let meal = Meal()
-        meal.id = 176933
-        meal.nameKr = "제육보쌈&막국수"
-        meal.score = 4.1
-        meal.reviewCnt = 40
+        let meal = MenuItemDisplayModel(
+            id: 176933,
+            code: "",
+            nameKr: "제육보쌈&막국수",
+            nameEn: "",
+            price: 0,
+            score: 4.1,
+            reviewCount: 40,
+            isLiked: false,
+            likeCount: 0,
+            imageURLStrings: []
+        )
         return MealInfoView(viewModel: MealInfoViewModel(meal: meal))
     }
 }

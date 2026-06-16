@@ -10,7 +10,7 @@ import SwiftUI
 struct MenuView: View {
     @Environment(\.safeAreaInsets) private var safeAreaInsets
     
-    @StateObject private var viewModel = MenuViewModel()
+    @StateObject private var viewModel: MenuViewModel
     @State private var selectedFilterType: MenuFilterType? = nil
     @State private var viewHeight: CGFloat = 0
     
@@ -41,6 +41,10 @@ struct MenuView: View {
     
     private let dimBackgroundColor = Color(.sRGB, white: 0, opacity: 0.6)
     private let orangeColor = Color("Color/Foundation/Orange/500")
+    
+    init(viewModel: MenuViewModel = MenuViewModel()) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
     
     var body: some View {
         VStack(spacing: 0) {

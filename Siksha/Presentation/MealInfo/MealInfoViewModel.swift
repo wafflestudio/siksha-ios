@@ -8,13 +8,12 @@
 import Foundation
 import Combine
 import UIKit
-import RealmSwift
-import SwiftyJSON
 
 public class MealInfoViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
+    private let mealInfoUseCase: MealInfoUseCase
     
-    @Published var meal: Meal
+    @Published var meal: MenuItemDisplayModel
     @Published var mealReviews: [Review] = []
     @Published var hasMorePages = true
     
@@ -34,8 +33,14 @@ public class MealInfoViewModel: ObservableObject {
     @Published var isLiked = false
     @Published var loadedReviews: Bool = false
     
-    init(meal: Meal) {
-            self.meal = meal
+    init(
+        meal: MenuItemDisplayModel,
+        mealInfoUseCase: MealInfoUseCase = DefaultMealInfoUseCase(
+            repository: MealInfoRepositoryImpl()
+        )
+    ) {
+        self.meal = meal
+        self.mealInfoUseCase = mealInfoUseCase
     }
     
     func toggleLike(){
@@ -45,48 +50,20 @@ public class MealInfoViewModel: ObservableObject {
         
         getLikeStatus = .loading
         
-        
-        if meal.isLiked{
-            Networking.shared.unlikeMenu(menuId: meal.id)
-                .map(\.value)
-                .receive(on:RunLoop.main)
-                .sink { [weak self] response in
-                    guard let self = self else { return }
-                    guard let response = response else {
-                        self.getLikeStatus = .failed
-                        return
-                    }
-                    
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let updatedMeal = try await mealInfoUseCase.toggleMenuLike(menu: meal.menuModel)
+                await MainActor.run {
                     self.getLikeStatus = .succeeded
-                    
-                    let realm = try! Realm()
-                    try! realm.write {
-                        self.meal.isLiked = response.isLiked
-                        self.meal.likeCnt = response.likeCnt
-                    }
+                    self.meal = MenuItemDisplayModel(menu: updatedMeal)
                 }
-                .store(in: &cancellables)
-        }
-        else{
-            Networking.shared.likeMenu(menuId: meal.id)
-                .map(\.value)
-                .receive(on:RunLoop.main)
-                .sink { [weak self] response in
-                    guard let self = self else { return }
-                    guard let response = response else {
-                        self.getLikeStatus = .failed
-                        return
-                    }
-                    
-                    self.getLikeStatus = .succeeded
-                    
-                    let realm = try! Realm()
-                    try! realm.write {
-                        self.meal.isLiked = response.isLiked
-                        self.meal.likeCnt = response.likeCnt
-                    }
+            } catch {
+                await MainActor.run {
+                    self.getLikeStatus = .failed
                 }
-                .store(in: &cancellables)
+            }
         }
     }
     
@@ -97,22 +74,22 @@ public class MealInfoViewModel: ObservableObject {
         
         getReviewStatus = .loading
 
-        Networking.shared.getReviews(menuId: meal.id, page: 1, perPage: 5)
-            .map(\.value)
-            .receive(on: RunLoop.main)
-            .handleEvents(receiveOutput: { [weak self] response in
-                guard let self = self else { return }
-                guard let response = response else {
-                    self.getReviewStatus = .failed
-                    return
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let response = try await mealInfoUseCase.fetchReviews(menuId: meal.id, page: 1, perPage: 5)
+                await MainActor.run {
+                    self.hasMorePages = response.hasNext
+                    self.getReviewStatus = .succeeded
+                    self.mealReviews = response.reviews
                 }
-                self.hasMorePages = response.hasNext
-                self.getReviewStatus = .succeeded
-            })
-            .map(\.?.result)
-            .replaceNil(with: [])
-            .assign(to: \.mealReviews, on: self)
-            .store(in: &cancellables)
+            } catch {
+                await MainActor.run {
+                    self.getReviewStatus = .failed
+                }
+            }
+        }
     }
     
     func loadImages() {
@@ -122,22 +99,22 @@ public class MealInfoViewModel: ObservableObject {
         
         getImageStatus = .loading
         
-        Networking.shared.getReviewImages(menuId: meal.id, page: 1, perPage: 6)
-            .receive(on: RunLoop.main)
-            .handleEvents(receiveOutput: { [weak self] response in
-                guard let self = self else { return }
-                guard let response = response.value else {
-                    self.getImageStatus = .failed
-                    return
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let response = try await mealInfoUseCase.fetchReviewImages(menuId: meal.id, page: 1, perPage: 6)
+                await MainActor.run {
+                    self.totalImageCount = response.totalCount
+                    self.getImageStatus = .succeeded
+                    self.images = response.reviews.map { $0.etc?["images"]?[0] ?? "" }
                 }
-                self.totalImageCount = response.totalCount
-                self.getImageStatus = .succeeded
-            })
-            .map(\.value?.result)
-            .replaceNil(with: [])
-            .map { $0.map {$0.etc?["images"]?[0] ?? ""} }
-            .assign(to: \.images, on: self)
-            .store(in: &cancellables)
+            } catch {
+                await MainActor.run {
+                    self.getImageStatus = .failed
+                }
+            }
+        }
     }
     
     func loadDistribution() {
@@ -147,22 +124,21 @@ public class MealInfoViewModel: ObservableObject {
         
         getDistributionStatus = .loading
         
-        Networking.shared.getScoreDistribution(menuId: meal.id)
-            .map(\.value)
-            .receive(on: RunLoop.main)
-            .handleEvents(receiveOutput: { [weak self] response in
-                guard let self = self else { return }
-                guard let _ = response else {
-                    self.getDistributionStatus = .failed
-                    return
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let distribution = try await mealInfoUseCase.fetchScoreDistribution(menuId: meal.id)
+                await MainActor.run {
+                    self.getDistributionStatus = .succeeded
+                    self.scoreDistribution = distribution.map { CGFloat($0) }
                 }
-                self.getDistributionStatus = .succeeded
-            })
-            .map(\.?.dist)
-            .replaceNil(with: [])
-            .map { dist in dist.map { CGFloat($0) } }
-            .assign(to: \.scoreDistribution, on: self)
-            .store(in: &cancellables)
+            } catch {
+                await MainActor.run {
+                    self.getDistributionStatus = .failed
+                }
+            }
+        }
     }
     
     func loadKeywordDistribution() {
@@ -172,59 +148,56 @@ public class MealInfoViewModel: ObservableObject {
         
         getKeywordDistributionStatus = .loading
         
-        Networking.shared.getKeywordDistribution(menuId: meal.id)
-            .map(\.value)
-            .receive(on: RunLoop.main)
-            .handleEvents(receiveOutput: { [weak self] response in
-                guard let self = self else { return }
-                guard let _ = response else {
-                    self.getKeywordDistributionStatus = .failed
-                    return
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let dist = try await mealInfoUseCase.fetchKeywordDistribution(menuId: meal.id)
+                await MainActor.run {
+                    self.getKeywordDistributionStatus = .succeeded
+                    
+                    self.tasteSummary = ReviewKeywordSummary(
+                        type: .taste,
+                        keyword: dist.tasteKeyword,
+                        count: dist.tasteCount,
+                        total: dist.tasteTotal
+                    )
+                    
+                    self.priceSummary = ReviewKeywordSummary(
+                        type: .price,
+                        keyword: dist.priceKeyword,
+                        count: dist.priceCount,
+                        total: dist.priceTotal
+                    )
+                    
+                    self.compositionSummary = ReviewKeywordSummary(
+                        type: .composition,
+                        keyword: dist.foodCompositionKeyword,
+                        count: dist.foodCompositionCount,
+                        total: dist.foodCompositionTotal
+                    )
                 }
-                self.getKeywordDistributionStatus = .succeeded
-            })
-            .compactMap{ $0 }
-            .sink{ [weak self] dist in
-                guard let self else { return }
-                
-                tasteSummary = ReviewKeywordSummary(
-                    type: .taste,
-                    keyword: dist.tasteKeyword,
-                    count: dist.tasteCnt,
-                    total: dist.tasteTotal
-                )
-                
-                priceSummary = ReviewKeywordSummary(
-                    type: .price,
-                    keyword: dist.priceKeyword,
-                    count: dist.priceCnt,
-                    total: dist.priceTotal
-                )
-                
-                compositionSummary = ReviewKeywordSummary(
-                    type: .composition,
-                    keyword: dist.foodCompositionKeyword,
-                    count: dist.foodCompositionCnt,
-                    total: dist.foodCompositionTotal
-                )
+            } catch {
+                await MainActor.run {
+                    self.getKeywordDistributionStatus = .failed
+                }
             }
-            .store(in: &cancellables)
+        }
     }
     
     /// 서버 MealID로 Meal 호출 속도 느림 -> 불가피하게 아는 정보가 mealId뿐일 때만 사용
     func updateMealFromId() {
-        Networking.shared.getMenuFromId(menuId: meal.id)
-            .map(\.value)
-            .receive(on: RunLoop.main)
-            .sink { [weak self] response in
-                guard let self = self,
-                      let response = response,
-                      let jsonData = try? JSONEncoder().encode(response),
-                      let json = try? JSON(data: jsonData) else {
-                    return
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let menu = try await mealInfoUseCase.fetchMenu(menuId: meal.id)
+                await MainActor.run {
+                    self.meal = MenuItemDisplayModel(menu: menu)
                 }
-                self.meal = Meal(json)
+            } catch {
+                return
             }
-            .store(in: &cancellables)
+        }
     }
 }

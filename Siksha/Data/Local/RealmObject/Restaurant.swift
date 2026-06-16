@@ -32,6 +32,7 @@ class Restaurant: Object {
         }
     }
     
+    @objc dynamic var realmKey: String = ""
     @objc dynamic var id: Int = 0
     @objc dynamic var code: String = ""
     @objc dynamic var nameKr: String = ""
@@ -49,16 +50,17 @@ class Restaurant: Object {
     }
     
     override static func primaryKey() -> String? {
-        return "id"
+        return "realmKey"
     }
     
     override init() {
         super.init()
     }
     
-    convenience init(_ json: JSON) {
+    convenience init(_ json: JSON, menuContext: String? = nil) {
         self.init()
         self.id = json["id"].intValue
+        self.realmKey = Self.makeRealmKey(id: id, menuContext: menuContext)
         self.code = json["code"].stringValue
         self.nameKr = json["name_kr"].stringValue
         self.nameEn = json["name_en"].stringValue
@@ -80,12 +82,13 @@ class Restaurant: Object {
                 operatingHours.append(hours.replacingOccurrences(of: "-", with: " - "))
             }
         }
-        addMenus(json["menus"])
+        addMenus(json["menus"], menuContext: realmKey)
     }
     
     init(id: Int, code: String, nameKr: String, nameEn: String, addr: String, lat: String, lng: String, operatingHours: [String], menus: [Meal]) {
         super.init()
         self.id = id
+        self.realmKey = Self.makeRealmKey(id: id)
         self.code = code
         self.nameKr = nameKr
         self.nameEn = nameEn
@@ -96,11 +99,25 @@ class Restaurant: Object {
         self.menus.append(objectsIn: menus)
     }
     
-    private func addMenus(_ json: JSON) {
+    func applyMenuContext(_ menuContext: String) {
+        realmKey = Self.makeRealmKey(id: id, menuContext: menuContext)
+        for meal in menus {
+            meal.applyMenuContext(realmKey)
+        }
+    }
+    
+    private func addMenus(_ json: JSON, menuContext: String) {
         json.forEach { (str, mealJson) in
-            let newMeal = Meal(mealJson)
+            let newMeal = Meal(mealJson, menuContext: menuContext)
             self.menus.append(newMeal)
         }
+    }
+    
+    private static func makeRealmKey(id: Int, menuContext: String? = nil) -> String {
+        if let menuContext {
+            return "\(menuContext):restaurant:\(id)"
+        }
+        return "restaurant:\(id)"
     }
 }
 

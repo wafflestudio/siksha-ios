@@ -14,27 +14,26 @@ struct MealReviewView: View {
     @ObservedObject var mealInfoViewModel: MealInfoViewModel
     @State private var isShowingPhotoLibrary = false
     
-    let meal: Meal
+    let meal: MenuItemDisplayModel
     let existingReview: RestaurantReview?
     
     // 새 리뷰 등록 생성자
-    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel) {
+    init(_ meal: MenuItemDisplayModel, mealInfoViewModel: MealInfoViewModel) {
         self.meal = meal
         self.mealInfoViewModel = mealInfoViewModel
         self.existingReview = nil
         
-        _viewModel = StateObject(wrappedValue: MealReviewViewModel())
+        _viewModel = StateObject(wrappedValue: MealReviewViewModel(meal: meal))
         UITextView.appearance().backgroundColor = .clear
     }
     
     // 리뷰 수정 생성자
-    init(_ meal: Meal, mealInfoViewModel: MealInfoViewModel, editingReview: RestaurantReview) {
+    init(_ meal: MenuItemDisplayModel, mealInfoViewModel: MealInfoViewModel, editingReview: RestaurantReview) {
         self.meal = meal
         self.mealInfoViewModel = mealInfoViewModel
         self.existingReview = editingReview
         
-        let vm = MealReviewViewModel()
-        vm.meal = meal
+        let vm = MealReviewViewModel(meal: meal)
         vm.loadExistingReview(editingReview)
         _viewModel = StateObject(wrappedValue: vm)
         
@@ -68,9 +67,7 @@ struct MealReviewView: View {
         .customNavigationBar(title: isEditMode ? "나의 평가 수정하기" : "나의 평가 남기기")
         .navigationBarItems(leading: backButton)
         .onAppear {
-            if viewModel.meal == nil {
-                viewModel.meal = self.meal
-            }
+            viewModel.meal = self.meal
         }
         .alert(isPresented: $viewModel.showAlert, content: {
             Alert(title: Text(isEditMode ? "나의 평가 수정하기" : "나의 평가 남기기"), message: alertMessage, dismissButton: alertButton)
@@ -211,6 +208,10 @@ private extension MealReviewView {
         var action: (() -> Void)? = nil
         if viewModel.postReviewSucceeded {
             action = {
+                if let meal = viewModel.meal {
+                    mealInfoViewModel.meal = meal
+                }
+                mealInfoViewModel.updateMealFromId()
                 mealInfoViewModel.mealReviews = []
                 mealInfoViewModel.loadReviews()
                 mealInfoViewModel.loadImages()
@@ -247,8 +248,18 @@ private extension MealReviewView {
 
 struct MealReviewPreview {
     static var previews: some View {
-        let meal = Meal()
-        meal.nameKr = "올리브스테이크"
+        let meal = MenuItemDisplayModel(
+            id: 0,
+            code: "",
+            nameKr: "올리브스테이크",
+            nameEn: "",
+            price: 0,
+            score: 0,
+            reviewCount: 0,
+            isLiked: false,
+            likeCount: 0,
+            imageURLStrings: []
+        )
         
         return MealReviewView(meal, mealInfoViewModel: MealInfoViewModel(meal: meal))
     }

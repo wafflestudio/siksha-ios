@@ -43,7 +43,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                                 .frame(width: 20, height: 20)
                                 .clipShape(Circle())
                         } else {
-                            Image("LogoEllipse")
+                            Image(.Icons.Common.profileImagePlaceholder)
                                 .resizable()
                                 .frame(width: 20, height: 20)
                                 .clipShape(Circle())

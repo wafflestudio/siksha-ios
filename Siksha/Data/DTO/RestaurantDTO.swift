@@ -21,11 +21,45 @@ struct RestaurantDTO: Decodable {
     let menus: [MenuDTO]
 }
 
-struct RestaurantEtcDTO: Decodable {
+struct PersonalRestaurantsResponseDTO: Decodable {
+    let count: Int
+    let result: [PersonalRestaurantDTO]
+}
+
+struct PersonalRestaurantDTO: Codable {
+    let createdAt: Date
+    let updatedAt: Date
+    let id: Int
+    let code: String
+    let nameKr: String?
+    let nameEn: String?
+    let addr: String?
+    let lat: Double?
+    let lng: Double?
+    let liked: Bool
+    let visible: Bool
+    let etc: RestaurantEtcDTO?
+}
+
+struct RestaurantLikeResponseDTO: Decodable {
+    let id: Int
+    let liked: Bool
+}
+
+struct RestaurantVisibleResponseDTO: Decodable {
+    let id: Int
+    let visible: Bool
+}
+
+struct RestaurantOrderResponseDTO: Decodable {
+    let order: [Int]
+}
+
+struct RestaurantEtcDTO: Codable {
     let operatingHours: OperatingHoursDTO?
 }
 
-struct OperatingHoursDTO: Decodable {
+struct OperatingHoursDTO: Codable {
     let weekdays: [String]
     let saturday: [String]
     let holiday: [String]
@@ -40,15 +74,24 @@ struct OperatingHoursDTO: Decodable {
     enum CodingKeys: String, CodingKey { case weekdays, saturday , holiday }
 }
 
+private func normalizedOperatingHours(_ operatingHours: OperatingHoursDTO?) -> [String] {
+    guard let operatingHours else {
+        return ["", "", ""]
+    }
+    
+    return [
+        formattedOperatingHours(operatingHours.weekdays),
+        formattedOperatingHours(operatingHours.saturday),
+        formattedOperatingHours(operatingHours.holiday)
+    ]
+}
+
+private func formattedOperatingHours(_ hours: [String]) -> String {
+    hours.joined(separator: "\n").replacingOccurrences(of: "-", with: " - ")
+}
+
 extension RestaurantDTO {
     func toRealmObject() -> Restaurant {
-        var operatingHours = [String]()
-        if let operatingHoursData = etc?.operatingHours {
-            operatingHours.append(operatingHoursData.weekdays.joined(separator: "\n").replacingOccurrences(of: "-", with: " - "))
-            operatingHours.append(operatingHoursData.saturday.joined(separator: "\n").replacingOccurrences(of: "-", with: " - "))
-            operatingHours.append(operatingHoursData.holiday.joined(separator: "\n").replacingOccurrences(of: "-", with: " - "))
-        }
-        
         return Restaurant(
             id: id,
             code: code,
@@ -57,7 +100,7 @@ extension RestaurantDTO {
             addr: addr ?? "",
             lat: lat?.description ?? "",
             lng: lng?.description ?? "",
-            operatingHours: operatingHours,
+            operatingHours: normalizedOperatingHours(etc?.operatingHours),
             menus: menus.map { $0.toRealmObject() }
         )
     }

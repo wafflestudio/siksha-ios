@@ -12,7 +12,7 @@ struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @ObservedObject var userModel = UserManager.shared
     @ObservedObject var viewModel: RenewalSettingsViewModel
-    @ObservedObject var orderViewModel = RestaurantOrderViewModel()
+    @StateObject private var orderViewModel = RestaurantOrderViewModel()
     
     
     init(viewModel: RenewalSettingsViewModel) {
@@ -61,7 +61,7 @@ struct RenewalSettingsView: View {
                         .clipShape(Circle())
                         .frame(width: 48, height: 48)
                 } else {
-                    Image("LogoEllipse")
+                    Image(.Icons.Common.profileImagePlaceholder)
                         .resizable()
                         .frame(width: 48, height: 48)
                 }
@@ -155,20 +155,6 @@ struct RenewalSettingsView: View {
             NavigationLink(destination: RestaurantOrderView(orderViewModel)) {
                 HStack(alignment: .center) {
                     Text("식당 순서 변경")
-                        .customFont(font: .text15(weight: .Regular))
-                        .foregroundColor(blackColor)
-                    
-                    Spacer()
-                    
-                    arrow
-                }
-            }
-            
-            partitionBar
-            
-            NavigationLink(destination: FavoriteRestaurantOrderView(orderViewModel)) {
-                HStack(alignment: .center) {
-                    Text("즐겨찾기 식당 순서 변경")
                         .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
                     

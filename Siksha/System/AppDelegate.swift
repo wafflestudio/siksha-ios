@@ -57,8 +57,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupMixpanel()
         
         let config = Realm.Configuration(
-            schemaVersion: 4, // 새로운 스키마 버전 설정
+            schemaVersion: 5, // 새로운 스키마 버전 설정
             migrationBlock: { migration, oldSchemaVersion in
+                if oldSchemaVersion < 5 {
+                    migration.enumerateObjects(ofType: Restaurant.className()) { oldObject, newObject in
+                        let id = oldObject?["id"] as? Int ?? 0
+                        newObject?["realmKey"] = "restaurant:\(id)"
+                    }
+                    migration.enumerateObjects(ofType: Meal.className()) { oldObject, newObject in
+                        let id = oldObject?["id"] as? Int ?? 0
+                        newObject?["realmKey"] = "meal:\(id)"
+                    }
+                }
                 if oldSchemaVersion < 3{
                     migration.enumerateObjects(ofType: DailyMenu.className()){
                         oldObject,newObject in
@@ -180,4 +190,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
 }
-

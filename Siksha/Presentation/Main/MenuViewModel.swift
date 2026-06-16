@@ -8,25 +8,31 @@
 import Foundation
 import UIKit
 import Combine
-import RealmSwift
 import CoreLocation
-import SwiftyJSON
-import FirebaseRemoteConfig
 
 final class MenuViewModel: NSObject, ObservableObject {
     let analytics: AnalyticsService
-    
-    private var remoteConfig = RemoteConfig.remoteConfig()
-    private var settings = RemoteConfigSettings()
-    
+
     private var festivalDates: [Date] = []
     
     private let MAX_PRICE = 10000
     private var cancellables = Set<AnyCancellable>()
     
-    private let repository = MenuRepository()
+    private let fetchDailyMenuUseCase: FetchDailyMenuUseCase
+    private let festivalRepository: FestivalRepositoryProtocol
+    private let fetchRemoteConfigUseCase: FetchRemoteConfigUseCase
+    private let observeRemoteConfigUseCase: ObserveRemoteConfigUseCase
+    private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
+    private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
+    private var remoteConfigFetchTask: Task<Void, Never>?
+    private var remoteConfigUpdatesTask: Task<Void, Never>?
+    private var personalRestaurantById: [Int: PersonalRestaurantModel] = [:]
+    private var personalRestaurantOrder: [Int: Int] = [:]
+    private var updatingLikeRestaurantIds = Set<Int>()
+    private var isLoadingPersonalRestaurants = false
+    private var shouldUseDefaultRestaurantPreference = false
     
     @Published var showCalendar: Bool = false
     @Published var showFestivalSwitch: Bool = false
@@ -37,9 +43,9 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     @Published var selectedFormatted: String = ""
     
-    @Published var selectedMenu: DailyMenu? = nil
+    @Published var selectedMenu: DailyMenuModel? = nil
     @Published var selectedFilters: MenuFilters = MenuFilters()
-    @Published var restaurantsLists: [[Restaurant]] = []
+    @Published var mealSections: [MealSectionDisplayModel] = []
     
     @Published var getMenuStatus: MenuStatus = .idle
     
@@ -102,8 +108,32 @@ final class MenuViewModel: NSObject, ObservableObject {
         return "카테고리"
     }
     
-    init(analytics: AnalyticsService = MixpanelAnalytics()) {
+    init(
+        analytics: AnalyticsService = MixpanelAnalytics(),
+        fetchDailyMenuUseCase: FetchDailyMenuUseCase = DefaultFetchDailyMenuUseCase(
+            repository: MenuRepositoryImpl()
+        ),
+        festivalRepository: FestivalRepositoryProtocol = FestivalRepositoryImpl(),
+        fetchRemoteConfigUseCase: FetchRemoteConfigUseCase = DefaultFetchRemoteConfigUseCase(
+            repository: RemoteConfigRepositoryImpl()
+        ),
+        observeRemoteConfigUseCase: ObserveRemoteConfigUseCase = DefaultObserveRemoteConfigUseCase(
+            repository: RemoteConfigRepositoryImpl()
+        ),
+        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
+            repository: RestaurantRepositoryImpl()
+        ),
+        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase = DefaultUpdateRestaurantPreferenceUseCase(
+            repository: RestaurantRepositoryImpl()
+        )
+    ) {
         self.analytics = analytics
+        self.fetchDailyMenuUseCase = fetchDailyMenuUseCase
+        self.festivalRepository = festivalRepository
+        self.fetchRemoteConfigUseCase = fetchRemoteConfigUseCase
+        self.observeRemoteConfigUseCase = observeRemoteConfigUseCase
+        self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
+        self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
         
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
@@ -117,11 +147,11 @@ final class MenuViewModel: NSObject, ObservableObject {
         isFestivalAppIconEnabled = UserDefaults.standard.bool(forKey: "isFestivalAppIconEnabled")
         
         super.init()
-        
-        self.setupRemoteConfigListener()
-        Task {
-            await activateRemoteConfig()
+
+        remoteConfigFetchTask = Task { [weak self] in
+            await self?.loadRemoteConfig()
         }
+        startObservingRemoteConfigUpdates()
         
         isFestival = isFestivalAvailable && UserDefaults.standard.bool(forKey: "isFestival")
         locationManager.delegate = self
@@ -138,43 +168,54 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
         
         loadFilters()
-        loadFestivalDates()
+        Task {
+            await loadFestivalDates()
+        }
         subscribe()
+        Task {
+            await loadPersonalRestaurants()
+        }
+    }
+
+    deinit {
+        remoteConfigFetchTask?.cancel()
+        remoteConfigUpdatesTask?.cancel()
     }
     
-    private func setupRemoteConfigListener() {
-        self.settings.minimumFetchInterval = 0
-        self.remoteConfig.configSettings = settings
-        remoteConfig.addOnConfigUpdateListener { configUpdate, error in
-            if let error {
-                print("Error: \(error)")
+    @MainActor
+    private func loadRemoteConfig() async {
+        do {
+            let config = try await fetchRemoteConfigUseCase.execute()
+            applyRemoteConfig(config)
+        } catch {
+            print("Failed to load remote config: \(error)")
+        }
+    }
+
+    private func startObservingRemoteConfigUpdates() {
+        remoteConfigUpdatesTask = Task { [weak self] in
+            guard let updates = self?.observeRemoteConfigUseCase.execute() else {
                 return
             }
-            Task {
-                await self.activateRemoteConfig()
+
+            for await config in updates {
+                await self?.applyRemoteConfig(config)
             }
         }
     }
-    
-    private func activateRemoteConfig() async {
-        do {
-            try await remoteConfig.fetch()
-            try await remoteConfig.activate()
-            DispatchQueue.main.async {
-                self.isFestivalAvailable = self.remoteConfig["festivalFeatureEnabled"].boolValue
-                self.isFestivalAppIconEnabled = self.remoteConfig["festivalAppIconEnabled"].boolValue
-            }
-        } catch {
-            print("Error: \(error)")
-        }
+
+    @MainActor
+    private func applyRemoteConfig(_ config: RemoteConfigModel) {
+        isFestivalAvailable = config.festivalFeatureEnabled
+        UserDefaults.standard.set(config.festivalFeatureEnabled, forKey: "isFestivalAvailable")
+        isFestivalAppIconEnabled = config.festivalAppIconEnabled
+        refreshFestivalSwitchState()
     }
     
     private func subscribe() {
         subscribeToIsFestivalAppIconEnabled()
-        subscribeToIsFestivalAvailable()
         subscribeToIsFestival()
         subscribeToSelectedDate()
-        subscribeToGetMenuStatus()
         subscribeToSelectedMenu()
     }
     
@@ -193,21 +234,6 @@ final class MenuViewModel: NSObject, ObservableObject {
                             print("Failed to set app icon: \(error)")
                         }
                     }
-                }
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func subscribeToIsFestivalAvailable() {
-        $isFestivalAvailable
-            .removeDuplicates()
-            .sink { [weak self] available in
-                guard let self = self else { return }
-                UserDefaults.standard.set(available, forKey: "isFestivalAvailable")
-                
-                if !available {
-                    self.isFestival = false
-                    self.showFestivalSwitch = false
                 }
             }
             .store(in: &cancellables)
@@ -240,114 +266,191 @@ final class MenuViewModel: NSObject, ObservableObject {
                 
                 self.getMenu(date: dateString)
                 
-                checkShowFestivalSwitch(selected)
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func subscribeToGetMenuStatus() {
-        $getMenuStatus
-            .filter { $0 == .succeeded || $0 == .needRerender || $0 == .showCached }
-            .combineLatest($selectedFilters)
-            .sink { [weak self] (_, filters) in
-                guard let self = self else { return }
-                
-                self.showCalendar = false
-                
-                let managedMenu = self.repository.getMenu(date: selectedDate)
-                
-                if managedMenu == nil {
-                    self.selectedMenu = nil
-                } else {
-                    self.selectedMenu = filterMenus(DailyMenu(value: managedMenu), filter: filters)
-                }
-                
-                if self.selectedDate == self.todayString {
-                    UserDefaults.standard.set(true, forKey: "canSubmitReview")
-                } else {
-                    UserDefaults.standard.set(false, forKey: "canSubmitReview")
-                }
-                
-                self.getMenuStatus = .idle
-            }
-            .store(in: &cancellables)
-        
-        $getMenuStatus
-            .filter { $0 == .showCached }
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                
-                self.showNetworkAlert = true
+                self.refreshFestivalSwitchState(selectedDate: selected)
             }
             .store(in: &cancellables)
     }
     
     private func subscribeToSelectedMenu() {
-        $selectedMenu
-            .combineLatest($isFestival)
-            .sink { [weak self] (menu,isFestival) in
+        $isFestival
+            .removeDuplicates()
+            .sink { [weak self] _ in
                 guard let self = self else { return }
-                
-                if let menu {
-                    let restOrder = (UserDefaults.standard.dictionary(forKey: selectedFilters.isFavorite ?? false ? "favRestaurantOrder" : "restaurantOrder") as? [String : Int]) ?? [String : Int]()
-                    
-                    let br = Array(menu.getRestaurants(.breakfast))
-                        .filter { restaurant in
-                            restaurant.nameKr.contains("[축제]") == isFestival
-                        }
-                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
-                    
-                    let lu = Array(menu.getRestaurants(.lunch))
-                        .filter { restaurant in
-                            restaurant.nameKr.contains("[축제]") == isFestival
-                        }
-                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
-                    
-                    let dn = Array(menu.getRestaurants(.dinner))
-                        .filter { restaurant in
-                            restaurant.nameKr.contains("[축제]") == isFestival
-                        }
-                        .sorted { restOrder["\($0.id)"] ?? 0 < restOrder["\($1.id)"] ?? 0 }
-                    
-                    self.restaurantsLists = [br, lu, dn]
-                } else {
-                    self.restaurantsLists = []
-                }
+                self.rebuildMealSections(filters: self.selectedFilters)
             }
             .store(in: &cancellables)
     }
     
-    func checkShowFestivalSwitch(_ date: Date) {
-        self.showFestivalSwitch = self.isFestivalAvailable && self.festivalDates.contains(date)
-        if !showFestivalSwitch {
-            self.isFestival = false
+    @MainActor
+    private func loadPersonalRestaurants() async {
+        guard !isLoadingPersonalRestaurants else {
+            return
+        }
+        
+        isLoadingPersonalRestaurants = true
+        defer {
+            isLoadingPersonalRestaurants = false
+        }
+        
+        do {
+            let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
+            shouldUseDefaultRestaurantPreference = false
+            updatePersonalRestaurants(restaurants)
+            applyCurrentMenu(filters: selectedFilters)
+        } catch {
+            print("Failed to load personal restaurants: \(error)")
+
+            if personalRestaurantById.isEmpty {
+                shouldUseDefaultRestaurantPreference = true
+                applyCurrentMenu(filters: selectedFilters)
+            }
         }
     }
     
-    private func filterMenus(_ menus: DailyMenu, filter: MenuFilters) -> DailyMenu {
-        var menus = menus
-        menus.br = filterRestaurants(restaurants: menus.br, filter: filter)
-        menus.lu = filterRestaurants(restaurants: menus.lu, filter: filter)
-        menus.dn = filterRestaurants(restaurants: menus.dn, filter: filter)
-        return menus
+    @MainActor
+    func refreshPersonalRestaurants() {
+        Task {
+            await loadPersonalRestaurants()
+        }
     }
     
-    private func filterRestaurants(restaurants: List<Restaurant>, filter: MenuFilters) -> List<Restaurant> {
-        let filteredArray: [Restaurant] = Array(restaurants).compactMap { (restaurant: Restaurant) -> Restaurant? in
+    private func updatePersonalRestaurants(_ restaurants: [PersonalRestaurantModel]) {
+        var byId: [Int: PersonalRestaurantModel] = [:]
+        var order: [Int: Int] = [:]
+        
+        for (index, restaurant) in restaurants.enumerated() {
+            byId[restaurant.id] = restaurant
+            order[restaurant.id] = index
+        }
+        
+        personalRestaurantById = byId
+        personalRestaurantOrder = order
+    }
+    
+    private func applyCurrentMenu(filters: MenuFilters) {
+        guard selectedMenu != nil else {
+            selectedMenu = nil
+            mealSections = []
+            return
+        }
+        
+        rebuildMealSections(filters: filters)
+    }
+    
+    private func refreshFestivalSwitchState(selectedDate selected: Date? = nil) {
+        let selected = selected ?? currentSelectedDate()
+        showFestivalSwitch = isFestivalAvailable && festivalDates.contains(selected)
+        if !showFestivalSwitch {
+            isFestival = false
+        }
+    }
+
+    private func currentSelectedDate() -> Date {
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.date(from: selectedDate) ?? Date()
+    }
+    
+    @MainActor
+    func toggleRestaurantLike(_ restaurantId: Int) async {
+        guard !updatingLikeRestaurantIds.contains(restaurantId),
+              let restaurant = personalRestaurantById[restaurantId] else {
+            return
+        }
+        
+        updatingLikeRestaurantIds.insert(restaurantId)
+        defer {
+            updatingLikeRestaurantIds.remove(restaurantId)
+        }
+        
+        do {
+            let status = try await updateRestaurantPreferenceUseCase.setLiked(
+                restaurant: restaurant,
+                liked: !restaurant.liked
+            )
+            updatePersonalRestaurant(status)
+            rebuildMealSections(filters: selectedFilters)
+        } catch {
+            print("Failed to update restaurant like: \(error)")
+        }
+    }
+    
+    private func updatePersonalRestaurant(_ status: RestaurantPreferenceStatusModel) {
+        guard let restaurant = personalRestaurantById[status.id] else {
+            return
+        }
+        
+        personalRestaurantById[status.id] = PersonalRestaurantModel(
+            id: restaurant.id,
+            code: restaurant.code,
+            nameKr: restaurant.nameKr,
+            nameEn: restaurant.nameEn,
+            address: restaurant.address,
+            coordinate: restaurant.coordinate,
+            liked: status.liked,
+            visible: status.visible,
+            operatingHours: restaurant.operatingHours
+        )
+    }
+    
+    private func rebuildMealSections(filters: MenuFilters) {
+        guard let selectedMenu else {
+            mealSections = []
+            return
+        }
+        
+        mealSections = [
+            MealSectionDisplayModel(
+                id: TypeSelection.breakfast.rawValue,
+                type: .breakfast,
+                restaurantMenus: makeRestaurantMenusDisplayModels(
+                    type: .breakfast,
+                    restaurants: selectedMenu.breakfast,
+                    filter: filters
+                )
+            ),
+            MealSectionDisplayModel(
+                id: TypeSelection.lunch.rawValue,
+                type: .lunch,
+                restaurantMenus: makeRestaurantMenusDisplayModels(
+                    type: .lunch,
+                    restaurants: selectedMenu.lunch,
+                    filter: filters
+                )
+            ),
+            MealSectionDisplayModel(
+                id: TypeSelection.dinner.rawValue,
+                type: .dinner,
+                restaurantMenus: makeRestaurantMenusDisplayModels(
+                    type: .dinner,
+                    restaurants: selectedMenu.dinner,
+                    filter: filters
+                )
+            )
+        ]
+    }
+    
+    private func makeRestaurantMenusDisplayModels(
+        type: TypeSelection,
+        restaurants: [RestaurantModel],
+        filter: MenuFilters
+    ) -> [RestaurantMenusDisplayModel] {
+        restaurants.compactMap { (restaurant: RestaurantModel) -> RestaurantMenusDisplayModel? in
+            let personalRestaurant = personalRestaurantById[restaurant.id]
+            let isVisible = personalRestaurant?.visible ?? shouldUseDefaultRestaurantPreference
+            let isLiked = personalRestaurant?.liked ?? false
+
+            guard isVisible else {
+                return nil
+            }
             
-            var isRestaurantEmpty = false
-            
-            // 영업 중인지 체크 (휴일 등은 추후 처리)
             if filter.isOpen == true && !isRestaurantOpen(restaurant) {
-                isRestaurantEmpty = true
+                return nil
             }
             
-            // 즐겨찾기한 식당인지 체크
-            if filter.isFavorite == true && !UserDefaults.standard.bool(forKey: "fav\(restaurant.id)") {
-                isRestaurantEmpty = true
+            if filter.isFavorite == true && !isLiked {
+                return nil
             }
             
-            // 거리 필터 적용
             if let distance = filter.distance {
                 checkLocationAuthorization()
                 
@@ -356,13 +459,12 @@ final class MenuViewModel: NSObject, ObservableObject {
                     DispatchQueue.main.async { self.showDistanceAlert = true }
                 } else {
                     if let currentLocation = locationManager.location {
-                        if let restaurantLocation = restaurant.location {
+                        if let restaurantLocation = restaurant.coordinate?.location {
                             if currentLocation.distance(from: restaurantLocation) > Double(distance) {
-                                isRestaurantEmpty = true
+                                return nil
                             }
                         } else {
-                            // 레스토랑 위치 정보가 없으면 거리 필터 적용시 해당 레스토랑 제거
-                            isRestaurantEmpty = true
+                            return nil
                         }
                     } else {
                         selectedFilters.distance = nil
@@ -371,30 +473,29 @@ final class MenuViewModel: NSObject, ObservableObject {
                 }
             }
             
-            let filteredMenus: [Meal]
-            
-            if isRestaurantEmpty {
-                filteredMenus = []
-            } else {
-                filteredMenus = filterRestaurantMenus(restaurant.menus, filter: filter)
-            }
+            let filteredMenus = filterRestaurantMenus(restaurant.menus, filter: filter)
             
             let noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide") // 메뉴가 없으면 레스토랑 hide
             if noMenuHide && filteredMenus.isEmpty { return nil }
             
-            // 새 메뉴 List에 필터링된 메뉴들을 추가
-            let newMenus = List<Meal>()
-            for menu in filteredMenus {
-                newMenus.append(menu)
-            }
-            restaurant.menus = newMenus
-            
-            return restaurant
+            return RestaurantMenusDisplayModel(
+                id: "\(type.rawValue)-\(restaurant.id)",
+                restaurantId: restaurant.id,
+                code: restaurant.code,
+                nameKr: restaurant.nameKr ?? "",
+                nameEn: restaurant.nameEn ?? "",
+                address: restaurant.address ?? "",
+                coordinate: restaurant.coordinate,
+                operatingHours: restaurant.operatingHours,
+                menus: filteredMenus,
+                isFavorite: isLiked
+            )
         }
-        
-        let newList = List<Restaurant>()
-        filteredArray.forEach { newList.append($0) }
-        return newList
+        .sorted { restaurantSortIndex($0.restaurantId) < restaurantSortIndex($1.restaurantId) }
+    }
+    
+    private func restaurantSortIndex(_ restaurantId: Int) -> Int {
+        personalRestaurantOrder[restaurantId] ?? Int.max
     }
     
     private func checkLocationAuthorization() {
@@ -415,7 +516,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     
-    private func filterRestaurantMenus(_ menus: List<Meal>, filter: MenuFilters) -> [Meal] {
+    private func filterRestaurantMenus(_ menus: [MenuModel], filter: MenuFilters) -> [MenuItemDisplayModel] {
         return menus.filter { menu in
             
             var meetsPrice = true
@@ -433,7 +534,7 @@ final class MenuViewModel: NSObject, ObservableObject {
             var meetsReview = true
             if let hasReview = filter.hasReview,
                hasReview == true {
-                meetsReview = menu.reviewCnt > 0
+                meetsReview = menu.reviewCount > 0
             }
             
             var meetsRate = true
@@ -447,10 +548,23 @@ final class MenuViewModel: NSObject, ObservableObject {
             }
             
             return meetsPrice && meetsReview && meetsRate && meetsCategories
+        }.map {
+            MenuItemDisplayModel(
+                id: $0.id,
+                code: $0.code,
+                nameKr: $0.nameKr,
+                nameEn: $0.nameEn,
+                price: $0.price,
+                score: $0.score,
+                reviewCount: $0.reviewCount,
+                isLiked: $0.isLiked,
+                likeCount: $0.likeCount,
+                imageURLStrings: $0.imageURLStrings
+            )
         }
     }
     
-    private func isRestaurantOpen(_ restaurant: Restaurant) -> Bool {
+    private func isRestaurantOpen(_ restaurant: RestaurantModel) -> Bool {
         var koreanCalendar = Calendar(identifier: .gregorian)
         koreanCalendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
         
@@ -503,16 +617,50 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func getMenu(date: String) {
-        guard self.getMenuStatus != .loading else {
-            return
+        Task { @MainActor [weak self] in
+            guard let self else {
+                return
+            }
+            
+            guard getMenuStatus != .loading else {
+                return
+            }
+            
+            getMenuStatus = .loading
+            
+            let result = await fetchDailyMenuUseCase.execute(date: date)
+            
+            guard date == selectedDate else {
+                getMenuStatus = .idle
+                getMenu(date: selectedDate)
+                return
+            }
+            
+            showCalendar = false
+            
+            switch result {
+            case .succeeded(let menu):
+                selectedMenu = menu
+                rebuildMealSections(filters: selectedFilters)
+                getMenuStatus = .idle
+            case .empty:
+                selectedMenu = nil
+                mealSections = []
+                getMenuStatus = .idle
+            case .cached(let menu):
+                selectedMenu = menu
+                rebuildMealSections(filters: selectedFilters)
+                showNetworkAlert = true
+                getMenuStatus = .idle
+            case .failed:
+                selectedMenu = nil
+                mealSections = []
+                showNetworkAlert = true
+                getMenuStatus = .failed
+            }
+            
+            UserDefaults.standard.set(selectedDate == todayString, forKey: "canSubmitReview")
         }
-        
-        self.getMenuStatus = .loading
-        
-        repository.fetchMenu(date: date)
-            .receive(on: RunLoop.main)
-            .assign(to: \.getMenuStatus, on: self)
-            .store(in: &cancellables)
     }
     
     func loadFilters() {
@@ -526,42 +674,83 @@ final class MenuViewModel: NSObject, ObservableObject {
         self.selectedFilters = MenuFilters()
     }
     
-    func saveFilters() {
+    func updateFilters(_ update: (inout MenuFilters) -> Void) {
+        var filters = selectedFilters
+        update(&filters)
+        setFilters(filters)
+    }
+    
+    func setFilters(_ filters: MenuFilters) {
+        selectedFilters = filters
+        saveFilters()
+        applyCurrentMenu(filters: filters)
+    }
+    
+    private func saveFilters() {
         let encoder = JSONEncoder()
         if let filters = try? encoder.encode(selectedFilters) {
             UserDefaults.standard.setValue(filters, forKey: "menuFilters")
         }
     }
     
-    func loadFestivalDates() {
-        repository.fetchFestivalDates()
-            .receive(on: RunLoop.main)
-            .sink { [weak self] dates in
-                guard let self = self else { return }
-                self.festivalDates = dates
-                self.formatter.dateFormat = "yyyy-MM-dd"
-                let selected = self.formatter.date(from: selectedDate) ?? Date()
-                self.checkShowFestivalSwitch(selected)
-            }
-            .store(in: &cancellables)
-    }
-    static func getOperatingHours(restaurant:Restaurant,dayType:Int,selectedPage:Int)->String{
-      
-        let operatingHours = restaurant.operatingHours[dayType].split(separator: "\n").map { String($0) }
-        if operatingHours.count == 3{
-            return operatingHours[selectedPage]
+    @MainActor
+    func loadFestivalDates() async {
+        do {
+            let dates = try await festivalRepository.fetchFestivalDates()
+            festivalDates = dates
+            refreshFestivalSwitchState()
+        } catch {
+            print("Failed to load festival dates: \(error)")
         }
-        if operatingHours.count == 2{
+    }
+    static func getOperatingHours(operatingHours: [String], dayType: Int, selectedPage: Int) -> String {
+      
+        guard operatingHours.count > dayType,
+              dayType >= 0 else {
+            return "정보 없음"
+        }
+        
+        let dayOperatingHours = operatingHours[dayType].split(separator: "\n").map { String($0) }
+        if dayOperatingHours.count == 3{
+            guard dayOperatingHours.indices.contains(selectedPage) else {
+                return "정보 없음"
+            }
+            return dayOperatingHours[selectedPage]
+        }
+        if dayOperatingHours.count == 2{
             if selectedPage == TypeSelection.breakfast.rawValue{
                 return "정보 없음"
             }
-            return operatingHours[selectedPage-1]
+            let index = selectedPage - 1
+            guard dayOperatingHours.indices.contains(index) else {
+                return "정보 없음"
+            }
+            return dayOperatingHours[index]
         }
-        if operatingHours.count == 1{
-            return operatingHours[0]
+        if dayOperatingHours.count == 1{
+            return dayOperatingHours[0]
         }
         return "정보 없음"
         
+    }
+}
+
+private extension Coordinate {
+    var location: CLLocation {
+        CLLocation(latitude: latitude, longitude: longitude)
+    }
+}
+
+extension DateType {
+    var operatingHourType: Int {
+        switch self {
+        case .weekdays:
+            return 0
+        case .saturday:
+            return 1
+        case .holiday:
+            return 2
+        }
     }
 }
 

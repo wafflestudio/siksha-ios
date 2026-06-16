@@ -9,57 +9,59 @@ import SwiftUI
 
 // MARK: - Restaurant Cell
 
-struct RestaurantCell: View {
+struct RestaurantCell<MenuRow: View>: View {
     private let lightGrayColor = Color.gray600
     private let orangeColor = Color.orange500
     
-    var restaurant: Restaurant
-    var meals: [Meal]
-    var selectedPage:Int
-    var dayType:Int
-    @State var isFavorite: Bool = false
-    @State var showRestaurant: Bool = false
-    @StateObject private var kakaoShareManager = KakaoShareManager()
-    @Environment(\.menuViewModel) var viewModel: MenuViewModel?
+    let item: RestaurantMenusDisplayModel
+    let selectedPage:Int
+    let dayType:Int
+    let onInfoTap: () -> Void
+    let onShareTap: () -> Void
+    let onFavoriteTap: (Int) -> Void
+    let menuRow: (MenuItemDisplayModel) -> MenuRow
     
-    init(_ restaurant: Restaurant,_ selectedPage:Int,_ dayType:Int) {
-        self.restaurant = restaurant
+    init(
+        item: RestaurantMenusDisplayModel,
+        selectedPage: Int,
+        dayType: Int,
+        onInfoTap: @escaping () -> Void,
+        onShareTap: @escaping () -> Void,
+        onFavoriteTap: @escaping (Int) -> Void,
+        @ViewBuilder menuRow: @escaping (MenuItemDisplayModel) -> MenuRow
+    ) {
+        self.item = item
         self.selectedPage = selectedPage
         self.dayType = dayType
-        self.meals = Array(restaurant.menus)
-        self._isFavorite = State(initialValue: UserDefaults.standard.bool(forKey: "fav\(restaurant.id)"))
+        self.onInfoTap = onInfoTap
+        self.onShareTap = onShareTap
+        self.onFavoriteTap = onFavoriteTap
+        self.menuRow = menuRow
     }
     
     var body: some View {
         VStack(spacing: 0) {
             // Restaurant Name
             HStack(alignment: .center) {
-                Text(restaurant.nameKr)
+                Text(item.nameKr)
                     .customFont(font: .text16(weight: .ExtraBold))
                     .foregroundColor(.blackColor)
                 Spacer()
                     .frame(width:6)
                 Button(action: {
-                    self.showRestaurant = true
+                    onInfoTap()
                 }) {
-                    Image("Info")
+                    Image(.Icons.Common.information)
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 20, height: 20)
                 }
-                .sheet(isPresented: $showRestaurant, content: {
-                    RestaurantInformationView(restaurant)
-                })
                 Spacer()
                     .frame(width:4)
                 Button(action: {
-                    isFavorite.toggle()
-                    UserDefaults.standard.set(isFavorite, forKey: "fav\(restaurant.id)")
-                    if viewModel?.selectedFilters.isFavorite ?? false == true {
-                        viewModel?.getMenuStatus = .needRerender
-                    }
+                    onFavoriteTap(item.restaurantId)
                 }, label: {
-                    Image(isFavorite ? "Favorite-selected" : "Favorite-default")
+                    Image(item.isFavorite ? "Favorite-selected" : "Favorite-default")
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 20, height: 20)
@@ -67,19 +69,14 @@ struct RestaurantCell: View {
                 Spacer()
                     .frame(width:4)
                 Button(action: {
-                    kakaoShareManager.shareKakao(restaurant: restaurant, selectedDateString: viewModel?.selectedDate ?? "오늘")
-                
+                    onShareTap()
                 }) {
-                    Image(.kakaoShare)
+                    Image(.Icons.Common.share)
                         .resizable()
                         .renderingMode(.original)
                         .frame(width: 20, height: 20)
                         .foregroundColor(orangeColor)
-                }.sheet(isPresented: $kakaoShareManager.showWebView) {
-                    if let urlString = kakaoShareManager.urlToLoad {
-                        KakaoShareWebView(urlString: urlString, showWebView: $kakaoShareManager.showWebView, restaurant: restaurant, selectedDate: viewModel?.selectedDate ?? "오늘")
-                    }
-                }.interactiveDismissDisabled(false)
+                }
                 Spacer()
                 /*Spacer()
                 
@@ -107,7 +104,7 @@ struct RestaurantCell: View {
                     .foregroundColor(Color.gray600)
                 Spacer()
                     .frame(width:4)
-                Text(MenuViewModel.getOperatingHours(restaurant: restaurant,dayType: dayType,selectedPage: selectedPage))
+                Text(MenuViewModel.getOperatingHours(operatingHours: item.operatingHours, dayType: dayType, selectedPage: selectedPage))
                     .customFont(font: .text12(weight: .Bold))
                     .foregroundColor(lightGrayColor)
                 Spacer()
@@ -145,19 +142,10 @@ struct RestaurantCell: View {
                 .padding([.trailing], 14.5)
                 .padding([.leading],11.5)
             VStack(spacing: 13) {
-                if meals.count > 0 {
-                    ForEach(meals, id: \.id) { meal in
-                        let mealInfoViewModel = MealInfoViewModel(meal: meal)
-                        NavigationLink(
-                            destination: MealInfoView(viewModel: mealInfoViewModel)
-                                .environment(\.menuViewModel, viewModel)
-                                .onAppear {
-                                    viewModel?.reloadOnAppear = false
-                                },
-                            label: {
-                                MealCell(viewModel: mealInfoViewModel)
-                                    .id("\(meal.id)\(meal.score)")
-                            })
+                if item.menus.count > 0 {
+                    ForEach(item.menus, id: \.id) { menu in
+                        menuRow(menu)
+                            .id("\(menu.id)\(menu.score)")
                     }
                 } else {
                     HStack(alignment: .center) {
@@ -185,43 +173,61 @@ struct RestaurantCell: View {
 struct RestaurantCell_Previews: PreviewProvider {
     
     static var previews: some View {
-        let dummyRestaurant = Restaurant()
-        dummyRestaurant.id = 1
-        dummyRestaurant.nameKr = "학생회관"
-        dummyRestaurant.nameEn = "Student Hall"
-        dummyRestaurant.code = "SH"
-        dummyRestaurant.addr = "학생회관 1층"
-        dummyRestaurant.lat = "37.123"
-        dummyRestaurant.lng = "127.123"
-        dummyRestaurant.operatingHours.append(objectsIn: [
-            "08:00 - 09:00\n11:30 - 13:30\n17:30 - 19:00",
-            "09:00 - 13:00\n17:00 - 18:30",
-            "Closed"
-        ])
+        let displayModel = RestaurantMenusDisplayModel(
+            id: "0-1",
+            restaurantId: 1,
+            code: "SH",
+            nameKr: "학생회관",
+            nameEn: "Student Hall",
+            address: "학생회관 1층",
+            coordinate: Coordinate(latitude: 37.123, longitude: 127.123),
+            operatingHours: [
+                "08:00 - 09:00\n11:30 - 13:30\n17:30 - 19:00",
+                "09:00 - 13:00\n17:00 - 18:30",
+                "Closed"
+            ],
+            menus: [
+                MenuItemDisplayModel(
+                    id: 101,
+                    code: "A",
+                    nameKr: "김치찌개",
+                    nameEn: "Kimchi Stew",
+                    price: 4500,
+                    score: 4.2,
+                    reviewCount: 20,
+                    isLiked: true,
+                    likeCount: 10,
+                    imageURLStrings: []
+                ),
+                MenuItemDisplayModel(
+                    id: 102,
+                    code: "B",
+                    nameKr: "제육볶음",
+                    nameEn: "Spicy Pork",
+                    price: 5000,
+                    score: 4.5,
+                    reviewCount: 35,
+                    isLiked: false,
+                    likeCount: 22,
+                    imageURLStrings: []
+                )
+            ],
+            isFavorite: true
+        )
         
-        let dummyMeal1 = Meal()
-        dummyMeal1.id = 101
-        dummyMeal1.nameKr = "김치찌개"
-        dummyMeal1.nameEn = "Kimchi Stew"
-        dummyMeal1.price = 4500
-        dummyMeal1.score = 4.2
-        dummyMeal1.reviewCnt = 20
-        dummyMeal1.likeCnt = 10
-        dummyMeal1.isLiked = true
-
-        let dummyMeal2 = Meal()
-        dummyMeal2.id = 102
-        dummyMeal2.nameKr = "제육볶음"
-        dummyMeal2.nameEn = "Spicy Pork"
-        dummyMeal2.price = 5000
-        dummyMeal2.score = 4.5
-        dummyMeal2.reviewCnt = 35
-        dummyMeal2.likeCnt = 22
-        dummyMeal2.isLiked = false
-
-        dummyRestaurant.menus.append(objectsIn: [dummyMeal1, dummyMeal2])
-        
-        return RestaurantCell(dummyRestaurant, 0, 0)
+        return RestaurantCell(
+            item: displayModel,
+            selectedPage: 0,
+            dayType: 0,
+            onInfoTap: {},
+            onShareTap: {},
+            onFavoriteTap: { _ in },
+            menuRow: { menu in
+                Text(menu.nameKr)
+                    .customFont(font: .text15(weight: .Regular))
+                    .foregroundColor(.blackColor)
+            }
+        )
             .previewLayout(.sizeThatFits)
             .padding()
     }

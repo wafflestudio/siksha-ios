@@ -7,13 +7,13 @@
 
 import Foundation
 import Combine
-import RealmSwift
 import SwiftUI
 
 class MealReviewViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
+    private let mealReviewUseCase: MealReviewUseCase
     
-    @Published var meal: Meal? = nil
+    @Published var meal: MenuItemDisplayModel?
     @Published var scoreToSubmit: Int = 0
     @Published var commentToSubmit: String = ""
     @Published var commentRecommended: Bool = false
@@ -32,7 +32,15 @@ class MealReviewViewModel: ObservableObject {
     private var recommendedComment = ""
     private var isEditMode = false
     
-    init() {
+    init(
+        meal: MenuItemDisplayModel? = nil,
+        mealReviewUseCase: MealReviewUseCase = DefaultMealReviewUseCase(
+            repository: MealInfoRepositoryImpl()
+        )
+    ) {
+        self.meal = meal
+        self.mealReviewUseCase = mealReviewUseCase
+        
         $postReviewSucceeded
             .dropFirst()
             .sink { [weak self] status in
@@ -71,18 +79,22 @@ class MealReviewViewModel: ObservableObject {
     }
     
     private func getRecommendedComment(_ score: Int) {
-        Networking.shared.getCommentRecommendation(score: score)
-            .map(\.value?.comment)
-            .replaceNil(with: "")
-            .filter({ comment in
-                !comment.isEmpty
-            })
-            .handleEvents(receiveOutput : { comment in
-                self.commentRecommended = true
-                self.recommendedComment = comment
-            })
-            .assign(to: \.commentToSubmit, on: self)
-            .store(in: &cancellables)
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let comment = try await mealReviewUseCase.fetchCommentRecommendation(score: score)
+                guard !comment.isEmpty else { return }
+                
+                await MainActor.run {
+                    self.commentRecommended = true
+                    self.recommendedComment = comment
+                    self.commentToSubmit = comment
+                }
+            } catch {
+                return
+            }
+        }
     }
     
     func submitReview() {
@@ -91,42 +103,24 @@ class MealReviewViewModel: ObservableObject {
             return
         }
         
-        Networking.shared.submitReview(
-            menuId: meal.id,
-            score: scoreToSubmit,
-            comment: commentToSubmit.count > 0 ? commentToSubmit : "",
-            taste: selectedKeywords[.taste] ?? "",
-            price: selectedKeywords[.price] ?? "",
-            foodComposition: selectedKeywords[.composition] ?? ""
-        )
-        .receive(on: RunLoop.main)
-        .sink { [weak self] result in
-            guard let self = self else { return }
-            guard let response = result.response else {
-                self.postReviewSucceeded = false
-                return
-            }
+        let submission = makeSubmission(menuId: meal.id, images: nil)
+        Task { [weak self] in
+            guard let self else { return }
             
-            if 200..<300 ~= response.statusCode {
-                self.postReviewSucceeded = true
-                
-                let score = meal.score
-                let reviewCnt = meal.reviewCnt
-                
-                let newScore = (score * Double(reviewCnt) + Double(self.scoreToSubmit)) / Double(reviewCnt + 1)
-                let newReviewCnt = reviewCnt + 1
-                
-                let realm = try! Realm()
-                try! realm.write {
-                    meal.score = newScore
-                    meal.reviewCnt = newReviewCnt
+            do {
+                try await mealReviewUseCase.submitReview(submission)
+                await MainActor.run {
+                    self.errorCode = nil
+                    self.postReviewSucceeded = true
+                    self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
                 }
-            } else {
-                self.errorCode = .init(rawValue: response.statusCode)
-                self.postReviewSucceeded = false
+            } catch {
+                await MainActor.run {
+                    self.errorCode = self.reviewErrorCode(from: error)
+                    self.postReviewSucceeded = false
+                }
             }
         }
-        .store(in: &cancellables)
     }
     
     func submitReviewImages(images: [UIImage]) {
@@ -135,47 +129,29 @@ class MealReviewViewModel: ObservableObject {
             return
         }
         
-        let imagesData = images.compactMap{ $0.jpegData(compressionQuality: 0.5) }
+        let imagesData = images.compactMap { $0.jpegData(compressionQuality: 0.5) }
+        let submission = makeSubmission(menuId: meal.id, images: imagesData)
         
-        Networking.shared.submitReviewImages(
-            menuId: meal.id,
-            score: scoreToSubmit,
-            comment: commentToSubmit.count > 0 ? commentToSubmit : "",
-            taste: selectedKeywords[.taste] ?? "",
-            price: selectedKeywords[.price] ?? "",
-            foodComposition: selectedKeywords[.composition] ?? "",
-            images: imagesData)
-        .receive(on: RunLoop.main)
-        .sink { [weak self] result in
-            guard let self = self else { return }
-            guard let response = result.response else {
-                self.postReviewSucceeded = false
-                return
-            }
+        Task { [weak self] in
+            guard let self else { return }
             
-            if 200..<300 ~= response.statusCode {
-                self.postReviewSucceeded = true
-                
-                let score = meal.score
-                let reviewCnt = meal.reviewCnt
-                
-                let newScore = (score * Double(reviewCnt) + Double(self.scoreToSubmit)) / Double(reviewCnt + 1)
-                let newReviewCnt = reviewCnt + 1
-                
-                let realm = try! Realm()
-                try! realm.write {
-                    meal.score = newScore
-                    meal.reviewCnt = newReviewCnt
+            do {
+                try await mealReviewUseCase.submitReview(submission)
+                await MainActor.run {
+                    self.errorCode = nil
+                    self.postReviewSucceeded = true
+                    self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
                 }
-            } else {
-                self.errorCode = .init(rawValue: response.statusCode)
-                self.postReviewSucceeded = false
+            } catch {
+                await MainActor.run {
+                    self.errorCode = self.reviewErrorCode(from: error)
+                    self.postReviewSucceeded = false
+                }
             }
         }
-        .store(in: &cancellables)
     }
     
-
+    
     // MARK: - 리뷰 수정 관련 메소드
     
     func loadExistingReview(_ review: RestaurantReview) {
@@ -223,36 +199,25 @@ class MealReviewViewModel: ObservableObject {
             return
         }
         
-        // 전체 이미지를 Data로 변환 (기존 + 새로운 이미지 모두)
         let allImagesData = selectedImages.compactMap { $0.jpegData(compressionQuality: 0.5) }
+        let submission = makeSubmission(menuId: meal.id, images: allImagesData.isEmpty ? nil : allImagesData)
         
-        Networking.shared.editReview(
-            reviewId: reviewId,
-            menuId: meal.id,
-            score: scoreToSubmit,
-            comment: commentToSubmit.count > 0 ? commentToSubmit : "",
-            taste: selectedKeywords[.taste] ?? "",
-            price: selectedKeywords[.price] ?? "",
-            foodComposition: selectedKeywords[.composition] ?? "",
-            images: allImagesData.isEmpty ? nil : allImagesData
-        )
-        .receive(on: RunLoop.main)
-        .sink { [weak self] result in
-            guard let self = self else { return }
+        Task { [weak self] in
+            guard let self else { return }
             
-            guard let response = result.response else {
-                self.postReviewSucceeded = false
-                return
-            }
-            
-            if 200..<300 ~= response.statusCode {
-                self.postReviewSucceeded = true
-            } else {
-                self.errorCode = .init(rawValue: response.statusCode)
-                self.postReviewSucceeded = false
+            do {
+                try await mealReviewUseCase.editReview(reviewId: reviewId, submission: submission)
+                await MainActor.run {
+                    self.errorCode = nil
+                    self.postReviewSucceeded = true
+                }
+            } catch {
+                await MainActor.run {
+                    self.errorCode = self.reviewErrorCode(from: error)
+                    self.postReviewSucceeded = false
+                }
             }
         }
-        .store(in: &cancellables)
     }
     
     func deleteImage(_ image: UIImage) {
@@ -261,4 +226,22 @@ class MealReviewViewModel: ObservableObject {
         }
     }
     
+    private func makeSubmission(menuId: Int, images: [Data]?) -> MealReviewSubmissionModel {
+        MealReviewSubmissionModel(
+            menuId: menuId,
+            score: scoreToSubmit,
+            comment: commentToSubmit.count > 0 ? commentToSubmit : "",
+            taste: selectedKeywords[.taste] ?? "",
+            price: selectedKeywords[.price] ?? "",
+            foodComposition: selectedKeywords[.composition] ?? "",
+            images: images
+        )
+    }
+    
+    private func reviewErrorCode(from error: Error) -> ReviewErrorCode? {
+        if case let MealReviewSubmissionError.statusCode(statusCode) = error {
+            return ReviewErrorCode(rawValue: statusCode) ?? .noNetwork
+        }
+        return .noNetwork
+    }
 }
