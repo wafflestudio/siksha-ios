@@ -32,6 +32,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private var personalRestaurantOrder: [Int: Int] = [:]
     private var updatingLikeRestaurantIds = Set<Int>()
     private var isLoadingPersonalRestaurants = false
+    private var shouldUseDefaultRestaurantPreference = false
     
     @Published var showCalendar: Bool = false
     @Published var showFestivalSwitch: Bool = false
@@ -293,10 +294,16 @@ final class MenuViewModel: NSObject, ObservableObject {
         
         do {
             let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
+            shouldUseDefaultRestaurantPreference = false
             updatePersonalRestaurants(restaurants)
             applyCurrentMenu(filters: selectedFilters)
         } catch {
             print("Failed to load personal restaurants: \(error)")
+
+            if personalRestaurantById.isEmpty {
+                shouldUseDefaultRestaurantPreference = true
+                applyCurrentMenu(filters: selectedFilters)
+            }
         }
     }
     
@@ -428,8 +435,11 @@ final class MenuViewModel: NSObject, ObservableObject {
         filter: MenuFilters
     ) -> [RestaurantMenusDisplayModel] {
         restaurants.compactMap { (restaurant: RestaurantModel) -> RestaurantMenusDisplayModel? in
-            guard let personalRestaurant = personalRestaurantById[restaurant.id],
-                  personalRestaurant.visible else {
+            let personalRestaurant = personalRestaurantById[restaurant.id]
+            let isVisible = personalRestaurant?.visible ?? shouldUseDefaultRestaurantPreference
+            let isLiked = personalRestaurant?.liked ?? false
+
+            guard isVisible else {
                 return nil
             }
             
@@ -437,7 +447,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 return nil
             }
             
-            if filter.isFavorite == true && !personalRestaurant.liked {
+            if filter.isFavorite == true && !isLiked {
                 return nil
             }
             
@@ -478,7 +488,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 coordinate: restaurant.coordinate,
                 operatingHours: restaurant.operatingHours,
                 menus: filteredMenus,
-                isFavorite: personalRestaurant.liked
+                isFavorite: isLiked
             )
         }
         .sorted { restaurantSortIndex($0.restaurantId) < restaurantSortIndex($1.restaurantId) }
