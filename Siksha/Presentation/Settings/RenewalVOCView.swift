@@ -124,5 +124,9 @@ struct RenewalVOCView: View {
 }
 
 #Preview {
-    RenewalVOCView(RenewalSettingsViewModel())
+    RenewalVOCView(
+        RenewalSettingsViewModel(
+            userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+        )
+    )
 }

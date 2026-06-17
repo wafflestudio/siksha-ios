@@ -254,7 +254,12 @@ struct MenuListView_Previews: PreviewProvider {
     struct ContainerView: View {
         @State var selectedFilterType: MenuFilterType? = .all
         var body: some View {
-            MenuListView(viewModel: MenuViewModel(), selectedFilterType: $selectedFilterType)
+            MenuListView(
+                viewModel: MenuViewModel(
+                    userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+                ),
+                selectedFilterType: $selectedFilterType
+            )
         }
     }
     

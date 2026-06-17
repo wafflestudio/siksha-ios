@@ -133,7 +133,11 @@ struct AccountManageView: View {
 struct AccountManageView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            AccountManageView(viewModel: RenewalSettingsViewModel())
+            AccountManageView(
+                viewModel: RenewalSettingsViewModel(
+                    userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+                )
+            )
         }
     }
 }

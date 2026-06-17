@@ -50,9 +50,13 @@ struct ContentView: View {
     @State var selectedTab = 0
     @EnvironmentObject var appState: AppState
     @ObservedObject var contentViewModel = ContentViewModel.contentViewModel
-    @StateObject private var menuViewModel = MenuViewModel()
+    @StateObject private var menuViewModel = MenuViewModel(
+        userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+    )
     @StateObject private var communityViewModel = CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository)
-    @StateObject private var settingsViewModel = RenewalSettingsViewModel()
+    @StateObject private var settingsViewModel = RenewalSettingsViewModel(
+        userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+    )
     @StateObject var alarmViewModel = MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository)
     @State private var hidePopupWorkItem: DispatchWorkItem?
     @State private var previousSelectedTab = 0

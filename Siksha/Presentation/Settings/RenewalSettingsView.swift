@@ -264,7 +264,11 @@ struct RenewalSettingsView: View {
 struct RenewalSettingsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            RenewalSettingsView(viewModel: RenewalSettingsViewModel())
+            RenewalSettingsView(
+                viewModel: RenewalSettingsViewModel(
+                    userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+                )
+            )
         }
     }
 }

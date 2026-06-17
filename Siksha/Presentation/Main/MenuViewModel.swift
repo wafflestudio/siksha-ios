@@ -25,6 +25,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
     private let mealSectionDisplayModelBuilder: MealSectionDisplayModelBuilder
+    private let userPreferenceUseCase: UserPreferenceUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
     private var remoteConfigFetchTask: Task<Void, Never>?
@@ -127,7 +128,8 @@ final class MenuViewModel: NSObject, ObservableObject {
         updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase = DefaultUpdateRestaurantPreferenceUseCase(
             repository: RestaurantRepositoryImpl()
         ),
-        mealSectionDisplayModelBuilder: MealSectionDisplayModelBuilder = MealSectionDisplayModelBuilder()
+        mealSectionDisplayModelBuilder: MealSectionDisplayModelBuilder = MealSectionDisplayModelBuilder(),
+        userPreferenceUseCase: UserPreferenceUseCase
     ) {
         self.analytics = analytics
         self.fetchDailyMenuUseCase = fetchDailyMenuUseCase
@@ -137,6 +139,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
         self.mealSectionDisplayModelBuilder = mealSectionDisplayModelBuilder
+        self.userPreferenceUseCase = userPreferenceUseCase
         
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
@@ -146,8 +149,8 @@ final class MenuViewModel: NSObject, ObservableObject {
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today
         dateRange = CurrentValueSubject((formatter.string(from: today), formatter.string(from: tomorrow)))
         
-        isFestivalAvailable = UserDefaults.standard.bool(forKey: "isFestivalAvailable")
-        isFestivalAppIconEnabled = UserDefaults.standard.bool(forKey: "isFestivalAppIconEnabled")
+        isFestivalAvailable = userPreferenceUseCase.isFestivalFeatureAvailable()
+        isFestivalAppIconEnabled = userPreferenceUseCase.isFestivalAppIconEnabled()
         
         super.init()
 
@@ -156,7 +159,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
         startObservingRemoteConfigUpdates()
         
-        isFestival = isFestivalAvailable && UserDefaults.standard.bool(forKey: "isFestival")
+        isFestival = isFestivalAvailable && userPreferenceUseCase.isFestivalEnabled()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
@@ -210,7 +213,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     @MainActor
     private func applyRemoteConfig(_ config: RemoteConfigModel) {
         isFestivalAvailable = config.festivalFeatureEnabled
-        UserDefaults.standard.set(config.festivalFeatureEnabled, forKey: "isFestivalAvailable")
+        userPreferenceUseCase.setFestivalFeatureAvailable(config.festivalFeatureEnabled)
         isFestivalAppIconEnabled = config.festivalAppIconEnabled
         refreshFestivalSwitchState()
     }
@@ -226,7 +229,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         $isFestivalAppIconEnabled
             .sink { [weak self] enabled in
                 guard let self = self else { return }
-                UserDefaults.standard.set(enabled, forKey: "isFestivalAppIconEnabled")
+                self.userPreferenceUseCase.setFestivalAppIconEnabled(enabled)
                 
                 let desiredIconName: String? = enabled ? "FestivalAppIcon" : nil
                 let currentIconName = UIApplication.shared.alternateIconName
@@ -243,10 +246,11 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func subscribeToIsFestival() {
-        $isFestival.sink {
-            isFestival in
-            UserDefaults.standard.set(isFestival,forKey: "isFestival")
-        }.store(in: &cancellables)
+        $isFestival
+            .sink { [weak self] isFestival in
+                self?.userPreferenceUseCase.setFestivalEnabled(isFestival)
+            }
+            .store(in: &cancellables)
     }
     
     private func subscribeToSelectedDate() {
@@ -403,7 +407,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
 
         let resolvedFilters = resolveDistanceFilterIfNeeded(filters)
-        let noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide")
+        let noMenuHide = userPreferenceUseCase.shouldHideRestaurantsWithoutMenu()
         mealSections = mealSectionDisplayModelBuilder.build(
             input: MealSectionDisplayModelBuilder.Input(
                 menu: selectedMenu,
@@ -501,19 +505,12 @@ final class MenuViewModel: NSObject, ObservableObject {
                 getMenuStatus = .failed
             }
             
-            UserDefaults.standard.set(selectedDate == todayString, forKey: "canSubmitReview")
+            userPreferenceUseCase.setCanSubmitReview(selectedDate == todayString)
         }
     }
     
     func loadFilters() {
-        if let savedFilters = UserDefaults.standard.object(forKey: "menuFilters") as? Data {
-            let decoder = JSONDecoder()
-            if let filters = try? decoder.decode(MenuFilters.self, from: savedFilters) {
-                self.selectedFilters = filters
-                return
-            }
-        }
-        self.selectedFilters = MenuFilters()
+        selectedFilters = userPreferenceUseCase.menuFilters()
     }
     
     func updateFilters(_ update: (inout MenuFilters) -> Void) {
@@ -529,10 +526,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func saveFilters() {
-        let encoder = JSONEncoder()
-        if let filters = try? encoder.encode(selectedFilters) {
-            UserDefaults.standard.setValue(filters, forKey: "menuFilters")
-        }
+        userPreferenceUseCase.saveMenuFilters(selectedFilters)
     }
     
     @MainActor

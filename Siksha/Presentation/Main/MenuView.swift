@@ -42,7 +42,11 @@ struct MenuView: View {
     private let dimBackgroundColor = Color(.sRGB, white: 0, opacity: 0.6)
     private let orangeColor = Color("Color/Foundation/Orange/500")
     
-    init(viewModel: MenuViewModel = MenuViewModel()) {
+    init(
+        viewModel: MenuViewModel = MenuViewModel(
+            userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+        )
+    ) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
     
