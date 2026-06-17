@@ -750,7 +750,7 @@
 			repositoryURL = "https://github.com/realm/realm-swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 20.0.2;
+				minimumVersion = 20.0.5;
 			};
 		};
 		33EA42072DDF0DF100A9ADD0 /* XCRemoteSwiftPackageReference "JTAppleCalendar" */ = {
