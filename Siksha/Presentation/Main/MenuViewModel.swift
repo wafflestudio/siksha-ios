@@ -24,6 +24,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let observeRemoteConfigUseCase: ObserveRemoteConfigUseCase
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
+    private let mealSectionDisplayModelBuilder: MealSectionDisplayModelBuilder
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
     private var remoteConfigFetchTask: Task<Void, Never>?
@@ -125,7 +126,8 @@ final class MenuViewModel: NSObject, ObservableObject {
         ),
         updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase = DefaultUpdateRestaurantPreferenceUseCase(
             repository: RestaurantRepositoryImpl()
-        )
+        ),
+        mealSectionDisplayModelBuilder: MealSectionDisplayModelBuilder = MealSectionDisplayModelBuilder()
     ) {
         self.analytics = analytics
         self.fetchDailyMenuUseCase = fetchDailyMenuUseCase
@@ -134,6 +136,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         self.observeRemoteConfigUseCase = observeRemoteConfigUseCase
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
+        self.mealSectionDisplayModelBuilder = mealSectionDisplayModelBuilder
         
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
@@ -325,6 +328,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         
         personalRestaurantById = byId
         personalRestaurantOrder = order
+        shouldUseDefaultRestaurantPreference = false
     }
     
     private func applyCurrentMenu(filters: MenuFilters) {
@@ -397,105 +401,21 @@ final class MenuViewModel: NSObject, ObservableObject {
             mealSections = []
             return
         }
-        
-        mealSections = [
-            MealSectionDisplayModel(
-                id: TypeSelection.breakfast.rawValue,
-                type: .breakfast,
-                restaurantMenus: makeRestaurantMenusDisplayModels(
-                    type: .breakfast,
-                    restaurants: selectedMenu.breakfast,
-                    filter: filters
-                )
-            ),
-            MealSectionDisplayModel(
-                id: TypeSelection.lunch.rawValue,
-                type: .lunch,
-                restaurantMenus: makeRestaurantMenusDisplayModels(
-                    type: .lunch,
-                    restaurants: selectedMenu.lunch,
-                    filter: filters
-                )
-            ),
-            MealSectionDisplayModel(
-                id: TypeSelection.dinner.rawValue,
-                type: .dinner,
-                restaurantMenus: makeRestaurantMenusDisplayModels(
-                    type: .dinner,
-                    restaurants: selectedMenu.dinner,
-                    filter: filters
-                )
-            )
-        ]
-    }
-    
-    private func makeRestaurantMenusDisplayModels(
-        type: TypeSelection,
-        restaurants: [RestaurantModel],
-        filter: MenuFilters
-    ) -> [RestaurantMenusDisplayModel] {
-        restaurants.compactMap { (restaurant: RestaurantModel) -> RestaurantMenusDisplayModel? in
-            let personalRestaurant = personalRestaurantById[restaurant.id]
-            let isVisible = personalRestaurant?.visible ?? shouldUseDefaultRestaurantPreference
-            let isLiked = personalRestaurant?.liked ?? false
 
-            guard isVisible else {
-                return nil
-            }
-            
-            if filter.isOpen == true && !isRestaurantOpen(restaurant) {
-                return nil
-            }
-            
-            if filter.isFavorite == true && !isLiked {
-                return nil
-            }
-            
-            if let distance = filter.distance {
-                checkLocationAuthorization()
-                
-                if locationManager.authorizationStatus != .authorizedAlways && locationManager.authorizationStatus != .authorizedWhenInUse {
-                    selectedFilters.distance = nil // 위치 이용 불가 시 distance filter off
-                    DispatchQueue.main.async { self.showDistanceAlert = true }
-                } else {
-                    if let currentLocation = locationManager.location {
-                        if let restaurantLocation = restaurant.coordinate?.location {
-                            if currentLocation.distance(from: restaurantLocation) > Double(distance) {
-                                return nil
-                            }
-                        } else {
-                            return nil
-                        }
-                    } else {
-                        selectedFilters.distance = nil
-                        DispatchQueue.main.async { self.showDistanceAlert = true }
-                    }
-                }
-            }
-            
-            let filteredMenus = filterRestaurantMenus(restaurant.menus, filter: filter)
-            
-            let noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide") // 메뉴가 없으면 레스토랑 hide
-            if noMenuHide && filteredMenus.isEmpty { return nil }
-            
-            return RestaurantMenusDisplayModel(
-                id: "\(type.rawValue)-\(restaurant.id)",
-                restaurantId: restaurant.id,
-                code: restaurant.code,
-                nameKr: restaurant.nameKr ?? "",
-                nameEn: restaurant.nameEn ?? "",
-                address: restaurant.address ?? "",
-                coordinate: restaurant.coordinate,
-                operatingHours: restaurant.operatingHours,
-                menus: filteredMenus,
-                isFavorite: isLiked
+        let resolvedFilters = resolveDistanceFilterIfNeeded(filters)
+        let noMenuHide = !UserDefaults.standard.bool(forKey: "notNoMenuHide")
+        mealSections = mealSectionDisplayModelBuilder.build(
+            input: MealSectionDisplayModelBuilder.Input(
+                menu: selectedMenu,
+                filters: resolvedFilters,
+                personalRestaurantById: personalRestaurantById,
+                personalRestaurantOrder: personalRestaurantOrder,
+                shouldUseDefaultRestaurantPreference: shouldUseDefaultRestaurantPreference,
+                noMenuHide: noMenuHide,
+                selectedDate: selectedDate,
+                currentLocation: locationManager.location
             )
-        }
-        .sorted { restaurantSortIndex($0.restaurantId) < restaurantSortIndex($1.restaurantId) }
-    }
-    
-    private func restaurantSortIndex(_ restaurantId: Int) -> Int {
-        personalRestaurantOrder[restaurantId] ?? Int.max
+        )
     }
     
     private func checkLocationAuthorization() {
@@ -512,108 +432,30 @@ final class MenuViewModel: NSObject, ObservableObject {
         case .authorizedAlways, .authorizedWhenInUse:
             locationManager.startUpdatingLocation()
             return
+        @unknown default:
+            DispatchQueue.main.async { self.showDistanceAlert = true }
+            return
         }
     }
-    
-    
-    private func filterRestaurantMenus(_ menus: [MenuModel], filter: MenuFilters) -> [MenuItemDisplayModel] {
-        return menus.filter { menu in
-            
-            var meetsPrice = true
-            if let priceRange = filter.priceRange {
-                let lower = priceRange.lowerBound
-                let upper = priceRange.upperBound
-                
-                if upper < MAX_PRICE {
-                    meetsPrice = priceRange.contains(menu.price)
-                } else {
-                    meetsPrice = menu.price >= lower
-                }
-            }
-            
-            var meetsReview = true
-            if let hasReview = filter.hasReview,
-               hasReview == true {
-                meetsReview = menu.reviewCount > 0
-            }
-            
-            var meetsRate = true
-            if let minimumRating = filter.minimumRating {
-                meetsRate = menu.score >= Double(minimumRating)
-            }
-            
-            var meetsCategories = true
-            if let categories = filter.categories {
-                // TODO: 추후 카테고리 추가시 구현
-            }
-            
-            return meetsPrice && meetsReview && meetsRate && meetsCategories
-        }.map {
-            MenuItemDisplayModel(
-                id: $0.id,
-                code: $0.code,
-                nameKr: $0.nameKr,
-                nameEn: $0.nameEn,
-                price: $0.price,
-                score: $0.score,
-                reviewCount: $0.reviewCount,
-                isLiked: $0.isLiked,
-                likeCount: $0.likeCount,
-                imageURLStrings: $0.imageURLStrings
-            )
+
+    private func resolveDistanceFilterIfNeeded(_ filters: MenuFilters) -> MenuFilters {
+        guard filters.distance != nil else {
+            return filters
         }
-    }
-    
-    private func isRestaurantOpen(_ restaurant: RestaurantModel) -> Bool {
-        var koreanCalendar = Calendar(identifier: .gregorian)
-        koreanCalendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
-        
-        self.formatter.dateFormat = "yyyy-MM-dd"
-        let selected = self.formatter.date(from: selectedDate) ?? Date()
-        let weekday = koreanCalendar.component(.weekday, from: selected)
-        
-        let dayIndex: Int
-        if weekday == 7 {
-            dayIndex = 1  // 토요일
-        } else if weekday == 1 {
-            dayIndex = 2  // 일요일 (휴일로 처리)
-        } else {
-            dayIndex = 0  // 평일
+
+        checkLocationAuthorization()
+        guard locationManager.authorizationStatus == .authorizedAlways ||
+              locationManager.authorizationStatus == .authorizedWhenInUse,
+              locationManager.location != nil else {
+            var resolvedFilters = filters
+            resolvedFilters.distance = nil
+            selectedFilters = resolvedFilters
+            saveFilters()
+            showDistanceAlert = true
+            return resolvedFilters
         }
-        
-        guard restaurant.operatingHours.count > dayIndex else { return false }
-        let hoursString = restaurant.operatingHours[dayIndex]
-        guard !hoursString.isEmpty else { return false }
-        
-        let intervals = hoursString.components(separatedBy: "\n")
-        let dateFormatter = DateFormatter()
-        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
-        dateFormatter.dateFormat = "HH:mm"
-        
-        let now = Date().addingTimeInterval(0)
-        let nowTimeStr = dateFormatter.string(from: now)
-        
-        var isRestaurantOpen = false
-        
-        for interval in intervals {
-            let times = interval.components(separatedBy: " - ")
-            if times.count == 2 {
-                let startTime = times[0]
-                let endTime = times[1]
-                
-                if nowTimeStr >= startTime && nowTimeStr <= endTime {
-                    isRestaurantOpen = true
-                    break
-                }
-                
-                // 자정 넘기는 경우
-                if startTime > endTime && nowTimeStr <= endTime {
-                    isRestaurantOpen = true
-                    break
-                }
-            }
-        }
-        return isRestaurantOpen
+
+        return filters
     }
     
     private func getMenu(date: String) {
@@ -732,12 +574,6 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
         return "정보 없음"
         
-    }
-}
-
-private extension Coordinate {
-    var location: CLLocation {
-        CLLocation(latitude: latitude, longitude: longitude)
     }
 }
 
