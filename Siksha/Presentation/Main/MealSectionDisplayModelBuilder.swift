@@ -21,20 +21,46 @@ struct MealSectionDisplayModelBuilder {
     }
 
     private let maxPrice: Int
+    private let menuSpecification: any MenuDisplaySpecification
 
-    init(maxPrice: Int = 10_000) {
+    init(
+        maxPrice: Int = 10_000,
+        menuSpecification: any MenuDisplaySpecification = CompositeMenuDisplaySpecification(
+            specifications: [
+                PriceMenuSpecification(),
+                ReviewedMenuSpecification(),
+                RatingMenuSpecification()
+            ]
+        )
+    ) {
         self.maxPrice = maxPrice
+        self.menuSpecification = menuSpecification
     }
 
     func build(input: Input) -> [MealSectionDisplayModel] {
-        [
+        let restaurantSpecification = makeRestaurantSpecification(selectedDate: input.selectedDate)
+        let restaurantContext = RestaurantDisplaySpecificationContext(
+            filters: input.filters,
+            personalRestaurantById: input.personalRestaurantById,
+            shouldUseDefaultRestaurantPreference: input.shouldUseDefaultRestaurantPreference,
+            currentLocation: input.currentLocation
+        )
+        let menuContext = MenuDisplaySpecificationContext(
+            filters: input.filters,
+            maxPrice: maxPrice
+        )
+
+        return [
             MealSectionDisplayModel(
                 id: TypeSelection.breakfast.rawValue,
                 type: .breakfast,
                 restaurantMenus: makeRestaurantMenusDisplayModels(
                     type: .breakfast,
                     restaurants: input.menu.breakfast,
-                    input: input
+                    input: input,
+                    restaurantSpecification: restaurantSpecification,
+                    restaurantContext: restaurantContext,
+                    menuContext: menuContext
                 )
             ),
             MealSectionDisplayModel(
@@ -43,7 +69,10 @@ struct MealSectionDisplayModelBuilder {
                 restaurantMenus: makeRestaurantMenusDisplayModels(
                     type: .lunch,
                     restaurants: input.menu.lunch,
-                    input: input
+                    input: input,
+                    restaurantSpecification: restaurantSpecification,
+                    restaurantContext: restaurantContext,
+                    menuContext: menuContext
                 )
             ),
             MealSectionDisplayModel(
@@ -52,7 +81,10 @@ struct MealSectionDisplayModelBuilder {
                 restaurantMenus: makeRestaurantMenusDisplayModels(
                     type: .dinner,
                     restaurants: input.menu.dinner,
-                    input: input
+                    input: input,
+                    restaurantSpecification: restaurantSpecification,
+                    restaurantContext: restaurantContext,
+                    menuContext: menuContext
                 )
             )
         ]
@@ -61,35 +93,20 @@ struct MealSectionDisplayModelBuilder {
     private func makeRestaurantMenusDisplayModels(
         type: TypeSelection,
         restaurants: [RestaurantModel],
-        input: Input
+        input: Input,
+        restaurantSpecification: any RestaurantDisplaySpecification,
+        restaurantContext: RestaurantDisplaySpecificationContext,
+        menuContext: MenuDisplaySpecificationContext
     ) -> [RestaurantMenusDisplayModel] {
         restaurants.enumerated()
             .compactMap { index, restaurant -> (originalIndex: Int, displayModel: RestaurantMenusDisplayModel)? in
-                let personalRestaurant = input.personalRestaurantById[restaurant.id]
-                let isVisible = personalRestaurant?.visible ?? input.shouldUseDefaultRestaurantPreference
-                let isLiked = personalRestaurant?.liked ?? false
+                let isLiked = restaurantContext.isLiked(restaurant)
 
-                guard isVisible else {
+                guard restaurantSpecification.isSatisfied(by: restaurant, context: restaurantContext) else {
                     return nil
                 }
 
-                if input.filters.isOpen == true && !isRestaurantOpen(restaurant, selectedDate: input.selectedDate) {
-                    return nil
-                }
-
-                if input.filters.isFavorite == true && !isLiked {
-                    return nil
-                }
-
-                if let distance = input.filters.distance {
-                    guard let currentLocation = input.currentLocation,
-                          let restaurantLocation = restaurant.coordinate?.location,
-                          currentLocation.distance(from: restaurantLocation) <= Double(distance) else {
-                        return nil
-                    }
-                }
-
-                let filteredMenus = filterRestaurantMenus(restaurant.menus, filter: input.filters)
+                let filteredMenus = filterRestaurantMenus(restaurant.menus, context: menuContext)
                 if input.noMenuHide && filteredMenus.isEmpty {
                     return nil
                 }
@@ -126,88 +143,26 @@ struct MealSectionDisplayModelBuilder {
         input.personalRestaurantOrder[restaurantId] ?? Int.max
     }
 
-    private func filterRestaurantMenus(_ menus: [MenuModel], filter: MenuFilters) -> [MenuItemDisplayModel] {
+    private func filterRestaurantMenus(
+        _ menus: [MenuModel],
+        context: MenuDisplaySpecificationContext
+    ) -> [MenuItemDisplayModel] {
         menus.filter { menu in
-            var meetsPrice = true
-            if let priceRange = filter.priceRange {
-                let lower = priceRange.lowerBound
-                let upper = priceRange.upperBound
-
-                if upper < maxPrice {
-                    meetsPrice = priceRange.contains(menu.price)
-                } else {
-                    meetsPrice = menu.price >= lower
-                }
-            }
-
-            var meetsReview = true
-            if filter.hasReview == true {
-                meetsReview = menu.reviewCount > 0
-            }
-
-            var meetsRate = true
-            if let minimumRating = filter.minimumRating {
-                meetsRate = menu.score >= Double(minimumRating)
-            }
-
-            let meetsCategories = true
-
-            return meetsPrice && meetsReview && meetsRate && meetsCategories
+            menuSpecification.isSatisfied(by: menu, context: context)
         }
         .map { MenuItemDisplayModel(menu: $0) }
     }
 
-    private func isRestaurantOpen(_ restaurant: RestaurantModel, selectedDate: String) -> Bool {
-        var koreanCalendar = Calendar(identifier: .gregorian)
-        koreanCalendar.timeZone = TimeZone(identifier: "Asia/Seoul")!
-
-        let selectedDateFormatter = DateFormatter()
-        selectedDateFormatter.dateFormat = "yyyy-MM-dd"
-        let selected = selectedDateFormatter.date(from: selectedDate) ?? Date()
-        let weekday = koreanCalendar.component(.weekday, from: selected)
-
-        let dayIndex: Int
-        if weekday == 7 {
-            dayIndex = 1
-        } else if weekday == 1 {
-            dayIndex = 2
-        } else {
-            dayIndex = 0
-        }
-
-        guard restaurant.operatingHours.count > dayIndex else { return false }
-        let hoursString = restaurant.operatingHours[dayIndex]
-        guard !hoursString.isEmpty else { return false }
-
-        let intervals = hoursString.components(separatedBy: "\n")
-        let timeFormatter = DateFormatter()
-        timeFormatter.timeZone = TimeZone(identifier: "Asia/Seoul")
-        timeFormatter.dateFormat = "HH:mm"
-        let nowTimeString = timeFormatter.string(from: Date())
-
-        for interval in intervals {
-            let times = interval.components(separatedBy: " - ")
-            guard times.count == 2 else {
-                continue
-            }
-
-            let startTime = times[0]
-            let endTime = times[1]
-
-            if nowTimeString >= startTime && nowTimeString <= endTime {
-                return true
-            }
-
-            if startTime > endTime && nowTimeString <= endTime {
-                return true
-            }
-        }
-        return false
-    }
-}
-
-private extension Coordinate {
-    var location: CLLocation {
-        CLLocation(latitude: latitude, longitude: longitude)
+    private func makeRestaurantSpecification(selectedDate: String) -> any RestaurantDisplaySpecification {
+        CompositeRestaurantDisplaySpecification(
+            specifications: [
+                VisibleRestaurantSpecification(),
+                OpenRestaurantSpecification(
+                    operatingStatusPolicy: RestaurantOperatingStatusPolicy(selectedDate: selectedDate)
+                ),
+                FavoriteRestaurantSpecification(),
+                DistanceRestaurantSpecification()
+            ]
+        )
     }
 }
