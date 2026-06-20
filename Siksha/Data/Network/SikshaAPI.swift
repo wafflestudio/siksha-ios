@@ -12,17 +12,15 @@ import Alamofire
 enum SikshaAPI: URLRequestConvertible {
     func asURLRequest() throws -> URLRequest {
         var request = URLRequest(url: URL(string: Self.baseURL + path)!)
+        let accessToken = UserDefaults.standard.string(forKey: "accessToken")
         
-        print("token:")
-        print(UserDefaults.standard.string(forKey: "accessToken"))
-        
-        if self.needToken, let token = UserDefaults.standard.string(forKey: "accessToken") {
+        if self.needToken, let token = accessToken {
             request.setToken(token: token)
         }
         
         if self.askingForToken {
             switch self {
-            case let .getAccessToken(token, endPoint):
+            case let .getAccessToken(token, _):
                 request.setToken(token: token)
             default:
                 break
@@ -35,8 +33,17 @@ enum SikshaAPI: URLRequestConvertible {
         }
         
         #if DEBUG
-        print(Self.baseURL + path)
-        print(parameters)
+        print("""
+        ---- Siksha API Request ----
+        Method: \(method.rawValue.uppercased())
+        URL: \(Self.baseURL + path)
+        Needs Token: \(needToken)
+        Access Token: \(formattedAccessTokenForDebugLog(accessToken))
+        Multipart: \(multiPartFormDataNeeded)
+        Parameters:
+        \(formattedParametersForDebugLog)
+        ----------------------------
+        """)
         #endif
         
         request.method = self.method
@@ -134,8 +141,6 @@ enum SikshaAPI: URLRequestConvertible {
         case .getCommentRecommendation:
             return false
         case .likeMenu, .unlikeMenu, .likeReview, .unlikeReview:
-            return true
-        case .unlikeMenu:
             return true
         case .getMyLikedMenu:
             return true
@@ -262,9 +267,9 @@ enum SikshaAPI: URLRequestConvertible {
             return .post
         case .deleteUserDevice:
             return .delete
-        case .alarmOn(menuId: let menuId):
+        case .alarmOn(menuId: _):
             return .post
-        case .alarmOff(menuId: let menuId):
+        case .alarmOff(menuId: _):
             return .post
         case .alarmOnAll:
             return .post
@@ -438,7 +443,7 @@ enum SikshaAPI: URLRequestConvertible {
             return ["post_id": postId, "page": page, "per_page": perPage]
         case let .submitComment(postId, content, anonymous):
             return ["post_id": postId, "content": content, "anonymous": anonymous]
-        case let .editPost(postId, boardId, title, content, images, anonymous):
+        case let .editPost(postId, _, _, _, _, _):
             return ["post_id": postId]
         case let .editComment(_, content):
             return ["content": content]
@@ -455,7 +460,11 @@ enum SikshaAPI: URLRequestConvertible {
         case let .getMyReview(page, perPage):
             return ["page": page, "per_page": perPage]
         case let .editReview(_, menuId, score, comment, taste, price, foodComposition, _):
-            return ["menu_id": menuId, "score": score, "comment": comment, "taste": taste, "price": price, "food_composition": foodComposition]
+            var parameters: [String: Any] = ["menu_id": menuId, "score": score, "taste": taste, "price": price, "food_composition": foodComposition]
+            if let comment {
+                parameters["comment"] = comment
+            }
+            return parameters
         case let .postUserDevice(fcmToken):
             return ["fcm_token" : fcmToken]
         case let .deleteUserDevice(fcmToken):
@@ -469,6 +478,41 @@ enum SikshaAPI: URLRequestConvertible {
             return nil
         }
     }
+
+    #if DEBUG
+    private var formattedParametersForDebugLog: String {
+        guard let parameters else {
+            return "  nil"
+        }
+
+        if JSONSerialization.isValidJSONObject(parameters),
+           let data = try? JSONSerialization.data(withJSONObject: parameters, options: [.prettyPrinted, .sortedKeys]),
+           let json = String(data: data, encoding: .utf8) {
+            return json
+                .split(separator: "\n", omittingEmptySubsequences: false)
+                .map { "  \($0)" }
+                .joined(separator: "\n")
+        }
+
+        return "  \(parameters)"
+    }
+
+    private func formattedAccessTokenForDebugLog(_ token: String?) -> String {
+        guard let token else {
+            return "nil"
+        }
+
+        guard !token.isEmpty else {
+            return "<empty>"
+        }
+
+        guard token.count > 12 else {
+            return "<\(token.count) characters>"
+        }
+
+        return "\(token.prefix(6))...\(token.suffix(6))"
+    }
+    #endif
     
     var multiPartFormDataNeeded: Bool {
         switch self {
