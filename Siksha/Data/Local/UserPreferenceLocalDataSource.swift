@@ -31,7 +31,7 @@ final class UserDefaultsUserPreferenceLocalDataSource: UserPreferenceLocalDataSo
         static let menuFilters = "menuFilters"
         static let shouldShowRestaurantsWithoutMenu = "notNoMenuHide"
         static let festivalFeatureAvailable = "isFestivalAvailable"
-        static let festivalSwitchOn = "isFestival"
+        static let festivalSwitchOn = "isFestivalSwitchOn"
         static let festivalAppIconEnabled = "isFestivalAppIconEnabled"
         static let canSubmitReview = "canSubmitReview"
     }
