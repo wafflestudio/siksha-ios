@@ -91,7 +91,7 @@ private extension MenuListView {
             if viewModel.showFestivalSwitch {
                 HStack {
                     Spacer()
-                    Toggle(isOn: $viewModel.isFestival) {
+                    Toggle(isOn: $viewModel.isFestivalSwitchOn) {
                     }
                     .toggleStyle(FestivalSwitchStyle())
                     .padding(EdgeInsets(top: 5.56, leading: 0, bottom: 0, trailing: 17))

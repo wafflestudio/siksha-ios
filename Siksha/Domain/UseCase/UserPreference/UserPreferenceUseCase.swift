@@ -17,8 +17,8 @@ protocol UserPreferenceUseCase {
     func isFestivalFeatureAvailable() -> Bool
     func setFestivalFeatureAvailable(_ isAvailable: Bool)
 
-    func isFestivalEnabled() -> Bool
-    func setFestivalEnabled(_ isEnabled: Bool)
+    func isFestivalSwitchOn() -> Bool
+    func setFestivalSwitchOn(_ isOn: Bool)
 
     func isFestivalAppIconEnabled() -> Bool
     func setFestivalAppIconEnabled(_ isEnabled: Bool)
@@ -57,12 +57,12 @@ final class DefaultUserPreferenceUseCase: UserPreferenceUseCase {
         repository.setFestivalFeatureAvailable(isAvailable)
     }
 
-    func isFestivalEnabled() -> Bool {
-        repository.isFestivalEnabled()
+    func isFestivalSwitchOn() -> Bool {
+        repository.isFestivalSwitchOn()
     }
 
-    func setFestivalEnabled(_ isEnabled: Bool) {
-        repository.setFestivalEnabled(isEnabled)
+    func setFestivalSwitchOn(_ isOn: Bool) {
+        repository.setFestivalSwitchOn(isOn)
     }
 
     func isFestivalAppIconEnabled() -> Bool {

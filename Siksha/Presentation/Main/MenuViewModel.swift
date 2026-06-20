@@ -59,7 +59,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     @Published var reloadOnAppear: Bool = true
     
     @Published var isFestivalAvailable: Bool
-    @Published var isFestival: Bool = false
+    @Published var isFestivalSwitchOn: Bool = false
     @Published var isFestivalAppIconEnabled: Bool
     
     @Published var menuList: [DailyMenuModel] = []
@@ -163,7 +163,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
         startObservingRemoteConfigUpdates()
         
-        isFestival = isFestivalAvailable && userPreferenceUseCase.isFestivalEnabled()
+        isFestivalSwitchOn = isFestivalAvailable && userPreferenceUseCase.isFestivalSwitchOn()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
@@ -224,7 +224,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     private func subscribe() {
         subscribeToIsFestivalAppIconEnabled()
-        subscribeToIsFestival()
+        subscribeToFestivalSwitchOn()
         subscribeToSelectedDate()
         subscribeToFestivalMode()
     }
@@ -249,10 +249,10 @@ final class MenuViewModel: NSObject, ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func subscribeToIsFestival() {
-        $isFestival
-            .sink { [weak self] isFestival in
-                self?.userPreferenceUseCase.setFestivalEnabled(isFestival)
+    private func subscribeToFestivalSwitchOn() {
+        $isFestivalSwitchOn
+            .sink { [weak self] isFestivalSwitchOn in
+                self?.userPreferenceUseCase.setFestivalSwitchOn(isFestivalSwitchOn)
             }
             .store(in: &cancellables)
     }
@@ -283,7 +283,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     private func subscribeToFestivalMode() {
-        $isFestival
+        $isFestivalSwitchOn
             .removeDuplicates()
             .sink { [weak self] _ in
                 guard let self = self else { return }
@@ -343,7 +343,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         let selected = selected ?? currentSelectedDate()
         showFestivalSwitch = isFestivalAvailable && festivalDates.contains(selected)
         if !showFestivalSwitch {
-            isFestival = false
+            isFestivalSwitchOn = false
         }
     }
 

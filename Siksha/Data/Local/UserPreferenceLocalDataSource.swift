@@ -17,8 +17,8 @@ protocol UserPreferenceLocalDataSource {
     func isFestivalFeatureAvailable() -> Bool
     func setFestivalFeatureAvailable(_ isAvailable: Bool)
 
-    func isFestivalEnabled() -> Bool
-    func setFestivalEnabled(_ isEnabled: Bool)
+    func isFestivalSwitchOn() -> Bool
+    func setFestivalSwitchOn(_ isOn: Bool)
 
     func isFestivalAppIconEnabled() -> Bool
     func setFestivalAppIconEnabled(_ isEnabled: Bool)
@@ -31,7 +31,7 @@ final class UserDefaultsUserPreferenceLocalDataSource: UserPreferenceLocalDataSo
         static let menuFilters = "menuFilters"
         static let shouldShowRestaurantsWithoutMenu = "notNoMenuHide"
         static let festivalFeatureAvailable = "isFestivalAvailable"
-        static let festivalEnabled = "isFestival"
+        static let festivalSwitchOn = "isFestival"
         static let festivalAppIconEnabled = "isFestivalAppIconEnabled"
         static let canSubmitReview = "canSubmitReview"
     }
@@ -75,12 +75,12 @@ final class UserDefaultsUserPreferenceLocalDataSource: UserPreferenceLocalDataSo
         userDefaults.set(isAvailable, forKey: Key.festivalFeatureAvailable)
     }
 
-    func isFestivalEnabled() -> Bool {
-        userDefaults.bool(forKey: Key.festivalEnabled)
+    func isFestivalSwitchOn() -> Bool {
+        userDefaults.bool(forKey: Key.festivalSwitchOn)
     }
 
-    func setFestivalEnabled(_ isEnabled: Bool) {
-        userDefaults.set(isEnabled, forKey: Key.festivalEnabled)
+    func setFestivalSwitchOn(_ isOn: Bool) {
+        userDefaults.set(isOn, forKey: Key.festivalSwitchOn)
     }
 
     func isFestivalAppIconEnabled() -> Bool {

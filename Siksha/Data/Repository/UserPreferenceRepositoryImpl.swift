@@ -38,12 +38,12 @@ final class UserPreferenceRepositoryImpl: UserPreferenceRepositoryProtocol {
         localDataSource.setFestivalFeatureAvailable(isAvailable)
     }
 
-    func isFestivalEnabled() -> Bool {
-        localDataSource.isFestivalEnabled()
+    func isFestivalSwitchOn() -> Bool {
+        localDataSource.isFestivalSwitchOn()
     }
 
-    func setFestivalEnabled(_ isEnabled: Bool) {
-        localDataSource.setFestivalEnabled(isEnabled)
+    func setFestivalSwitchOn(_ isOn: Bool) {
+        localDataSource.setFestivalSwitchOn(isOn)
     }
 
     func isFestivalAppIconEnabled() -> Bool {
