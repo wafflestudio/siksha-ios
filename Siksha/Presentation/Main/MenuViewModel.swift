@@ -45,7 +45,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     @Published var selectedFormatted: String = ""
     
-    @Published var selectedMenu: DailyMenuModel? = nil
+    private var currentDailyMenu: DailyMenuModel? = nil
     @Published var selectedFilters: MenuFilters = MenuFilters()
     @Published var mealSections: [MealSectionDisplayModel] = []
     
@@ -108,6 +108,10 @@ final class MenuViewModel: NSObject, ObservableObject {
             return categories.joined(separator: ",")
         }
         return "카테고리"
+    }
+
+    var currentOperatingHourType: Int {
+        currentDailyMenu?.dateType.operatingHourType ?? 0
     }
     
     init(
@@ -222,7 +226,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         subscribeToIsFestivalAppIconEnabled()
         subscribeToIsFestival()
         subscribeToSelectedDate()
-        subscribeToSelectedMenu()
+        subscribeToFestivalMode()
     }
     
     private func subscribeToIsFestivalAppIconEnabled() {
@@ -278,12 +282,12 @@ final class MenuViewModel: NSObject, ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func subscribeToSelectedMenu() {
+    private func subscribeToFestivalMode() {
         $isFestival
             .removeDuplicates()
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                self.rebuildMealSections(filters: self.selectedFilters)
+                self.renderMealSections()
             }
             .store(in: &cancellables)
     }
@@ -303,13 +307,13 @@ final class MenuViewModel: NSObject, ObservableObject {
             let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
             shouldUseDefaultRestaurantPreference = false
             updatePersonalRestaurants(restaurants)
-            applyCurrentMenu(filters: selectedFilters)
+            renderMealSections()
         } catch {
             print("Failed to load personal restaurants: \(error)")
 
             if personalRestaurantById.isEmpty {
                 shouldUseDefaultRestaurantPreference = true
-                applyCurrentMenu(filters: selectedFilters)
+                renderMealSections()
             }
         }
     }
@@ -333,16 +337,6 @@ final class MenuViewModel: NSObject, ObservableObject {
         personalRestaurantById = byId
         personalRestaurantOrder = order
         shouldUseDefaultRestaurantPreference = false
-    }
-    
-    private func applyCurrentMenu(filters: MenuFilters) {
-        guard selectedMenu != nil else {
-            selectedMenu = nil
-            mealSections = []
-            return
-        }
-        
-        rebuildMealSections(filters: filters)
     }
     
     private func refreshFestivalSwitchState(selectedDate selected: Date? = nil) {
@@ -376,7 +370,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 liked: !restaurant.liked
             )
             updatePersonalRestaurant(status)
-            rebuildMealSections(filters: selectedFilters)
+            renderMealSections()
         } catch {
             print("Failed to update restaurant like: \(error)")
         }
@@ -400,18 +394,17 @@ final class MenuViewModel: NSObject, ObservableObject {
         )
     }
     
-    private func rebuildMealSections(filters: MenuFilters) {
-        guard let selectedMenu else {
+    private func renderMealSections() {
+        guard let currentDailyMenu else {
             mealSections = []
             return
         }
 
-        let resolvedFilters = resolveDistanceFilterIfNeeded(filters)
         let noMenuHide = userPreferenceUseCase.shouldHideRestaurantsWithoutMenu()
         mealSections = mealSectionDisplayModelBuilder.build(
             input: MealSectionDisplayModelBuilder.Input(
-                menu: selectedMenu,
-                filters: resolvedFilters,
+                menu: currentDailyMenu,
+                filters: selectedFilters,
                 personalRestaurantById: personalRestaurantById,
                 personalRestaurantOrder: personalRestaurantOrder,
                 shouldUseDefaultRestaurantPreference: shouldUseDefaultRestaurantPreference,
@@ -442,7 +435,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
     }
 
-    private func resolveDistanceFilterIfNeeded(_ filters: MenuFilters) -> MenuFilters {
+    private func resolveAvailableFilters(_ filters: MenuFilters) -> MenuFilters {
         guard filters.distance != nil else {
             return filters
         }
@@ -453,8 +446,6 @@ final class MenuViewModel: NSObject, ObservableObject {
               locationManager.location != nil else {
             var resolvedFilters = filters
             resolvedFilters.distance = nil
-            selectedFilters = resolvedFilters
-            saveFilters()
             showDistanceAlert = true
             return resolvedFilters
         }
@@ -486,21 +477,19 @@ final class MenuViewModel: NSObject, ObservableObject {
             
             switch result {
             case .succeeded(let menu):
-                selectedMenu = menu
-                rebuildMealSections(filters: selectedFilters)
+                currentDailyMenu = menu
+                renderMealSections()
                 getMenuStatus = .idle
             case .empty:
-                selectedMenu = nil
-                mealSections = []
+                clearCurrentDailyMenu()
                 getMenuStatus = .idle
             case .cached(let menu):
-                selectedMenu = menu
-                rebuildMealSections(filters: selectedFilters)
+                currentDailyMenu = menu
+                renderMealSections()
                 showNetworkAlert = true
                 getMenuStatus = .idle
             case .failed:
-                selectedMenu = nil
-                mealSections = []
+                clearCurrentDailyMenu()
                 showNetworkAlert = true
                 getMenuStatus = .failed
             }
@@ -510,7 +499,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     func loadFilters() {
-        selectedFilters = userPreferenceUseCase.menuFilters()
+        applyFilters(userPreferenceUseCase.menuFilters(), shouldPersist: true)
     }
     
     func updateFilters(_ update: (inout MenuFilters) -> Void) {
@@ -520,13 +509,24 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     func setFilters(_ filters: MenuFilters) {
-        selectedFilters = filters
-        saveFilters()
-        applyCurrentMenu(filters: filters)
+        applyFilters(filters, shouldPersist: true)
+        renderMealSections()
     }
     
+    private func applyFilters(_ filters: MenuFilters, shouldPersist: Bool) {
+        selectedFilters = resolveAvailableFilters(filters)
+        if shouldPersist {
+            saveFilters()
+        }
+    }
+
     private func saveFilters() {
         userPreferenceUseCase.saveMenuFilters(selectedFilters)
+    }
+
+    private func clearCurrentDailyMenu() {
+        currentDailyMenu = nil
+        mealSections = []
     }
     
     @MainActor

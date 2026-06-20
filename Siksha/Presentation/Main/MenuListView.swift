@@ -37,7 +37,7 @@ struct MenuListView: View {
                         RestaurantsView(
                             section.restaurantMenus,
                             section.type.rawValue,
-                            viewModel.selectedMenu?.dateType.operatingHourType ?? 0,
+                            viewModel.currentOperatingHourType,
                             onFavoriteTap: { restaurantId in
                                 Task {
                                     await viewModel.toggleRestaurantLike(restaurantId)
