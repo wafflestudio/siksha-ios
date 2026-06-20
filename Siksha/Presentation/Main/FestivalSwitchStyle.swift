@@ -36,10 +36,9 @@ struct FestivalSwitchStyle: ToggleStyle {
                 , alignment: .leading
             )
             .onTapGesture {
-                withAnimation(.easeOut(duration: 0.3)) {
-                    configuration.$isOn.wrappedValue.toggle()
-                }
+                configuration.$isOn.wrappedValue.toggle()
             }
+            .animation(.easeOut(duration: 0.3), value: configuration.isOn)
     }
 }
 

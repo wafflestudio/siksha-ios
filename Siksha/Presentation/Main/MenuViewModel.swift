@@ -24,7 +24,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let observeRemoteConfigUseCase: ObserveRemoteConfigUseCase
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
-    private let mealSectionDisplayModelBuilder: MealSectionDisplayModelBuilder
+    private let mealSectionRenderScheduler: MealSectionRenderScheduling
     private let userPreferenceUseCase: UserPreferenceUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
@@ -59,7 +59,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     @Published var reloadOnAppear: Bool = true
     
     @Published var isFestivalAvailable: Bool
-    @Published var isFestivalSwitchOn: Bool = false
+    @Published private(set) var isFestivalSwitchOn: Bool = false
     @Published var isFestivalAppIconEnabled: Bool
     
     @Published var menuList: [DailyMenuModel] = []
@@ -132,7 +132,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase = DefaultUpdateRestaurantPreferenceUseCase(
             repository: RestaurantRepositoryImpl()
         ),
-        mealSectionDisplayModelBuilder: MealSectionDisplayModelBuilder = MealSectionDisplayModelBuilder(),
+        mealSectionRenderScheduler: MealSectionRenderScheduling = MealSectionRenderScheduler(),
         userPreferenceUseCase: UserPreferenceUseCase
     ) {
         self.analytics = analytics
@@ -142,7 +142,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         self.observeRemoteConfigUseCase = observeRemoteConfigUseCase
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
-        self.mealSectionDisplayModelBuilder = mealSectionDisplayModelBuilder
+        self.mealSectionRenderScheduler = mealSectionRenderScheduler
         self.userPreferenceUseCase = userPreferenceUseCase
         
         formatter.locale = Locale(identifier: "ko_kr")
@@ -224,9 +224,8 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     private func subscribe() {
         subscribeToIsFestivalAppIconEnabled()
-        subscribeToFestivalSwitchOn()
+        subscribeToMealSectionRendering()
         subscribeToSelectedDate()
-        subscribeToFestivalMode()
     }
     
     private func subscribeToIsFestivalAppIconEnabled() {
@@ -245,14 +244,6 @@ final class MenuViewModel: NSObject, ObservableObject {
                         }
                     }
                 }
-            }
-            .store(in: &cancellables)
-    }
-    
-    private func subscribeToFestivalSwitchOn() {
-        $isFestivalSwitchOn
-            .sink { [weak self] isFestivalSwitchOn in
-                self?.userPreferenceUseCase.setFestivalSwitchOn(isFestivalSwitchOn)
             }
             .store(in: &cancellables)
     }
@@ -281,17 +272,15 @@ final class MenuViewModel: NSObject, ObservableObject {
             }
             .store(in: &cancellables)
     }
-    
-    private func subscribeToFestivalMode() {
-        $isFestivalSwitchOn
-            .removeDuplicates()
-            .sink { [weak self] _ in
-                guard let self = self else { return }
-                self.renderMealSections()
+
+    private func subscribeToMealSectionRendering() {
+        mealSectionRenderScheduler.mealSectionsPublisher
+            .sink { [weak self] mealSections in
+                self?.mealSections = mealSections
             }
             .store(in: &cancellables)
     }
-    
+
     @MainActor
     private func loadPersonalRestaurants() async {
         guard !isLoadingPersonalRestaurants else {
@@ -307,13 +296,13 @@ final class MenuViewModel: NSObject, ObservableObject {
             let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
             shouldUseDefaultRestaurantPreference = false
             updatePersonalRestaurants(restaurants)
-            renderMealSections()
+            requestMealSectionRender()
         } catch {
             print("Failed to load personal restaurants: \(error)")
 
             if personalRestaurantById.isEmpty {
                 shouldUseDefaultRestaurantPreference = true
-                renderMealSections()
+                requestMealSectionRender()
             }
         }
     }
@@ -343,7 +332,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         let selected = selected ?? currentSelectedDate()
         showFestivalSwitch = isFestivalAvailable && festivalDates.contains(selected)
         if !showFestivalSwitch {
-            isFestivalSwitchOn = false
+            setFestivalSwitchOn(false, renderTiming: .immediate)
         }
     }
 
@@ -370,7 +359,7 @@ final class MenuViewModel: NSObject, ObservableObject {
                 liked: !restaurant.liked
             )
             updatePersonalRestaurant(status)
-            renderMealSections()
+            requestMealSectionRender()
         } catch {
             print("Failed to update restaurant like: \(error)")
         }
@@ -394,24 +383,48 @@ final class MenuViewModel: NSObject, ObservableObject {
         )
     }
     
-    private func renderMealSections() {
-        guard let currentDailyMenu else {
-            mealSections = []
+    func setFestivalSwitchOn(_ isOn: Bool) {
+        setFestivalSwitchOn(isOn, renderTiming: .debounced)
+    }
+
+    private func setFestivalSwitchOn(_ isOn: Bool, renderTiming: MealSectionRenderTiming) {
+        let isOn = showFestivalSwitch && isOn
+        guard isFestivalSwitchOn != isOn else {
             return
         }
 
+        isFestivalSwitchOn = isOn
+        userPreferenceUseCase.setFestivalSwitchOn(isOn)
+        requestMealSectionRender(timing: renderTiming)
+    }
+
+    private func requestMealSectionRender(timing: MealSectionRenderTiming = .immediate) {
+        guard let input = makeMealSectionRenderInput() else {
+            mealSections = []
+            mealSectionRenderScheduler.clear()
+            return
+        }
+
+        mealSectionRenderScheduler.render(input: input, timing: timing)
+    }
+
+    private func makeMealSectionRenderInput() -> MealSectionDisplayModelBuilder.Input? {
+        guard let currentDailyMenu else {
+            return nil
+        }
+
         let noMenuHide = userPreferenceUseCase.shouldHideRestaurantsWithoutMenu()
-        mealSections = mealSectionDisplayModelBuilder.build(
-            input: MealSectionDisplayModelBuilder.Input(
-                menu: currentDailyMenu,
-                filters: selectedFilters,
-                personalRestaurantById: personalRestaurantById,
-                personalRestaurantOrder: personalRestaurantOrder,
-                shouldUseDefaultRestaurantPreference: shouldUseDefaultRestaurantPreference,
-                noMenuHide: noMenuHide,
-                selectedDate: selectedDate,
-                currentLocation: locationManager.location
-            )
+
+        return MealSectionDisplayModelBuilder.Input(
+            menu: currentDailyMenu,
+            filters: selectedFilters,
+            personalRestaurantById: personalRestaurantById,
+            personalRestaurantOrder: personalRestaurantOrder,
+            shouldUseDefaultRestaurantPreference: shouldUseDefaultRestaurantPreference,
+            noMenuHide: noMenuHide,
+            selectedDate: selectedDate,
+            currentLocation: locationManager.location,
+            isFestivalSwitchOn: isFestivalSwitchOn
         )
     }
     
@@ -478,14 +491,14 @@ final class MenuViewModel: NSObject, ObservableObject {
             switch result {
             case .succeeded(let menu):
                 currentDailyMenu = menu
-                renderMealSections()
+                requestMealSectionRender()
                 getMenuStatus = .idle
             case .empty:
                 clearCurrentDailyMenu()
                 getMenuStatus = .idle
             case .cached(let menu):
                 currentDailyMenu = menu
-                renderMealSections()
+                requestMealSectionRender()
                 showNetworkAlert = true
                 getMenuStatus = .idle
             case .failed:
@@ -510,7 +523,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     func setFilters(_ filters: MenuFilters) {
         applyFilters(filters, shouldPersist: true)
-        renderMealSections()
+        requestMealSectionRender()
     }
     
     private func applyFilters(_ filters: MenuFilters, shouldPersist: Bool) {
@@ -527,6 +540,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private func clearCurrentDailyMenu() {
         currentDailyMenu = nil
         mealSections = []
+        mealSectionRenderScheduler.clear()
     }
     
     @MainActor

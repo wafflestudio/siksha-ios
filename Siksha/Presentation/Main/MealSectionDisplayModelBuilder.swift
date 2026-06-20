@@ -18,6 +18,7 @@ struct MealSectionDisplayModelBuilder {
         let noMenuHide: Bool
         let selectedDate: String
         let currentLocation: CLLocation?
+        let isFestivalSwitchOn: Bool
     }
 
     private let maxPrice: Int
@@ -43,7 +44,8 @@ struct MealSectionDisplayModelBuilder {
             filters: input.filters,
             personalRestaurantById: input.personalRestaurantById,
             shouldUseDefaultRestaurantPreference: input.shouldUseDefaultRestaurantPreference,
-            currentLocation: input.currentLocation
+            currentLocation: input.currentLocation,
+            isFestivalSwitchOn: input.isFestivalSwitchOn
         )
         let menuContext = MenuDisplaySpecificationContext(
             filters: input.filters,
@@ -160,6 +162,7 @@ struct MealSectionDisplayModelBuilder {
                 OpenRestaurantSpecification(
                     operatingStatusPolicy: RestaurantOperatingStatusPolicy(selectedDate: selectedDate)
                 ),
+                FestivalRestaurantSpecification(),
                 FavoriteRestaurantSpecification(),
                 DistanceRestaurantSpecification()
             ]

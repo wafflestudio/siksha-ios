@@ -11,16 +11,25 @@ struct MenuListView: View {
     @ObservedObject var viewModel: MenuViewModel
     @Binding var selectedFilterType: MenuFilterType?
     @State private var isAtLeadingEdge: Bool = true
+    @State private var displayedFestivalSwitchOn: Bool
+    @State private var festivalSwitchCommitTask: Task<Void, Never>?
     
     private let backgroundColor = Color.backgroundMain
     private let lightGrayColor = Color.gray600
     private let orangeColor = Color.orange500
     private let fontColor = Color.gray700
+    private let festivalSwitchCommitDelayNanoseconds: UInt64 = 300_000_000
     private let typeInfos: [TypeInfo] = [
         TypeInfo(type: .breakfast),
         TypeInfo(type: .lunch),
         TypeInfo(type: .dinner)
     ]
+
+    init(viewModel: MenuViewModel, selectedFilterType: Binding<MenuFilterType?>) {
+        self.viewModel = viewModel
+        self._selectedFilterType = selectedFilterType
+        self._displayedFestivalSwitchOn = State(initialValue: viewModel.isFestivalSwitchOn)
+    }
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
@@ -91,13 +100,40 @@ private extension MenuListView {
             if viewModel.showFestivalSwitch {
                 HStack {
                     Spacer()
-                    Toggle(isOn: $viewModel.isFestivalSwitchOn) {
+                    Toggle(isOn: festivalSwitchBinding) {
                     }
                     .toggleStyle(FestivalSwitchStyle())
                     .padding(EdgeInsets(top: 5.56, leading: 0, bottom: 0, trailing: 17))
+                    .onAppear {
+                        displayedFestivalSwitchOn = viewModel.isFestivalSwitchOn
+                    }
+                    .onChange(of: viewModel.isFestivalSwitchOn) { isOn in
+                        displayedFestivalSwitchOn = isOn
+                    }
                 }
             }
         }.frame(maxWidth: .infinity)
+    }
+
+    var festivalSwitchBinding: Binding<Bool> {
+        Binding(
+            get: { displayedFestivalSwitchOn },
+            set: { updateFestivalSwitch($0) }
+        )
+    }
+
+    func updateFestivalSwitch(_ isOn: Bool) {
+        festivalSwitchCommitTask?.cancel()
+        displayedFestivalSwitchOn = isOn
+
+        festivalSwitchCommitTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: festivalSwitchCommitDelayNanoseconds)
+            guard !Task.isCancelled else {
+                return
+            }
+
+            viewModel.setFestivalSwitchOn(isOn)
+        }
     }
     
     var filterSelectorView: some View {

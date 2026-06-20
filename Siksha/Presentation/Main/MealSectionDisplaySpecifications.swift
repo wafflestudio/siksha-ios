@@ -13,6 +13,7 @@ struct RestaurantDisplaySpecificationContext {
     let personalRestaurantById: [Int: PersonalRestaurantModel]
     let shouldUseDefaultRestaurantPreference: Bool
     let currentLocation: CLLocation?
+    let isFestivalSwitchOn: Bool
 
     func personalRestaurant(for restaurant: RestaurantModel) -> PersonalRestaurantModel? {
         personalRestaurantById[restaurant.id]
@@ -61,6 +62,12 @@ struct OpenRestaurantSpecification: RestaurantDisplaySpecification {
             return true
         }
         return operatingStatusPolicy.isOpen(restaurant)
+    }
+}
+
+struct FestivalRestaurantSpecification: RestaurantDisplaySpecification {
+    func isSatisfied(by restaurant: RestaurantModel, context: RestaurantDisplaySpecificationContext) -> Bool {
+        restaurant.isFestivalRestaurant == context.isFestivalSwitchOn
     }
 }
 
@@ -137,6 +144,12 @@ struct RatingMenuSpecification: MenuDisplaySpecification {
             return true
         }
         return menu.score >= Double(minimumRating)
+    }
+}
+
+extension RestaurantModel {
+    var isFestivalRestaurant: Bool {
+        nameKr?.contains("[축제]") ?? false
     }
 }
 
