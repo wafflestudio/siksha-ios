@@ -103,7 +103,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealInfoUseCase.fetchReviewImages(menuId: meal.id, page: 1, perPage: 6)
+                let response = try await mealInfoUseCase.fetchImageReviews(menuId: meal.id, page: 1, perPage: 6)
                 await MainActor.run {
                     self.totalImageCount = response.totalCount
                     self.getImageStatus = .succeeded

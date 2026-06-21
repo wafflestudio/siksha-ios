@@ -9,7 +9,7 @@ protocol MealInfoUseCase {
     func fetchMenu(menuId: Int) async throws -> MenuModel
     func toggleMenuLike(menu: MenuModel) async throws -> MenuModel
     func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel
-    func fetchReviewImages(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel
     func fetchScoreDistribution(menuId: Int) async throws -> [Int]
     func fetchKeywordDistribution(menuId: Int) async throws -> KeywordDistributionModel
     func toggleReviewLike(review: Review) async throws
@@ -39,8 +39,8 @@ final class DefaultMealInfoUseCase: MealInfoUseCase {
         try await repository.fetchReviews(menuId: menuId, page: page, perPage: perPage)
     }
     
-    func fetchReviewImages(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
-        try await repository.fetchReviewImages(menuId: menuId, page: page, perPage: perPage)
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
+        try await repository.fetchImageReviews(menuId: menuId, page: page, perPage: perPage)
     }
     
     func fetchScoreDistribution(menuId: Int) async throws -> [Int] {

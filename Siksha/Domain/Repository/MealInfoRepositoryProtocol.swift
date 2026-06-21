@@ -12,7 +12,7 @@ protocol MealInfoRepositoryProtocol {
     func likeMenu(menuId: Int) async throws -> MenuModel
     func unlikeMenu(menuId: Int) async throws -> MenuModel
     func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel
-    func fetchReviewImages(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel
     func fetchScoreDistribution(menuId: Int) async throws -> [Int]
     func fetchKeywordDistribution(menuId: Int) async throws -> KeywordDistributionModel
     func fetchCommentRecommendation(score: Int) async throws -> String

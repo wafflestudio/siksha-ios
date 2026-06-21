@@ -116,7 +116,7 @@ extension Repository: CommunityRepositoryProtocol {
 
 extension Repository: UserRepositoryProtocol {
     func loadUserInfo() -> AnyPublisher<User, AppError> {
-        let endpoint = SikshaAPI.loadUserInfo
+        let endpoint = SikshaAPI.getUserInfo
         return self.networkModule.request(endpoint: endpoint)
     }
     func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, AppError> {
@@ -189,7 +189,7 @@ extension Repository: AuthRepositoryProtocol{
 
     }
     func postAlarmTime(type:AlarmTime)->AnyPublisher<Void,AppError>{
-        let endpoint = SikshaAPI.alarmTime(alarmTime: type.rawValue)
+        let endpoint = SikshaAPI.setAlarmTime(alarmTime: type.rawValue)
         return self.networkModule.requestWithNoContent(endpoint: endpoint)
 
     }

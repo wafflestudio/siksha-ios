@@ -164,7 +164,7 @@ class Networking {
     }
     
     func getReviewImages(menuId: Int, page: Int, perPage: Int) -> DataResponsePublisher<ReviewResponse> {
-        let request = AF.request(SikshaAPI.getReviewImages(menuId: menuId, page: page, perPage: perPage))
+        let request = AF.request(SikshaAPI.getImageReviews(menuId: menuId, page: page, perPage: perPage))
         let decoder = JSONDecoder()
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"

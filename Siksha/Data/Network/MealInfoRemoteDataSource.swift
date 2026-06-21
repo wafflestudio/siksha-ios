@@ -13,7 +13,7 @@ protocol MealInfoRemoteDataSource {
     func likeMenu(menuId: Int) async throws -> MenuIdResponse
     func unlikeMenu(menuId: Int) async throws -> MenuIdResponse
     func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse
-    func fetchReviewImages(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse
     func fetchScoreDistribution(menuId: Int) async throws -> ScoreDistributionResponse
     func fetchKeywordDistribution(menuId: Int) async throws -> KeywordDistributionResponse
     func fetchCommentRecommendation(score: Int) async throws -> CommentRecommendationResponse
@@ -57,9 +57,9 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             .value
     }
     
-    func fetchReviewImages(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse {
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse {
         try await AF
-            .request(SikshaAPI.getReviewImages(menuId: menuId, page: page, perPage: perPage))
+            .request(SikshaAPI.getImageReviews(menuId: menuId, page: page, perPage: perPage))
             .validate()
             .serializingDecodable(ReviewResponse.self, decoder: reviewDecoder())
             .value

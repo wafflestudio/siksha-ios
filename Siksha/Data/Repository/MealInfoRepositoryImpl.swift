@@ -30,8 +30,8 @@ final class MealInfoRepositoryImpl: MealInfoRepositoryProtocol {
         try await remote.fetchReviews(menuId: menuId, page: page, perPage: perPage).toDomain()
     }
     
-    func fetchReviewImages(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
-        try await remote.fetchReviewImages(menuId: menuId, page: page, perPage: perPage).toDomain()
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
+        try await remote.fetchImageReviews(menuId: menuId, page: page, perPage: perPage).toDomain()
     }
     
     func fetchScoreDistribution(menuId: Int) async throws -> [Int] {

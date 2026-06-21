@@ -100,7 +100,7 @@ public class ReviewListViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealInfoUseCase.fetchReviewImages(menuId: mealID, page: currentPage, perPage: perPage)
+                let response = try await mealInfoUseCase.fetchImageReviews(menuId: mealID, page: currentPage, perPage: perPage)
                 await MainActor.run {
                     self.hasMorePages = response.hasNext
                     self.currentPage += 1
