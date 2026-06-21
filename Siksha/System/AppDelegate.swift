@@ -154,7 +154,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     static func sendFCMToken(){
         let token = UserDefaults.standard.string(forKey: "fcmToken")
         guard let token = token else { return }
-        print("FCM:",token)
         AppContainer.shared.domain.authRepository.postUserDevice(fcmToken: token)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
@@ -173,7 +172,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     static func deleteFCMToken(){
         let token = UserDefaults.standard.string(forKey: "fcmToken")
         guard let token = token else { return }
-        print("FCM:",token)
         AppContainer.shared.domain.authRepository.deleteUserDevice(fcmToken: token)
             .receive(on: RunLoop.main)
             .sink(receiveCompletion: { completion in
