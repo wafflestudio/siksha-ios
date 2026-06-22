@@ -12,8 +12,8 @@ protocol MealInfoRemoteDataSource {
     func fetchMenu(menuId: Int) async throws -> MenuIdResponse
     func likeMenu(menuId: Int) async throws -> MenuIdResponse
     func unlikeMenu(menuId: Int) async throws -> MenuIdResponse
-    func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse
-    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse
+    func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO
     func fetchScoreDistribution(menuId: Int) async throws -> ScoreDistributionResponse
     func fetchKeywordDistribution(menuId: Int) async throws -> KeywordDistributionResponse
     func fetchCommentRecommendation(score: Int) async throws -> CommentRecommendationResponse
@@ -49,19 +49,19 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             .value
     }
     
-    func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse {
+    func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO {
         try await AF
             .request(SikshaAPI.getReviews(menuId: menuId, page: page, perPage: perPage))
             .validate()
-            .serializingDecodable(ReviewResponse.self, decoder: reviewDecoder())
+            .serializingDecodable(ReviewPageResponseDTO.self, decoder: reviewDecoder())
             .value
     }
     
-    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse {
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO {
         try await AF
             .request(SikshaAPI.getImageReviews(menuId: menuId, page: page, perPage: perPage))
             .validate()
-            .serializingDecodable(ReviewResponse.self, decoder: reviewDecoder())
+            .serializingDecodable(ReviewPageResponseDTO.self, decoder: reviewDecoder())
             .value
     }
     

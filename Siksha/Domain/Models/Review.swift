@@ -6,20 +6,19 @@
 //
 
 import Foundation
-import UIKit
 
-struct Review: Codable, Hashable {
-    var id: Int
-    var menuId: Int
-    var userId: Int
-    var score: Double
-    var comment: String?
-    var etc: [String: [String]]?
-    var keywordReviews: [String]
-    var likeCount: Int
-    var isLiked: Bool
-    var createdAt: Date
-    var updatedAt: Date
+struct Review: Hashable {
+    let id: Int
+    let menuId: Int
+    let userId: Int
+    let score: Double
+    let comment: String?
+    let etc: [String: [String]]?
+    let keywordReviews: [String]
+    let likeCount: Int
+    let isLiked: Bool
+    let createdAt: Date
+    let updatedAt: Date
 }
 
 struct MyReviewRestaurant: Codable, Identifiable {

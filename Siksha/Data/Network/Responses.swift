@@ -7,12 +7,6 @@
 
 import Foundation
 
-struct ReviewResponse: Codable {
-    var totalCount: Int
-    var hasNext: Bool
-    var result: [Review]
-}
-
 struct CommentRecommendationResponse: Codable {
     var comment: String
 }

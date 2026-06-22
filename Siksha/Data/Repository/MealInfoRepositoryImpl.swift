@@ -84,12 +84,12 @@ private extension MenuIdResponse {
     }
 }
 
-private extension ReviewResponse {
+private extension ReviewPageResponseDTO {
     func toDomain() -> ReviewPageModel {
         ReviewPageModel(
             totalCount: totalCount,
             hasNext: hasNext,
-            reviews: result
+            reviews: result.map { $0.toDomain() }
         )
     }
 }

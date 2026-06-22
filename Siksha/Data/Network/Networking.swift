@@ -119,17 +119,6 @@ class Networking {
         return request.validate().publishData()
     }
     
-    func getReviews(menuId: Int, page: Int, perPage: Int) -> DataResponsePublisher<ReviewResponse> {
-        let request = AF.request(SikshaAPI.getReviews(menuId: menuId, page: page, perPage: perPage))
-        
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-        decoder.dateDecodingStrategy = .formatted(formatter)
-        return request.validate().publishDecodable(type: ReviewResponse.self, decoder: decoder)
-    }
-    
     func getScoreDistribution(menuId: Int) -> DataResponsePublisher<ScoreDistributionResponse> {
         let request = AF.request(SikshaAPI.getScoreDistribution(menuId: menuId))
         
@@ -162,17 +151,6 @@ class Networking {
         
         return request.validate().publishData()
     }
-    
-    func getReviewImages(menuId: Int, page: Int, perPage: Int) -> DataResponsePublisher<ReviewResponse> {
-        let request = AF.request(SikshaAPI.getImageReviews(menuId: menuId, page: page, perPage: perPage))
-        let decoder = JSONDecoder()
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-        decoder.dateDecodingStrategy = .formatted(formatter)
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        return request.validate().publishDecodable(type: ReviewResponse.self, decoder: decoder)
-    }
-    
     func getUserInfo() -> DataResponsePublisher<UserInfoResponse> {
         let request = AF.request(SikshaAPI.getUserInfo)
         
