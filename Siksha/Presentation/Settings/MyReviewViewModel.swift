@@ -7,7 +7,6 @@
 
 import Foundation
 import Combine
-import SwiftyJSON
  
 struct RestaurantSection: Identifiable {
     let id: Int
@@ -104,7 +103,7 @@ class MyReviewViewModel: ObservableObject {
                 switch completionStatus {
                 case .finished:
                     completion(true)
-                case .failure(let error):
+                case .failure:
                     completion(false)
                 }
             }, receiveValue: { _ in
@@ -133,10 +132,10 @@ class MyReviewViewModel: ObservableObject {
         }
     }
     
-    private func handleReviewResponse(_ response: MyReviewResponse, isLoadMore: Bool) {
+    private func handleReviewResponse(_ response: MyReviewPageModel, isLoadMore: Bool) {
         self.hasNext = response.hasNext
         
-        let newSections = response.result.map { restaurant in
+        let newSections = response.restaurants.map { restaurant in
             convertToRestaurantSection(restaurant)
         }
         
@@ -153,17 +152,17 @@ class MyReviewViewModel: ObservableObject {
         }
     }
     
-    private func convertToRestaurantSection(_ restaurant: MyReviewRestaurant) -> RestaurantSection {
+    private func convertToRestaurantSection(_ restaurant: MyReviewRestaurantModel) -> RestaurantSection {
         let reviews = restaurant.reviews.map { review in
             RestaurantReview(
                 id: review.id,
                 menuId: review.menuId,
                 menuName: review.nameKr,
                 rating: review.score,
-                date: formatDate(review.createdDate),
+                date: formatDate(review.createdAt),
                 reviewText: review.comment,
                 imageUrls: review.etc?["images"] ?? [],
-                tags: review.keywordReviews.compactMap { $0 }.filter { !$0.isEmpty }
+                tags: review.keywordReviews.filter { !$0.isEmpty }
             )
         }
         

@@ -66,18 +66,6 @@ struct MyLikedMenuResponse: Codable{
     }
 }
 
-struct MyReviewResponse: Codable {
-    var totalCount: Int
-    var hasNext: Bool
-    var result: [MyReviewRestaurant]
-    
-    enum CodingKeys: String, CodingKey {
-        case totalCount = "total_count"
-        case hasNext = "has_next"
-        case result
-    }
-}
-
 struct KeywordDistributionResponse: Codable {
     let tasteKeyword: String
     let tasteCnt: Int

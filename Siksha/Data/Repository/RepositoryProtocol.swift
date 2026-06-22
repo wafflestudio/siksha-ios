@@ -39,7 +39,7 @@ protocol UserRepositoryProtocol {
     func updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool) -> AnyPublisher<User, AppError>
     func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, AppError>
     func deleteUser() -> AnyPublisher<Void, AppError>
-    func getMyReview(page: Int, perPage: Int) -> AnyPublisher<MyReviewResponse, AppError>
+    func getMyReview(page: Int, perPage: Int) -> AnyPublisher<MyReviewPageModel, AppError>
     func deleteMyReview(reviewId: Int) -> AnyPublisher<Void, AppError>
 }
 

@@ -133,9 +133,14 @@ extension Repository: UserRepositoryProtocol {
         return self.networkModule.request(endpoint: endpoint)
     }
     
-    func getMyReview(page: Int, perPage: Int) -> AnyPublisher<MyReviewResponse, AppError> {
+    func getMyReview(page: Int, perPage: Int) -> AnyPublisher<MyReviewPageModel, AppError> {
         let endpoint = SikshaAPI.getMyReview(page: page, perPage: perPage)
-        return self.networkModule.request(endpoint: endpoint)
+        return self.networkModule
+            .request(endpoint: endpoint)
+            .map { (response: MyReviewPageResponseDTO) in
+                response.toDomain()
+            }
+            .eraseToAnyPublisher()
     }
     
     func deleteMyReview(reviewId: Int) -> AnyPublisher<Void, AppError> {
