@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Combine
  
 struct RestaurantSection: Identifiable {
     let id: Int
@@ -34,15 +33,14 @@ class MyReviewViewModel: ObservableObject {
     @Published var expandedSections: [Int: Bool] = [:]
     
     // MARK: - Private Properties
-    private var cancellables = Set<AnyCancellable>()
-    private let repository: UserRepositoryProtocol
+    private let myReviewUseCase: MyReviewUseCase
     private var currentPage = 1
     private let perPage = 20
     private var hasNext = true
     
     // MARK: - Init
-    init(repository: UserRepositoryProtocol) {
-        self.repository = repository
+    init(myReviewUseCase: MyReviewUseCase) {
+        self.myReviewUseCase = myReviewUseCase
     }
     
     // MARK: - Public Methods
@@ -52,21 +50,17 @@ class MyReviewViewModel: ObservableObject {
         isLoading = true
         currentPage = 1
         
-        repository.getMyReview(page: currentPage, perPage: perPage)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                self?.isLoading = false
-                
-                switch completionStatus {
-                case .finished:
-                    break
-                case .failure:
-                    break
-                }
-            }, receiveValue: { [weak self] response in
-                self?.handleReviewResponse(response, isLoadMore: false)
-            })
-            .store(in: &cancellables)
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let response = try await myReviewUseCase.fetchMyReviews(page: currentPage, perPage: perPage)
+                handleReviewResponse(response, isLoadMore: false)
+            } catch {
+            }
+            
+            isLoading = false
+        }
     }
     
     func loadMoreReviews() {
@@ -75,21 +69,18 @@ class MyReviewViewModel: ObservableObject {
         isLoading = true
         currentPage += 1
         
-        repository.getMyReview(page: currentPage, perPage: perPage)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                self?.isLoading = false
-                
-                switch completionStatus {
-                case .finished:
-                    break
-                case .failure:
-                    self?.currentPage -= 1
-                }
-            }, receiveValue: { [weak self] response in
-                self?.handleReviewResponse(response, isLoadMore: true)
-            })
-            .store(in: &cancellables)
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let response = try await myReviewUseCase.fetchMyReviews(page: currentPage, perPage: perPage)
+                handleReviewResponse(response, isLoadMore: true)
+            } catch {
+                currentPage -= 1
+            }
+            
+            isLoading = false
+        }
     }
     
     func toggleSection(_ sectionId: Int, expanded: Bool) {
@@ -97,18 +88,16 @@ class MyReviewViewModel: ObservableObject {
     }
     
     func deleteReview(_ reviewId: Int, completion: @escaping (Bool) -> Void) {
-        repository.deleteMyReview(reviewId: reviewId)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completionStatus in
-                switch completionStatus {
-                case .finished:
-                    completion(true)
-                case .failure:
-                    completion(false)
-                }
-            }, receiveValue: { _ in
-            })
-            .store(in: &cancellables)
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                try await myReviewUseCase.deleteMyReview(reviewId: reviewId)
+                completion(true)
+            } catch {
+                completion(false)
+            }
+        }
     }
 
     func removeReviewFromSection(reviewId: Int) {

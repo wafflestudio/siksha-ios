@@ -132,23 +132,8 @@ extension Repository: UserRepositoryProtocol {
         let endpoint = SikshaAPI.updateUserProfile(nickname: nickname, image: image, changeToDefaultImage: changeToDefaultImage)
         return self.networkModule.request(endpoint: endpoint)
     }
-    
-    func getMyReview(page: Int, perPage: Int) -> AnyPublisher<MyReviewPageModel, AppError> {
-        let endpoint = SikshaAPI.getMyReview(page: page, perPage: perPage)
-        return self.networkModule
-            .request(endpoint: endpoint)
-            .map { (response: MyReviewPageResponseDTO) in
-                response.toDomain()
-            }
-            .eraseToAnyPublisher()
-    }
-    
-    func deleteMyReview(reviewId: Int) -> AnyPublisher<Void, AppError> {
-        let endpoint = SikshaAPI.deleteMyReview(reviewId: reviewId)
-        return self.networkModule.requestWithNoContent(endpoint: endpoint)
-    }
-    
 }
+
 extension Repository: MyLikedMenuRepositoryProtocol{
     func likeMenu(menuId: Int) -> AnyPublisher<Void, AppError> {
         let endpoint = SikshaAPI.likeMenu(menuId: menuId)

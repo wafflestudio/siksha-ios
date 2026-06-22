@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol,MyLikedMenuRepositoryProtocol,AuthRepositoryProtocol {
+protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol, MyLikedMenuRepositoryProtocol, AuthRepositoryProtocol {
 
 }
 
@@ -39,8 +39,6 @@ protocol UserRepositoryProtocol {
     func updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool) -> AnyPublisher<User, AppError>
     func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, AppError>
     func deleteUser() -> AnyPublisher<Void, AppError>
-    func getMyReview(page: Int, perPage: Int) -> AnyPublisher<MyReviewPageModel, AppError>
-    func deleteMyReview(reviewId: Int) -> AnyPublisher<Void, AppError>
 }
 
 protocol MyLikedMenuRepositoryProtocol{

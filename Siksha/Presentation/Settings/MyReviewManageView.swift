@@ -379,5 +379,5 @@ private extension RestaurantReview {
 }
 
 #Preview {
-    MyReviewManageView(viewModel: MyReviewViewModel(repository: AppContainer.shared.domain.userRepository))
+    MyReviewManageView(viewModel: MyReviewViewModel(myReviewUseCase: AppContainer.shared.useCases.myReviewUseCase))
 }
