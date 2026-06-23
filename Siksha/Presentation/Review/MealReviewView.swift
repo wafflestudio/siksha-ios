@@ -23,7 +23,10 @@ struct MealReviewView: View {
         self.mealInfoViewModel = mealInfoViewModel
         self.existingReview = nil
         
-        _viewModel = StateObject(wrappedValue: MealReviewViewModel(meal: meal))
+        _viewModel = StateObject(wrappedValue: MealReviewViewModel(
+            meal: meal,
+            mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+        ))
         UITextView.appearance().backgroundColor = .clear
     }
     
@@ -33,7 +36,10 @@ struct MealReviewView: View {
         self.mealInfoViewModel = mealInfoViewModel
         self.existingReview = editingReview
         
-        let vm = MealReviewViewModel(meal: meal)
+        let vm = MealReviewViewModel(
+            meal: meal,
+            mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+        )
         vm.loadExistingReview(editingReview)
         _viewModel = StateObject(wrappedValue: vm)
         
@@ -261,7 +267,14 @@ struct MealReviewPreview {
             imageURLStrings: []
         )
         
-        return MealReviewView(meal, mealInfoViewModel: MealInfoViewModel(meal: meal))
+        return MealReviewView(
+            meal,
+            mealInfoViewModel: MealInfoViewModel(
+                meal: meal,
+                mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
+                mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+            )
+        )
     }
 }
 

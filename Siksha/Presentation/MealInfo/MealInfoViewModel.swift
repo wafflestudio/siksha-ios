@@ -12,6 +12,7 @@ import UIKit
 public class MealInfoViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let mealInfoUseCase: MealInfoUseCase
+    private let mealReviewUseCase: MealReviewUseCase
     
     @Published var meal: MenuItemDisplayModel
     @Published var mealReviews: [Review] = []
@@ -35,12 +36,12 @@ public class MealInfoViewModel: ObservableObject {
     
     init(
         meal: MenuItemDisplayModel,
-        mealInfoUseCase: MealInfoUseCase = DefaultMealInfoUseCase(
-            repository: MealInfoRepositoryImpl()
-        )
+        mealInfoUseCase: MealInfoUseCase,
+        mealReviewUseCase: MealReviewUseCase
     ) {
         self.meal = meal
         self.mealInfoUseCase = mealInfoUseCase
+        self.mealReviewUseCase = mealReviewUseCase
     }
     
     func toggleLike(){
@@ -78,7 +79,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealInfoUseCase.fetchReviews(menuId: meal.id, page: 1, perPage: 5)
+                let response = try await mealReviewUseCase.fetchReviews(menuId: meal.id, page: 1, perPage: 5)
                 await MainActor.run {
                     self.hasMorePages = response.hasNext
                     self.getReviewStatus = .succeeded
@@ -103,7 +104,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealInfoUseCase.fetchImageReviews(menuId: meal.id, page: 1, perPage: 6)
+                let response = try await mealReviewUseCase.fetchImageReviews(menuId: meal.id, page: 1, perPage: 6)
                 await MainActor.run {
                     self.totalImageCount = response.totalCount
                     self.getImageStatus = .succeeded
@@ -128,7 +129,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let distribution = try await mealInfoUseCase.fetchScoreDistribution(menuId: meal.id)
+                let distribution = try await mealReviewUseCase.fetchScoreDistribution(menuId: meal.id)
                 await MainActor.run {
                     self.getDistributionStatus = .succeeded
                     self.scoreDistribution = distribution.map { CGFloat($0) }
@@ -152,7 +153,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let dist = try await mealInfoUseCase.fetchKeywordDistribution(menuId: meal.id)
+                let dist = try await mealReviewUseCase.fetchKeywordDistribution(menuId: meal.id)
                 await MainActor.run {
                     self.getKeywordDistributionStatus = .succeeded
                     

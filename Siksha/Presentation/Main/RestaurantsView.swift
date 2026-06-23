@@ -49,7 +49,11 @@ struct RestaurantsView: View {
                                 },
                                 onFavoriteTap: onFavoriteTap,
                                 menuRow: { menu in
-                                    let mealInfoViewModel = MealInfoViewModel(meal: menu)
+                                    let mealInfoViewModel = MealInfoViewModel(
+                                        meal: menu,
+                                        mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
+                                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+                                    )
                                     NavigationLink(
                                         destination: MealInfoView(viewModel: mealInfoViewModel)
                                             .environment(\.menuViewModel, viewModel)

@@ -34,9 +34,7 @@ class MealReviewViewModel: ObservableObject {
     
     init(
         meal: MenuItemDisplayModel? = nil,
-        mealReviewUseCase: MealReviewUseCase = DefaultMealReviewUseCase(
-            repository: MealInfoRepositoryImpl()
-        )
+        mealReviewUseCase: MealReviewUseCase
     ) {
         self.meal = meal
         self.mealReviewUseCase = mealReviewUseCase

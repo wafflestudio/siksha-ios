@@ -172,7 +172,11 @@ private struct MealInfoPreview {
             likeCount: 0,
             imageURLStrings: []
         )
-        return MealInfoView(viewModel: MealInfoViewModel(meal: meal))
+        return MealInfoView(viewModel: MealInfoViewModel(
+            meal: meal,
+            mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
+            mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+        ))
     }
 }
 

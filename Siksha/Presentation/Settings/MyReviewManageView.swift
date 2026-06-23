@@ -243,7 +243,11 @@ struct ReviewCardView: View {
             NavigationLink(
                 destination: {
                     let meal = review.menuDisplayModel
-                    let mealInfoVM = MealInfoViewModel(meal: meal)
+                    let mealInfoVM = MealInfoViewModel(
+                        meal: meal,
+                        mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
+                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+                    )
                     mealInfoVM.updateMealFromId()
                     
                     return MealInfoView(viewModel: mealInfoVM)
@@ -345,7 +349,11 @@ struct ReviewCardView: View {
                 
                 NavigationLink(destination: {
                     let meal = review.menuDisplayModel
-                    let mealInfoVM = MealInfoViewModel(meal: meal)
+                    let mealInfoVM = MealInfoViewModel(
+                        meal: meal,
+                        mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
+                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+                    )
                     mealInfoVM.updateMealFromId()
                     
                     return MealReviewView(meal, mealInfoViewModel: mealInfoVM, editingReview: review)

@@ -91,6 +91,82 @@ struct MealCell_Previews: PreviewProvider {
             imageURLStrings: []
         )
         
-        return MealCell(viewModel: MealInfoViewModel(meal: meal))
+        return MealCell(viewModel: MealInfoViewModel(
+            meal: meal,
+            mealInfoUseCase: PreviewMealInfoUseCase(),
+            mealReviewUseCase: PreviewMealReviewUseCase()
+        ))
+    }
+    
+    private final class PreviewMealInfoUseCase: MealInfoUseCase {
+        func fetchMenu(menuId: Int) async throws -> MenuModel {
+            MenuModel(
+                id: menuId,
+                code: "",
+                nameKr: "음식",
+                nameEn: "",
+                price: 4000,
+                score: 4.1,
+                reviewCount: 1,
+                isLiked: false,
+                likeCount: 0,
+                imageURLStrings: []
+            )
+        }
+        
+        func toggleMenuLike(menu: MenuModel) async throws -> MenuModel {
+            MenuModel(
+                id: menu.id,
+                code: menu.code,
+                nameKr: menu.nameKr,
+                nameEn: menu.nameEn,
+                price: menu.price,
+                score: menu.score,
+                reviewCount: menu.reviewCount,
+                isLiked: !menu.isLiked,
+                likeCount: max(0, menu.likeCount + (menu.isLiked ? -1 : 1)),
+                imageURLStrings: menu.imageURLStrings
+            )
+        }
+    }
+    
+    private final class PreviewMealReviewUseCase: MealReviewUseCase {
+        func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
+            ReviewPageModel(totalCount: 0, hasNext: false, reviews: [])
+        }
+        
+        func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
+            ReviewPageModel(totalCount: 0, hasNext: false, reviews: [])
+        }
+        
+        func fetchScoreDistribution(menuId: Int) async throws -> [Int] {
+            []
+        }
+        
+        func fetchKeywordDistribution(menuId: Int) async throws -> KeywordDistributionModel {
+            KeywordDistributionModel(
+                tasteKeyword: "",
+                tasteCount: 0,
+                tasteTotal: 0,
+                priceKeyword: "",
+                priceCount: 0,
+                priceTotal: 0,
+                foodCompositionKeyword: "",
+                foodCompositionCount: 0,
+                foodCompositionTotal: 0
+            )
+        }
+        
+        func fetchCommentRecommendation(score: Int) async throws -> String {
+            ""
+        }
+        
+        func submitReview(_ submission: MealReviewSubmissionModel) async throws {}
+        
+        func editReview(reviewId: Int, submission: MealReviewSubmissionModel) async throws {}
+        
+        func likeReview(reviewId: Int) async throws {}
+        
+        func unlikeReview(reviewId: Int) async throws {}
     }
 }

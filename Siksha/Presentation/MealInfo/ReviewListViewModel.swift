@@ -11,7 +11,7 @@ import UIKit
 
 public class ReviewListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
-    private let mealInfoUseCase: MealInfoUseCase
+    private let mealReviewUseCase: MealReviewUseCase
     private var perPage = 10
     var currentPage: Int = 1
     
@@ -24,13 +24,11 @@ public class ReviewListViewModel: ObservableObject {
     init(
         mealID: Int,
         imageOnly: Bool = false,
-        mealInfoUseCase: MealInfoUseCase = DefaultMealInfoUseCase(
-            repository: MealInfoRepositoryImpl()
-        )
+        mealReviewUseCase: MealReviewUseCase
     ) {
         self.mealID = mealID
         self.imageOnly = imageOnly
-        self.mealInfoUseCase = mealInfoUseCase
+        self.mealReviewUseCase = mealReviewUseCase
     }
     
     func loadMoreReviewsIfNeeded(current: Review? = nil) {
@@ -74,7 +72,7 @@ public class ReviewListViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealInfoUseCase.fetchReviews(menuId: mealID, page: currentPage, perPage: perPage)
+                let response = try await mealReviewUseCase.fetchReviews(menuId: mealID, page: currentPage, perPage: perPage)
                 await MainActor.run {
                     self.hasMorePages = (self.currentPage < (response.totalCount + self.perPage - 1) / self.perPage)
                     self.currentPage += 1
@@ -100,7 +98,7 @@ public class ReviewListViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealInfoUseCase.fetchImageReviews(menuId: mealID, page: currentPage, perPage: perPage)
+                let response = try await mealReviewUseCase.fetchImageReviews(menuId: mealID, page: currentPage, perPage: perPage)
                 await MainActor.run {
                     self.hasMorePages = response.hasNext
                     self.currentPage += 1

@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class MealInfoRepositoryImpl: MealInfoRepositoryProtocol {
+final class MealInfoRepositoryImpl: MealInfoRepositoryProtocol, MealReviewRepositoryProtocol {
     private let remote: MealInfoRemoteDataSource
     
     init(remote: MealInfoRemoteDataSource = MealInfoRemoteDataSourceImpl()) {
