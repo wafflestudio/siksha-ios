@@ -57,7 +57,7 @@ struct ContentView: View {
     @StateObject private var settingsViewModel = RenewalSettingsViewModel(
         userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
     )
-    @StateObject var alarmViewModel = MyLikedMenuViewModel(
+    @StateObject private var myLikedMenuViewModel = MyLikedMenuViewModel(
         myLikedMenuUseCase: AppContainer.shared.useCases.myLikedMenuUseCase,
         menuAlarmUseCase: AppContainer.shared.useCases.menuAlarmUseCase,
         menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
@@ -81,7 +81,7 @@ struct ContentView: View {
     
     var body: some View {
         ZStack {
-            NavigationView {
+            NavigationStack {
                 GeometryReader { geometry in
                     ZStack {
                         ZStack {
@@ -93,7 +93,7 @@ struct ContentView: View {
                             .ignoresSafeArea(.all, edges: .bottom)
                             
                             ZStack {
-                                MyLikedMenuModal(viewModel: alarmViewModel)
+                                MyLikedMenuModal(viewModel: myLikedMenuViewModel)
                                     .environmentObject(ContentViewModel.contentViewModel)
                                     .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
                             }
@@ -103,26 +103,17 @@ struct ContentView: View {
                             .zIndex(contentViewModel.showModal ? 10 : -10)
                             .opacity(contentViewModel.showModal ? 1 : 0)
                         }
-                        
-                        NavigationLink(destination: MyLikedMenuView(
-                            viewModel: MyLikedMenuViewModel(
-                                myLikedMenuUseCase: AppContainer.shared.useCases.myLikedMenuUseCase,
-                                menuAlarmUseCase: AppContainer.shared.useCases.menuAlarmUseCase,
-                                menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
-                            ),
-                            isFromModal: true
-                        ), isActive: $contentViewModel.showMyMenuViewFromPopup) {
-                            EmptyView()
-                        }
                     }
                     .onAppear {
                         if !UserDefaults.standard.bool(forKey: "alreadySentFCM") {
                             UIApplication.shared.registerForRemoteNotifications()
                         }
                     }
+                    .navigationDestination(isPresented: $contentViewModel.showMyMenuViewFromPopup) {
+                        MyLikedMenuView(viewModel: myLikedMenuViewModel)
+                    }
                 }
             }
-            .navigationViewStyle(StackNavigationViewStyle())
             
             if contentViewModel.showPopUp {
                 ZStack(alignment: .topTrailing) {

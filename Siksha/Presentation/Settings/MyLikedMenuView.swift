@@ -22,35 +22,13 @@ struct MyLikedMenuView: View {
                 .foregroundColor(.white)
         }
     }
-    init(viewModel:MyLikedMenuViewModel,isFromModal:Bool = false){
+    init(viewModel:MyLikedMenuViewModel){
         self.viewModel = viewModel
-        if isFromModal{
-            viewModel.loadMyLikedMenu()
-        }
 
     }
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            if viewModel.likedMenuGroups.isEmpty {
-                ZStack(alignment: .center, content: {
-                    Text("내가 찜한 메뉴가 없어요")
-                        .customFont(font: .text15(weight: .Bold))
-                        .foregroundColor(Color.gray600)
-                })
-                .frame(maxWidth: .infinity,maxHeight: .infinity)
-            }
-            else{
-                ScrollView {
-                    VStack(spacing:12){
-                        ForEach(viewModel.likedMenuGroups, id: \.self) { group in
-                            LikedMenuRestaurantCell(viewModel, group)
-                            
-                        }
-                    }
-                    .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
-                }
-                .padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
-            }
+            contentView
         }
      
         .padding(.zero)
@@ -63,8 +41,10 @@ struct MyLikedMenuView: View {
             })
         .onAppear{
             ContentViewModel.contentViewModel.showPopUp = true
-            viewModel.loadMyLikedMenu()
 
+        }
+        .task {
+            await viewModel.loadMyLikedMenu()
         }
        
         .onDisappear{
@@ -77,4 +57,57 @@ struct MyLikedMenuView: View {
 
     }
 
+}
+
+private extension MyLikedMenuView {
+    @ViewBuilder
+    var contentView: some View {
+        switch viewModel.loadState {
+        case .idle, .loading:
+            ProgressView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+        case .loaded:
+            if viewModel.likedMenuGroups.isEmpty {
+                emptyView
+            } else {
+                likedMenuListView
+            }
+        case .failed:
+            if viewModel.likedMenuGroups.isEmpty {
+                loadFailedView
+            } else {
+                likedMenuListView
+            }
+        }
+    }
+    
+    var emptyView: some View {
+        ZStack(alignment: .center, content: {
+            Text("내가 찜한 메뉴가 없어요")
+                .customFont(font: .text15(weight: .Bold))
+                .foregroundColor(Color.gray600)
+        })
+        .frame(maxWidth: .infinity,maxHeight: .infinity)
+    }
+    
+    var loadFailedView: some View {
+        ZStack(alignment: .center, content: {
+            Text("내가 찜한 메뉴를 불러오지 못했어요")
+                .customFont(font: .text15(weight: .Bold))
+                .foregroundColor(Color.gray600)
+        })
+        .frame(maxWidth: .infinity,maxHeight: .infinity)
+    }
+    
+    var likedMenuListView: some View {
+        ScrollView {
+            VStack(spacing:12){
+                ForEach(viewModel.likedMenuGroups, id: \.self) { group in
+                    LikedMenuRestaurantCell(viewModel, group)
+                }
+            }
+            .padding(EdgeInsets(top: 0, leading: 16, bottom: 0, trailing: 16))
+        }
+        .padding(EdgeInsets(top: 12, leading: 0, bottom: 0, trailing: 0))
+    }
 }

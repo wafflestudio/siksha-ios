@@ -8,6 +8,19 @@
 import Foundation
 import SwiftUI
 
+enum MyLikedMenuLoadState {
+    case idle
+    case loading
+    case loaded
+    case failed
+}
+
+private enum MyLikedMenuLoadResult {
+    case succeeded
+    case cancelled
+    case failed
+}
+
 class MyLikedMenuViewModel: ObservableObject{
     private let myLikedMenuUseCase: MyLikedMenuUseCase
     private let menuAlarmUseCase: MenuAlarmUseCase
@@ -19,12 +32,15 @@ class MyLikedMenuViewModel: ObservableObject{
     @Published var noAlarmPermission = false
     @Published var isAlarmEnabled: Bool
     @Published var likedMenuGroups: [RestaurantLikedMenuGroup] = []
+    @Published private(set) var loadState: MyLikedMenuLoadState = .idle
     @Published private var personalRestaurantById: [Int: PersonalRestaurantModel] = [:]
     @Published private var updatingFavoriteRestaurantIds: Set<Int> = []
     @Published private var updatingMenuLikeIds: Set<Int> = []
     @Published var alarmTime: AlarmTime = .DAILY
     private var personalRestaurantOrder: [Int: Int] = [:]
     private var initErrorCount = 0
+    private var isLoadingLikedMenus = false
+    private var hasLoadedLikedMenus = false
     
     init(
         myLikedMenuUseCase: MyLikedMenuUseCase,
@@ -61,12 +77,32 @@ class MyLikedMenuViewModel: ObservableObject{
         }
     }
     
-    func loadMyLikedMenu(){
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            
-            await refreshPersonalRestaurants()
-            await loadMyLikedMenuItems()
+    @MainActor
+    func loadMyLikedMenu() async {
+        guard !isLoadingLikedMenus, !hasLoadedLikedMenus else {
+            return
+        }
+        
+        isLoadingLikedMenus = true
+        loadState = .loading
+        defer {
+            isLoadingLikedMenus = false
+        }
+        
+        await refreshPersonalRestaurants()
+        guard !Task.isCancelled else {
+            loadState = .idle
+            return
+        }
+        
+        switch await loadMyLikedMenuItems() {
+        case .succeeded:
+            hasLoadedLikedMenus = true
+            loadState = .loaded
+        case .cancelled:
+            loadState = .idle
+        case .failed:
+            loadState = .failed
         }
     }
     
@@ -80,16 +116,22 @@ class MyLikedMenuViewModel: ObservableObject{
     }
     
     @MainActor
-    private func loadMyLikedMenuItems() async {
+    private func loadMyLikedMenuItems() async -> MyLikedMenuLoadResult {
         do {
             let groups = try await myLikedMenuUseCase.fetchMyLikedMenus()
             likedMenuGroups = sortByPersonalRestaurantOrder(groups)
             initErrorCount = 0
+            return .succeeded
         } catch {
+            if error is CancellationError {
+                return .cancelled
+            }
+            
             if initErrorCount == 0 { // 알람 화면에서 뒤로 갈 때 알람이 떠서 잘 안 돌아가지는 문제 해결용
                 self.error = ErrorHelper.categorize(error)
             }
             initErrorCount += 1
+            return .failed
         }
     }
     
@@ -135,6 +177,10 @@ class MyLikedMenuViewModel: ObservableObject{
             personalRestaurantById = Dictionary(uniqueKeysWithValues: restaurants.map { ($0.id, $0) })
             personalRestaurantOrder = Dictionary(uniqueKeysWithValues: restaurants.enumerated().map { ($0.element.id, $0.offset) })
         } catch {
+            if error is CancellationError {
+                return
+            }
+            
             self.error = ErrorHelper.categorize(error)
         }
     }
