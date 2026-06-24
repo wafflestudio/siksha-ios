@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol, MyLikedMenuRepositoryProtocol, AuthRepositoryProtocol {
+protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol, AuthRepositoryProtocol {
 
 }
 
@@ -39,18 +39,6 @@ protocol UserRepositoryProtocol {
     func updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool) -> AnyPublisher<User, AppError>
     func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, AppError>
     func deleteUser() -> AnyPublisher<Void, AppError>
-}
-
-protocol MyLikedMenuRepositoryProtocol{
-    func likeMenu(menuId: Int) -> AnyPublisher<Void, AppError>
-    func unlikeMenu(menuId: Int) -> AnyPublisher<Void, AppError>
-    func getMyLikedMenu() -> AnyPublisher<MyLikedMenuResponse,AppError>
-    func onAlarm(menuId:Int)->AnyPublisher<AlarmResponse,AppError>
-    func offAlarm(menuId:Int)->AnyPublisher<AlarmResponse,AppError>
-    func onAlarmAll()->AnyPublisher<Void,AppError>
-    func offAlarmAll()->AnyPublisher<Void,AppError>
-    func postAlarmTime(type:AlarmTime)->AnyPublisher<Void,AppError>
-    func getAlarmTime()->AnyPublisher<AlarmTimeResponse,AppError>
 }
 
 protocol AuthRepositoryProtocol{

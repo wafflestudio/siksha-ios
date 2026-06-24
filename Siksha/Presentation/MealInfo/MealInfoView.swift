@@ -57,6 +57,7 @@ private extension MealInfoView {
                     .foregroundStyle(viewModel.meal.isLiked ? Color.accentLike : Color.gray200)
                     .padding(.top, 20)
             }
+            .disabled(viewModel.isUpdatingLike)
             
             HStack(spacing: 0) {
                 Text("찜 \(viewModel.meal.likeCount)개")
@@ -175,7 +176,8 @@ private struct MealInfoPreview {
         return MealInfoView(viewModel: MealInfoViewModel(
             meal: meal,
             mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
-            mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+            mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase,
+            menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
         ))
     }
 }

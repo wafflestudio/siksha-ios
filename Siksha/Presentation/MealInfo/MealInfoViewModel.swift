@@ -6,13 +6,12 @@
 //
 
 import Foundation
-import Combine
 import UIKit
 
 public class MealInfoViewModel: ObservableObject {
-    private var cancellables = Set<AnyCancellable>()
     private let mealInfoUseCase: MealInfoUseCase
     private let mealReviewUseCase: MealReviewUseCase
+    private let menuPreferenceUseCase: MenuPreferenceUseCase
     
     @Published var meal: MenuItemDisplayModel
     @Published var mealReviews: [Review] = []
@@ -30,39 +29,57 @@ public class MealInfoViewModel: ObservableObject {
     @Published var getImageStatus: NetworkStatus = .idle
     @Published var getDistributionStatus: NetworkStatus = .idle
     @Published var getKeywordDistributionStatus: NetworkStatus = .idle
-    @Published var getLikeStatus: NetworkStatus = .idle
+    @Published var likeStatus: NetworkStatus = .idle
     @Published var isLiked = false
     @Published var loadedReviews: Bool = false
+    
+    var isUpdatingLike: Bool {
+        likeStatus == .loading
+    }
     
     init(
         meal: MenuItemDisplayModel,
         mealInfoUseCase: MealInfoUseCase,
-        mealReviewUseCase: MealReviewUseCase
+        mealReviewUseCase: MealReviewUseCase,
+        menuPreferenceUseCase: MenuPreferenceUseCase
     ) {
         self.meal = meal
         self.mealInfoUseCase = mealInfoUseCase
         self.mealReviewUseCase = mealReviewUseCase
+        self.menuPreferenceUseCase = menuPreferenceUseCase
     }
     
     func toggleLike(){
-        guard getLikeStatus != .loading else{
+        guard likeStatus != .loading else{
             return
         }
         
-        getLikeStatus = .loading
+        likeStatus = .loading
         
         Task { [weak self] in
             guard let self else { return }
             
             do {
-                let updatedMeal = try await mealInfoUseCase.toggleMenuLike(menu: meal.menuModel)
+                let menuId = meal.id
+                let isCurrentlyLiked = meal.isLiked
+                let status: MenuLikeStatusModel
+                
+                if isCurrentlyLiked {
+                    status = try await menuPreferenceUseCase.unlikeMenu(menuId: menuId)
+                } else {
+                    status = try await menuPreferenceUseCase.likeMenu(menuId: menuId)
+                }
+                
                 await MainActor.run {
-                    self.getLikeStatus = .succeeded
-                    self.meal = MenuItemDisplayModel(menu: updatedMeal)
+                    self.likeStatus = .succeeded
+                    self.meal = self.meal.updatingLike(
+                        isLiked: status.isLiked,
+                        likeCount: status.likeCount
+                    )
                 }
             } catch {
                 await MainActor.run {
-                    self.getLikeStatus = .failed
+                    self.likeStatus = .failed
                 }
             }
         }

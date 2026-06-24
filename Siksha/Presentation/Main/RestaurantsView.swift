@@ -52,7 +52,8 @@ struct RestaurantsView: View {
                                     let mealInfoViewModel = MealInfoViewModel(
                                         meal: menu,
                                         mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
-                                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+                                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase,
+                                        menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
                                     )
                                     NavigationLink(
                                         destination: MealInfoView(viewModel: mealInfoViewModel)

@@ -123,7 +123,11 @@ struct RenewalSettingsView: View {
             }
             
             partitionBar
-            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository))) {
+            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(
+                myLikedMenuUseCase: AppContainer.shared.useCases.myLikedMenuUseCase,
+                menuAlarmUseCase: AppContainer.shared.useCases.menuAlarmUseCase,
+                menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
+            ))) {
                 HStack(alignment: .center) {
                     Text("내가 찜한 메뉴")
                         .customFont(font: .text15(weight: .Regular))

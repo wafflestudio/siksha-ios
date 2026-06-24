@@ -18,14 +18,6 @@ final class MealInfoRepositoryImpl: MealInfoRepositoryProtocol, MealReviewReposi
         try await remote.fetchMenu(menuId: menuId).toDomain()
     }
     
-    func likeMenu(menuId: Int) async throws -> MenuModel {
-        try await remote.likeMenu(menuId: menuId).toDomain()
-    }
-    
-    func unlikeMenu(menuId: Int) async throws -> MenuModel {
-        try await remote.unlikeMenu(menuId: menuId).toDomain()
-    }
-    
     func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
         try await remote.fetchReviews(menuId: menuId, page: page, perPage: perPage).toDomain()
     }

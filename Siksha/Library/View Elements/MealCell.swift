@@ -70,6 +70,7 @@ struct MealCell: View {
                 Image(viewModel.meal.isLiked ? "Heart-selected" : "Heart-default")
                     .frame(width: 24, height: 24)
             }
+            .disabled(viewModel.isUpdatingLike)
         }
         .padding(.zero)
         .background(Color.backgroundSecondary)
@@ -94,7 +95,8 @@ struct MealCell_Previews: PreviewProvider {
         return MealCell(viewModel: MealInfoViewModel(
             meal: meal,
             mealInfoUseCase: PreviewMealInfoUseCase(),
-            mealReviewUseCase: PreviewMealReviewUseCase()
+            mealReviewUseCase: PreviewMealReviewUseCase(),
+            menuPreferenceUseCase: PreviewMenuPreferenceUseCase()
         ))
     }
     
@@ -113,20 +115,15 @@ struct MealCell_Previews: PreviewProvider {
                 imageURLStrings: []
             )
         }
+    }
+    
+    private final class PreviewMenuPreferenceUseCase: MenuPreferenceUseCase {
+        func likeMenu(menuId: Int) async throws -> MenuLikeStatusModel {
+            MenuLikeStatusModel(menuId: menuId, isLiked: true, likeCount: 1)
+        }
         
-        func toggleMenuLike(menu: MenuModel) async throws -> MenuModel {
-            MenuModel(
-                id: menu.id,
-                code: menu.code,
-                nameKr: menu.nameKr,
-                nameEn: menu.nameEn,
-                price: menu.price,
-                score: menu.score,
-                reviewCount: menu.reviewCount,
-                isLiked: !menu.isLiked,
-                likeCount: max(0, menu.likeCount + (menu.isLiked ? -1 : 1)),
-                imageURLStrings: menu.imageURLStrings
-            )
+        func unlikeMenu(menuId: Int) async throws -> MenuLikeStatusModel {
+            MenuLikeStatusModel(menuId: menuId, isLiked: false, likeCount: 0)
         }
     }
     

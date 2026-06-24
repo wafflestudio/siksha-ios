@@ -31,7 +31,7 @@ struct MyLikedMenuView: View {
     }
     var body: some View {
         ZStack(alignment: .topTrailing) {
-            if viewModel.myLikedRestaurants.isEmpty{
+            if viewModel.likedMenuGroups.isEmpty {
                 ZStack(alignment: .center, content: {
                     Text("내가 찜한 메뉴가 없어요")
                         .customFont(font: .text15(weight: .Bold))
@@ -42,8 +42,8 @@ struct MyLikedMenuView: View {
             else{
                 ScrollView {
                     VStack(spacing:12){
-                        ForEach(viewModel.myLikedRestaurants,id:\.self){restaurant in
-                            LikedMenuRestaurantCell(viewModel,restaurant)
+                        ForEach(viewModel.likedMenuGroups, id: \.self) { group in
+                            LikedMenuRestaurantCell(viewModel, group)
                             
                         }
                     }
@@ -78,4 +78,3 @@ struct MyLikedMenuView: View {
     }
 
 }
-

@@ -7,7 +7,6 @@
 
 protocol MealInfoUseCase {
     func fetchMenu(menuId: Int) async throws -> MenuModel
-    func toggleMenuLike(menu: MenuModel) async throws -> MenuModel
 }
 
 final class DefaultMealInfoUseCase: MealInfoUseCase {
@@ -19,12 +18,5 @@ final class DefaultMealInfoUseCase: MealInfoUseCase {
     
     func fetchMenu(menuId: Int) async throws -> MenuModel {
         try await repository.fetchMenu(menuId: menuId)
-    }
-    
-    func toggleMenuLike(menu: MenuModel) async throws -> MenuModel {
-        if menu.isLiked {
-            return try await repository.unlikeMenu(menuId: menu.id)
-        }
-        return try await repository.likeMenu(menuId: menu.id)
     }
 }

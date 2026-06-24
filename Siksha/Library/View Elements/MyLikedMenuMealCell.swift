@@ -76,9 +76,9 @@ struct MyLikedMenuMealCell: View {
                 Image(menu.isLiked ? "Heart-selected" : "Heart-default")
                     .frame(width: 24, height: 24)
             }
+            .disabled(viewModel.isUpdatingMenuLike(menuId: menu.id))
         }
         .padding(.zero)
         .background(Color.backgroundSecondary)
     }
 }
-

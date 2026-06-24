@@ -10,6 +10,9 @@ final class UseCaseProvider {
     let myReviewUseCase: MyReviewUseCase
     let mealInfoUseCase: MealInfoUseCase
     let mealReviewUseCase: MealReviewUseCase
+    let menuPreferenceUseCase: MenuPreferenceUseCase
+    let myLikedMenuUseCase: MyLikedMenuUseCase
+    let menuAlarmUseCase: MenuAlarmUseCase
 
     init(
         userPreferenceUseCase: UserPreferenceUseCase = DefaultUserPreferenceUseCase(
@@ -23,11 +26,23 @@ final class UseCaseProvider {
         ),
         mealReviewUseCase: MealReviewUseCase = DefaultMealReviewUseCase(
             repository: MealInfoRepositoryImpl()
+        ),
+        menuPreferenceUseCase: MenuPreferenceUseCase = DefaultMenuPreferenceUseCase(
+            repository: MenuPreferenceRepositoryImpl()
+        ),
+        myLikedMenuUseCase: MyLikedMenuUseCase = DefaultMyLikedMenuUseCase(
+            repository: MyLikedMenuRepositoryImpl()
+        ),
+        menuAlarmUseCase: MenuAlarmUseCase = DefaultMenuAlarmUseCase(
+            repository: MyLikedMenuRepositoryImpl()
         )
     ) {
         self.userPreferenceUseCase = userPreferenceUseCase
         self.myReviewUseCase = myReviewUseCase
         self.mealInfoUseCase = mealInfoUseCase
         self.mealReviewUseCase = mealReviewUseCase
+        self.menuPreferenceUseCase = menuPreferenceUseCase
+        self.myLikedMenuUseCase = myLikedMenuUseCase
+        self.menuAlarmUseCase = menuAlarmUseCase
     }
 }

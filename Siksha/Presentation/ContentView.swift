@@ -57,7 +57,11 @@ struct ContentView: View {
     @StateObject private var settingsViewModel = RenewalSettingsViewModel(
         userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
     )
-    @StateObject var alarmViewModel = MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository)
+    @StateObject var alarmViewModel = MyLikedMenuViewModel(
+        myLikedMenuUseCase: AppContainer.shared.useCases.myLikedMenuUseCase,
+        menuAlarmUseCase: AppContainer.shared.useCases.menuAlarmUseCase,
+        menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
+    )
     @State private var hidePopupWorkItem: DispatchWorkItem?
     @State private var previousSelectedTab = 0
     
@@ -100,7 +104,14 @@ struct ContentView: View {
                             .opacity(contentViewModel.showModal ? 1 : 0)
                         }
                         
-                        NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository),isFromModal: true), isActive: $contentViewModel.showMyMenuViewFromPopup) {
+                        NavigationLink(destination: MyLikedMenuView(
+                            viewModel: MyLikedMenuViewModel(
+                                myLikedMenuUseCase: AppContainer.shared.useCases.myLikedMenuUseCase,
+                                menuAlarmUseCase: AppContainer.shared.useCases.menuAlarmUseCase,
+                                menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
+                            ),
+                            isFromModal: true
+                        ), isActive: $contentViewModel.showMyMenuViewFromPopup) {
                             EmptyView()
                         }
                     }

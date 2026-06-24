@@ -10,8 +10,6 @@ import Foundation
 
 protocol MealInfoRemoteDataSource {
     func fetchMenu(menuId: Int) async throws -> MenuIdResponse
-    func likeMenu(menuId: Int) async throws -> MenuIdResponse
-    func unlikeMenu(menuId: Int) async throws -> MenuIdResponse
     func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO
     func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO
     func fetchScoreDistribution(menuId: Int) async throws -> ScoreDistributionResponse
@@ -28,22 +26,6 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
     func fetchMenu(menuId: Int) async throws -> MenuIdResponse {
         try await AF
             .request(SikshaAPI.getMenuFromId(menuId: menuId))
-            .validate()
-            .serializingDecodable(MenuIdResponse.self, decoder: JSONDecoder())
-            .value
-    }
-    
-    func likeMenu(menuId: Int) async throws -> MenuIdResponse {
-        try await AF
-            .request(SikshaAPI.likeMenu(menuId: menuId))
-            .validate()
-            .serializingDecodable(MenuIdResponse.self, decoder: JSONDecoder())
-            .value
-    }
-    
-    func unlikeMenu(menuId: Int) async throws -> MenuIdResponse {
-        try await AF
-            .request(SikshaAPI.unlikeMenu(menuId: menuId))
             .validate()
             .serializingDecodable(MenuIdResponse.self, decoder: JSONDecoder())
             .value

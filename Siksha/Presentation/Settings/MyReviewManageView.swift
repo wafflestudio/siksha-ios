@@ -246,7 +246,8 @@ struct ReviewCardView: View {
                     let mealInfoVM = MealInfoViewModel(
                         meal: meal,
                         mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
-                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase,
+                        menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
                     )
                     mealInfoVM.updateMealFromId()
                     
@@ -352,7 +353,8 @@ struct ReviewCardView: View {
                     let mealInfoVM = MealInfoViewModel(
                         meal: meal,
                         mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
-                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase,
+                        menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
                     )
                     mealInfoVM.updateMealFromId()
                     
