@@ -250,7 +250,7 @@ struct ReviewCardView: View {
                         fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
                         fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
                         fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
-                        menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
+                        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
                     )
                     mealInfoVM.updateMealFromId()
                     
@@ -360,7 +360,7 @@ struct ReviewCardView: View {
                         fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
                         fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
                         fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
-                        menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
+                        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
                     )
                     mealInfoVM.updateMealFromId()
                     

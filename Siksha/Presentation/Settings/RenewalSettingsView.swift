@@ -129,7 +129,7 @@ struct RenewalSettingsView: View {
             NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(
                 myLikedMenuUseCase: AppContainer.shared.useCases.myLikedMenuUseCase,
                 menuAlarmUseCase: AppContainer.shared.useCases.menuAlarmUseCase,
-                menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
+                updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
             ))) {
                 HStack(alignment: .center) {
                     Text("내가 찜한 메뉴")

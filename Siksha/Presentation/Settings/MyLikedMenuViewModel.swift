@@ -24,7 +24,7 @@ private enum MyLikedMenuLoadResult {
 class MyLikedMenuViewModel: ObservableObject{
     private let myLikedMenuUseCase: MyLikedMenuUseCase
     private let menuAlarmUseCase: MenuAlarmUseCase
-    private let menuPreferenceUseCase: MenuPreferenceUseCase
+    private let updateMenuLikeUseCase: UpdateMenuLikeUseCase
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
 
@@ -45,7 +45,7 @@ class MyLikedMenuViewModel: ObservableObject{
     init(
         myLikedMenuUseCase: MyLikedMenuUseCase,
         menuAlarmUseCase: MenuAlarmUseCase,
-        menuPreferenceUseCase: MenuPreferenceUseCase,
+        updateMenuLikeUseCase: UpdateMenuLikeUseCase,
         fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
             repository: RestaurantRepositoryImpl()
         ),
@@ -55,7 +55,7 @@ class MyLikedMenuViewModel: ObservableObject{
     ) {
         self.myLikedMenuUseCase = myLikedMenuUseCase
         self.menuAlarmUseCase = menuAlarmUseCase
-        self.menuPreferenceUseCase = menuPreferenceUseCase
+        self.updateMenuLikeUseCase = updateMenuLikeUseCase
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
         self.isAlarmEnabled = menuAlarmUseCase.getAlarmEnabled()
@@ -288,14 +288,10 @@ class MyLikedMenuViewModel: ObservableObject{
         }
         
         do {
-            let status: MenuLikeStatusModel
-            
-            if isCurrentlyLiked {
-                status = try await menuPreferenceUseCase.unlikeMenu(menuId: menuId)
-            } else {
-                status = try await menuPreferenceUseCase.likeMenu(menuId: menuId)
-            }
-            
+            let status = try await updateMenuLikeUseCase.execute(
+                menuId: menuId,
+                isLiked: !isCurrentlyLiked
+            )
             updateMenuLikeStatus(status)
         } catch {
             self.error = nil

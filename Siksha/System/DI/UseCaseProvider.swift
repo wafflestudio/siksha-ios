@@ -18,7 +18,7 @@ final class UseCaseProvider {
     let submitMealReviewUseCase: SubmitMealReviewUseCase
     let editMealReviewUseCase: EditMealReviewUseCase
     let updateReviewLikeUseCase: UpdateReviewLikeUseCase
-    let menuPreferenceUseCase: MenuPreferenceUseCase
+    let updateMenuLikeUseCase: UpdateMenuLikeUseCase
     let myLikedMenuUseCase: MyLikedMenuUseCase
     let menuAlarmUseCase: MenuAlarmUseCase
 
@@ -35,7 +35,7 @@ final class UseCaseProvider {
         submitMealReviewUseCase: SubmitMealReviewUseCase? = nil,
         editMealReviewUseCase: EditMealReviewUseCase? = nil,
         updateReviewLikeUseCase: UpdateReviewLikeUseCase? = nil,
-        menuPreferenceUseCase: MenuPreferenceUseCase? = nil,
+        updateMenuLikeUseCase: UpdateMenuLikeUseCase? = nil,
         myLikedMenuUseCase: MyLikedMenuUseCase? = nil,
         menuAlarmUseCase: MenuAlarmUseCase? = nil
     ) {
@@ -81,7 +81,7 @@ final class UseCaseProvider {
         self.updateReviewLikeUseCase = updateReviewLikeUseCase ?? DefaultUpdateReviewLikeUseCase(
             repository: mealInfoRepository
         )
-        self.menuPreferenceUseCase = menuPreferenceUseCase ?? DefaultMenuPreferenceUseCase(
+        self.updateMenuLikeUseCase = updateMenuLikeUseCase ?? DefaultUpdateMenuLikeUseCase(
             repository: menuPreferenceRepository
         )
         self.myLikedMenuUseCase = myLikedMenuUseCase ?? DefaultMyLikedMenuUseCase(

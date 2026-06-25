@@ -60,7 +60,7 @@ struct ContentView: View {
     @StateObject private var myLikedMenuViewModel = MyLikedMenuViewModel(
         myLikedMenuUseCase: AppContainer.shared.useCases.myLikedMenuUseCase,
         menuAlarmUseCase: AppContainer.shared.useCases.menuAlarmUseCase,
-        menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
+        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
     )
     @State private var hidePopupWorkItem: DispatchWorkItem?
     @State private var previousSelectedTab = 0

@@ -14,7 +14,7 @@ public class MealInfoViewModel: ObservableObject {
     private let fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase
     private let fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase
     private let fetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase
-    private let menuPreferenceUseCase: MenuPreferenceUseCase
+    private let updateMenuLikeUseCase: UpdateMenuLikeUseCase
     
     @Published var meal: MenuItemDisplayModel
     @Published var mealReviews: [Review] = []
@@ -47,7 +47,7 @@ public class MealInfoViewModel: ObservableObject {
         fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase,
         fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase,
         fetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase,
-        menuPreferenceUseCase: MenuPreferenceUseCase
+        updateMenuLikeUseCase: UpdateMenuLikeUseCase
     ) {
         self.meal = meal
         self.mealInfoUseCase = mealInfoUseCase
@@ -55,7 +55,7 @@ public class MealInfoViewModel: ObservableObject {
         self.fetchMealImageReviewsUseCase = fetchMealImageReviewsUseCase
         self.fetchMealReviewScoreDistributionUseCase = fetchMealReviewScoreDistributionUseCase
         self.fetchMealReviewKeywordDistributionUseCase = fetchMealReviewKeywordDistributionUseCase
-        self.menuPreferenceUseCase = menuPreferenceUseCase
+        self.updateMenuLikeUseCase = updateMenuLikeUseCase
     }
     
     func toggleLike(){
@@ -71,13 +71,10 @@ public class MealInfoViewModel: ObservableObject {
             do {
                 let menuId = meal.id
                 let isCurrentlyLiked = meal.isLiked
-                let status: MenuLikeStatusModel
-                
-                if isCurrentlyLiked {
-                    status = try await menuPreferenceUseCase.unlikeMenu(menuId: menuId)
-                } else {
-                    status = try await menuPreferenceUseCase.likeMenu(menuId: menuId)
-                }
+                let status = try await updateMenuLikeUseCase.execute(
+                    menuId: menuId,
+                    isLiked: !isCurrentlyLiked
+                )
                 
                 await MainActor.run {
                     self.likeStatus = .succeeded

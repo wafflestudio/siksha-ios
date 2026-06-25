@@ -99,7 +99,7 @@ struct MealCell_Previews: PreviewProvider {
             fetchMealImageReviewsUseCase: PreviewFetchMealImageReviewsUseCase(),
             fetchMealReviewScoreDistributionUseCase: PreviewFetchMealReviewScoreDistributionUseCase(),
             fetchMealReviewKeywordDistributionUseCase: PreviewFetchMealReviewKeywordDistributionUseCase(),
-            menuPreferenceUseCase: PreviewMenuPreferenceUseCase()
+            updateMenuLikeUseCase: PreviewUpdateMenuLikeUseCase()
         ))
     }
     
@@ -120,13 +120,9 @@ struct MealCell_Previews: PreviewProvider {
         }
     }
     
-    private final class PreviewMenuPreferenceUseCase: MenuPreferenceUseCase {
-        func likeMenu(menuId: Int) async throws -> MenuLikeStatusModel {
-            MenuLikeStatusModel(menuId: menuId, isLiked: true, likeCount: 1)
-        }
-        
-        func unlikeMenu(menuId: Int) async throws -> MenuLikeStatusModel {
-            MenuLikeStatusModel(menuId: menuId, isLiked: false, likeCount: 0)
+    private final class PreviewUpdateMenuLikeUseCase: UpdateMenuLikeUseCase {
+        func execute(menuId: Int, isLiked: Bool) async throws -> MenuLikeStatusModel {
+            MenuLikeStatusModel(menuId: menuId, isLiked: isLiked, likeCount: isLiked ? 1 : 0)
         }
     }
     
