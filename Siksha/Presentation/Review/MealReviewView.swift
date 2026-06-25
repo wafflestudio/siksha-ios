@@ -25,7 +25,9 @@ struct MealReviewView: View {
         
         _viewModel = StateObject(wrappedValue: MealReviewViewModel(
             meal: meal,
-            mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+            fetchReviewCommentRecommendationUseCase: AppContainer.shared.useCases.fetchReviewCommentRecommendationUseCase,
+            submitMealReviewUseCase: AppContainer.shared.useCases.submitMealReviewUseCase,
+            editMealReviewUseCase: AppContainer.shared.useCases.editMealReviewUseCase
         ))
         UITextView.appearance().backgroundColor = .clear
     }
@@ -38,7 +40,9 @@ struct MealReviewView: View {
         
         let vm = MealReviewViewModel(
             meal: meal,
-            mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+            fetchReviewCommentRecommendationUseCase: AppContainer.shared.useCases.fetchReviewCommentRecommendationUseCase,
+            submitMealReviewUseCase: AppContainer.shared.useCases.submitMealReviewUseCase,
+            editMealReviewUseCase: AppContainer.shared.useCases.editMealReviewUseCase
         )
         vm.loadExistingReview(editingReview)
         _viewModel = StateObject(wrappedValue: vm)
@@ -272,7 +276,10 @@ struct MealReviewPreview {
             mealInfoViewModel: MealInfoViewModel(
                 meal: meal,
                 mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
-                mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase,
+                fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+                fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
+                fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
+                fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
                 menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
             )
         )

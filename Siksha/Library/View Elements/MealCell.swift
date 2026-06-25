@@ -95,7 +95,10 @@ struct MealCell_Previews: PreviewProvider {
         return MealCell(viewModel: MealInfoViewModel(
             meal: meal,
             mealInfoUseCase: PreviewMealInfoUseCase(),
-            mealReviewUseCase: PreviewMealReviewUseCase(),
+            fetchMealReviewsUseCase: PreviewFetchMealReviewsUseCase(),
+            fetchMealImageReviewsUseCase: PreviewFetchMealImageReviewsUseCase(),
+            fetchMealReviewScoreDistributionUseCase: PreviewFetchMealReviewScoreDistributionUseCase(),
+            fetchMealReviewKeywordDistributionUseCase: PreviewFetchMealReviewKeywordDistributionUseCase(),
             menuPreferenceUseCase: PreviewMenuPreferenceUseCase()
         ))
     }
@@ -127,20 +130,26 @@ struct MealCell_Previews: PreviewProvider {
         }
     }
     
-    private final class PreviewMealReviewUseCase: MealReviewUseCase {
-        func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
+    private final class PreviewFetchMealReviewsUseCase: FetchMealReviewsUseCase {
+        func execute(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
             ReviewPageModel(totalCount: 0, hasNext: false, reviews: [])
         }
-        
-        func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
+    }
+    
+    private final class PreviewFetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase {
+        func execute(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
             ReviewPageModel(totalCount: 0, hasNext: false, reviews: [])
         }
-        
-        func fetchScoreDistribution(menuId: Int) async throws -> [Int] {
+    }
+    
+    private final class PreviewFetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase {
+        func execute(menuId: Int) async throws -> [Int] {
             []
         }
-        
-        func fetchKeywordDistribution(menuId: Int) async throws -> KeywordDistributionModel {
+    }
+    
+    private final class PreviewFetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase {
+        func execute(menuId: Int) async throws -> KeywordDistributionModel {
             KeywordDistributionModel(
                 tasteKeyword: "",
                 tasteCount: 0,
@@ -153,17 +162,5 @@ struct MealCell_Previews: PreviewProvider {
                 foodCompositionTotal: 0
             )
         }
-        
-        func fetchCommentRecommendation(score: Int) async throws -> String {
-            ""
-        }
-        
-        func submitReview(_ submission: MealReviewSubmissionModel) async throws {}
-        
-        func editReview(reviewId: Int, submission: MealReviewSubmissionModel) async throws {}
-        
-        func likeReview(reviewId: Int) async throws {}
-        
-        func unlikeReview(reviewId: Int) async throws {}
     }
 }

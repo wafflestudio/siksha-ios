@@ -176,7 +176,10 @@ private struct MealInfoPreview {
         return MealInfoView(viewModel: MealInfoViewModel(
             meal: meal,
             mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
-            mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase,
+            fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+            fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
+            fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
+            fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
             menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
         ))
     }

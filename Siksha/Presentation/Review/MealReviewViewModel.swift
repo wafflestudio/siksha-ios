@@ -11,7 +11,9 @@ import SwiftUI
 
 class MealReviewViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
-    private let mealReviewUseCase: MealReviewUseCase
+    private let fetchReviewCommentRecommendationUseCase: FetchReviewCommentRecommendationUseCase
+    private let submitMealReviewUseCase: SubmitMealReviewUseCase
+    private let editMealReviewUseCase: EditMealReviewUseCase
     
     @Published var meal: MenuItemDisplayModel?
     @Published var scoreToSubmit: Int = 0
@@ -34,10 +36,14 @@ class MealReviewViewModel: ObservableObject {
     
     init(
         meal: MenuItemDisplayModel? = nil,
-        mealReviewUseCase: MealReviewUseCase
+        fetchReviewCommentRecommendationUseCase: FetchReviewCommentRecommendationUseCase,
+        submitMealReviewUseCase: SubmitMealReviewUseCase,
+        editMealReviewUseCase: EditMealReviewUseCase
     ) {
         self.meal = meal
-        self.mealReviewUseCase = mealReviewUseCase
+        self.fetchReviewCommentRecommendationUseCase = fetchReviewCommentRecommendationUseCase
+        self.submitMealReviewUseCase = submitMealReviewUseCase
+        self.editMealReviewUseCase = editMealReviewUseCase
         
         $postReviewSucceeded
             .dropFirst()
@@ -81,7 +87,7 @@ class MealReviewViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let comment = try await mealReviewUseCase.fetchCommentRecommendation(score: score)
+                let comment = try await fetchReviewCommentRecommendationUseCase.execute(score: score)
                 guard !comment.isEmpty else { return }
                 
                 await MainActor.run {
@@ -106,7 +112,7 @@ class MealReviewViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                try await mealReviewUseCase.submitReview(submission)
+                try await submitMealReviewUseCase.execute(submission)
                 await MainActor.run {
                     self.errorCode = nil
                     self.postReviewSucceeded = true
@@ -134,7 +140,7 @@ class MealReviewViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                try await mealReviewUseCase.submitReview(submission)
+                try await submitMealReviewUseCase.execute(submission)
                 await MainActor.run {
                     self.errorCode = nil
                     self.postReviewSucceeded = true
@@ -204,7 +210,7 @@ class MealReviewViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                try await mealReviewUseCase.editReview(reviewId: reviewId, submission: submission)
+                try await editMealReviewUseCase.execute(reviewId: reviewId, submission: submission)
                 await MainActor.run {
                     self.errorCode = nil
                     self.postReviewSucceeded = true

@@ -17,7 +17,7 @@ struct ReviewRow: View {
         self._viewModel = StateObject(wrappedValue: ReviewRowViewModel(
             review: review,
             showImage: showImage,
-            mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+            updateReviewLikeUseCase: AppContainer.shared.useCases.updateReviewLikeUseCase
         ))
     }
     

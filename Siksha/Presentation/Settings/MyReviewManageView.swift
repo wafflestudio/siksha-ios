@@ -246,7 +246,10 @@ struct ReviewCardView: View {
                     let mealInfoVM = MealInfoViewModel(
                         meal: meal,
                         mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
-                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase,
+                        fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+                        fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
+                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
+                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
                         menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
                     )
                     mealInfoVM.updateMealFromId()
@@ -353,7 +356,10 @@ struct ReviewCardView: View {
                     let mealInfoVM = MealInfoViewModel(
                         meal: meal,
                         mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
-                        mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase,
+                        fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+                        fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
+                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
+                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
                         menuPreferenceUseCase: AppContainer.shared.useCases.menuPreferenceUseCase
                     )
                     mealInfoVM.updateMealFromId()
@@ -389,5 +395,8 @@ private extension RestaurantReview {
 }
 
 #Preview {
-    MyReviewManageView(viewModel: MyReviewViewModel(myReviewUseCase: AppContainer.shared.useCases.myReviewUseCase))
+    MyReviewManageView(viewModel: MyReviewViewModel(
+        fetchMyReviewsUseCase: AppContainer.shared.useCases.fetchMyReviewsUseCase,
+        deleteMyReviewUseCase: AppContainer.shared.useCases.deleteMyReviewUseCase
+    ))
 }

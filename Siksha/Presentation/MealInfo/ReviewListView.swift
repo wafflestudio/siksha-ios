@@ -15,7 +15,8 @@ struct ReviewListView: View {
         self._viewModel = StateObject(wrappedValue: ReviewListViewModel(
             mealID: mealID,
             imageOnly: imageReviewOnly,
-            mealReviewUseCase: AppContainer.shared.useCases.mealReviewUseCase
+            fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+            fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase
         ))
     }
     

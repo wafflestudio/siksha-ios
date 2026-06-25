@@ -10,7 +10,10 @@ import UIKit
 
 public class MealInfoViewModel: ObservableObject {
     private let mealInfoUseCase: MealInfoUseCase
-    private let mealReviewUseCase: MealReviewUseCase
+    private let fetchMealReviewsUseCase: FetchMealReviewsUseCase
+    private let fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase
+    private let fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase
+    private let fetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase
     private let menuPreferenceUseCase: MenuPreferenceUseCase
     
     @Published var meal: MenuItemDisplayModel
@@ -40,12 +43,18 @@ public class MealInfoViewModel: ObservableObject {
     init(
         meal: MenuItemDisplayModel,
         mealInfoUseCase: MealInfoUseCase,
-        mealReviewUseCase: MealReviewUseCase,
+        fetchMealReviewsUseCase: FetchMealReviewsUseCase,
+        fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase,
+        fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase,
+        fetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase,
         menuPreferenceUseCase: MenuPreferenceUseCase
     ) {
         self.meal = meal
         self.mealInfoUseCase = mealInfoUseCase
-        self.mealReviewUseCase = mealReviewUseCase
+        self.fetchMealReviewsUseCase = fetchMealReviewsUseCase
+        self.fetchMealImageReviewsUseCase = fetchMealImageReviewsUseCase
+        self.fetchMealReviewScoreDistributionUseCase = fetchMealReviewScoreDistributionUseCase
+        self.fetchMealReviewKeywordDistributionUseCase = fetchMealReviewKeywordDistributionUseCase
         self.menuPreferenceUseCase = menuPreferenceUseCase
     }
     
@@ -96,7 +105,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealReviewUseCase.fetchReviews(menuId: meal.id, page: 1, perPage: 5)
+                let response = try await fetchMealReviewsUseCase.execute(menuId: meal.id, page: 1, perPage: 5)
                 await MainActor.run {
                     self.hasMorePages = response.hasNext
                     self.getReviewStatus = .succeeded
@@ -121,7 +130,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealReviewUseCase.fetchImageReviews(menuId: meal.id, page: 1, perPage: 6)
+                let response = try await fetchMealImageReviewsUseCase.execute(menuId: meal.id, page: 1, perPage: 6)
                 await MainActor.run {
                     self.totalImageCount = response.totalCount
                     self.getImageStatus = .succeeded
@@ -146,7 +155,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let distribution = try await mealReviewUseCase.fetchScoreDistribution(menuId: meal.id)
+                let distribution = try await fetchMealReviewScoreDistributionUseCase.execute(menuId: meal.id)
                 await MainActor.run {
                     self.getDistributionStatus = .succeeded
                     self.scoreDistribution = distribution.map { CGFloat($0) }
@@ -170,7 +179,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let dist = try await mealReviewUseCase.fetchKeywordDistribution(menuId: meal.id)
+                let dist = try await fetchMealReviewKeywordDistributionUseCase.execute(menuId: meal.id)
                 await MainActor.run {
                     self.getKeywordDistributionStatus = .succeeded
                     

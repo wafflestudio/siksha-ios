@@ -33,14 +33,19 @@ class MyReviewViewModel: ObservableObject {
     @Published var expandedSections: [Int: Bool] = [:]
     
     // MARK: - Private Properties
-    private let myReviewUseCase: MyReviewUseCase
+    private let fetchMyReviewsUseCase: FetchMyReviewsUseCase
+    private let deleteMyReviewUseCase: DeleteMyReviewUseCase
     private var currentPage = 1
     private let perPage = 20
     private var hasNext = true
     
     // MARK: - Init
-    init(myReviewUseCase: MyReviewUseCase) {
-        self.myReviewUseCase = myReviewUseCase
+    init(
+        fetchMyReviewsUseCase: FetchMyReviewsUseCase,
+        deleteMyReviewUseCase: DeleteMyReviewUseCase
+    ) {
+        self.fetchMyReviewsUseCase = fetchMyReviewsUseCase
+        self.deleteMyReviewUseCase = deleteMyReviewUseCase
     }
     
     // MARK: - Public Methods
@@ -54,7 +59,7 @@ class MyReviewViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await myReviewUseCase.fetchMyReviews(page: currentPage, perPage: perPage)
+                let response = try await fetchMyReviewsUseCase.execute(page: currentPage, perPage: perPage)
                 handleReviewResponse(response, isLoadMore: false)
             } catch {
             }
@@ -73,7 +78,7 @@ class MyReviewViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await myReviewUseCase.fetchMyReviews(page: currentPage, perPage: perPage)
+                let response = try await fetchMyReviewsUseCase.execute(page: currentPage, perPage: perPage)
                 handleReviewResponse(response, isLoadMore: true)
             } catch {
                 currentPage -= 1
@@ -92,7 +97,7 @@ class MyReviewViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                try await myReviewUseCase.deleteMyReview(reviewId: reviewId)
+                try await deleteMyReviewUseCase.execute(reviewId: reviewId)
                 completion(true)
             } catch {
                 completion(false)
