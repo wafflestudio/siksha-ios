@@ -20,7 +20,12 @@ final class UseCaseProvider {
     let updateReviewLikeUseCase: UpdateReviewLikeUseCase
     let updateMenuLikeUseCase: UpdateMenuLikeUseCase
     let myLikedMenuUseCase: MyLikedMenuUseCase
-    let menuAlarmUseCase: MenuAlarmUseCase
+    let getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase
+    let setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase
+    let updateMenuAlarmUseCase: UpdateMenuAlarmUseCase
+    let updateAllMenuAlarmsUseCase: UpdateAllMenuAlarmsUseCase
+    let fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase
+    let updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase
 
     init(
         userPreferenceUseCase: UserPreferenceUseCase? = nil,
@@ -37,7 +42,12 @@ final class UseCaseProvider {
         updateReviewLikeUseCase: UpdateReviewLikeUseCase? = nil,
         updateMenuLikeUseCase: UpdateMenuLikeUseCase? = nil,
         myLikedMenuUseCase: MyLikedMenuUseCase? = nil,
-        menuAlarmUseCase: MenuAlarmUseCase? = nil
+        getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase? = nil,
+        setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase? = nil,
+        updateMenuAlarmUseCase: UpdateMenuAlarmUseCase? = nil,
+        updateAllMenuAlarmsUseCase: UpdateAllMenuAlarmsUseCase? = nil,
+        fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase? = nil,
+        updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase? = nil
     ) {
         let userPreferenceRepository = UserPreferenceRepositoryImpl()
         let myReviewRepository = MyReviewRepositoryImpl()
@@ -87,7 +97,22 @@ final class UseCaseProvider {
         self.myLikedMenuUseCase = myLikedMenuUseCase ?? DefaultMyLikedMenuUseCase(
             repository: myLikedMenuRepository
         )
-        self.menuAlarmUseCase = menuAlarmUseCase ?? DefaultMenuAlarmUseCase(
+        self.getMenuAlarmEnabledUseCase = getMenuAlarmEnabledUseCase ?? DefaultGetMenuAlarmEnabledUseCase(
+            repository: myLikedMenuRepository
+        )
+        self.setMenuAlarmEnabledUseCase = setMenuAlarmEnabledUseCase ?? DefaultSetMenuAlarmEnabledUseCase(
+            repository: myLikedMenuRepository
+        )
+        self.updateMenuAlarmUseCase = updateMenuAlarmUseCase ?? DefaultUpdateMenuAlarmUseCase(
+            repository: myLikedMenuRepository
+        )
+        self.updateAllMenuAlarmsUseCase = updateAllMenuAlarmsUseCase ?? DefaultUpdateAllMenuAlarmsUseCase(
+            repository: myLikedMenuRepository
+        )
+        self.fetchMenuAlarmTimeUseCase = fetchMenuAlarmTimeUseCase ?? DefaultFetchMenuAlarmTimeUseCase(
+            repository: myLikedMenuRepository
+        )
+        self.updateMenuAlarmTimeUseCase = updateMenuAlarmTimeUseCase ?? DefaultUpdateMenuAlarmTimeUseCase(
             repository: myLikedMenuRepository
         )
     }

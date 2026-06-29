@@ -23,7 +23,12 @@ private enum MyLikedMenuLoadResult {
 
 class MyLikedMenuViewModel: ObservableObject{
     private let myLikedMenuUseCase: MyLikedMenuUseCase
-    private let menuAlarmUseCase: MenuAlarmUseCase
+    private let getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase
+    private let setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase
+    private let updateMenuAlarmUseCase: UpdateMenuAlarmUseCase
+    private let updateAllMenuAlarmsUseCase: UpdateAllMenuAlarmsUseCase
+    private let fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase
+    private let updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase
     private let updateMenuLikeUseCase: UpdateMenuLikeUseCase
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
@@ -44,7 +49,12 @@ class MyLikedMenuViewModel: ObservableObject{
     
     init(
         myLikedMenuUseCase: MyLikedMenuUseCase,
-        menuAlarmUseCase: MenuAlarmUseCase,
+        getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase,
+        setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase,
+        updateMenuAlarmUseCase: UpdateMenuAlarmUseCase,
+        updateAllMenuAlarmsUseCase: UpdateAllMenuAlarmsUseCase,
+        fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase,
+        updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase,
         updateMenuLikeUseCase: UpdateMenuLikeUseCase,
         fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
             repository: RestaurantRepositoryImpl()
@@ -54,11 +64,16 @@ class MyLikedMenuViewModel: ObservableObject{
         )
     ) {
         self.myLikedMenuUseCase = myLikedMenuUseCase
-        self.menuAlarmUseCase = menuAlarmUseCase
+        self.getMenuAlarmEnabledUseCase = getMenuAlarmEnabledUseCase
+        self.setMenuAlarmEnabledUseCase = setMenuAlarmEnabledUseCase
+        self.updateMenuAlarmUseCase = updateMenuAlarmUseCase
+        self.updateAllMenuAlarmsUseCase = updateAllMenuAlarmsUseCase
+        self.fetchMenuAlarmTimeUseCase = fetchMenuAlarmTimeUseCase
+        self.updateMenuAlarmTimeUseCase = updateMenuAlarmTimeUseCase
         self.updateMenuLikeUseCase = updateMenuLikeUseCase
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
-        self.isAlarmEnabled = menuAlarmUseCase.getAlarmEnabled()
+        self.isAlarmEnabled = getMenuAlarmEnabledUseCase.execute()
     }
     
     func failedAlarm() {
@@ -67,7 +82,7 @@ class MyLikedMenuViewModel: ObservableObject{
     }
     
     func setAlarmEnabled(_ enabled: Bool) {
-        menuAlarmUseCase.setAlarmEnabled(enabled)
+        setMenuAlarmEnabledUseCase.execute(enabled)
         isAlarmEnabled = enabled
     }
     
@@ -109,7 +124,7 @@ class MyLikedMenuViewModel: ObservableObject{
     @MainActor
     private func refreshAlarmTime() async {
         do {
-            alarmTime = try await menuAlarmUseCase.fetchAlarmTime()
+            alarmTime = try await fetchMenuAlarmTimeUseCase.execute()
         } catch {
             self.error = ErrorHelper.categorize(error)
         }
@@ -325,7 +340,7 @@ class MyLikedMenuViewModel: ObservableObject{
     @MainActor
     private func turnOnAlarm(menuId:Int) async {
         do {
-            try await menuAlarmUseCase.enableMenuAlarm(menuId: menuId)
+            try await updateMenuAlarmUseCase.execute(menuId: menuId, isEnabled: true)
             toggleMenuAlarm(menuId: menuId)
         } catch {
             self.error = ErrorHelper.categorize(error)
@@ -352,7 +367,7 @@ class MyLikedMenuViewModel: ObservableObject{
     @MainActor
     private func turnOffAlarm(menuId:Int) async {
         do {
-            try await menuAlarmUseCase.disableMenuAlarm(menuId: menuId)
+            try await updateMenuAlarmUseCase.execute(menuId: menuId, isEnabled: false)
             toggleMenuAlarm(menuId: menuId)
         } catch {
             self.error = ErrorHelper.categorize(error)
@@ -380,7 +395,7 @@ class MyLikedMenuViewModel: ObservableObject{
     @MainActor
     private func enableAlarmAsync() async {
         do {
-            try await menuAlarmUseCase.enableAllMenuAlarms()
+            try await updateAllMenuAlarmsUseCase.execute(isEnabled: true)
             
             withAnimation(.easeOut(duration: 0.3)) {
                 isAlarmEnabled = true
@@ -396,7 +411,7 @@ class MyLikedMenuViewModel: ObservableObject{
     @MainActor
     private func disableAlarm() async {
         do {
-            try await menuAlarmUseCase.disableAllMenuAlarms()
+            try await updateAllMenuAlarmsUseCase.execute(isEnabled: false)
             
             withAnimation(.easeOut(duration: 0.3)) {
                 isAlarmEnabled = false
@@ -427,7 +442,7 @@ class MyLikedMenuViewModel: ObservableObject{
             let nextAlarmTime = alarmTime == .EVERY_MEAL ? AlarmTime.DAILY : AlarmTime.EVERY_MEAL
             
             do {
-                try await menuAlarmUseCase.updateAlarmTime(nextAlarmTime)
+                try await updateMenuAlarmTimeUseCase.execute(nextAlarmTime)
                 alarmTime = nextAlarmTime
             } catch {
                 self.error = ErrorHelper.categorize(error)

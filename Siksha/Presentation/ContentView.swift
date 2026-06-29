@@ -59,7 +59,12 @@ struct ContentView: View {
     )
     @StateObject private var myLikedMenuViewModel = MyLikedMenuViewModel(
         myLikedMenuUseCase: AppContainer.shared.useCases.myLikedMenuUseCase,
-        menuAlarmUseCase: AppContainer.shared.useCases.menuAlarmUseCase,
+        getMenuAlarmEnabledUseCase: AppContainer.shared.useCases.getMenuAlarmEnabledUseCase,
+        setMenuAlarmEnabledUseCase: AppContainer.shared.useCases.setMenuAlarmEnabledUseCase,
+        updateMenuAlarmUseCase: AppContainer.shared.useCases.updateMenuAlarmUseCase,
+        updateAllMenuAlarmsUseCase: AppContainer.shared.useCases.updateAllMenuAlarmsUseCase,
+        fetchMenuAlarmTimeUseCase: AppContainer.shared.useCases.fetchMenuAlarmTimeUseCase,
+        updateMenuAlarmTimeUseCase: AppContainer.shared.useCases.updateMenuAlarmTimeUseCase,
         updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
     )
     @State private var hidePopupWorkItem: DispatchWorkItem?
