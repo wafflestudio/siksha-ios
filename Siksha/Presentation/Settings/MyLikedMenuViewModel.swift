@@ -30,11 +30,13 @@ class MyLikedMenuViewModel: ObservableObject{
     private let fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase
     private let updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase
     private let updateMenuLikeUseCase: UpdateMenuLikeUseCase
+    private let menuAlarmNotificationManager: MenuAlarmNotificationManaging
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
 
     @Published var error: AppError?
     @Published var noAlarmPermission = false
+    @Published private(set) var isUpdatingAlarmEnabled = false
     @Published var isAlarmEnabled: Bool
     @Published var likedMenuGroups: [RestaurantLikedMenuGroup] = []
     @Published private(set) var loadState: MyLikedMenuLoadState = .idle
@@ -56,6 +58,7 @@ class MyLikedMenuViewModel: ObservableObject{
         fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase,
         updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase,
         updateMenuLikeUseCase: UpdateMenuLikeUseCase,
+        menuAlarmNotificationManager: MenuAlarmNotificationManaging,
         fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
             repository: RestaurantRepositoryImpl()
         ),
@@ -71,19 +74,64 @@ class MyLikedMenuViewModel: ObservableObject{
         self.fetchMenuAlarmTimeUseCase = fetchMenuAlarmTimeUseCase
         self.updateMenuAlarmTimeUseCase = updateMenuAlarmTimeUseCase
         self.updateMenuLikeUseCase = updateMenuLikeUseCase
+        self.menuAlarmNotificationManager = menuAlarmNotificationManager
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
         self.isAlarmEnabled = getMenuAlarmEnabledUseCase.execute()
     }
     
-    func failedAlarm() {
-        print("errorALARM")
-        error = AppError.unknownError("알람 오류가 발생했습니다.")
-    }
-    
     func setAlarmEnabled(_ enabled: Bool) {
+        isUpdatingAlarmEnabled = false
         setMenuAlarmEnabledUseCase.execute(enabled)
         isAlarmEnabled = enabled
+    }
+    
+    func requestAlarmEnabledChange(_ enabled: Bool) {
+        guard enabled != isAlarmEnabled, !isUpdatingAlarmEnabled else {
+            return
+        }
+        
+        if enabled {
+            isUpdatingAlarmEnabled = true
+            Task { @MainActor [weak self] in
+                await self?.enableAlarmFromUserRequest()
+            }
+        } else {
+            Task { @MainActor [weak self] in
+                await self?.disableAlarm()
+            }
+        }
+    }
+    
+    @MainActor
+    private func enableAlarmFromUserRequest() async {
+        guard !isAlarmEnabled else {
+            isUpdatingAlarmEnabled = false
+            return
+        }
+        
+        defer {
+            isUpdatingAlarmEnabled = false
+        }
+        
+        let isGranted = await menuAlarmNotificationManager.requestAuthorization()
+        guard isGranted else {
+            noAlarmPermission = true
+            return
+        }
+        
+        do {
+            try await updateAllMenuAlarmsUseCase.execute(isEnabled: true)
+            
+            withAnimation(.easeOut(duration: 0.3)) {
+                isAlarmEnabled = true
+                enableAllAlarm()
+            }
+            
+            menuAlarmNotificationManager.registerRemoteNotificationsIfNeeded()
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+        }
     }
     
     func getAlarmTime() {
@@ -386,30 +434,17 @@ class MyLikedMenuViewModel: ObservableObject{
         }
     }
     
-    func enableAlarm(){
-        Task { @MainActor [weak self] in
-            await self?.enableAlarmAsync()
-        }
-    }
-    
-    @MainActor
-    private func enableAlarmAsync() async {
-        do {
-            try await updateAllMenuAlarmsUseCase.execute(isEnabled: true)
-            
-            withAnimation(.easeOut(duration: 0.3)) {
-                isAlarmEnabled = true
-                enableAllAlarm()
-            }
-        } catch {
-            print("ERROR")
-            print(error)
-            self.error = ErrorHelper.categorize(error)
-        }
-    }
-
     @MainActor
     private func disableAlarm() async {
+        guard !isUpdatingAlarmEnabled else {
+            return
+        }
+        
+        isUpdatingAlarmEnabled = true
+        defer {
+            isUpdatingAlarmEnabled = false
+        }
+        
         do {
             try await updateAllMenuAlarmsUseCase.execute(isEnabled: false)
             
@@ -423,16 +458,7 @@ class MyLikedMenuViewModel: ObservableObject{
     }
     
     func toggleAlarmEnabled(){
-        
-        if isAlarmEnabled{
-            Task { @MainActor [weak self] in
-                await self?.disableAlarm()
-            }
-        }
-        else{
-            AppDelegate.alarmViewModel = self
-            AppDelegate.requestNotificationPermission()
-        }
+        requestAlarmEnabledChange(!isAlarmEnabled)
     }
     
     func toggleAlarmTime(){

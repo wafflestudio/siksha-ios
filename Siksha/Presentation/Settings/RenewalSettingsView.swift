@@ -134,7 +134,8 @@ struct RenewalSettingsView: View {
                 updateAllMenuAlarmsUseCase: AppContainer.shared.useCases.updateAllMenuAlarmsUseCase,
                 fetchMenuAlarmTimeUseCase: AppContainer.shared.useCases.fetchMenuAlarmTimeUseCase,
                 updateMenuAlarmTimeUseCase: AppContainer.shared.useCases.updateMenuAlarmTimeUseCase,
-                updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
+                updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase,
+                menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager
             ))) {
                 HStack(alignment: .center) {
                     Text("내가 찜한 메뉴")

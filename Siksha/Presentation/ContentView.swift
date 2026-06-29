@@ -65,7 +65,8 @@ struct ContentView: View {
         updateAllMenuAlarmsUseCase: AppContainer.shared.useCases.updateAllMenuAlarmsUseCase,
         fetchMenuAlarmTimeUseCase: AppContainer.shared.useCases.fetchMenuAlarmTimeUseCase,
         updateMenuAlarmTimeUseCase: AppContainer.shared.useCases.updateMenuAlarmTimeUseCase,
-        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
+        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase,
+        menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager
     )
     @State private var hidePopupWorkItem: DispatchWorkItem?
     @State private var previousSelectedTab = 0
@@ -110,9 +111,7 @@ struct ContentView: View {
                         }
                     }
                     .onAppear {
-                        if !UserDefaults.standard.bool(forKey: "alreadySentFCM") {
-                            UIApplication.shared.registerForRemoteNotifications()
-                        }
+                        AppContainer.shared.menuAlarmNotificationManager.registerRemoteNotificationsIfNeeded()
                     }
                     .navigationDestination(isPresented: $contentViewModel.showMyMenuViewFromPopup) {
                         MyLikedMenuView(viewModel: myLikedMenuViewModel)

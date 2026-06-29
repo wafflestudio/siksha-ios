@@ -39,13 +39,13 @@ struct AlarmView: View {
                     .foregroundStyle(Color.blackColor)
                     .customFont(font: .text15(weight: .Regular))
                 Spacer()
-                Toggle(isOn:$viewModel.isAlarmEnabled){
+                Toggle(isOn: Binding(
+                    get: { viewModel.isAlarmEnabled },
+                    set: { viewModel.requestAlarmEnabledChange($0) }
+                )) {
                     EmptyView()
                 }
                 .toggleStyle(AlarmSwitchStyle())
-                .onTapGesture {
-                        viewModel.toggleAlarmEnabled()
-                }
 
             }
             Spacer()
@@ -114,12 +114,6 @@ struct AlarmView: View {
                 .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 17))
                     .customNavigationBar(title: "메뉴 알림 설정")
                     .navigationBarItems(leading: backButton)
-                    .onChange(of: viewModel.isAlarmEnabled, perform: {  isAlarmOn in
-                        if isAlarmOn{
-                            AppDelegate.requestNotificationPermission()
-                        }
-                        
-                    })
 
             }
             .errorAlert(error: $viewModel.error)
@@ -140,4 +134,3 @@ struct AlarmView: View {
         }
        
     }
-
