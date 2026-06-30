@@ -7,6 +7,13 @@
 
 final class UseCaseProvider {
     let userPreferenceUseCase: UserPreferenceUseCase
+    let fetchDailyMenuUseCase: FetchDailyMenuUseCase
+    let fetchFestivalDatesUseCase: FetchFestivalDatesUseCase
+    let fetchRemoteConfigUseCase: FetchRemoteConfigUseCase
+    let observeRemoteConfigUseCase: ObserveRemoteConfigUseCase
+    let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
+    let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
+    let setRestaurantOrderUseCase: SetRestaurantOrderUseCase
     let fetchMyReviewsUseCase: FetchMyReviewsUseCase
     let deleteMyReviewUseCase: DeleteMyReviewUseCase
     let mealInfoUseCase: MealInfoUseCase
@@ -29,6 +36,13 @@ final class UseCaseProvider {
 
     init(
         userPreferenceUseCase: UserPreferenceUseCase? = nil,
+        fetchDailyMenuUseCase: FetchDailyMenuUseCase? = nil,
+        fetchFestivalDatesUseCase: FetchFestivalDatesUseCase? = nil,
+        fetchRemoteConfigUseCase: FetchRemoteConfigUseCase? = nil,
+        observeRemoteConfigUseCase: ObserveRemoteConfigUseCase? = nil,
+        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase? = nil,
+        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase? = nil,
+        setRestaurantOrderUseCase: SetRestaurantOrderUseCase? = nil,
         fetchMyReviewsUseCase: FetchMyReviewsUseCase? = nil,
         deleteMyReviewUseCase: DeleteMyReviewUseCase? = nil,
         mealInfoUseCase: MealInfoUseCase? = nil,
@@ -50,6 +64,10 @@ final class UseCaseProvider {
         updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase? = nil
     ) {
         let userPreferenceRepository = UserPreferenceRepositoryImpl()
+        let menuRepository = MenuRepositoryImpl()
+        let festivalRepository = FestivalRepositoryImpl()
+        let remoteConfigRepository = RemoteConfigRepositoryImpl()
+        let restaurantRepository = RestaurantRepositoryImpl()
         let myReviewRepository = MyReviewRepositoryImpl()
         let mealInfoRepository = MealInfoRepositoryImpl()
         let menuPreferenceRepository = MenuPreferenceRepositoryImpl()
@@ -57,6 +75,27 @@ final class UseCaseProvider {
 
         self.userPreferenceUseCase = userPreferenceUseCase ?? DefaultUserPreferenceUseCase(
             repository: userPreferenceRepository
+        )
+        self.fetchDailyMenuUseCase = fetchDailyMenuUseCase ?? DefaultFetchDailyMenuUseCase(
+            repository: menuRepository
+        )
+        self.fetchFestivalDatesUseCase = fetchFestivalDatesUseCase ?? DefaultFetchFestivalDatesUseCase(
+            repository: festivalRepository
+        )
+        self.fetchRemoteConfigUseCase = fetchRemoteConfigUseCase ?? DefaultFetchRemoteConfigUseCase(
+            repository: remoteConfigRepository
+        )
+        self.observeRemoteConfigUseCase = observeRemoteConfigUseCase ?? DefaultObserveRemoteConfigUseCase(
+            repository: remoteConfigRepository
+        )
+        self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase ?? DefaultFetchPersonalRestaurantsUseCase(
+            repository: restaurantRepository
+        )
+        self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase ?? DefaultUpdateRestaurantPreferenceUseCase(
+            repository: restaurantRepository
+        )
+        self.setRestaurantOrderUseCase = setRestaurantOrderUseCase ?? DefaultSetRestaurantOrderUseCase(
+            repository: restaurantRepository
         )
         self.fetchMyReviewsUseCase = fetchMyReviewsUseCase ?? DefaultFetchMyReviewsUseCase(
             repository: myReviewRepository

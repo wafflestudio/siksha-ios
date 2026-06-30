@@ -12,11 +12,15 @@ struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @ObservedObject var userModel = UserManager.shared
     @ObservedObject var viewModel: RenewalSettingsViewModel
-    @StateObject private var orderViewModel = RestaurantOrderViewModel()
+    @ObservedObject var orderViewModel: RestaurantOrderViewModel
     
     
-    init(viewModel: RenewalSettingsViewModel) {
+    init(
+        viewModel: RenewalSettingsViewModel,
+        orderViewModel: RestaurantOrderViewModel
+    ) {
         self.viewModel = viewModel
+        self.orderViewModel = orderViewModel
     }
     
     private let borderColor = Color.gray200
@@ -135,7 +139,9 @@ struct RenewalSettingsView: View {
                 fetchMenuAlarmTimeUseCase: AppContainer.shared.useCases.fetchMenuAlarmTimeUseCase,
                 updateMenuAlarmTimeUseCase: AppContainer.shared.useCases.updateMenuAlarmTimeUseCase,
                 updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase,
-                menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager
+                menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager,
+                fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+                updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase
             ))) {
                 HStack(alignment: .center) {
                     Text("내가 찜한 메뉴")
@@ -280,6 +286,11 @@ struct RenewalSettingsView_Previews: PreviewProvider {
             RenewalSettingsView(
                 viewModel: RenewalSettingsViewModel(
                     userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+                ),
+                orderViewModel: RestaurantOrderViewModel(
+                    fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+                    updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
+                    setRestaurantOrderUseCase: AppContainer.shared.useCases.setRestaurantOrderUseCase
                 )
             )
         }

@@ -43,9 +43,7 @@ struct MenuView: View {
     private let orangeColor = Color("Color/Foundation/Orange/500")
     
     init(
-        viewModel: MenuViewModel = MenuViewModel(
-            userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
-        )
+        viewModel: MenuViewModel
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
@@ -179,6 +177,16 @@ private extension MenuView {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MenuView()
+        MenuView(
+            viewModel: MenuViewModel(
+                fetchDailyMenuUseCase: AppContainer.shared.useCases.fetchDailyMenuUseCase,
+                fetchFestivalDatesUseCase: AppContainer.shared.useCases.fetchFestivalDatesUseCase,
+                fetchRemoteConfigUseCase: AppContainer.shared.useCases.fetchRemoteConfigUseCase,
+                observeRemoteConfigUseCase: AppContainer.shared.useCases.observeRemoteConfigUseCase,
+                fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+                updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
+                userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+            )
+        )
     }
 }

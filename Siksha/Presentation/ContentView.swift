@@ -51,6 +51,12 @@ struct ContentView: View {
     @EnvironmentObject var appState: AppState
     @ObservedObject var contentViewModel = ContentViewModel.contentViewModel
     @StateObject private var menuViewModel = MenuViewModel(
+        fetchDailyMenuUseCase: AppContainer.shared.useCases.fetchDailyMenuUseCase,
+        fetchFestivalDatesUseCase: AppContainer.shared.useCases.fetchFestivalDatesUseCase,
+        fetchRemoteConfigUseCase: AppContainer.shared.useCases.fetchRemoteConfigUseCase,
+        observeRemoteConfigUseCase: AppContainer.shared.useCases.observeRemoteConfigUseCase,
+        fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
         userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
     )
     @StateObject private var communityViewModel = CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository)
@@ -66,7 +72,14 @@ struct ContentView: View {
         fetchMenuAlarmTimeUseCase: AppContainer.shared.useCases.fetchMenuAlarmTimeUseCase,
         updateMenuAlarmTimeUseCase: AppContainer.shared.useCases.updateMenuAlarmTimeUseCase,
         updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase,
-        menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager
+        menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager,
+        fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase
+    )
+    @StateObject private var restaurantOrderViewModel = RestaurantOrderViewModel(
+        fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
+        setRestaurantOrderUseCase: AppContainer.shared.useCases.setRestaurantOrderUseCase
     )
     @State private var hidePopupWorkItem: DispatchWorkItem?
     @State private var previousSelectedTab = 0
@@ -81,7 +94,10 @@ struct ContentView: View {
         [
             TabItem(id: 0, content: AnyView(MenuView(viewModel: menuViewModel).id("main")), buttonImage: ["Icons/Tabbar/main_orange", "Icons/Tabbar/main_grey"]),
             TabItem(id: 1, content: AnyView(CommunityView(viewModel: communityViewModel)), buttonImage: ["Icons/Tabbar/community_orange", "Icons/Tabbar/community_grey"]),
-            TabItem(id: 2, content: AnyView(RenewalSettingsView(viewModel: settingsViewModel)), buttonImage: ["Icons/Tabbar/settings_orange", "Icons/Tabbar/settings_grey"])
+            TabItem(id: 2, content: AnyView(RenewalSettingsView(
+                viewModel: settingsViewModel,
+                orderViewModel: restaurantOrderViewModel
+            )), buttonImage: ["Icons/Tabbar/settings_orange", "Icons/Tabbar/settings_grey"])
         ]
     }
     

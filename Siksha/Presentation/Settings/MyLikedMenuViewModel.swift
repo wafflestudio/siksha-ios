@@ -59,12 +59,8 @@ class MyLikedMenuViewModel: ObservableObject{
         updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase,
         updateMenuLikeUseCase: UpdateMenuLikeUseCase,
         menuAlarmNotificationManager: MenuAlarmNotificationManaging,
-        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
-            repository: RestaurantRepositoryImpl()
-        ),
-        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase = DefaultUpdateRestaurantPreferenceUseCase(
-            repository: RestaurantRepositoryImpl()
-        )
+        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
     ) {
         self.myLikedMenuUseCase = myLikedMenuUseCase
         self.getMenuAlarmEnabledUseCase = getMenuAlarmEnabledUseCase

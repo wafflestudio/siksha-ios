@@ -109,6 +109,12 @@ struct RestaurantOrderView: View {
 
 struct MenuOrderView_Previews: PreviewProvider {
     static var previews: some View {
-        RestaurantOrderView(RestaurantOrderViewModel())
+        RestaurantOrderView(
+            RestaurantOrderViewModel(
+                fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+                updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
+                setRestaurantOrderUseCase: AppContainer.shared.useCases.setRestaurantOrderUseCase
+            )
+        )
     }
 }

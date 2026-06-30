@@ -19,7 +19,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     private let fetchDailyMenuUseCase: FetchDailyMenuUseCase
-    private let festivalRepository: FestivalRepositoryProtocol
+    private let fetchFestivalDatesUseCase: FetchFestivalDatesUseCase
     private let fetchRemoteConfigUseCase: FetchRemoteConfigUseCase
     private let observeRemoteConfigUseCase: ObserveRemoteConfigUseCase
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
@@ -116,28 +116,18 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     init(
         analytics: AnalyticsService = MixpanelAnalytics(),
-        fetchDailyMenuUseCase: FetchDailyMenuUseCase = DefaultFetchDailyMenuUseCase(
-            repository: MenuRepositoryImpl()
-        ),
-        festivalRepository: FestivalRepositoryProtocol = FestivalRepositoryImpl(),
-        fetchRemoteConfigUseCase: FetchRemoteConfigUseCase = DefaultFetchRemoteConfigUseCase(
-            repository: RemoteConfigRepositoryImpl()
-        ),
-        observeRemoteConfigUseCase: ObserveRemoteConfigUseCase = DefaultObserveRemoteConfigUseCase(
-            repository: RemoteConfigRepositoryImpl()
-        ),
-        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
-            repository: RestaurantRepositoryImpl()
-        ),
-        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase = DefaultUpdateRestaurantPreferenceUseCase(
-            repository: RestaurantRepositoryImpl()
-        ),
+        fetchDailyMenuUseCase: FetchDailyMenuUseCase,
+        fetchFestivalDatesUseCase: FetchFestivalDatesUseCase,
+        fetchRemoteConfigUseCase: FetchRemoteConfigUseCase,
+        observeRemoteConfigUseCase: ObserveRemoteConfigUseCase,
+        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase,
         mealSectionRenderScheduler: MealSectionRenderScheduling = MealSectionRenderScheduler(),
         userPreferenceUseCase: UserPreferenceUseCase
     ) {
         self.analytics = analytics
         self.fetchDailyMenuUseCase = fetchDailyMenuUseCase
-        self.festivalRepository = festivalRepository
+        self.fetchFestivalDatesUseCase = fetchFestivalDatesUseCase
         self.fetchRemoteConfigUseCase = fetchRemoteConfigUseCase
         self.observeRemoteConfigUseCase = observeRemoteConfigUseCase
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
@@ -546,7 +536,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     @MainActor
     func loadFestivalDates() async {
         do {
-            let dates = try await festivalRepository.fetchFestivalDates()
+            let dates = try await fetchFestivalDatesUseCase.execute()
             festivalDates = dates
             refreshFestivalSwitchState()
         } catch {

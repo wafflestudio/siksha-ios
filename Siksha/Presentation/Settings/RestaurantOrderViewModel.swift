@@ -29,15 +29,9 @@ class RestaurantOrderViewModel: ObservableObject {
     private var toastWorkItem: DispatchWorkItem?
 
     init(
-        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
-            repository: RestaurantRepositoryImpl()
-        ),
-        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase = DefaultUpdateRestaurantPreferenceUseCase(
-            repository: RestaurantRepositoryImpl()
-        ),
-        setRestaurantOrderUseCase: SetRestaurantOrderUseCase = DefaultSetRestaurantOrderUseCase(
-            repository: RestaurantRepositoryImpl()
-        )
+        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase,
+        setRestaurantOrderUseCase: SetRestaurantOrderUseCase
     ) {
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase

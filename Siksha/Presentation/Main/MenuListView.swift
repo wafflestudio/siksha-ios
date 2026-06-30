@@ -292,6 +292,12 @@ struct MenuListView_Previews: PreviewProvider {
         var body: some View {
             MenuListView(
                 viewModel: MenuViewModel(
+                    fetchDailyMenuUseCase: AppContainer.shared.useCases.fetchDailyMenuUseCase,
+                    fetchFestivalDatesUseCase: AppContainer.shared.useCases.fetchFestivalDatesUseCase,
+                    fetchRemoteConfigUseCase: AppContainer.shared.useCases.fetchRemoteConfigUseCase,
+                    observeRemoteConfigUseCase: AppContainer.shared.useCases.observeRemoteConfigUseCase,
+                    fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+                    updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
                     userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
                 ),
                 selectedFilterType: $selectedFilterType
