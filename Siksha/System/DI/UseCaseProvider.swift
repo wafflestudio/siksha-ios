@@ -7,6 +7,10 @@
 
 final class UseCaseProvider {
     let userPreferenceUseCase: UserPreferenceUseCase
+    let manageMenuFiltersUseCase: ManageMenuFiltersUseCase
+    let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
+    let manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase
+    let checkFestivalSwitchVisibilityUseCase: CheckFestivalSwitchVisibilityUseCase
     let fetchDailyMenuUseCase: FetchDailyMenuUseCase
     let fetchFestivalDatesUseCase: FetchFestivalDatesUseCase
     let fetchRemoteConfigUseCase: FetchRemoteConfigUseCase
@@ -33,9 +37,14 @@ final class UseCaseProvider {
     let updateAllMenuAlarmsUseCase: UpdateAllMenuAlarmsUseCase
     let fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase
     let updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase
+    let checkMealReviewSubmissionAvailabilityUseCase: CheckMealReviewSubmissionAvailabilityUseCase
 
     init(
         userPreferenceUseCase: UserPreferenceUseCase? = nil,
+        manageMenuFiltersUseCase: ManageMenuFiltersUseCase? = nil,
+        manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase? = nil,
+        manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase? = nil,
+        checkFestivalSwitchVisibilityUseCase: CheckFestivalSwitchVisibilityUseCase? = nil,
         fetchDailyMenuUseCase: FetchDailyMenuUseCase? = nil,
         fetchFestivalDatesUseCase: FetchFestivalDatesUseCase? = nil,
         fetchRemoteConfigUseCase: FetchRemoteConfigUseCase? = nil,
@@ -61,7 +70,8 @@ final class UseCaseProvider {
         updateMenuAlarmUseCase: UpdateMenuAlarmUseCase? = nil,
         updateAllMenuAlarmsUseCase: UpdateAllMenuAlarmsUseCase? = nil,
         fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase? = nil,
-        updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase? = nil
+        updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase? = nil,
+        checkMealReviewSubmissionAvailabilityUseCase: CheckMealReviewSubmissionAvailabilityUseCase? = nil
     ) {
         let userPreferenceRepository = UserPreferenceRepositoryImpl()
         let menuRepository = MenuRepositoryImpl()
@@ -76,6 +86,16 @@ final class UseCaseProvider {
         self.userPreferenceUseCase = userPreferenceUseCase ?? DefaultUserPreferenceUseCase(
             repository: userPreferenceRepository
         )
+        self.manageMenuFiltersUseCase = manageMenuFiltersUseCase ?? DefaultManageMenuFiltersUseCase(
+            repository: userPreferenceRepository
+        )
+        self.manageRestaurantsWithoutMenuVisibilityUseCase = manageRestaurantsWithoutMenuVisibilityUseCase ?? DefaultManageRestaurantsWithoutMenuVisibilityUseCase(
+            repository: userPreferenceRepository
+        )
+        self.manageFestivalPreferencesUseCase = manageFestivalPreferencesUseCase ?? DefaultManageFestivalPreferencesUseCase(
+            repository: userPreferenceRepository
+        )
+        self.checkFestivalSwitchVisibilityUseCase = checkFestivalSwitchVisibilityUseCase ?? DefaultCheckFestivalSwitchVisibilityUseCase()
         self.fetchDailyMenuUseCase = fetchDailyMenuUseCase ?? DefaultFetchDailyMenuUseCase(
             repository: menuRepository
         )
@@ -154,5 +174,6 @@ final class UseCaseProvider {
         self.updateMenuAlarmTimeUseCase = updateMenuAlarmTimeUseCase ?? DefaultUpdateMenuAlarmTimeUseCase(
             repository: myLikedMenuRepository
         )
+        self.checkMealReviewSubmissionAvailabilityUseCase = checkMealReviewSubmissionAvailabilityUseCase ?? DefaultCheckMealReviewSubmissionAvailabilityUseCase()
     }
 }
