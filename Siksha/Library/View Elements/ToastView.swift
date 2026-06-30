@@ -12,10 +12,10 @@ struct ToastView: View {
         case error
         case check
         
-        var imageName: String {
+        var image: Image {
             switch self {
-            case .error: return "Error"
-            case .check: return "CheckCircleOrange"
+            case .error: return Image(.Icons.Common.alertCircle)
+            case .check: return Image("CheckCircleOrange")
             }
         }
 //        
@@ -48,7 +48,7 @@ struct ToastView: View {
                     .fill(Color.backgroundToast)
                 
                 HStack(spacing: 0) {
-                    Image(type.imageName)
+                    type.image
                         .frame(width: 14, height: 14)
 //                        .foregroundColor(type.iconColor)
                         .padding(.trailing, 10)
