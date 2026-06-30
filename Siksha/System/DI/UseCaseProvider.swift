@@ -26,7 +26,7 @@ final class UseCaseProvider {
     let editMealReviewUseCase: EditMealReviewUseCase
     let updateReviewLikeUseCase: UpdateReviewLikeUseCase
     let updateMenuLikeUseCase: UpdateMenuLikeUseCase
-    let myLikedMenuUseCase: MyLikedMenuUseCase
+    let fetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase
     let getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase
     let setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase
     let updateMenuAlarmUseCase: UpdateMenuAlarmUseCase
@@ -55,7 +55,7 @@ final class UseCaseProvider {
         editMealReviewUseCase: EditMealReviewUseCase? = nil,
         updateReviewLikeUseCase: UpdateReviewLikeUseCase? = nil,
         updateMenuLikeUseCase: UpdateMenuLikeUseCase? = nil,
-        myLikedMenuUseCase: MyLikedMenuUseCase? = nil,
+        fetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase? = nil,
         getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase? = nil,
         setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase? = nil,
         updateMenuAlarmUseCase: UpdateMenuAlarmUseCase? = nil,
@@ -133,7 +133,7 @@ final class UseCaseProvider {
         self.updateMenuLikeUseCase = updateMenuLikeUseCase ?? DefaultUpdateMenuLikeUseCase(
             repository: menuPreferenceRepository
         )
-        self.myLikedMenuUseCase = myLikedMenuUseCase ?? DefaultMyLikedMenuUseCase(
+        self.fetchMyLikedMenusUseCase = fetchMyLikedMenusUseCase ?? DefaultFetchMyLikedMenusUseCase(
             repository: myLikedMenuRepository
         )
         self.getMenuAlarmEnabledUseCase = getMenuAlarmEnabledUseCase ?? DefaultGetMenuAlarmEnabledUseCase(

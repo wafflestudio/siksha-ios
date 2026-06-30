@@ -131,7 +131,7 @@ struct RenewalSettingsView: View {
             
             partitionBar
             NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(
-                myLikedMenuUseCase: AppContainer.shared.useCases.myLikedMenuUseCase,
+                fetchMyLikedMenusUseCase: AppContainer.shared.useCases.fetchMyLikedMenusUseCase,
                 getMenuAlarmEnabledUseCase: AppContainer.shared.useCases.getMenuAlarmEnabledUseCase,
                 setMenuAlarmEnabledUseCase: AppContainer.shared.useCases.setMenuAlarmEnabledUseCase,
                 updateMenuAlarmUseCase: AppContainer.shared.useCases.updateMenuAlarmUseCase,

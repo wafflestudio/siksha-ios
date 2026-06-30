@@ -22,7 +22,7 @@ private enum MyLikedMenuLoadResult {
 }
 
 class MyLikedMenuViewModel: ObservableObject{
-    private let myLikedMenuUseCase: MyLikedMenuUseCase
+    private let fetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase
     private let getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase
     private let setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase
     private let updateMenuAlarmUseCase: UpdateMenuAlarmUseCase
@@ -50,7 +50,7 @@ class MyLikedMenuViewModel: ObservableObject{
     private var hasLoadedLikedMenus = false
     
     init(
-        myLikedMenuUseCase: MyLikedMenuUseCase,
+        fetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase,
         getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase,
         setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase,
         updateMenuAlarmUseCase: UpdateMenuAlarmUseCase,
@@ -62,7 +62,7 @@ class MyLikedMenuViewModel: ObservableObject{
         fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase,
         updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
     ) {
-        self.myLikedMenuUseCase = myLikedMenuUseCase
+        self.fetchMyLikedMenusUseCase = fetchMyLikedMenusUseCase
         self.getMenuAlarmEnabledUseCase = getMenuAlarmEnabledUseCase
         self.setMenuAlarmEnabledUseCase = setMenuAlarmEnabledUseCase
         self.updateMenuAlarmUseCase = updateMenuAlarmUseCase
@@ -177,7 +177,7 @@ class MyLikedMenuViewModel: ObservableObject{
     @MainActor
     private func loadMyLikedMenuItems() async -> MyLikedMenuLoadResult {
         do {
-            let groups = try await myLikedMenuUseCase.fetchMyLikedMenus()
+            let groups = try await fetchMyLikedMenusUseCase.execute()
             likedMenuGroups = sortByPersonalRestaurantOrder(groups)
             initErrorCount = 0
             return .succeeded
