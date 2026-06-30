@@ -16,7 +16,7 @@ final class UseCaseProvider {
     let setRestaurantOrderUseCase: SetRestaurantOrderUseCase
     let fetchMyReviewsUseCase: FetchMyReviewsUseCase
     let deleteMyReviewUseCase: DeleteMyReviewUseCase
-    let mealInfoUseCase: MealInfoUseCase
+    let fetchMenuUseCase: FetchMenuUseCase
     let fetchMealReviewsUseCase: FetchMealReviewsUseCase
     let fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase
     let fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase
@@ -45,7 +45,7 @@ final class UseCaseProvider {
         setRestaurantOrderUseCase: SetRestaurantOrderUseCase? = nil,
         fetchMyReviewsUseCase: FetchMyReviewsUseCase? = nil,
         deleteMyReviewUseCase: DeleteMyReviewUseCase? = nil,
-        mealInfoUseCase: MealInfoUseCase? = nil,
+        fetchMenuUseCase: FetchMenuUseCase? = nil,
         fetchMealReviewsUseCase: FetchMealReviewsUseCase? = nil,
         fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase? = nil,
         fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase? = nil,
@@ -103,7 +103,7 @@ final class UseCaseProvider {
         self.deleteMyReviewUseCase = deleteMyReviewUseCase ?? DefaultDeleteMyReviewUseCase(
             repository: myReviewRepository
         )
-        self.mealInfoUseCase = mealInfoUseCase ?? DefaultMealInfoUseCase(
+        self.fetchMenuUseCase = fetchMenuUseCase ?? DefaultFetchMenuUseCase(
             repository: mealInfoRepository
         )
         self.fetchMealReviewsUseCase = fetchMealReviewsUseCase ?? DefaultFetchMealReviewsUseCase(

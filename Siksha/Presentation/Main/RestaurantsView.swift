@@ -51,7 +51,7 @@ struct RestaurantsView: View {
                                 menuRow: { menu in
                                     let mealInfoViewModel = MealInfoViewModel(
                                         meal: menu,
-                                        mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
+                                        fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
                                         fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
                                         fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
                                         fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,

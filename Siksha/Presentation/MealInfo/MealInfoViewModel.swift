@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 public class MealInfoViewModel: ObservableObject {
-    private let mealInfoUseCase: MealInfoUseCase
+    private let fetchMenuUseCase: FetchMenuUseCase
     private let fetchMealReviewsUseCase: FetchMealReviewsUseCase
     private let fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase
     private let fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase
@@ -42,7 +42,7 @@ public class MealInfoViewModel: ObservableObject {
     
     init(
         meal: MenuItemDisplayModel,
-        mealInfoUseCase: MealInfoUseCase,
+        fetchMenuUseCase: FetchMenuUseCase,
         fetchMealReviewsUseCase: FetchMealReviewsUseCase,
         fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase,
         fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase,
@@ -50,7 +50,7 @@ public class MealInfoViewModel: ObservableObject {
         updateMenuLikeUseCase: UpdateMenuLikeUseCase
     ) {
         self.meal = meal
-        self.mealInfoUseCase = mealInfoUseCase
+        self.fetchMenuUseCase = fetchMenuUseCase
         self.fetchMealReviewsUseCase = fetchMealReviewsUseCase
         self.fetchMealImageReviewsUseCase = fetchMealImageReviewsUseCase
         self.fetchMealReviewScoreDistributionUseCase = fetchMealReviewScoreDistributionUseCase
@@ -215,7 +215,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let menu = try await mealInfoUseCase.fetchMenu(menuId: meal.id)
+                let menu = try await fetchMenuUseCase.execute(menuId: meal.id)
                 await MainActor.run {
                     self.meal = MenuItemDisplayModel(menu: menu)
                 }

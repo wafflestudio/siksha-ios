@@ -94,7 +94,7 @@ struct MealCell_Previews: PreviewProvider {
         
         return MealCell(viewModel: MealInfoViewModel(
             meal: meal,
-            mealInfoUseCase: PreviewMealInfoUseCase(),
+            fetchMenuUseCase: PreviewFetchMenuUseCase(),
             fetchMealReviewsUseCase: PreviewFetchMealReviewsUseCase(),
             fetchMealImageReviewsUseCase: PreviewFetchMealImageReviewsUseCase(),
             fetchMealReviewScoreDistributionUseCase: PreviewFetchMealReviewScoreDistributionUseCase(),
@@ -103,8 +103,8 @@ struct MealCell_Previews: PreviewProvider {
         ))
     }
     
-    private final class PreviewMealInfoUseCase: MealInfoUseCase {
-        func fetchMenu(menuId: Int) async throws -> MenuModel {
+    private final class PreviewFetchMenuUseCase: FetchMenuUseCase {
+        func execute(menuId: Int) async throws -> MenuModel {
             MenuModel(
                 id: menuId,
                 code: "",

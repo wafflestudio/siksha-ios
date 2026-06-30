@@ -245,7 +245,7 @@ struct ReviewCardView: View {
                     let meal = review.menuDisplayModel
                     let mealInfoVM = MealInfoViewModel(
                         meal: meal,
-                        mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
+                        fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
                         fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
                         fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
                         fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
@@ -355,7 +355,7 @@ struct ReviewCardView: View {
                     let meal = review.menuDisplayModel
                     let mealInfoVM = MealInfoViewModel(
                         meal: meal,
-                        mealInfoUseCase: AppContainer.shared.useCases.mealInfoUseCase,
+                        fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
                         fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
                         fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
                         fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
