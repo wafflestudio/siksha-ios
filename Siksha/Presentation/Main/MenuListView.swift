@@ -298,6 +298,8 @@ struct MenuListView_Previews: PreviewProvider {
                     observeRemoteConfigUseCase: AppContainer.shared.useCases.observeRemoteConfigUseCase,
                     fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
                     updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
+                    manageMenuFiltersUseCase: AppContainer.shared.useCases.manageMenuFiltersUseCase,
+                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
                     userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
                 ),
                 selectedFilterType: $selectedFilterType

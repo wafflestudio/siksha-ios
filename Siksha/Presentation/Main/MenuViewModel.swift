@@ -25,6 +25,8 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
     private let mealSectionRenderScheduler: MealSectionRenderScheduling
+    private let manageMenuFiltersUseCase: ManageMenuFiltersUseCase
+    private let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
     private let userPreferenceUseCase: UserPreferenceUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
@@ -122,6 +124,8 @@ final class MenuViewModel: NSObject, ObservableObject {
         observeRemoteConfigUseCase: ObserveRemoteConfigUseCase,
         fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase,
         updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase,
+        manageMenuFiltersUseCase: ManageMenuFiltersUseCase,
+        manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase,
         mealSectionRenderScheduler: MealSectionRenderScheduling = MealSectionRenderScheduler(),
         userPreferenceUseCase: UserPreferenceUseCase
     ) {
@@ -132,6 +136,8 @@ final class MenuViewModel: NSObject, ObservableObject {
         self.observeRemoteConfigUseCase = observeRemoteConfigUseCase
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
+        self.manageMenuFiltersUseCase = manageMenuFiltersUseCase
+        self.manageRestaurantsWithoutMenuVisibilityUseCase = manageRestaurantsWithoutMenuVisibilityUseCase
         self.mealSectionRenderScheduler = mealSectionRenderScheduler
         self.userPreferenceUseCase = userPreferenceUseCase
         
@@ -403,7 +409,7 @@ final class MenuViewModel: NSObject, ObservableObject {
             return nil
         }
 
-        let noMenuHide = userPreferenceUseCase.shouldHideRestaurantsWithoutMenu()
+        let noMenuHide = manageRestaurantsWithoutMenuVisibilityUseCase.shouldHideRestaurantsWithoutMenu()
 
         return MealSectionDisplayModelBuilder.Input(
             menu: currentDailyMenu,
@@ -502,7 +508,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
     
     func loadFilters() {
-        applyFilters(userPreferenceUseCase.menuFilters(), shouldPersist: true)
+        applyFilters(manageMenuFiltersUseCase.loadFilters(), shouldPersist: true)
     }
     
     func updateFilters(_ update: (inout MenuFilters) -> Void) {
@@ -524,7 +530,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
 
     private func saveFilters() {
-        userPreferenceUseCase.saveMenuFilters(selectedFilters)
+        manageMenuFiltersUseCase.saveFilters(selectedFilters)
     }
 
     private func clearCurrentDailyMenu() {

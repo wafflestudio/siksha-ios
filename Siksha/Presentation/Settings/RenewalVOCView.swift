@@ -126,7 +126,7 @@ struct RenewalVOCView: View {
 #Preview {
     RenewalVOCView(
         RenewalSettingsViewModel(
-            userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+            manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
         )
     )
 }

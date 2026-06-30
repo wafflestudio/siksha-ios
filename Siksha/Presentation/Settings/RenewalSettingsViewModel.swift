@@ -15,7 +15,7 @@ class RenewalSettingsViewModel: ObservableObject {
     
     private let repository: UserRepositoryProtocol = AppContainer.shared.domain.userRepository
     private let authRepository:AuthRepositoryProtocol = AppContainer.shared.domain.authRepository
-    private let userPreferenceUseCase: UserPreferenceUseCase
+    private let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
     @Published var error: AppError?
 
     @Published var noMenuHide = false
@@ -67,9 +67,9 @@ class RenewalSettingsViewModel: ObservableObject {
         }
     }
     
-    init(userPreferenceUseCase: UserPreferenceUseCase) {
-        self.userPreferenceUseCase = userPreferenceUseCase
-        noMenuHide = userPreferenceUseCase.shouldHideRestaurantsWithoutMenu()
+    init(manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase) {
+        self.manageRestaurantsWithoutMenuVisibilityUseCase = manageRestaurantsWithoutMenuVisibilityUseCase
+        noMenuHide = manageRestaurantsWithoutMenuVisibilityUseCase.shouldHideRestaurantsWithoutMenu()
         
         getUserId()
         getVersion()
@@ -78,7 +78,7 @@ class RenewalSettingsViewModel: ObservableObject {
         
         $noMenuHide
             .sink { [weak self] hide in
-                self?.userPreferenceUseCase.setShouldHideRestaurantsWithoutMenu(hide)
+                self?.manageRestaurantsWithoutMenuVisibilityUseCase.setShouldHideRestaurantsWithoutMenu(hide)
             }
             .store(in: &cancellables)
          

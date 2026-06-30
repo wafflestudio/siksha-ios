@@ -57,11 +57,13 @@ struct ContentView: View {
         observeRemoteConfigUseCase: AppContainer.shared.useCases.observeRemoteConfigUseCase,
         fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
         updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
+        manageMenuFiltersUseCase: AppContainer.shared.useCases.manageMenuFiltersUseCase,
+        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
         userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
     )
     @StateObject private var communityViewModel = CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository)
     @StateObject private var settingsViewModel = RenewalSettingsViewModel(
-        userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
     )
     @StateObject private var myLikedMenuViewModel = MyLikedMenuViewModel(
         fetchMyLikedMenusUseCase: AppContainer.shared.useCases.fetchMyLikedMenusUseCase,

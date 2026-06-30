@@ -445,7 +445,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             case .post:
                 AlertView(
                     RenewalSettingsViewModel(
-                        userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+                        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
                     ),
                     viewModel,
                     commentId: nil
@@ -453,7 +453,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
             case .comment(let comment):
                 AlertView(
                     RenewalSettingsViewModel(
-                        userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+                        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
                     ),
                     viewModel,
                     commentId: comment.id

@@ -135,7 +135,7 @@ struct AccountManageView_Previews: PreviewProvider {
         Group {
             AccountManageView(
                 viewModel: RenewalSettingsViewModel(
-                    userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
                 )
             )
         }

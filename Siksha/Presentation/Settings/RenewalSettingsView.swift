@@ -285,7 +285,7 @@ struct RenewalSettingsView_Previews: PreviewProvider {
         Group {
             RenewalSettingsView(
                 viewModel: RenewalSettingsViewModel(
-                    userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
                 ),
                 orderViewModel: RestaurantOrderViewModel(
                     fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
