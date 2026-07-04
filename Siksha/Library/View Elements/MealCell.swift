@@ -70,6 +70,7 @@ struct MealCell: View {
                 Image(viewModel.meal.isLiked ? "Heart-selected" : "Heart-default")
                     .frame(width: 24, height: 24)
             }
+            .disabled(viewModel.isUpdatingLike)
         }
         .padding(.zero)
         .background(Color.backgroundSecondary)
@@ -91,6 +92,71 @@ struct MealCell_Previews: PreviewProvider {
             imageURLStrings: []
         )
         
-        return MealCell(viewModel: MealInfoViewModel(meal: meal))
+        return MealCell(viewModel: MealInfoViewModel(
+            meal: meal,
+            fetchMenuUseCase: PreviewFetchMenuUseCase(),
+            fetchMealReviewsUseCase: PreviewFetchMealReviewsUseCase(),
+            fetchMealImageReviewsUseCase: PreviewFetchMealImageReviewsUseCase(),
+            fetchMealReviewScoreDistributionUseCase: PreviewFetchMealReviewScoreDistributionUseCase(),
+            fetchMealReviewKeywordDistributionUseCase: PreviewFetchMealReviewKeywordDistributionUseCase(),
+            updateMenuLikeUseCase: PreviewUpdateMenuLikeUseCase()
+        ))
+    }
+    
+    private final class PreviewFetchMenuUseCase: FetchMenuUseCase {
+        func execute(menuId: Int) async throws -> MenuModel {
+            MenuModel(
+                id: menuId,
+                code: "",
+                nameKr: "음식",
+                nameEn: "",
+                price: 4000,
+                score: 4.1,
+                reviewCount: 1,
+                isLiked: false,
+                likeCount: 0,
+                imageURLStrings: []
+            )
+        }
+    }
+    
+    private final class PreviewUpdateMenuLikeUseCase: UpdateMenuLikeUseCase {
+        func execute(menuId: Int, isLiked: Bool) async throws -> MenuLikeStatusModel {
+            MenuLikeStatusModel(menuId: menuId, isLiked: isLiked, likeCount: isLiked ? 1 : 0)
+        }
+    }
+    
+    private final class PreviewFetchMealReviewsUseCase: FetchMealReviewsUseCase {
+        func execute(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
+            ReviewPageModel(totalCount: 0, hasNext: false, reviews: [])
+        }
+    }
+    
+    private final class PreviewFetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase {
+        func execute(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
+            ReviewPageModel(totalCount: 0, hasNext: false, reviews: [])
+        }
+    }
+    
+    private final class PreviewFetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase {
+        func execute(menuId: Int) async throws -> [Int] {
+            []
+        }
+    }
+    
+    private final class PreviewFetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase {
+        func execute(menuId: Int) async throws -> KeywordDistributionModel {
+            KeywordDistributionModel(
+                tasteKeyword: "",
+                tasteCount: 0,
+                tasteTotal: 0,
+                priceKeyword: "",
+                priceCount: 0,
+                priceTotal: 0,
+                foodCompositionKeyword: "",
+                foodCompositionCount: 0,
+                foodCompositionTotal: 0
+            )
+        }
     }
 }

@@ -6,8 +6,6 @@
 //
 
 import Foundation
-import Combine
-import SwiftyJSON
  
 struct RestaurantSection: Identifiable {
     let id: Int
@@ -35,15 +33,19 @@ class MyReviewViewModel: ObservableObject {
     @Published var expandedSections: [Int: Bool] = [:]
     
     // MARK: - Private Properties
-    private var cancellables = Set<AnyCancellable>()
-    private let repository: UserRepositoryProtocol
+    private let fetchMyReviewsUseCase: FetchMyReviewsUseCase
+    private let deleteMyReviewUseCase: DeleteMyReviewUseCase
     private var currentPage = 1
     private let perPage = 20
     private var hasNext = true
     
     // MARK: - Init
-    init(repository: UserRepositoryProtocol) {
-        self.repository = repository
+    init(
+        fetchMyReviewsUseCase: FetchMyReviewsUseCase,
+        deleteMyReviewUseCase: DeleteMyReviewUseCase
+    ) {
+        self.fetchMyReviewsUseCase = fetchMyReviewsUseCase
+        self.deleteMyReviewUseCase = deleteMyReviewUseCase
     }
     
     // MARK: - Public Methods
@@ -53,21 +55,17 @@ class MyReviewViewModel: ObservableObject {
         isLoading = true
         currentPage = 1
         
-        repository.getMyReview(page: currentPage, perPage: perPage)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                self?.isLoading = false
-                
-                switch completionStatus {
-                case .finished:
-                    break
-                case .failure:
-                    break
-                }
-            }, receiveValue: { [weak self] response in
-                self?.handleReviewResponse(response, isLoadMore: false)
-            })
-            .store(in: &cancellables)
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let response = try await fetchMyReviewsUseCase.execute(page: currentPage, perPage: perPage)
+                handleReviewResponse(response, isLoadMore: false)
+            } catch {
+            }
+            
+            isLoading = false
+        }
     }
     
     func loadMoreReviews() {
@@ -76,21 +74,18 @@ class MyReviewViewModel: ObservableObject {
         isLoading = true
         currentPage += 1
         
-        repository.getMyReview(page: currentPage, perPage: perPage)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                self?.isLoading = false
-                
-                switch completionStatus {
-                case .finished:
-                    break
-                case .failure:
-                    self?.currentPage -= 1
-                }
-            }, receiveValue: { [weak self] response in
-                self?.handleReviewResponse(response, isLoadMore: true)
-            })
-            .store(in: &cancellables)
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                let response = try await fetchMyReviewsUseCase.execute(page: currentPage, perPage: perPage)
+                handleReviewResponse(response, isLoadMore: true)
+            } catch {
+                currentPage -= 1
+            }
+            
+            isLoading = false
+        }
     }
     
     func toggleSection(_ sectionId: Int, expanded: Bool) {
@@ -98,18 +93,16 @@ class MyReviewViewModel: ObservableObject {
     }
     
     func deleteReview(_ reviewId: Int, completion: @escaping (Bool) -> Void) {
-        repository.deleteMyReview(reviewId: reviewId)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completionStatus in
-                switch completionStatus {
-                case .finished:
-                    completion(true)
-                case .failure(let error):
-                    completion(false)
-                }
-            }, receiveValue: { _ in
-            })
-            .store(in: &cancellables)
+        Task { [weak self] in
+            guard let self else { return }
+            
+            do {
+                try await deleteMyReviewUseCase.execute(reviewId: reviewId)
+                completion(true)
+            } catch {
+                completion(false)
+            }
+        }
     }
 
     func removeReviewFromSection(reviewId: Int) {
@@ -133,10 +126,10 @@ class MyReviewViewModel: ObservableObject {
         }
     }
     
-    private func handleReviewResponse(_ response: MyReviewResponse, isLoadMore: Bool) {
+    private func handleReviewResponse(_ response: MyReviewPageModel, isLoadMore: Bool) {
         self.hasNext = response.hasNext
         
-        let newSections = response.result.map { restaurant in
+        let newSections = response.restaurants.map { restaurant in
             convertToRestaurantSection(restaurant)
         }
         
@@ -153,17 +146,17 @@ class MyReviewViewModel: ObservableObject {
         }
     }
     
-    private func convertToRestaurantSection(_ restaurant: MyReviewRestaurant) -> RestaurantSection {
+    private func convertToRestaurantSection(_ restaurant: MyReviewRestaurantModel) -> RestaurantSection {
         let reviews = restaurant.reviews.map { review in
             RestaurantReview(
                 id: review.id,
                 menuId: review.menuId,
                 menuName: review.nameKr,
                 rating: review.score,
-                date: formatDate(review.createdDate),
+                date: formatDate(review.createdAt),
                 reviewText: review.comment,
                 imageUrls: review.etc?["images"] ?? [],
-                tags: review.keywordReviews.compactMap { $0 }.filter { !$0.isEmpty }
+                tags: review.keywordReviews.filter { !$0.isEmpty }
             )
         }
         

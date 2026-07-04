@@ -7,10 +7,10 @@
 
 import Foundation
 
-final class MealInfoRepositoryImpl: MealInfoRepositoryProtocol {
+final class MealInfoRepositoryImpl: MealInfoRepositoryProtocol, MealReviewRepositoryProtocol {
     private let remote: MealInfoRemoteDataSource
     
-    init(remote: MealInfoRemoteDataSource = MealInfoRemoteDataSourceImpl()) {
+    init(remote: MealInfoRemoteDataSource) {
         self.remote = remote
     }
     
@@ -18,20 +18,12 @@ final class MealInfoRepositoryImpl: MealInfoRepositoryProtocol {
         try await remote.fetchMenu(menuId: menuId).toDomain()
     }
     
-    func likeMenu(menuId: Int) async throws -> MenuModel {
-        try await remote.likeMenu(menuId: menuId).toDomain()
-    }
-    
-    func unlikeMenu(menuId: Int) async throws -> MenuModel {
-        try await remote.unlikeMenu(menuId: menuId).toDomain()
-    }
-    
     func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
         try await remote.fetchReviews(menuId: menuId, page: page, perPage: perPage).toDomain()
     }
     
-    func fetchReviewImages(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
-        try await remote.fetchReviewImages(menuId: menuId, page: page, perPage: perPage).toDomain()
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
+        try await remote.fetchImageReviews(menuId: menuId, page: page, perPage: perPage).toDomain()
     }
     
     func fetchScoreDistribution(menuId: Int) async throws -> [Int] {
@@ -84,12 +76,12 @@ private extension MenuIdResponse {
     }
 }
 
-private extension ReviewResponse {
+private extension ReviewPageResponseDTO {
     func toDomain() -> ReviewPageModel {
         ReviewPageModel(
             totalCount: totalCount,
             hasNext: hasNext,
-            reviews: result
+            reviews: result.map { $0.toDomain() }
         )
     }
 }

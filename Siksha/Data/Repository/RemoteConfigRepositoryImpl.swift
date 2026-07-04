@@ -10,7 +10,7 @@ import Foundation
 final class RemoteConfigRepositoryImpl: RemoteConfigRepositoryProtocol {
     private let dataSource: RemoteConfigDataSource
 
-    init(dataSource: RemoteConfigDataSource = FirebaseRemoteConfigDataSource()) {
+    init(dataSource: RemoteConfigDataSource) {
         self.dataSource = dataSource
     }
 

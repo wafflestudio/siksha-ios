@@ -39,13 +39,13 @@ struct AlarmView: View {
                     .foregroundStyle(Color.blackColor)
                     .customFont(font: .text15(weight: .Regular))
                 Spacer()
-                Toggle(isOn:$viewModel.isAlarmEnabled){
+                Toggle(isOn: Binding(
+                    get: { viewModel.isAlarmEnabled },
+                    set: { viewModel.requestAlarmEnabledChange($0) }
+                )) {
                     EmptyView()
                 }
                 .toggleStyle(AlarmSwitchStyle())
-                .onTapGesture {
-                        viewModel.toggleAlarmEnabled()
-                }
 
             }
             Spacer()
@@ -84,7 +84,7 @@ struct AlarmView: View {
                     Spacer()
                         .frame(height:20)
                     if viewModel.isAlarmEnabled{
-                        if viewModel.myLikedRestaurants.isEmpty{
+                        if viewModel.likedMenuGroups.isEmpty{
                                 Text("내가 찜한 메뉴가 없어요")
                                     .foregroundStyle(Color.gray600)
                                     .customFont(font: .text15(weight: .Bold))
@@ -99,9 +99,9 @@ struct AlarmView: View {
                                 .customFont(font: .text14(weight: .Bold))
                                 .padding(EdgeInsets(top: 0, leading: 14, bottom: 8, trailing: 0))
                             
-                            ForEach(viewModel.myLikedRestaurants,id:\.self){
-                                restaurant in
-                                AlarmRestaurantCell(viewModel:viewModel,restaurantName: restaurant.name, menus: restaurant.menus)
+                            ForEach(viewModel.likedMenuGroups,id:\.self){
+                                group in
+                                AlarmRestaurantCell(viewModel:viewModel,restaurantName: group.name, menus: group.menus)
                                 Spacer()
                                     .frame(height:12)
                             }
@@ -114,12 +114,6 @@ struct AlarmView: View {
                 .padding(EdgeInsets(top: 18, leading: 16, bottom: 0, trailing: 17))
                     .customNavigationBar(title: "메뉴 알림 설정")
                     .navigationBarItems(leading: backButton)
-                    .onChange(of: viewModel.isAlarmEnabled, perform: {  isAlarmOn in
-                        if isAlarmOn{
-                            AppDelegate.requestNotificationPermission()
-                        }
-                        
-                    })
 
             }
             .errorAlert(error: $viewModel.error)
@@ -140,5 +134,3 @@ struct AlarmView: View {
         }
        
     }
-
-

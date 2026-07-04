@@ -169,7 +169,10 @@ private final class DevMenuViewModel: ObservableObject {
     private let restaurantRemoteDataSource: RestaurantRemoteDataSource
 
     init(
-        menuRepository: MenuRepositoryProtocol = MenuRepositoryImpl(),
+        menuRepository: MenuRepositoryProtocol = MenuRepositoryImpl(
+            remote: MenuRemoteDataSourceImpl(),
+            local: MenuLocalDataSourceImpl()
+        ),
         restaurantRemoteDataSource: RestaurantRemoteDataSource = RestaurantRemoteDataSourceImpl()
     ) {
         self.menuRepository = menuRepository

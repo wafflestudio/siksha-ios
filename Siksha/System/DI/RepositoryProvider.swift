@@ -21,9 +21,7 @@ final class RepositoryProvider {
     var userRepository: UserRepositoryProtocol {
         return self.repository
     }
-    var myLikedMenuRepository: MyLikedMenuRepositoryProtocol{
-        return self.repository
-    }
+    
     var authRepository: AuthRepositoryProtocol{
         return self.repository
     }

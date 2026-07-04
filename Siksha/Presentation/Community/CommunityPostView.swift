@@ -443,9 +443,21 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         .fullScreenCover(item: $showAlert) { item in
             switch item {
             case .post:
-                AlertView(RenewalSettingsViewModel(), viewModel, commentId: nil)
+                AlertView(
+                    RenewalSettingsViewModel(
+                        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
+                    ),
+                    viewModel,
+                    commentId: nil
+                )
             case .comment(let comment):
-                AlertView(RenewalSettingsViewModel(), viewModel, commentId: comment.id)
+                AlertView(
+                    RenewalSettingsViewModel(
+                        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
+                    ),
+                    viewModel,
+                    commentId: comment.id
+                )
             }
         }
         .fullScreenCover(item: $editComment) { comment in

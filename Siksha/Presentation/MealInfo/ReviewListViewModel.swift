@@ -11,7 +11,8 @@ import UIKit
 
 public class ReviewListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
-    private let mealInfoUseCase: MealInfoUseCase
+    private let fetchMealReviewsUseCase: FetchMealReviewsUseCase
+    private let fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase
     private var perPage = 10
     var currentPage: Int = 1
     
@@ -24,13 +25,13 @@ public class ReviewListViewModel: ObservableObject {
     init(
         mealID: Int,
         imageOnly: Bool = false,
-        mealInfoUseCase: MealInfoUseCase = DefaultMealInfoUseCase(
-            repository: MealInfoRepositoryImpl()
-        )
+        fetchMealReviewsUseCase: FetchMealReviewsUseCase,
+        fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase
     ) {
         self.mealID = mealID
         self.imageOnly = imageOnly
-        self.mealInfoUseCase = mealInfoUseCase
+        self.fetchMealReviewsUseCase = fetchMealReviewsUseCase
+        self.fetchMealImageReviewsUseCase = fetchMealImageReviewsUseCase
     }
     
     func loadMoreReviewsIfNeeded(current: Review? = nil) {
@@ -74,7 +75,7 @@ public class ReviewListViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealInfoUseCase.fetchReviews(menuId: mealID, page: currentPage, perPage: perPage)
+                let response = try await fetchMealReviewsUseCase.execute(menuId: mealID, page: currentPage, perPage: perPage)
                 await MainActor.run {
                     self.hasMorePages = (self.currentPage < (response.totalCount + self.perPage - 1) / self.perPage)
                     self.currentPage += 1
@@ -100,7 +101,7 @@ public class ReviewListViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealInfoUseCase.fetchReviewImages(menuId: mealID, page: currentPage, perPage: perPage)
+                let response = try await fetchMealImageReviewsUseCase.execute(menuId: mealID, page: currentPage, perPage: perPage)
                 await MainActor.run {
                     self.hasMorePages = response.hasNext
                     self.currentPage += 1

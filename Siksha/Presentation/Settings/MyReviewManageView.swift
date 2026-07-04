@@ -243,7 +243,15 @@ struct ReviewCardView: View {
             NavigationLink(
                 destination: {
                     let meal = review.menuDisplayModel
-                    let mealInfoVM = MealInfoViewModel(meal: meal)
+                    let mealInfoVM = MealInfoViewModel(
+                        meal: meal,
+                        fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
+                        fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+                        fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
+                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
+                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
+                        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
+                    )
                     mealInfoVM.updateMealFromId()
                     
                     return MealInfoView(viewModel: mealInfoVM)
@@ -345,7 +353,15 @@ struct ReviewCardView: View {
                 
                 NavigationLink(destination: {
                     let meal = review.menuDisplayModel
-                    let mealInfoVM = MealInfoViewModel(meal: meal)
+                    let mealInfoVM = MealInfoViewModel(
+                        meal: meal,
+                        fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
+                        fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+                        fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
+                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
+                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
+                        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
+                    )
                     mealInfoVM.updateMealFromId()
                     
                     return MealReviewView(meal, mealInfoViewModel: mealInfoVM, editingReview: review)
@@ -379,5 +395,8 @@ private extension RestaurantReview {
 }
 
 #Preview {
-    MyReviewManageView(viewModel: MyReviewViewModel(repository: AppContainer.shared.domain.userRepository))
+    MyReviewManageView(viewModel: MyReviewViewModel(
+        fetchMyReviewsUseCase: AppContainer.shared.useCases.fetchMyReviewsUseCase,
+        deleteMyReviewUseCase: AppContainer.shared.useCases.deleteMyReviewUseCase
+    ))
 }

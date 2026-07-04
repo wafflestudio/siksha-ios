@@ -9,10 +9,18 @@ final class AppContainer {
     static let shared = AppContainer()
     
     let domain: RepositoryProvider
+    let useCases: UseCaseProvider
+    let menuAlarmNotificationManager: DefaultMenuAlarmNotificationManager
     
     init() {
         let networkModule = AlamofireNetworking()
         let repository = Repository(networkModule: networkModule)
-        self.domain = RepositoryProvider(repository: repository)
+        let domain = RepositoryProvider(repository: repository)
+        
+        self.domain = domain
+        self.useCases = UseCaseProvider()
+        self.menuAlarmNotificationManager = DefaultMenuAlarmNotificationManager(
+            authRepository: domain.authRepository
+        )
     }
 }

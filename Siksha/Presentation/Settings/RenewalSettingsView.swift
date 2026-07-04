@@ -12,11 +12,15 @@ struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @ObservedObject var userModel = UserManager.shared
     @ObservedObject var viewModel: RenewalSettingsViewModel
-    @StateObject private var orderViewModel = RestaurantOrderViewModel()
+    @ObservedObject var orderViewModel: RestaurantOrderViewModel
     
     
-    init(viewModel: RenewalSettingsViewModel) {
+    init(
+        viewModel: RenewalSettingsViewModel,
+        orderViewModel: RestaurantOrderViewModel
+    ) {
         self.viewModel = viewModel
+        self.orderViewModel = orderViewModel
     }
     
     private let borderColor = Color.gray200
@@ -110,7 +114,10 @@ struct RenewalSettingsView: View {
             
             partitionBar
             
-            NavigationLink(destination: MyReviewManageView(viewModel: MyReviewViewModel(repository: AppContainer.shared.domain.userRepository))) {
+            NavigationLink(destination: MyReviewManageView(viewModel: MyReviewViewModel(
+                fetchMyReviewsUseCase: AppContainer.shared.useCases.fetchMyReviewsUseCase,
+                deleteMyReviewUseCase: AppContainer.shared.useCases.deleteMyReviewUseCase
+            ))) {
                 HStack(alignment: .center) {
                     Text("나의 평가 관리")
                         .customFont(font: .text15(weight: .Regular))
@@ -123,7 +130,19 @@ struct RenewalSettingsView: View {
             }
             
             partitionBar
-            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository))) {
+            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(
+                fetchMyLikedMenusUseCase: AppContainer.shared.useCases.fetchMyLikedMenusUseCase,
+                getMenuAlarmEnabledUseCase: AppContainer.shared.useCases.getMenuAlarmEnabledUseCase,
+                setMenuAlarmEnabledUseCase: AppContainer.shared.useCases.setMenuAlarmEnabledUseCase,
+                updateMenuAlarmUseCase: AppContainer.shared.useCases.updateMenuAlarmUseCase,
+                updateAllMenuAlarmsUseCase: AppContainer.shared.useCases.updateAllMenuAlarmsUseCase,
+                fetchMenuAlarmTimeUseCase: AppContainer.shared.useCases.fetchMenuAlarmTimeUseCase,
+                updateMenuAlarmTimeUseCase: AppContainer.shared.useCases.updateMenuAlarmTimeUseCase,
+                updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase,
+                menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager,
+                fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+                updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase
+            ))) {
                 HStack(alignment: .center) {
                     Text("내가 찜한 메뉴")
                         .customFont(font: .text15(weight: .Regular))
@@ -264,7 +283,16 @@ struct RenewalSettingsView: View {
 struct RenewalSettingsView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            RenewalSettingsView(viewModel: RenewalSettingsViewModel())
+            RenewalSettingsView(
+                viewModel: RenewalSettingsViewModel(
+                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
+                ),
+                orderViewModel: RestaurantOrderViewModel(
+                    fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+                    updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
+                    setRestaurantOrderUseCase: AppContainer.shared.useCases.setRestaurantOrderUseCase
+                )
+            )
         }
     }
 }

@@ -120,11 +120,10 @@ struct MyLikedMenuModal: View {
                     }
                     Button(action:{
                         if isYesSelected {
-                            AppDelegate.alarmViewModel = viewModel
-                            AppDelegate.requestNotificationPermission()
+                            viewModel.requestAlarmEnabledChange(true)
                             contentViewModel.showModal = false
                         } else {
-                            UserDefaults.standard.set(false, forKey: "isAlarmEnabled")
+                            viewModel.setAlarmEnabled(false)
                             contentViewModel.showModal = false
                         }
                         
@@ -164,4 +163,3 @@ struct MyLikedMenuModal: View {
 
     }
 }
-

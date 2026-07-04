@@ -49,7 +49,15 @@ struct RestaurantsView: View {
                                 },
                                 onFavoriteTap: onFavoriteTap,
                                 menuRow: { menu in
-                                    let mealInfoViewModel = MealInfoViewModel(meal: menu)
+                                    let mealInfoViewModel = MealInfoViewModel(
+                                        meal: menu,
+                                        fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
+                                        fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+                                        fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
+                                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
+                                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
+                                        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
+                                    )
                                     NavigationLink(
                                         destination: MealInfoView(viewModel: mealInfoViewModel)
                                             .environment(\.menuViewModel, viewModel)

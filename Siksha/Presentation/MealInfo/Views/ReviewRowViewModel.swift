@@ -10,7 +10,7 @@ import Combine
 
 class ReviewRowViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
-    private let mealInfoUseCase: MealInfoUseCase
+    private let updateReviewLikeUseCase: UpdateReviewLikeUseCase
     
     private let review: Review
     let showImage: Bool
@@ -56,13 +56,11 @@ class ReviewRowViewModel: ObservableObject {
     init(
         review: Review,
         showImage: Bool,
-        mealInfoUseCase: MealInfoUseCase = DefaultMealInfoUseCase(
-            repository: MealInfoRepositoryImpl()
-        )
+        updateReviewLikeUseCase: UpdateReviewLikeUseCase
     ) {
         self.review = review
         self.showImage = showImage
-        self.mealInfoUseCase = mealInfoUseCase
+        self.updateReviewLikeUseCase = updateReviewLikeUseCase
         self.likeCount = review.likeCount
         self.isLiked = review.isLiked
     }
@@ -74,7 +72,7 @@ class ReviewRowViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                try await mealInfoUseCase.likeReview(reviewId: review.id)
+                try await updateReviewLikeUseCase.execute(reviewId: review.id, isLiked: true)
                 await MainActor.run {
                     self.isLiked = true
                     self.likeCount += 1
@@ -94,7 +92,7 @@ class ReviewRowViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                try await mealInfoUseCase.unlikeReview(reviewId: review.id)
+                try await updateReviewLikeUseCase.execute(reviewId: review.id, isLiked: false)
                 await MainActor.run {
                     self.isLiked = false
                     self.likeCount = max(0, self.likeCount - 1)

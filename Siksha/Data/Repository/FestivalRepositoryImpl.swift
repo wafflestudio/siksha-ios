@@ -10,7 +10,7 @@ import Foundation
 final class FestivalRepositoryImpl: FestivalRepositoryProtocol {
     private let remote: FestivalRemoteDataSource
 
-    init(remote: FestivalRemoteDataSource = FestivalRemoteDataSourceImpl()) {
+    init(remote: FestivalRemoteDataSource) {
         self.remote = remote
     }
 

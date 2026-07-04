@@ -19,11 +19,6 @@ final class AlamofireNetworking: NetworkModuleProtocol {
             .validate(statusCode: 200..<300)
             .publishDecodable(type: T.self)
             .value()
-            .handleEvents(receiveCompletion: {_ in
-                if let data = request.data {
-                    print(String(bytes:data,encoding:.utf8) ?? "")
-                }
-            })
             .mapError { error in
                 self.mapToAppError(error: error)
             }

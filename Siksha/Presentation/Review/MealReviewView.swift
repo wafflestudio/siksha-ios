@@ -23,7 +23,12 @@ struct MealReviewView: View {
         self.mealInfoViewModel = mealInfoViewModel
         self.existingReview = nil
         
-        _viewModel = StateObject(wrappedValue: MealReviewViewModel(meal: meal))
+        _viewModel = StateObject(wrappedValue: MealReviewViewModel(
+            meal: meal,
+            fetchReviewCommentRecommendationUseCase: AppContainer.shared.useCases.fetchReviewCommentRecommendationUseCase,
+            submitMealReviewUseCase: AppContainer.shared.useCases.submitMealReviewUseCase,
+            editMealReviewUseCase: AppContainer.shared.useCases.editMealReviewUseCase
+        ))
         UITextView.appearance().backgroundColor = .clear
     }
     
@@ -33,7 +38,12 @@ struct MealReviewView: View {
         self.mealInfoViewModel = mealInfoViewModel
         self.existingReview = editingReview
         
-        let vm = MealReviewViewModel(meal: meal)
+        let vm = MealReviewViewModel(
+            meal: meal,
+            fetchReviewCommentRecommendationUseCase: AppContainer.shared.useCases.fetchReviewCommentRecommendationUseCase,
+            submitMealReviewUseCase: AppContainer.shared.useCases.submitMealReviewUseCase,
+            editMealReviewUseCase: AppContainer.shared.useCases.editMealReviewUseCase
+        )
         vm.loadExistingReview(editingReview)
         _viewModel = StateObject(wrappedValue: vm)
         
@@ -261,7 +271,18 @@ struct MealReviewPreview {
             imageURLStrings: []
         )
         
-        return MealReviewView(meal, mealInfoViewModel: MealInfoViewModel(meal: meal))
+        return MealReviewView(
+            meal,
+            mealInfoViewModel: MealInfoViewModel(
+                meal: meal,
+                fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
+                fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+                fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
+                fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
+                fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
+                updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
+            )
+        )
     }
 }
 

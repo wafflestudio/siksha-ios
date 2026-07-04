@@ -13,7 +13,6 @@ struct MealInfoView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @StateObject var viewModel: MealInfoViewModel
-    @State var showSubmitButton: Bool = true
     @State var showDetailImage: Bool = false
     
     init(viewModel: MealInfoViewModel) {
@@ -34,7 +33,6 @@ struct MealInfoView: View {
         .customNavigationBar(title: viewModel.meal.nameKr)
         .navigationBarItems(leading: backButton)
         .onAppear {
-            self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
             viewModel.mealReviews = []
             viewModel.loadReviews()
             viewModel.loadImages()
@@ -57,6 +55,7 @@ private extension MealInfoView {
                     .foregroundStyle(viewModel.meal.isLiked ? Color.accentLike : Color.gray200)
                     .padding(.top, 20)
             }
+            .disabled(viewModel.isUpdatingLike)
             
             HStack(spacing: 0) {
                 Text("찜 \(viewModel.meal.likeCount)개")
@@ -172,7 +171,15 @@ private struct MealInfoPreview {
             likeCount: 0,
             imageURLStrings: []
         )
-        return MealInfoView(viewModel: MealInfoViewModel(meal: meal))
+        return MealInfoView(viewModel: MealInfoViewModel(
+            meal: meal,
+            fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
+            fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+            fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
+            fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
+            fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
+            updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
+        ))
     }
 }
 

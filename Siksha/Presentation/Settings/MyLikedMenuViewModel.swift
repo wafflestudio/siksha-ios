@@ -6,79 +6,192 @@
 //
 
 import Foundation
-import Combine
 import SwiftUI
 
+enum MyLikedMenuLoadState {
+    case idle
+    case loading
+    case loaded
+    case failed
+}
+
+private enum MyLikedMenuLoadResult {
+    case succeeded
+    case cancelled
+    case failed
+}
+
 class MyLikedMenuViewModel: ObservableObject{
-    private let myLikedMenuRepository: MyLikedMenuRepositoryProtocol
+    private let fetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase
+    private let getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase
+    private let setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase
+    private let updateMenuAlarmUseCase: UpdateMenuAlarmUseCase
+    private let updateAllMenuAlarmsUseCase: UpdateAllMenuAlarmsUseCase
+    private let fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase
+    private let updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase
+    private let updateMenuLikeUseCase: UpdateMenuLikeUseCase
+    private let menuAlarmNotificationManager: MenuAlarmNotificationManaging
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
-    private var cancellables = Set<AnyCancellable>()
 
     @Published var error: AppError?
     @Published var noAlarmPermission = false
-    @Published var isAlarmEnabled = UserDefaults.standard.bool(forKey: "isAlarmEnabled")
-    @Published  var myLikedRestaurants: [MyLikedRestaurant] = []
+    @Published private(set) var isUpdatingAlarmEnabled = false
+    @Published var isAlarmEnabled: Bool
+    @Published var likedMenuGroups: [RestaurantLikedMenuGroup] = []
+    @Published private(set) var loadState: MyLikedMenuLoadState = .idle
     @Published private var personalRestaurantById: [Int: PersonalRestaurantModel] = [:]
     @Published private var updatingFavoriteRestaurantIds: Set<Int> = []
+    @Published private var updatingMenuLikeIds: Set<Int> = []
     @Published var alarmTime: AlarmTime = .DAILY
     private var personalRestaurantOrder: [Int: Int] = [:]
-    private var init_error = 0
+    private var initErrorCount = 0
+    private var isLoadingLikedMenus = false
+    private var hasLoadedLikedMenus = false
+    
     init(
-        myLikedMenuRepository: MyLikedMenuRepositoryProtocol,
-        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase = DefaultFetchPersonalRestaurantsUseCase(
-            repository: RestaurantRepositoryImpl()
-        ),
-        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase = DefaultUpdateRestaurantPreferenceUseCase(
-            repository: RestaurantRepositoryImpl()
-        )
+        fetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase,
+        getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase,
+        setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase,
+        updateMenuAlarmUseCase: UpdateMenuAlarmUseCase,
+        updateAllMenuAlarmsUseCase: UpdateAllMenuAlarmsUseCase,
+        fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase,
+        updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase,
+        updateMenuLikeUseCase: UpdateMenuLikeUseCase,
+        menuAlarmNotificationManager: MenuAlarmNotificationManaging,
+        fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
     ) {
-        self.myLikedMenuRepository = myLikedMenuRepository
+        self.fetchMyLikedMenusUseCase = fetchMyLikedMenusUseCase
+        self.getMenuAlarmEnabledUseCase = getMenuAlarmEnabledUseCase
+        self.setMenuAlarmEnabledUseCase = setMenuAlarmEnabledUseCase
+        self.updateMenuAlarmUseCase = updateMenuAlarmUseCase
+        self.updateAllMenuAlarmsUseCase = updateAllMenuAlarmsUseCase
+        self.fetchMenuAlarmTimeUseCase = fetchMenuAlarmTimeUseCase
+        self.updateMenuAlarmTimeUseCase = updateMenuAlarmTimeUseCase
+        self.updateMenuLikeUseCase = updateMenuLikeUseCase
+        self.menuAlarmNotificationManager = menuAlarmNotificationManager
         self.fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
+        self.isAlarmEnabled = getMenuAlarmEnabledUseCase.execute()
     }
-    func failedAlarm() {
-        print("errorALARM")
-        error = AppError.unknownError("알람 오류가 발생했습니다.")
+    
+    func setAlarmEnabled(_ enabled: Bool) {
+        isUpdatingAlarmEnabled = false
+        setMenuAlarmEnabledUseCase.execute(enabled)
+        isAlarmEnabled = enabled
     }
-    func getAlarmTime() {
-        myLikedMenuRepository.getAlarmTime()
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.error = ErrorHelper.categorize(error)
-                }
-            }, receiveValue: {[weak self] response in
-                self?.alarmTime = AlarmTime(rawValue: response.alarmType)!
-            })
-            .store(in: &cancellables)
-    }
-    func loadMyLikedMenu(){
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-            
-            await refreshPersonalRestaurants()
-            loadMyLikedMenuItems()
+    
+    func requestAlarmEnabledChange(_ enabled: Bool) {
+        guard enabled != isAlarmEnabled, !isUpdatingAlarmEnabled else {
+            return
+        }
+        
+        if enabled {
+            isUpdatingAlarmEnabled = true
+            Task { @MainActor [weak self] in
+                await self?.enableAlarmFromUserRequest()
+            }
+        } else {
+            Task { @MainActor [weak self] in
+                await self?.disableAlarm()
+            }
         }
     }
     
-    private func loadMyLikedMenuItems() {
-        myLikedMenuRepository.getMyLikedMenu()
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
-                    if self?.init_error == 0{ //  알람 화면에서 뒤로 갈 때 알람 떠서 잘 안 돌아가지는 문제 해결용
-                        self?.error = ErrorHelper.categorize(error)
-                    }
-                    self?.init_error += 1
-                }
-            }, receiveValue: { [weak self] restaurants in
-                guard let self else { return }
-                
-                self.myLikedRestaurants = sortByPersonalRestaurantOrder(restaurants.restaurants)
-                self.init_error = 0
-            })
-            .store(in: &cancellables)
+    @MainActor
+    private func enableAlarmFromUserRequest() async {
+        guard !isAlarmEnabled else {
+            isUpdatingAlarmEnabled = false
+            return
+        }
+        
+        defer {
+            isUpdatingAlarmEnabled = false
+        }
+        
+        let isGranted = await menuAlarmNotificationManager.requestAuthorization()
+        guard isGranted else {
+            noAlarmPermission = true
+            return
+        }
+        
+        do {
+            try await updateAllMenuAlarmsUseCase.execute(isEnabled: true)
+            
+            withAnimation(.easeOut(duration: 0.3)) {
+                isAlarmEnabled = true
+                enableAllAlarm()
+            }
+            
+            menuAlarmNotificationManager.registerRemoteNotificationsIfNeeded()
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+        }
+    }
+    
+    func getAlarmTime() {
+        Task { @MainActor [weak self] in
+            await self?.refreshAlarmTime()
+        }
+    }
+    
+    @MainActor
+    func loadMyLikedMenu() async {
+        guard !isLoadingLikedMenus, !hasLoadedLikedMenus else {
+            return
+        }
+        
+        isLoadingLikedMenus = true
+        loadState = .loading
+        defer {
+            isLoadingLikedMenus = false
+        }
+        
+        await refreshPersonalRestaurants()
+        guard !Task.isCancelled else {
+            loadState = .idle
+            return
+        }
+        
+        switch await loadMyLikedMenuItems() {
+        case .succeeded:
+            hasLoadedLikedMenus = true
+            loadState = .loaded
+        case .cancelled:
+            loadState = .idle
+        case .failed:
+            loadState = .failed
+        }
+    }
+    
+    @MainActor
+    private func refreshAlarmTime() async {
+        do {
+            alarmTime = try await fetchMenuAlarmTimeUseCase.execute()
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+        }
+    }
+    
+    @MainActor
+    private func loadMyLikedMenuItems() async -> MyLikedMenuLoadResult {
+        do {
+            let groups = try await fetchMyLikedMenusUseCase.execute()
+            likedMenuGroups = sortByPersonalRestaurantOrder(groups)
+            initErrorCount = 0
+            return .succeeded
+        } catch {
+            if error is CancellationError {
+                return .cancelled
+            }
+            
+            if initErrorCount == 0 { // 알람 화면에서 뒤로 갈 때 알람이 떠서 잘 안 돌아가지는 문제 해결용
+                self.error = ErrorHelper.categorize(error)
+            }
+            initErrorCount += 1
+            return .failed
+        }
     }
     
     func isFavoriteRestaurant(restaurantId: Int) -> Bool {
@@ -87,6 +200,10 @@ class MyLikedMenuViewModel: ObservableObject{
     
     func isUpdatingFavoriteRestaurant(restaurantId: Int) -> Bool {
         updatingFavoriteRestaurantIds.contains(restaurantId)
+    }
+    
+    func isUpdatingMenuLike(menuId: Int) -> Bool {
+        updatingMenuLikeIds.contains(menuId)
     }
     
     @MainActor
@@ -119,6 +236,10 @@ class MyLikedMenuViewModel: ObservableObject{
             personalRestaurantById = Dictionary(uniqueKeysWithValues: restaurants.map { ($0.id, $0) })
             personalRestaurantOrder = Dictionary(uniqueKeysWithValues: restaurants.enumerated().map { ($0.element.id, $0.offset) })
         } catch {
+            if error is CancellationError {
+                return
+            }
+            
             self.error = ErrorHelper.categorize(error)
         }
     }
@@ -153,8 +274,18 @@ class MyLikedMenuViewModel: ObservableObject{
         updatingFavoriteRestaurantIds = restaurantIds
     }
     
-    private func sortByPersonalRestaurantOrder(_ restaurants: [MyLikedRestaurant]) -> [MyLikedRestaurant] {
-        restaurants.sorted {
+    private func setUpdatingMenuLike(_ menuId: Int, isUpdating: Bool) {
+        var menuIds = updatingMenuLikeIds
+        if isUpdating {
+            menuIds.insert(menuId)
+        } else {
+            menuIds.remove(menuId)
+        }
+        updatingMenuLikeIds = menuIds
+    }
+    
+    private func sortByPersonalRestaurantOrder(_ groups: [RestaurantLikedMenuGroup]) -> [RestaurantLikedMenuGroup] {
+        groups.sorted {
             let lhsIndex = personalRestaurantOrder[$0.id] ?? Int.max
             let rhsIndex = personalRestaurantOrder[$1.id] ?? Int.max
             
@@ -166,235 +297,178 @@ class MyLikedMenuViewModel: ObservableObject{
     }
     
     
+    private func menu(menuId: Int) -> MyLikedMenu? {
+        for group in likedMenuGroups {
+            if let menu = group.menus.first(where: { $0.id == menuId }) {
+                return menu
+            }
+        }
+        return nil
+    }
+    
+    private func updateMenu(menuId: Int, transform: (inout MyLikedMenu) -> Void) {
+        for groupIndex in likedMenuGroups.indices {
+            guard let menuIndex = likedMenuGroups[groupIndex].menus.firstIndex(where: { $0.id == menuId }) else {
+                continue
+            }
+            
+            transform(&likedMenuGroups[groupIndex].menus[menuIndex])
+            return
+        }
+    }
+    
     private func isLikedMenu(menuId:Int)->Bool{
-        for (i,_) in myLikedRestaurants.enumerated(){
-            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
-                if myLikedRestaurants[i].menus[j].id == menuId{
-                    return myLikedRestaurants[i].menus[j].isLiked
-                }
-            }
-        }
-        return false
+        menu(menuId: menuId)?.isLiked ?? false
     }
-    private func toggleMenuLike(menuId:Int){
-        for (i,_) in myLikedRestaurants.enumerated(){
-            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
-                if myLikedRestaurants[i].menus[j].id == menuId{
-                    myLikedRestaurants[i].menus[j].isLiked.toggle()
-                }
-            }
+    
+    private func updateMenuLikeStatus(_ status: MenuLikeStatusModel) {
+        updateMenu(menuId: status.menuId) { menu in
+            menu.isLiked = status.isLiked
+            menu.likeCnt = status.likeCount
         }
     }
+    
     private func toggleMenuAlarm(menuId:Int){
-        for (i,_) in myLikedRestaurants.enumerated(){
-            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
-                if myLikedRestaurants[i].menus[j].id == menuId{
-                    myLikedRestaurants[i].menus[j].alarm.toggle()
-                }
-            }
+        updateMenu(menuId: menuId) { menu in
+            menu.alarm.toggle()
         }
     }
-    private func unlikeMenu(menuId: Int){
-        myLikedMenuRepository.unlikeMenu(menuId: menuId)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    self?.toggleMenuLike(menuId: menuId)
-                case .failure(let error):
-                    self?.error = ErrorHelper.categorize(error)
-                }
-            }, receiveValue: { value in
-                
-            })
-            .store(in: &cancellables)
-
+    
+    @MainActor
+    private func toggleMenuLikePreference(menuId: Int) async {
+        guard !updatingMenuLikeIds.contains(menuId) else {
+            return
+        }
+        
+        let isCurrentlyLiked = isLikedMenu(menuId: menuId)
+        setUpdatingMenuLike(menuId, isUpdating: true)
+        defer {
+            setUpdatingMenuLike(menuId, isUpdating: false)
+        }
+        
+        do {
+            let status = try await updateMenuLikeUseCase.execute(
+                menuId: menuId,
+                isLiked: !isCurrentlyLiked
+            )
+            updateMenuLikeStatus(status)
+        } catch {
+            self.error = nil
+            self.error = ErrorHelper.categorize(error)
+        }
     }
-    private func likeMenu(menuId: Int){
-        myLikedMenuRepository.likeMenu(menuId: menuId)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    self?.toggleMenuLike(menuId: menuId)
-                case .failure(let error):
-                    self?.error = nil
-                    self?.error = ErrorHelper.categorize(error)
-                }
-            }, receiveValue: { value in
-                
-            })
-            .store(in: &cancellables)
-
-    }
+    
     func toggleMenu(menuId: Int){
-        if isLikedMenu(menuId: menuId){
-            unlikeMenu(menuId: menuId)
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            
+            await toggleMenuLikePreference(menuId: menuId)
         }
-        else{
-            likeMenu(menuId: menuId)
-        }
-    }
-    private func removeMenu(menuId: Int){
-        for (i,_) in myLikedRestaurants.enumerated(){
-            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
-                if myLikedRestaurants[i].menus[j].id == menuId{
-                    myLikedRestaurants[i].menus[j].isLiked = false
-                }
-            }
-        }
-      
     }
     func unLikedMenuCleanup(){
-        for (i,_) in myLikedRestaurants.enumerated(){
-            myLikedRestaurants[i].menus.removeAll(where: {
+        for (i,_) in likedMenuGroups.enumerated(){
+            likedMenuGroups[i].menus.removeAll(where: {
                 menu in
                 !menu.isLiked
             })
         }
-        myLikedRestaurants.removeAll(where: {
-            restaurant in
-            restaurant.menus.isEmpty
+        likedMenuGroups.removeAll(where: {
+            group in
+            group.menus.isEmpty
         })
     }
     private func isAlarmOn(menuId:Int)->Bool{
-        for (i,_) in myLikedRestaurants.enumerated(){
-            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
-                if myLikedRestaurants[i].menus[j].id == menuId{
-                    return myLikedRestaurants[i].menus[j].alarm
-                }
-            }
+        menu(menuId: menuId)?.alarm ?? false
+    }
+    
+    @MainActor
+    private func turnOnAlarm(menuId:Int) async {
+        do {
+            try await updateMenuAlarmUseCase.execute(menuId: menuId, isEnabled: true)
+            toggleMenuAlarm(menuId: menuId)
+        } catch {
+            self.error = ErrorHelper.categorize(error)
         }
-        return false
     }
-    private func turnOnAlarm(menuId:Int){
-        myLikedMenuRepository.onAlarm(menuId: menuId)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    self?.toggleMenuAlarm(menuId:menuId)
-                case .failure(let error):
-                    self?.error = ErrorHelper.categorize(error)
-                }
-            }, receiveValue: { value in
-                
-            })
-            .store(in: &cancellables)
-
-    }
+    
     private func enableAllAlarm(){
-        for (i,_) in myLikedRestaurants.enumerated(){
-            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
-                     myLikedRestaurants[i].menus[j].alarm = true
+        for (i,_) in likedMenuGroups.enumerated(){
+            for (j,_) in likedMenuGroups[i].menus.enumerated(){
+                     likedMenuGroups[i].menus[j].alarm = true
                 
             }
         }
     }
     private func disableAllAlarm(){
-        for (i,_) in myLikedRestaurants.enumerated(){
-            for (j,_) in myLikedRestaurants[i].menus.enumerated(){
-                     myLikedRestaurants[i].menus[j].alarm = false
+        for (i,_) in likedMenuGroups.enumerated(){
+            for (j,_) in likedMenuGroups[i].menus.enumerated(){
+                     likedMenuGroups[i].menus[j].alarm = false
                 
             }
         }
     }
-    private func turnOffAlarm(menuId:Int){
-        myLikedMenuRepository.offAlarm(menuId: menuId)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    self?.toggleMenuAlarm(menuId:menuId)
-                case .failure(let error):
-                    self?.error = ErrorHelper.categorize(error)
-                }
-            }, receiveValue: { value in
-                
-            })
-            .store(in: &cancellables)
-
+    
+    @MainActor
+    private func turnOffAlarm(menuId:Int) async {
+        do {
+            try await updateMenuAlarmUseCase.execute(menuId: menuId, isEnabled: false)
+            toggleMenuAlarm(menuId: menuId)
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+        }
     }
+    
     func toggleAlarm(menuId:Int){
-        if isAlarmOn(menuId: menuId){
-            turnOffAlarm(menuId: menuId)
-        }
-        else{
-            turnOnAlarm(menuId: menuId)
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            
+            if isAlarmOn(menuId: menuId) {
+                await turnOffAlarm(menuId: menuId)
+            } else {
+                await turnOnAlarm(menuId: menuId)
+            }
         }
     }
-     func enableAlarm(){
+    
+    @MainActor
+    private func disableAlarm() async {
+        guard !isUpdatingAlarmEnabled else {
+            return
+        }
         
-        myLikedMenuRepository.onAlarmAll()
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    UserDefaults.standard.set(true,forKey: "isAlarmEnabled")
-
-                    withAnimation(.easeOut(duration: 0.3)) {
-                        self?.isAlarmEnabled = true
-                        self?.enableAllAlarm()
-
-                    }
-                case .failure(let error):
-                    print("ERROR")
-                    print(error)
-                    self?.error = ErrorHelper.categorize(error)
-                }
-            }, receiveValue: { value in
-                
-            })
-            .store(in: &cancellables)
-
+        isUpdatingAlarmEnabled = true
+        defer {
+            isUpdatingAlarmEnabled = false
+        }
+        
+        do {
+            try await updateAllMenuAlarmsUseCase.execute(isEnabled: false)
+            
+            withAnimation(.easeOut(duration: 0.3)) {
+                isAlarmEnabled = false
+                disableAllAlarm()
+            }
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+        }
     }
-
-    private func disableAlarm(){
-        myLikedMenuRepository.offAlarmAll()
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    UserDefaults.standard.set(false,forKey: "isAlarmEnabled")
-                    withAnimation(.easeOut(duration: 0.3)) {
-                        self?.isAlarmEnabled = false
-                        self?.disableAllAlarm()
-                    }
-                case .failure(let error):
-                    self?.error = ErrorHelper.categorize(error)
-                }
-            }, receiveValue: { value in
-                
-            })
-            .store(in: &cancellables)
-
-    }
+    
     func toggleAlarmEnabled(){
-        
-        if isAlarmEnabled{
-            disableAlarm()
-        }
-        else{
-            AppDelegate.alarmViewModel = self
-            AppDelegate.requestNotificationPermission()
-        }
+        requestAlarmEnabledChange(!isAlarmEnabled)
     }
+    
     func toggleAlarmTime(){
-        let next_alarm_time = alarmTime == AlarmTime.EVERY_MEAL ? AlarmTime.DAILY : AlarmTime.EVERY_MEAL
-        myLikedMenuRepository.postAlarmTime(type: next_alarm_time )
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    self?.alarmTime = next_alarm_time
- 
-                case .failure(let error):
-                    self?.error = ErrorHelper.categorize(error)
-                }
-            }, receiveValue: { value in
-                
-            })
-            .store(in: &cancellables)
-
+        Task { @MainActor [weak self] in
+            guard let self else { return }
+            
+            let nextAlarmTime = alarmTime == .EVERY_MEAL ? AlarmTime.DAILY : AlarmTime.EVERY_MEAL
+            
+            do {
+                try await updateMenuAlarmTimeUseCase.execute(nextAlarmTime)
+                alarmTime = nextAlarmTime
+            } catch {
+                self.error = ErrorHelper.categorize(error)
+            }
+        }
     }
 }

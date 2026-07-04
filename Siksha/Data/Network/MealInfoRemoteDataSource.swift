@@ -10,10 +10,8 @@ import Foundation
 
 protocol MealInfoRemoteDataSource {
     func fetchMenu(menuId: Int) async throws -> MenuIdResponse
-    func likeMenu(menuId: Int) async throws -> MenuIdResponse
-    func unlikeMenu(menuId: Int) async throws -> MenuIdResponse
-    func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse
-    func fetchReviewImages(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse
+    func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO
     func fetchScoreDistribution(menuId: Int) async throws -> ScoreDistributionResponse
     func fetchKeywordDistribution(menuId: Int) async throws -> KeywordDistributionResponse
     func fetchCommentRecommendation(score: Int) async throws -> CommentRecommendationResponse
@@ -33,35 +31,19 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             .value
     }
     
-    func likeMenu(menuId: Int) async throws -> MenuIdResponse {
-        try await AF
-            .request(SikshaAPI.likeMenu(menuId: menuId))
-            .validate()
-            .serializingDecodable(MenuIdResponse.self, decoder: JSONDecoder())
-            .value
-    }
-    
-    func unlikeMenu(menuId: Int) async throws -> MenuIdResponse {
-        try await AF
-            .request(SikshaAPI.unlikeMenu(menuId: menuId))
-            .validate()
-            .serializingDecodable(MenuIdResponse.self, decoder: JSONDecoder())
-            .value
-    }
-    
-    func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse {
+    func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO {
         try await AF
             .request(SikshaAPI.getReviews(menuId: menuId, page: page, perPage: perPage))
             .validate()
-            .serializingDecodable(ReviewResponse.self, decoder: reviewDecoder())
+            .serializingDecodable(ReviewPageResponseDTO.self, decoder: reviewDecoder())
             .value
     }
     
-    func fetchReviewImages(menuId: Int, page: Int, perPage: Int) async throws -> ReviewResponse {
+    func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO {
         try await AF
-            .request(SikshaAPI.getReviewImages(menuId: menuId, page: page, perPage: perPage))
+            .request(SikshaAPI.getImageReviews(menuId: menuId, page: page, perPage: perPage))
             .validate()
-            .serializingDecodable(ReviewResponse.self, decoder: reviewDecoder())
+            .serializingDecodable(ReviewPageResponseDTO.self, decoder: reviewDecoder())
             .value
     }
     

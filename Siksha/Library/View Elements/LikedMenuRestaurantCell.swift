@@ -13,11 +13,11 @@ struct LikedMenuRestaurantCell: View {
     private let lightGrayColor = Color.gray600
     private let orangeColor = Color.orange500
     
-    var restaurant: MyLikedRestaurant
+    var restaurant: RestaurantLikedMenuGroup
     @ObservedObject var viewModel: MyLikedMenuViewModel
     @State var showRestaurant: Bool = false
     
-    init(_ viewModel: MyLikedMenuViewModel, _ restaurant: MyLikedRestaurant) {
+    init(_ viewModel: MyLikedMenuViewModel, _ restaurant: RestaurantLikedMenuGroup) {
         self.viewModel = viewModel
         self.restaurant = restaurant
     }

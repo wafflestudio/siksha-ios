@@ -14,7 +14,11 @@ struct ReviewRow: View {
     @State var tappedIndex: Int? = nil
     
     init(_ review: Review, showImage: Bool = true) {
-        self._viewModel = StateObject(wrappedValue: ReviewRowViewModel(review: review, showImage: showImage))
+        self._viewModel = StateObject(wrappedValue: ReviewRowViewModel(
+            review: review,
+            showImage: showImage,
+            updateReviewLikeUseCase: AppContainer.shared.useCases.updateReviewLikeUseCase
+        ))
     }
     
     var body: some View {

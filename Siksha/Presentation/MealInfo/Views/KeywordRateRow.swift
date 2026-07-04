@@ -14,14 +14,14 @@ struct KeywordRateRow: View {
     
     var body: some View {
         HStack(spacing: 0) {
-            summary.type.image
+            summary.type.displayIcon
                 .resizable()
                 .scaledToFit()
                 .frame(width: 24, height: 24)
                 .padding(.trailing, 6)
                 .padding(.leading, 14)
             
-            Text(summary.keyword.isEmpty ? summary.type.title : summary.keyword)
+            Text(summary.keyword.isEmpty ? summary.type.displayTitle : summary.keyword)
                 .customFont(font: .text13(weight: .Bold))
                 .foregroundStyle(summary.keyword.isEmpty ? Color.gray600 : Color.gray800)
             

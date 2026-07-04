@@ -6,12 +6,15 @@
 //
 
 import Foundation
-import Combine
 import UIKit
 
 public class MealInfoViewModel: ObservableObject {
-    private var cancellables = Set<AnyCancellable>()
-    private let mealInfoUseCase: MealInfoUseCase
+    private let fetchMenuUseCase: FetchMenuUseCase
+    private let fetchMealReviewsUseCase: FetchMealReviewsUseCase
+    private let fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase
+    private let fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase
+    private let fetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase
+    private let updateMenuLikeUseCase: UpdateMenuLikeUseCase
     
     @Published var meal: MenuItemDisplayModel
     @Published var mealReviews: [Review] = []
@@ -29,39 +32,60 @@ public class MealInfoViewModel: ObservableObject {
     @Published var getImageStatus: NetworkStatus = .idle
     @Published var getDistributionStatus: NetworkStatus = .idle
     @Published var getKeywordDistributionStatus: NetworkStatus = .idle
-    @Published var getLikeStatus: NetworkStatus = .idle
+    @Published var likeStatus: NetworkStatus = .idle
     @Published var isLiked = false
     @Published var loadedReviews: Bool = false
     
+    var isUpdatingLike: Bool {
+        likeStatus == .loading
+    }
+    
     init(
         meal: MenuItemDisplayModel,
-        mealInfoUseCase: MealInfoUseCase = DefaultMealInfoUseCase(
-            repository: MealInfoRepositoryImpl()
-        )
+        fetchMenuUseCase: FetchMenuUseCase,
+        fetchMealReviewsUseCase: FetchMealReviewsUseCase,
+        fetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase,
+        fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase,
+        fetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase,
+        updateMenuLikeUseCase: UpdateMenuLikeUseCase
     ) {
         self.meal = meal
-        self.mealInfoUseCase = mealInfoUseCase
+        self.fetchMenuUseCase = fetchMenuUseCase
+        self.fetchMealReviewsUseCase = fetchMealReviewsUseCase
+        self.fetchMealImageReviewsUseCase = fetchMealImageReviewsUseCase
+        self.fetchMealReviewScoreDistributionUseCase = fetchMealReviewScoreDistributionUseCase
+        self.fetchMealReviewKeywordDistributionUseCase = fetchMealReviewKeywordDistributionUseCase
+        self.updateMenuLikeUseCase = updateMenuLikeUseCase
     }
     
     func toggleLike(){
-        guard getLikeStatus != .loading else{
+        guard likeStatus != .loading else{
             return
         }
         
-        getLikeStatus = .loading
+        likeStatus = .loading
         
         Task { [weak self] in
             guard let self else { return }
             
             do {
-                let updatedMeal = try await mealInfoUseCase.toggleMenuLike(menu: meal.menuModel)
+                let menuId = meal.id
+                let isCurrentlyLiked = meal.isLiked
+                let status = try await updateMenuLikeUseCase.execute(
+                    menuId: menuId,
+                    isLiked: !isCurrentlyLiked
+                )
+                
                 await MainActor.run {
-                    self.getLikeStatus = .succeeded
-                    self.meal = MenuItemDisplayModel(menu: updatedMeal)
+                    self.likeStatus = .succeeded
+                    self.meal = self.meal.updatingLike(
+                        isLiked: status.isLiked,
+                        likeCount: status.likeCount
+                    )
                 }
             } catch {
                 await MainActor.run {
-                    self.getLikeStatus = .failed
+                    self.likeStatus = .failed
                 }
             }
         }
@@ -78,7 +102,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealInfoUseCase.fetchReviews(menuId: meal.id, page: 1, perPage: 5)
+                let response = try await fetchMealReviewsUseCase.execute(menuId: meal.id, page: 1, perPage: 5)
                 await MainActor.run {
                     self.hasMorePages = response.hasNext
                     self.getReviewStatus = .succeeded
@@ -103,7 +127,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let response = try await mealInfoUseCase.fetchReviewImages(menuId: meal.id, page: 1, perPage: 6)
+                let response = try await fetchMealImageReviewsUseCase.execute(menuId: meal.id, page: 1, perPage: 6)
                 await MainActor.run {
                     self.totalImageCount = response.totalCount
                     self.getImageStatus = .succeeded
@@ -128,7 +152,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let distribution = try await mealInfoUseCase.fetchScoreDistribution(menuId: meal.id)
+                let distribution = try await fetchMealReviewScoreDistributionUseCase.execute(menuId: meal.id)
                 await MainActor.run {
                     self.getDistributionStatus = .succeeded
                     self.scoreDistribution = distribution.map { CGFloat($0) }
@@ -152,7 +176,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let dist = try await mealInfoUseCase.fetchKeywordDistribution(menuId: meal.id)
+                let dist = try await fetchMealReviewKeywordDistributionUseCase.execute(menuId: meal.id)
                 await MainActor.run {
                     self.getKeywordDistributionStatus = .succeeded
                     
@@ -191,7 +215,7 @@ public class MealInfoViewModel: ObservableObject {
             guard let self else { return }
             
             do {
-                let menu = try await mealInfoUseCase.fetchMenu(menuId: meal.id)
+                let menu = try await fetchMenuUseCase.execute(menuId: meal.id)
                 await MainActor.run {
                     self.meal = MenuItemDisplayModel(menu: menu)
                 }

@@ -11,16 +11,25 @@ struct MenuListView: View {
     @ObservedObject var viewModel: MenuViewModel
     @Binding var selectedFilterType: MenuFilterType?
     @State private var isAtLeadingEdge: Bool = true
+    @State private var displayedFestivalSwitchOn: Bool
+    @State private var festivalSwitchCommitTask: Task<Void, Never>?
     
     private let backgroundColor = Color.backgroundMain
     private let lightGrayColor = Color.gray600
     private let orangeColor = Color.orange500
     private let fontColor = Color.gray700
+    private let festivalSwitchCommitDelayNanoseconds: UInt64 = 300_000_000
     private let typeInfos: [TypeInfo] = [
         TypeInfo(type: .breakfast),
         TypeInfo(type: .lunch),
         TypeInfo(type: .dinner)
     ]
+
+    init(viewModel: MenuViewModel, selectedFilterType: Binding<MenuFilterType?>) {
+        self.viewModel = viewModel
+        self._selectedFilterType = selectedFilterType
+        self._displayedFestivalSwitchOn = State(initialValue: viewModel.isFestivalSwitchOn)
+    }
     
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
@@ -37,7 +46,7 @@ struct MenuListView: View {
                         RestaurantsView(
                             section.restaurantMenus,
                             section.type.rawValue,
-                            viewModel.selectedMenu?.dateType.operatingHourType ?? 0,
+                            viewModel.currentOperatingHourType,
                             onFavoriteTap: { restaurantId in
                                 Task {
                                     await viewModel.toggleRestaurantLike(restaurantId)
@@ -91,13 +100,40 @@ private extension MenuListView {
             if viewModel.showFestivalSwitch {
                 HStack {
                     Spacer()
-                    Toggle(isOn: $viewModel.isFestival) {
+                    Toggle(isOn: festivalSwitchBinding) {
                     }
                     .toggleStyle(FestivalSwitchStyle())
                     .padding(EdgeInsets(top: 5.56, leading: 0, bottom: 0, trailing: 17))
+                    .onAppear {
+                        displayedFestivalSwitchOn = viewModel.isFestivalSwitchOn
+                    }
+                    .onChange(of: viewModel.isFestivalSwitchOn) { isOn in
+                        displayedFestivalSwitchOn = isOn
+                    }
                 }
             }
         }.frame(maxWidth: .infinity)
+    }
+
+    var festivalSwitchBinding: Binding<Bool> {
+        Binding(
+            get: { displayedFestivalSwitchOn },
+            set: { updateFestivalSwitch($0) }
+        )
+    }
+
+    func updateFestivalSwitch(_ isOn: Bool) {
+        festivalSwitchCommitTask?.cancel()
+        displayedFestivalSwitchOn = isOn
+
+        festivalSwitchCommitTask = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: festivalSwitchCommitDelayNanoseconds)
+            guard !Task.isCancelled else {
+                return
+            }
+
+            viewModel.setFestivalSwitchOn(isOn)
+        }
     }
     
     var filterSelectorView: some View {
@@ -254,7 +290,21 @@ struct MenuListView_Previews: PreviewProvider {
     struct ContainerView: View {
         @State var selectedFilterType: MenuFilterType? = .all
         var body: some View {
-            MenuListView(viewModel: MenuViewModel(), selectedFilterType: $selectedFilterType)
+            MenuListView(
+                viewModel: MenuViewModel(
+                    fetchDailyMenuUseCase: AppContainer.shared.useCases.fetchDailyMenuUseCase,
+                    fetchFestivalDatesUseCase: AppContainer.shared.useCases.fetchFestivalDatesUseCase,
+                    fetchRemoteConfigUseCase: AppContainer.shared.useCases.fetchRemoteConfigUseCase,
+                    observeRemoteConfigUseCase: AppContainer.shared.useCases.observeRemoteConfigUseCase,
+                    fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+                    updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
+                    manageMenuFiltersUseCase: AppContainer.shared.useCases.manageMenuFiltersUseCase,
+                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+                    manageFestivalPreferencesUseCase: AppContainer.shared.useCases.manageFestivalPreferencesUseCase,
+                    checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases.checkFestivalSwitchVisibilityUseCase
+                ),
+                selectedFilterType: $selectedFilterType
+            )
         }
     }
     

@@ -50,10 +50,40 @@ struct ContentView: View {
     @State var selectedTab = 0
     @EnvironmentObject var appState: AppState
     @ObservedObject var contentViewModel = ContentViewModel.contentViewModel
-    @StateObject private var menuViewModel = MenuViewModel()
+    @StateObject private var menuViewModel = MenuViewModel(
+        fetchDailyMenuUseCase: AppContainer.shared.useCases.fetchDailyMenuUseCase,
+        fetchFestivalDatesUseCase: AppContainer.shared.useCases.fetchFestivalDatesUseCase,
+        fetchRemoteConfigUseCase: AppContainer.shared.useCases.fetchRemoteConfigUseCase,
+        observeRemoteConfigUseCase: AppContainer.shared.useCases.observeRemoteConfigUseCase,
+        fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
+        manageMenuFiltersUseCase: AppContainer.shared.useCases.manageMenuFiltersUseCase,
+        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+        manageFestivalPreferencesUseCase: AppContainer.shared.useCases.manageFestivalPreferencesUseCase,
+        checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases.checkFestivalSwitchVisibilityUseCase
+    )
     @StateObject private var communityViewModel = CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository)
-    @StateObject private var settingsViewModel = RenewalSettingsViewModel()
-    @StateObject var alarmViewModel = MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository)
+    @StateObject private var settingsViewModel = RenewalSettingsViewModel(
+        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
+    )
+    @StateObject private var myLikedMenuViewModel = MyLikedMenuViewModel(
+        fetchMyLikedMenusUseCase: AppContainer.shared.useCases.fetchMyLikedMenusUseCase,
+        getMenuAlarmEnabledUseCase: AppContainer.shared.useCases.getMenuAlarmEnabledUseCase,
+        setMenuAlarmEnabledUseCase: AppContainer.shared.useCases.setMenuAlarmEnabledUseCase,
+        updateMenuAlarmUseCase: AppContainer.shared.useCases.updateMenuAlarmUseCase,
+        updateAllMenuAlarmsUseCase: AppContainer.shared.useCases.updateAllMenuAlarmsUseCase,
+        fetchMenuAlarmTimeUseCase: AppContainer.shared.useCases.fetchMenuAlarmTimeUseCase,
+        updateMenuAlarmTimeUseCase: AppContainer.shared.useCases.updateMenuAlarmTimeUseCase,
+        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase,
+        menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager,
+        fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase
+    )
+    @StateObject private var restaurantOrderViewModel = RestaurantOrderViewModel(
+        fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
+        setRestaurantOrderUseCase: AppContainer.shared.useCases.setRestaurantOrderUseCase
+    )
     @State private var hidePopupWorkItem: DispatchWorkItem?
     @State private var previousSelectedTab = 0
     
@@ -67,13 +97,16 @@ struct ContentView: View {
         [
             TabItem(id: 0, content: AnyView(MenuView(viewModel: menuViewModel).id("main")), buttonImage: ["Icons/Tabbar/main_orange", "Icons/Tabbar/main_grey"]),
             TabItem(id: 1, content: AnyView(CommunityView(viewModel: communityViewModel)), buttonImage: ["Icons/Tabbar/community_orange", "Icons/Tabbar/community_grey"]),
-            TabItem(id: 2, content: AnyView(RenewalSettingsView(viewModel: settingsViewModel)), buttonImage: ["Icons/Tabbar/settings_orange", "Icons/Tabbar/settings_grey"])
+            TabItem(id: 2, content: AnyView(RenewalSettingsView(
+                viewModel: settingsViewModel,
+                orderViewModel: restaurantOrderViewModel
+            )), buttonImage: ["Icons/Tabbar/settings_orange", "Icons/Tabbar/settings_grey"])
         ]
     }
     
     var body: some View {
         ZStack {
-            NavigationView {
+            NavigationStack {
                 GeometryReader { geometry in
                     ZStack {
                         ZStack {
@@ -85,7 +118,7 @@ struct ContentView: View {
                             .ignoresSafeArea(.all, edges: .bottom)
                             
                             ZStack {
-                                MyLikedMenuModal(viewModel: alarmViewModel)
+                                MyLikedMenuModal(viewModel: myLikedMenuViewModel)
                                     .environmentObject(ContentViewModel.contentViewModel)
                                     .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
                             }
@@ -95,19 +128,15 @@ struct ContentView: View {
                             .zIndex(contentViewModel.showModal ? 10 : -10)
                             .opacity(contentViewModel.showModal ? 1 : 0)
                         }
-                        
-                        NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(myLikedMenuRepository: AppContainer.shared.domain.myLikedMenuRepository),isFromModal: true), isActive: $contentViewModel.showMyMenuViewFromPopup) {
-                            EmptyView()
-                        }
                     }
                     .onAppear {
-                        if !UserDefaults.standard.bool(forKey: "alreadySentFCM") {
-                            UIApplication.shared.registerForRemoteNotifications()
-                        }
+                        AppContainer.shared.menuAlarmNotificationManager.registerRemoteNotificationsIfNeeded()
+                    }
+                    .navigationDestination(isPresented: $contentViewModel.showMyMenuViewFromPopup) {
+                        MyLikedMenuView(viewModel: myLikedMenuViewModel)
                     }
                 }
             }
-            .navigationViewStyle(StackNavigationViewStyle())
             
             if contentViewModel.showPopUp {
                 ZStack(alignment: .topTrailing) {

@@ -12,7 +12,12 @@ struct ReviewListView: View {
     @StateObject var viewModel: ReviewListViewModel
     
     init(mealID: Int, imageReviewOnly: Bool = false) {
-        self._viewModel = StateObject(wrappedValue: ReviewListViewModel(mealID: mealID, imageOnly: imageReviewOnly))
+        self._viewModel = StateObject(wrappedValue: ReviewListViewModel(
+            mealID: mealID,
+            imageOnly: imageReviewOnly,
+            fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+            fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase
+        ))
     }
     
     var body: some View {
@@ -84,4 +89,3 @@ struct ReviewListView: View {
         }
     }
 }
-

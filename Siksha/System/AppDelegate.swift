@@ -12,35 +12,9 @@ import NMapsMap
 import RealmSwift
 import FirebaseCore
 import Mixpanel
-import FirebaseMessaging
-import Combine
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    static private var cancellables = Set<AnyCancellable>()
-    static var alarmViewModel:MyLikedMenuViewModel?
-    static func requestNotificationPermission(){
-        let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
-  
-                UNUserNotificationCenter.current().requestAuthorization(
-                    options: authOptions,
-                    completionHandler: { result, _ in
-                        if result{
-                            DispatchQueue.main.async {
-                                UIApplication.shared.registerForRemoteNotifications()
-                            }
-                        }
-                        else{
-                            DispatchQueue.main.async{
-                                AppDelegate.alarmViewModel?.noAlarmPermission = true
-                            }
-                        }
-                            
-                    })
-
-            }
-       
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
@@ -128,65 +102,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
  
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
-        if UserDefaults.standard.bool(forKey: "alreadySentFCM"){
-            AppDelegate.alarmViewModel?.enableAlarm()
-            return
-        }
-         Messaging.messaging().apnsToken = deviceToken
-        Messaging.messaging().token {  token, error in
-            if let error = error{
-                AppDelegate.alarmViewModel?.failedAlarm()
-
-            }
-            else{
-                UserDefaults.standard.set(token, forKey: "fcmToken")
-                AppDelegate.sendFCMToken()
-            }
-        }
+        AppContainer.shared.menuAlarmNotificationManager.didRegisterForRemoteNotifications(
+            with: deviceToken
+        )
      }
      func application(
         _ application: UIApplication,
         didFailToRegisterForRemoteNotificationsWithError error: any Error
     ){
-        AppDelegate.alarmViewModel?.failedAlarm()
-        
-    }
-    static func sendFCMToken(){
-        let token = UserDefaults.standard.string(forKey: "fcmToken")
-        guard let token = token else { return }
-        print("FCM:",token)
-        AppContainer.shared.domain.authRepository.postUserDevice(fcmToken: token)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
-                    print(error)
-                    AppDelegate.alarmViewModel?.failedAlarm()
-                    print("Token Registration fail")
-                }
-            }, receiveValue: {
-                alarmViewModel?.enableAlarm()
-                UserDefaults.standard.set(true, forKey: "alreadySentFCM")
-                print("Token Registration success")
-            })
-            .store(in: &cancellables)
-    }
-    static func deleteFCMToken(){
-        let token = UserDefaults.standard.string(forKey: "fcmToken")
-        guard let token = token else { return }
-        print("FCM:",token)
-        AppContainer.shared.domain.authRepository.deleteUserDevice(fcmToken: token)
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completion in
-                if case .failure(let error) = completion {
-                    print(error)
-
-                    print("Token Delete fail")
-                }
-            }, receiveValue: {
-                print("Token Delete success")
-            })
-            .store(in: &cancellables)
-
+        AppContainer.shared.menuAlarmNotificationManager.didFailToRegisterForRemoteNotifications(
+            error: error
+        )
     }
 
 }
