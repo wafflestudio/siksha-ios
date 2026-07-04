@@ -22,6 +22,4 @@ protocol UserPreferenceRepositoryProtocol {
 
     func isFestivalAppIconEnabled() -> Bool
     func setFestivalAppIconEnabled(_ isEnabled: Bool)
-
-    func setCanSubmitReview(_ canSubmit: Bool)
 }

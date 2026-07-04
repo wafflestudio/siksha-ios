@@ -6,7 +6,6 @@
 //
 
 final class UseCaseProvider {
-    let userPreferenceUseCase: UserPreferenceUseCase
     let manageMenuFiltersUseCase: ManageMenuFiltersUseCase
     let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
     let manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase
@@ -37,10 +36,8 @@ final class UseCaseProvider {
     let updateAllMenuAlarmsUseCase: UpdateAllMenuAlarmsUseCase
     let fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase
     let updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase
-    let checkMealReviewSubmissionAvailabilityUseCase: CheckMealReviewSubmissionAvailabilityUseCase
 
     init(
-        userPreferenceUseCase: UserPreferenceUseCase? = nil,
         manageMenuFiltersUseCase: ManageMenuFiltersUseCase? = nil,
         manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase? = nil,
         manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase? = nil,
@@ -70,8 +67,7 @@ final class UseCaseProvider {
         updateMenuAlarmUseCase: UpdateMenuAlarmUseCase? = nil,
         updateAllMenuAlarmsUseCase: UpdateAllMenuAlarmsUseCase? = nil,
         fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase? = nil,
-        updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase? = nil,
-        checkMealReviewSubmissionAvailabilityUseCase: CheckMealReviewSubmissionAvailabilityUseCase? = nil
+        updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase? = nil
     ) {
         let userPreferenceRepository = UserPreferenceRepositoryImpl()
         let menuRepository = MenuRepositoryImpl()
@@ -83,9 +79,6 @@ final class UseCaseProvider {
         let menuPreferenceRepository = MenuPreferenceRepositoryImpl()
         let myLikedMenuRepository = MyLikedMenuRepositoryImpl()
 
-        self.userPreferenceUseCase = userPreferenceUseCase ?? DefaultUserPreferenceUseCase(
-            repository: userPreferenceRepository
-        )
         self.manageMenuFiltersUseCase = manageMenuFiltersUseCase ?? DefaultManageMenuFiltersUseCase(
             repository: userPreferenceRepository
         )
@@ -174,6 +167,5 @@ final class UseCaseProvider {
         self.updateMenuAlarmTimeUseCase = updateMenuAlarmTimeUseCase ?? DefaultUpdateMenuAlarmTimeUseCase(
             repository: myLikedMenuRepository
         )
-        self.checkMealReviewSubmissionAvailabilityUseCase = checkMealReviewSubmissionAvailabilityUseCase ?? DefaultCheckMealReviewSubmissionAvailabilityUseCase()
     }
 }

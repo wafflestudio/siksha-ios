@@ -22,8 +22,6 @@ protocol UserPreferenceLocalDataSource {
 
     func isFestivalAppIconEnabled() -> Bool
     func setFestivalAppIconEnabled(_ isEnabled: Bool)
-
-    func setCanSubmitReview(_ canSubmit: Bool)
 }
 
 final class UserDefaultsUserPreferenceLocalDataSource: UserPreferenceLocalDataSource {
@@ -33,7 +31,6 @@ final class UserDefaultsUserPreferenceLocalDataSource: UserPreferenceLocalDataSo
         static let festivalFeatureAvailable = "isFestivalAvailable"
         static let festivalSwitchOn = "isFestivalSwitchOn"
         static let festivalAppIconEnabled = "isFestivalAppIconEnabled"
-        static let canSubmitReview = "canSubmitReview"
     }
 
     private let userDefaults: UserDefaults
@@ -89,9 +86,5 @@ final class UserDefaultsUserPreferenceLocalDataSource: UserPreferenceLocalDataSo
 
     func setFestivalAppIconEnabled(_ isEnabled: Bool) {
         userDefaults.set(isEnabled, forKey: Key.festivalAppIconEnabled)
-    }
-
-    func setCanSubmitReview(_ canSubmit: Bool) {
-        userDefaults.set(canSubmit, forKey: Key.canSubmitReview)
     }
 }

@@ -53,8 +53,4 @@ final class UserPreferenceRepositoryImpl: UserPreferenceRepositoryProtocol {
     func setFestivalAppIconEnabled(_ isEnabled: Bool) {
         localDataSource.setFestivalAppIconEnabled(isEnabled)
     }
-
-    func setCanSubmitReview(_ canSubmit: Bool) {
-        localDataSource.setCanSubmitReview(canSubmit)
-    }
 }
