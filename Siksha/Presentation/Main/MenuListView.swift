@@ -300,6 +300,8 @@ struct MenuListView_Previews: PreviewProvider {
                     updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
                     manageMenuFiltersUseCase: AppContainer.shared.useCases.manageMenuFiltersUseCase,
                     manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+                    manageFestivalPreferencesUseCase: AppContainer.shared.useCases.manageFestivalPreferencesUseCase,
+                    checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases.checkFestivalSwitchVisibilityUseCase,
                     userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
                 ),
                 selectedFilterType: $selectedFilterType

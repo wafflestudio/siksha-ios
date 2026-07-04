@@ -59,6 +59,8 @@ struct ContentView: View {
         updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
         manageMenuFiltersUseCase: AppContainer.shared.useCases.manageMenuFiltersUseCase,
         manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+        manageFestivalPreferencesUseCase: AppContainer.shared.useCases.manageFestivalPreferencesUseCase,
+        checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases.checkFestivalSwitchVisibilityUseCase,
         userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
     )
     @StateObject private var communityViewModel = CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository)

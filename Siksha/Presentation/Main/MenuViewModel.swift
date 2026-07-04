@@ -27,6 +27,8 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let mealSectionRenderScheduler: MealSectionRenderScheduling
     private let manageMenuFiltersUseCase: ManageMenuFiltersUseCase
     private let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
+    private let manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase
+    private let checkFestivalSwitchVisibilityUseCase: CheckFestivalSwitchVisibilityUseCase
     private let userPreferenceUseCase: UserPreferenceUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
@@ -126,6 +128,8 @@ final class MenuViewModel: NSObject, ObservableObject {
         updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase,
         manageMenuFiltersUseCase: ManageMenuFiltersUseCase,
         manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase,
+        manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase,
+        checkFestivalSwitchVisibilityUseCase: CheckFestivalSwitchVisibilityUseCase,
         mealSectionRenderScheduler: MealSectionRenderScheduling = MealSectionRenderScheduler(),
         userPreferenceUseCase: UserPreferenceUseCase
     ) {
@@ -138,6 +142,8 @@ final class MenuViewModel: NSObject, ObservableObject {
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
         self.manageMenuFiltersUseCase = manageMenuFiltersUseCase
         self.manageRestaurantsWithoutMenuVisibilityUseCase = manageRestaurantsWithoutMenuVisibilityUseCase
+        self.manageFestivalPreferencesUseCase = manageFestivalPreferencesUseCase
+        self.checkFestivalSwitchVisibilityUseCase = checkFestivalSwitchVisibilityUseCase
         self.mealSectionRenderScheduler = mealSectionRenderScheduler
         self.userPreferenceUseCase = userPreferenceUseCase
         
@@ -149,8 +155,8 @@ final class MenuViewModel: NSObject, ObservableObject {
         let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: today) ?? today
         dateRange = CurrentValueSubject((formatter.string(from: today), formatter.string(from: tomorrow)))
         
-        isFestivalAvailable = userPreferenceUseCase.isFestivalFeatureAvailable()
-        isFestivalAppIconEnabled = userPreferenceUseCase.isFestivalAppIconEnabled()
+        isFestivalAvailable = manageFestivalPreferencesUseCase.isFeatureAvailable()
+        isFestivalAppIconEnabled = manageFestivalPreferencesUseCase.isAppIconEnabled()
         
         super.init()
 
@@ -159,7 +165,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
         startObservingRemoteConfigUpdates()
         
-        isFestivalSwitchOn = isFestivalAvailable && userPreferenceUseCase.isFestivalSwitchOn()
+        isFestivalSwitchOn = isFestivalAvailable && manageFestivalPreferencesUseCase.isSwitchOn()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         
@@ -213,7 +219,7 @@ final class MenuViewModel: NSObject, ObservableObject {
     @MainActor
     private func applyRemoteConfig(_ config: RemoteConfigModel) {
         isFestivalAvailable = config.festivalFeatureEnabled
-        userPreferenceUseCase.setFestivalFeatureAvailable(config.festivalFeatureEnabled)
+        manageFestivalPreferencesUseCase.setFeatureAvailable(config.festivalFeatureEnabled)
         isFestivalAppIconEnabled = config.festivalAppIconEnabled
         refreshFestivalSwitchState()
     }
@@ -228,7 +234,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         $isFestivalAppIconEnabled
             .sink { [weak self] enabled in
                 guard let self = self else { return }
-                self.userPreferenceUseCase.setFestivalAppIconEnabled(enabled)
+                self.manageFestivalPreferencesUseCase.setAppIconEnabled(enabled)
                 
                 let desiredIconName: String? = enabled ? "FestivalAppIcon" : nil
                 let currentIconName = UIApplication.shared.alternateIconName
@@ -326,7 +332,11 @@ final class MenuViewModel: NSObject, ObservableObject {
     
     private func refreshFestivalSwitchState(selectedDate selected: Date? = nil) {
         let selected = selected ?? currentSelectedDate()
-        showFestivalSwitch = isFestivalAvailable && festivalDates.contains(selected)
+        showFestivalSwitch = checkFestivalSwitchVisibilityUseCase.execute(
+            selectedDate: selected,
+            festivalDates: festivalDates,
+            isFeatureAvailable: isFestivalAvailable
+        )
         if !showFestivalSwitch {
             setFestivalSwitchOn(false, renderTiming: .immediate)
         }
@@ -390,7 +400,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
 
         isFestivalSwitchOn = isOn
-        userPreferenceUseCase.setFestivalSwitchOn(isOn)
+        manageFestivalPreferencesUseCase.setSwitchOn(isOn)
         requestMealSectionRender(timing: renderTiming)
     }
 
