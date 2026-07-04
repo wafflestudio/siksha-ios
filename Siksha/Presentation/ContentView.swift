@@ -60,8 +60,7 @@ struct ContentView: View {
         manageMenuFiltersUseCase: AppContainer.shared.useCases.manageMenuFiltersUseCase,
         manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
         manageFestivalPreferencesUseCase: AppContainer.shared.useCases.manageFestivalPreferencesUseCase,
-        checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases.checkFestivalSwitchVisibilityUseCase,
-        userPreferenceUseCase: AppContainer.shared.useCases.userPreferenceUseCase
+        checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases.checkFestivalSwitchVisibilityUseCase
     )
     @StateObject private var communityViewModel = CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository)
     @StateObject private var settingsViewModel = RenewalSettingsViewModel(

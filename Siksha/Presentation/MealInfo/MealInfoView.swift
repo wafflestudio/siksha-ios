@@ -13,7 +13,6 @@ struct MealInfoView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     
     @StateObject var viewModel: MealInfoViewModel
-    @State var showSubmitButton: Bool = true
     @State var showDetailImage: Bool = false
     
     init(viewModel: MealInfoViewModel) {
@@ -34,7 +33,6 @@ struct MealInfoView: View {
         .customNavigationBar(title: viewModel.meal.nameKr)
         .navigationBarItems(leading: backButton)
         .onAppear {
-            self.showSubmitButton = UserDefaults.standard.bool(forKey: "canSubmitReview")
             viewModel.mealReviews = []
             viewModel.loadReviews()
             viewModel.loadImages()

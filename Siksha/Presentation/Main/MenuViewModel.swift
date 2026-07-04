@@ -29,7 +29,6 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
     private let manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase
     private let checkFestivalSwitchVisibilityUseCase: CheckFestivalSwitchVisibilityUseCase
-    private let userPreferenceUseCase: UserPreferenceUseCase
     private let formatter = DateFormatter()
     private let locationManager = CLLocationManager()
     private var remoteConfigFetchTask: Task<Void, Never>?
@@ -69,11 +68,6 @@ final class MenuViewModel: NSObject, ObservableObject {
     @Published var menuList: [DailyMenuModel] = []
     
     private let dateRange: CurrentValueSubject<(start: String, end: String), Never>
-    
-    private var todayString: String {
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: Date())
-    }
     
     private var tommorowString: String {
         formatter.dateFormat = "yyyy-MM-dd"
@@ -130,8 +124,7 @@ final class MenuViewModel: NSObject, ObservableObject {
         manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase,
         manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase,
         checkFestivalSwitchVisibilityUseCase: CheckFestivalSwitchVisibilityUseCase,
-        mealSectionRenderScheduler: MealSectionRenderScheduling = MealSectionRenderScheduler(),
-        userPreferenceUseCase: UserPreferenceUseCase
+        mealSectionRenderScheduler: MealSectionRenderScheduling = MealSectionRenderScheduler()
     ) {
         self.analytics = analytics
         self.fetchDailyMenuUseCase = fetchDailyMenuUseCase
@@ -145,7 +138,6 @@ final class MenuViewModel: NSObject, ObservableObject {
         self.manageFestivalPreferencesUseCase = manageFestivalPreferencesUseCase
         self.checkFestivalSwitchVisibilityUseCase = checkFestivalSwitchVisibilityUseCase
         self.mealSectionRenderScheduler = mealSectionRenderScheduler
-        self.userPreferenceUseCase = userPreferenceUseCase
         
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy-MM-dd"
@@ -512,8 +504,6 @@ final class MenuViewModel: NSObject, ObservableObject {
                 showNetworkAlert = true
                 getMenuStatus = .failed
             }
-            
-            userPreferenceUseCase.setCanSubmitReview(selectedDate == todayString)
         }
     }
     
