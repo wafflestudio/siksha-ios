@@ -6,6 +6,12 @@
 //
 
 final class UseCaseProvider {
+    let loginUseCase: LoginUseCase
+    let refreshAccessTokenUseCase: RefreshAccessTokenUseCase
+    let fetchCurrentUserUseCase: FetchCurrentUserUseCase
+    let updateUserProfileUseCase: UpdateUserProfileUseCase
+    let submitVOCUseCase: SubmitVOCUseCase
+    let fetchAppStoreVersionUseCase: FetchAppStoreVersionUseCase
     let manageMenuFiltersUseCase: ManageMenuFiltersUseCase
     let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
     let manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase
@@ -38,6 +44,12 @@ final class UseCaseProvider {
     let updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase
 
     init(
+        loginUseCase: LoginUseCase? = nil,
+        refreshAccessTokenUseCase: RefreshAccessTokenUseCase? = nil,
+        fetchCurrentUserUseCase: FetchCurrentUserUseCase? = nil,
+        updateUserProfileUseCase: UpdateUserProfileUseCase? = nil,
+        submitVOCUseCase: SubmitVOCUseCase? = nil,
+        fetchAppStoreVersionUseCase: FetchAppStoreVersionUseCase? = nil,
         manageMenuFiltersUseCase: ManageMenuFiltersUseCase? = nil,
         manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase? = nil,
         manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase? = nil,
@@ -99,7 +111,36 @@ final class UseCaseProvider {
             remote: MyLikedMenuRemoteDataSourceImpl(),
             local: UserDefaultsMenuAlarmLocalDataSource()
         )
+        let authSessionLocalDataSource = AuthSessionLocalDataSourceImpl()
+        let authRepository = AuthRepositoryImpl(
+            remote: AuthRemoteDataSourceImpl(),
+            local: authSessionLocalDataSource
+        )
+        let userRepository = UserRepositoryImpl(
+            remote: UserRemoteDataSourceImpl()
+        )
+        let appVersionRepository = AppVersionRepositoryImpl(
+            remote: AppVersionRemoteDataSourceImpl()
+        )
 
+        self.loginUseCase = loginUseCase ?? DefaultLoginUseCase(
+            repository: authRepository
+        )
+        self.refreshAccessTokenUseCase = refreshAccessTokenUseCase ?? DefaultRefreshAccessTokenUseCase(
+            repository: authRepository
+        )
+        self.fetchCurrentUserUseCase = fetchCurrentUserUseCase ?? DefaultFetchCurrentUserUseCase(
+            repository: userRepository
+        )
+        self.updateUserProfileUseCase = updateUserProfileUseCase ?? DefaultUpdateUserProfileUseCase(
+            repository: userRepository
+        )
+        self.submitVOCUseCase = submitVOCUseCase ?? DefaultSubmitVOCUseCase(
+            repository: userRepository
+        )
+        self.fetchAppStoreVersionUseCase = fetchAppStoreVersionUseCase ?? DefaultFetchAppStoreVersionUseCase(
+            repository: appVersionRepository
+        )
         self.manageMenuFiltersUseCase = manageMenuFiltersUseCase ?? DefaultManageMenuFiltersUseCase(
             repository: userPreferenceRepository
         )
