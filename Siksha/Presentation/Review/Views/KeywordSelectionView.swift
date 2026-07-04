@@ -14,11 +14,11 @@ struct KeywordSelectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 3) {
-                type.image
+                type.displayIcon
                     .resizable()
                     .frame(width: 16, height: 16)
                     .padding(3)
-                Text(type.title)
+                Text(type.displayTitle)
                     .customFont(font: .text14(weight: .Bold))
                     .foregroundStyle(Color.blackColor)
             }
@@ -54,7 +54,7 @@ private struct KeywordCellContainerView: View {
     @ObservedObject var viewModel: MealReviewViewModel
     
     private var items: [String] {
-        type.selects
+        type.selectionTexts
     }
     
     public var body: some View {
@@ -107,4 +107,3 @@ private struct KeywordCellContainerView: View {
         .frame(height: totalHeight)
     }
 }
-
