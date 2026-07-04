@@ -16,8 +16,8 @@ final class MenuRepositoryImpl: MenuRepositoryProtocol {
     private let local: MenuLocalDataSource
     
     init(
-        remote: MenuRemoteDataSource = MenuRemoteDataSourceImpl(),
-        local: MenuLocalDataSource = MenuLocalDataSourceImpl()
+        remote: MenuRemoteDataSource,
+        local: MenuLocalDataSource
     ) {
         self.remote = remote
         self.local = local

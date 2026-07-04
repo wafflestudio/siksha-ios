@@ -12,8 +12,8 @@ final class MyLikedMenuRepositoryImpl: MyLikedMenuRepositoryProtocol {
     private let local: MenuAlarmLocalDataSource
     
     init(
-        remote: MyLikedMenuRemoteDataSource = MyLikedMenuRemoteDataSourceImpl(),
-        local: MenuAlarmLocalDataSource = UserDefaultsMenuAlarmLocalDataSource()
+        remote: MyLikedMenuRemoteDataSource,
+        local: MenuAlarmLocalDataSource
     ) {
         self.remote = remote
         self.local = local

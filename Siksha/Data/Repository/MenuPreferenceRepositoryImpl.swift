@@ -8,7 +8,7 @@
 final class MenuPreferenceRepositoryImpl: MenuPreferenceRepositoryProtocol {
     private let remote: MenuPreferenceRemoteDataSource
     
-    init(remote: MenuPreferenceRemoteDataSource = MenuPreferenceRemoteDataSourceImpl()) {
+    init(remote: MenuPreferenceRemoteDataSource) {
         self.remote = remote
     }
     

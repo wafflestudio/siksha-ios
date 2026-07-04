@@ -12,8 +12,8 @@ final class RestaurantRepositoryImpl: RestaurantRepositoryProtocol {
     private let local: RestaurantLocalDataSource
 
     init(
-        remote: RestaurantRemoteDataSource = RestaurantRemoteDataSourceImpl(),
-        local: RestaurantLocalDataSource = RestaurantLocalDataSourceImpl()
+        remote: RestaurantRemoteDataSource,
+        local: RestaurantLocalDataSource
     ) {
         self.remote = remote
         self.local = local

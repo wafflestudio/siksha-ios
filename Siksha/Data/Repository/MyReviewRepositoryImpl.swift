@@ -10,7 +10,7 @@ import Foundation
 final class MyReviewRepositoryImpl: MyReviewRepositoryProtocol {
     private let remote: MyReviewRemoteDataSource
     
-    init(remote: MyReviewRemoteDataSource = MyReviewRemoteDataSourceImpl()) {
+    init(remote: MyReviewRemoteDataSource) {
         self.remote = remote
     }
     

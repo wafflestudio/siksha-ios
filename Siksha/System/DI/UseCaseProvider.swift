@@ -69,15 +69,36 @@ final class UseCaseProvider {
         fetchMenuAlarmTimeUseCase: FetchMenuAlarmTimeUseCase? = nil,
         updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase? = nil
     ) {
-        let userPreferenceRepository = UserPreferenceRepositoryImpl()
-        let menuRepository = MenuRepositoryImpl()
-        let festivalRepository = FestivalRepositoryImpl()
-        let remoteConfigRepository = RemoteConfigRepositoryImpl()
-        let restaurantRepository = RestaurantRepositoryImpl()
-        let myReviewRepository = MyReviewRepositoryImpl()
-        let mealInfoRepository = MealInfoRepositoryImpl()
-        let menuPreferenceRepository = MenuPreferenceRepositoryImpl()
-        let myLikedMenuRepository = MyLikedMenuRepositoryImpl()
+        let userPreferenceRepository = UserPreferenceRepositoryImpl(
+            localDataSource: UserDefaultsUserPreferenceLocalDataSource()
+        )
+        let menuRepository = MenuRepositoryImpl(
+            remote: MenuRemoteDataSourceImpl(),
+            local: MenuLocalDataSourceImpl()
+        )
+        let festivalRepository = FestivalRepositoryImpl(
+            remote: FestivalRemoteDataSourceImpl()
+        )
+        let remoteConfigRepository = RemoteConfigRepositoryImpl(
+            dataSource: FirebaseRemoteConfigDataSource()
+        )
+        let restaurantRepository = RestaurantRepositoryImpl(
+            remote: RestaurantRemoteDataSourceImpl(),
+            local: RestaurantLocalDataSourceImpl()
+        )
+        let myReviewRepository = MyReviewRepositoryImpl(
+            remote: MyReviewRemoteDataSourceImpl()
+        )
+        let mealInfoRepository = MealInfoRepositoryImpl(
+            remote: MealInfoRemoteDataSourceImpl()
+        )
+        let menuPreferenceRepository = MenuPreferenceRepositoryImpl(
+            remote: MenuPreferenceRemoteDataSourceImpl()
+        )
+        let myLikedMenuRepository = MyLikedMenuRepositoryImpl(
+            remote: MyLikedMenuRemoteDataSourceImpl(),
+            local: UserDefaultsMenuAlarmLocalDataSource()
+        )
 
         self.manageMenuFiltersUseCase = manageMenuFiltersUseCase ?? DefaultManageMenuFiltersUseCase(
             repository: userPreferenceRepository

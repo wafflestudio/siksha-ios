@@ -10,7 +10,7 @@ import Foundation
 final class UserPreferenceRepositoryImpl: UserPreferenceRepositoryProtocol {
     private let localDataSource: UserPreferenceLocalDataSource
 
-    init(localDataSource: UserPreferenceLocalDataSource = UserDefaultsUserPreferenceLocalDataSource()) {
+    init(localDataSource: UserPreferenceLocalDataSource) {
         self.localDataSource = localDataSource
     }
 
