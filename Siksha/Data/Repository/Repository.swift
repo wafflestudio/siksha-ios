@@ -114,7 +114,7 @@ extension Repository: CommunityRepositoryProtocol {
 }
 
 
-extension Repository: UserRepositoryProtocol {
+extension Repository: LegacyUserRepositoryProtocol {
     func loadUserInfo() -> AnyPublisher<User, AppError> {
         let endpoint = SikshaAPI.getUserInfo
         return self.networkModule.request(endpoint: endpoint)
@@ -134,7 +134,7 @@ extension Repository: UserRepositoryProtocol {
     }
 }
 
-extension Repository: AuthRepositoryProtocol{
+extension Repository: LegacyAuthRepositoryProtocol {
     func postUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>{
         let endpoint = SikshaAPI.postUserDevice(fcmToken: fcmToken)
         return self.networkModule.requestWithNoContent(endpoint: endpoint)

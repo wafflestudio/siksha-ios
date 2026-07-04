@@ -29,9 +29,9 @@ class UserManager: ObservableObject {
     @Published var imageData: Data?
     
     private var cancellables = Set<AnyCancellable>()
-    private let userRepository: UserRepositoryProtocol
+    private let userRepository: LegacyUserRepositoryProtocol
     
-    private init(userRepository: UserRepositoryProtocol = AppContainer.shared.domain.userRepository) {
+    private init(userRepository: LegacyUserRepositoryProtocol = AppContainer.shared.domain.userRepository) {
         self.userRepository = userRepository
     }
 

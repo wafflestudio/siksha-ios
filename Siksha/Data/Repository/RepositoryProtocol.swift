@@ -8,7 +8,7 @@
 import Foundation
 import Combine
 
-protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol, AuthRepositoryProtocol {
+protocol RepositoryProtocol: CommunityRepositoryProtocol, LegacyUserRepositoryProtocol, LegacyAuthRepositoryProtocol {
 
 }
 
@@ -34,14 +34,14 @@ protocol CommunityRepositoryProtocol {
     
 }
 
-protocol UserRepositoryProtocol {
+protocol LegacyUserRepositoryProtocol {
     func loadUserInfo() -> AnyPublisher<User, AppError>
     func updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool) -> AnyPublisher<User, AppError>
     func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, AppError>
     func deleteUser() -> AnyPublisher<Void, AppError>
 }
 
-protocol AuthRepositoryProtocol{
+protocol LegacyAuthRepositoryProtocol {
     func postUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>
     func deleteUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>
 }

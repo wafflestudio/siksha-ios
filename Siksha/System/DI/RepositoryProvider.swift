@@ -18,11 +18,11 @@ final class RepositoryProvider {
         return self.repository
     }
     
-    var userRepository: UserRepositoryProtocol {
+    var userRepository: LegacyUserRepositoryProtocol {
         return self.repository
     }
     
-    var authRepository: AuthRepositoryProtocol{
+    var authRepository: LegacyAuthRepositoryProtocol {
         return self.repository
     }
 }

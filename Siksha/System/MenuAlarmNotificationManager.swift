@@ -11,11 +11,11 @@ import FirebaseMessaging
 import Combine
 
 final class DefaultMenuAlarmNotificationManager: MenuAlarmNotificationManaging {
-    private let authRepository: AuthRepositoryProtocol
+    private let authRepository: LegacyAuthRepositoryProtocol
     private var cancellables = Set<AnyCancellable>()
     private var isSendingFCMToken = false
     
-    init(authRepository: AuthRepositoryProtocol) {
+    init(authRepository: LegacyAuthRepositoryProtocol) {
         self.authRepository = authRepository
     }
     

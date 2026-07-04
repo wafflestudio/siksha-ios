@@ -25,6 +25,24 @@ struct User: Decodable {
     let profileUrl: String?
     let createdAt: Date
     let updatedAt: Date
+
+    init(
+        id: Int,
+        type: String,
+        identity: String,
+        nickname: String?,
+        profileUrl: String?,
+        createdAt: Date,
+        updatedAt: Date
+    ) {
+        self.id = id
+        self.type = type
+        self.identity = identity
+        self.nickname = nickname
+        self.profileUrl = profileUrl
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
+    }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
