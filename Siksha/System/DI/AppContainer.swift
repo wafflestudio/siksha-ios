@@ -10,6 +10,7 @@ final class AppContainer {
     
     let domain: RepositoryProvider
     let useCases: UseCaseProvider
+    let socialLoginService: SocialLoginService
     let menuAlarmNotificationManager: DefaultMenuAlarmNotificationManager
     
     init() {
@@ -19,6 +20,7 @@ final class AppContainer {
         
         self.domain = domain
         self.useCases = UseCaseProvider()
+        self.socialLoginService = SocialLoginServiceImpl()
         self.menuAlarmNotificationManager = DefaultMenuAlarmNotificationManager(
             authRepository: domain.authRepository
         )

@@ -8,8 +8,6 @@
 import UIKit
 import SwiftUI
 import AuthenticationServices
-import KakaoSDKAuth
-import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -17,11 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {
-            if (AuthApi.isKakaoTalkLoginUrl(url)) {
-                _ = AuthController.handleOpenUrl(url: url)
-            } else {
-                _ = GIDSignIn.sharedInstance.handle(url)
-            }
+            _ = AppContainer.shared.socialLoginService.handleOpenURL(url)
         }
     }
 
@@ -105,4 +99,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 }
-

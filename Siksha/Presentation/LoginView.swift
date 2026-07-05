@@ -6,67 +6,74 @@
 //
 
 import SwiftUI
-import AuthenticationServices
-import KakaoSDKAuth
-import KakaoSDKUser
-import GoogleSignIn
+import UIKit
 
 struct LoginView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
-    
-    @ObservedObject var viewModel = LoginViewModel()
-    
+
+    @StateObject private var viewModel: LoginViewModel
+
+    init(
+        viewModel: LoginViewModel = LoginViewModel(
+            loginUseCase: AppContainer.shared.useCases.loginUseCase,
+            socialLoginService: AppContainer.shared.socialLoginService
+        )
+    ) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
+
     var body: some View {
         GeometryReader { geometry in
             ZStack {
                 VStack {
                     Spacer()
-                    
+
                     Image(.Logos.sikshaSplash)
                         .resizable()
                         .frame(width: 85.5, height: 49.5)
-                    
+
                     Spacer()
-                    
+
                     VStack(spacing: 10) {
-                        Button(action : {
-                            handleKakaoLogin()
-                        }){
+                        Button(action: {
+                            login(provider: .kakao)
+                        }) {
                             Image(.Images.Login.kakaoButton)
                                 .frame(width: 300, height: 45)
                                 .foregroundColor(.black)
                                 .cornerRadius(5.5)
                         }
-                        
-                        Button(action : {
-                            handleGoogleLogin()
-                        }){
+
+                        Button(action: {
+                            login(provider: .google)
+                        }) {
                             Image(.Images.Login.googleButton)
                                 .frame(width: 300, height: 45)
                                 .foregroundColor(.black)
                                 .cornerRadius(5.5)
                         }
-                        
+
                         Button(action: {
-                            handleAppleLogin()
+                            login(provider: .apple)
                         }, label: {
                             Image(.Images.Login.appleButton)
                                 .frame(width: 300, height: 45)
                                 .foregroundColor(.black)
                                 .cornerRadius(5.5)
                         })
-                        
+
                         #if DEBUG
-                        
+
                         Button(action: {
-                            viewModel.requestTestLogin()
+                            loginForTest()
                         }, label: {
                             Text("테스트 로그인")
                         })
-                        
+
                         #endif
                     }
-                    
+                    .disabled(viewModel.isLoggingIn)
+
                     Spacer()
                 }
             }
@@ -82,50 +89,23 @@ struct LoginView: View {
         }
         .edgesIgnoringSafeArea(.all)
     }
-    
-    func handleAppleLogin() {
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        let request = appleIDProvider.createRequest()
-        request.requestedScopes = [.fullName, .email]
-        
-        let authorizationController = ASAuthorizationController(authorizationRequests: [request])
-        
-        authorizationController.delegate = viewModel
-        authorizationController.performRequests()
-    }
-    
-    func handleKakaoLogin() {
-        // checks whether KakaoTalk is installed
-        if (UserApi.isKakaoTalkLoginAvailable()) {
-            UserApi.shared.loginWithKakaoTalk(completion: self.handleKakaoLoginResponse)
-        } else {
-            // Login through Safari
-            UserApi.shared.loginWithKakaoAccount(completion: self.handleKakaoLoginResponse)
+
+    private func login(provider: LoginProvider) {
+        Task {
+            await viewModel.login(
+                provider: provider,
+                presentingViewController: viewControllerHolder
+            )
         }
     }
-    
-    func handleKakaoLoginResponse(oauthToken: OAuthToken?, error: Error?) {
-        if let oauthToken = oauthToken {
-            viewModel.kakaoIdToken = oauthToken.accessToken
-        } else {
-            viewModel.signInFailed = true
+
+    private func loginForTest() {
+        Task {
+            await viewModel.loginForTest()
         }
     }
-    
-    func handleGoogleLogin() {
-        if let viewController = viewControllerHolder {
-            GIDSignIn.sharedInstance.signIn(withPresenting: viewController) { signInResult, error in
-                guard let result = signInResult,
-                      let token = result.user.idToken?.tokenString else {
-                    viewModel.signInFailed = true
-                    return
-                }
-                viewModel.googleIdToken = token
-            }
-        }
-    }
-    
-    func presentMenu() {
+
+    private func presentMenu() {
         let appState = AppState()
         viewControllerHolder?.present(style: .fullScreen) {
             ContentView().environmentObject(appState)
