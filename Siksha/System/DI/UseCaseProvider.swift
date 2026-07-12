@@ -8,6 +8,7 @@
 final class UseCaseProvider {
     let loginUseCase: LoginUseCase
     let refreshAccessTokenUseCase: RefreshAccessTokenUseCase
+    let resolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCase
     let fetchCurrentUserUseCase: FetchCurrentUserUseCase
     let updateUserProfileUseCase: UpdateUserProfileUseCase
     let submitVOCUseCase: SubmitVOCUseCase
@@ -46,6 +47,7 @@ final class UseCaseProvider {
     init(
         loginUseCase: LoginUseCase? = nil,
         refreshAccessTokenUseCase: RefreshAccessTokenUseCase? = nil,
+        resolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCase? = nil,
         fetchCurrentUserUseCase: FetchCurrentUserUseCase? = nil,
         updateUserProfileUseCase: UpdateUserProfileUseCase? = nil,
         submitVOCUseCase: SubmitVOCUseCase? = nil,
@@ -116,18 +118,27 @@ final class UseCaseProvider {
             remote: AuthRemoteDataSourceImpl(),
             local: authSessionLocalDataSource
         )
+        let appleCredentialRepository = AppleCredentialRepositoryImpl(
+            service: AppleCredentialServiceImpl()
+        )
         let userRepository = UserRepositoryImpl(
             remote: UserRemoteDataSourceImpl()
         )
         let appVersionRepository = AppVersionRepositoryImpl(
             remote: AppVersionRemoteDataSourceImpl()
         )
+        let defaultRefreshAccessTokenUseCase = refreshAccessTokenUseCase ?? DefaultRefreshAccessTokenUseCase(
+            repository: authRepository
+        )
 
         self.loginUseCase = loginUseCase ?? DefaultLoginUseCase(
             repository: authRepository
         )
-        self.refreshAccessTokenUseCase = refreshAccessTokenUseCase ?? DefaultRefreshAccessTokenUseCase(
-            repository: authRepository
+        self.refreshAccessTokenUseCase = defaultRefreshAccessTokenUseCase
+        self.resolveInitialAuthStateUseCase = resolveInitialAuthStateUseCase ?? DefaultResolveInitialAuthStateUseCase(
+            authRepository: authRepository,
+            refreshAccessTokenUseCase: defaultRefreshAccessTokenUseCase,
+            appleCredentialRepository: appleCredentialRepository
         )
         self.fetchCurrentUserUseCase = fetchCurrentUserUseCase ?? DefaultFetchCurrentUserUseCase(
             repository: userRepository

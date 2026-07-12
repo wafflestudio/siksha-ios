@@ -7,7 +7,6 @@
 
 import UIKit
 import SwiftUI
-import AuthenticationServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -26,46 +25,45 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Create the SwiftUI view that provides the window contents.
         
-        let appleUserIdentifier = UserDefaults.standard.string(forKey: "appleUserIdentifier")
-        var accessToken = UserDefaults.standard.string(forKey: "accessToken")
-        
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        
-        if UserDefaults.standard.bool(forKey: "signedInWithApple") {
-            if let identifier = appleUserIdentifier {
-                appleIDProvider.getCredentialState(forUserID: appleUserIdentifier ?? "") { (credentialState, error) in
-                    switch credentialState {
-                    case .authorized:
-                        break // The Apple ID credential is valid.
-                    case .revoked, .notFound:
-                        accessToken = nil
-                        UserDefaults.standard.removeObject(forKey:  "userToken")
-                    default:
-                        break
-                    }
-                }
-            } else {
-                accessToken = nil
-                UserDefaults.standard.removeObject(forKey:  "userToken")
-            }
-        }
-
-        // Navigation Bar 배경색 세팅
         UINavigationBar.changeBackgroundColor(color: UIColor(named: "Color/Foundation/Orange/500") ?? .clear)
 
-        // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            if accessToken != nil {
-                print(accessToken!)
-                let appState = AppState()
-                let contentView = ContentView().environmentObject(appState)
-                window.rootViewController = UIHostingController(rootView: contentView)
-            } else {
-                window.rootViewController = UIHostingController(rootView: LoginView())
-            }
+            window.rootViewController = makePlaceholderRootViewController()
             self.window = window
             window.makeKeyAndVisible()
+
+            Task { [weak self, weak window] in
+                let authState = await AppContainer.shared.useCases.resolveInitialAuthStateUseCase.execute()
+
+                await MainActor.run {
+                    guard let self,
+                          let window,
+                          self.window === window else {
+                        return
+                    }
+
+                    window.rootViewController = self.makeRootViewController(for: authState)
+                }
+            }
+        }
+    }
+
+    private func makePlaceholderRootViewController() -> UIViewController {
+        UIHostingController(
+            rootView: Color("Color/Foundation/Orange/500")
+                .ignoresSafeArea()
+        )
+    }
+
+    private func makeRootViewController(for authState: AuthState) -> UIViewController {
+        switch authState {
+        case .authenticated:
+            let appState = AppState()
+            let contentView = ContentView().environmentObject(appState)
+            return UIHostingController(rootView: contentView)
+        case .requiresLogin:
+            return UIHostingController(rootView: LoginView())
         }
     }
 
