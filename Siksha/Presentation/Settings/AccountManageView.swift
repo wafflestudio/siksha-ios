@@ -6,11 +6,10 @@
 //
 
 import SwiftUI
-import UIKit
 
 struct AccountManageView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @Environment(\.viewController) private var viewControllerHolder: UIViewController?
+    @EnvironmentObject private var appState: AppState
     @ObservedObject var viewModel:RenewalSettingsViewModel
     
     init(viewModel: RenewalSettingsViewModel) {
@@ -56,9 +55,7 @@ struct AccountManageView: View {
                             .destructive(Text("로그아웃")){
                                 viewModel.logOutAccount(){ result in
                                     if result{
-                                        viewControllerHolder?.present(style: .fullScreen) {
-                                            LoginView()
-                                        }
+                                        transitionToLogin()
                                     }
                                 }
                             },
@@ -87,9 +84,7 @@ struct AccountManageView: View {
                                     .destructive(Text("회원 탈퇴")) {
                                         viewModel.removeAccount { success in
                                             if success {
-                                                viewControllerHolder?.present(style: .fullScreen) {
-                                                    LoginView()
-                                                }
+                                                transitionToLogin()
                                             }
                                         }
                                     },
@@ -128,6 +123,12 @@ struct AccountManageView: View {
         .customNavigationBar(title: "계정관리")
         .navigationBarItems(leading: backButton)
     }
+
+    private func transitionToLogin() {
+        Task { @MainActor in
+            appState.didLogout()
+        }
+    }
 }
 
 struct AccountManageView_Previews: PreviewProvider {
@@ -138,6 +139,7 @@ struct AccountManageView_Previews: PreviewProvider {
                     manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
                 )
             )
+            .environmentObject(AppState())
         }
     }
 }

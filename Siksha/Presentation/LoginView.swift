@@ -10,6 +10,7 @@ import UIKit
 
 struct LoginView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
+    @EnvironmentObject private var appState: AppState
 
     @StateObject private var viewModel: LoginViewModel
 
@@ -79,12 +80,12 @@ struct LoginView: View {
             }
             .frame(width: geometry.size.width, height: geometry.size.height + geometry.safeAreaInsets.bottom + geometry.safeAreaInsets.top)
             .padding(.top, -geometry.safeAreaInsets.top)
-            .background(Color("Color/Foundation/Orange/500"))
+            .background(Color.orange500)
             .alert(isPresented: $viewModel.signInFailed, content: {
                 Alert(title: Text("로그인"), message: Text("로그인을 실패했습니다. 다시 시도해주세요."), dismissButton: .default(Text("확인")))
             })
             .onAppear {
-                viewModel.onSignedIn = presentMenu
+                viewModel.onSignedIn = appState.didLogin
             }
         }
         .edgesIgnoringSafeArea(.all)
@@ -105,16 +106,11 @@ struct LoginView: View {
         }
     }
 
-    private func presentMenu() {
-        let appState = AppState()
-        viewControllerHolder?.present(style: .fullScreen) {
-            ContentView().environmentObject(appState)
-        }
-    }
 }
 
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
         LoginView()
+            .environmentObject(AppState())
     }
 }

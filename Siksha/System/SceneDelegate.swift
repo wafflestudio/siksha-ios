@@ -19,51 +19,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-
-        // Create the SwiftUI view that provides the window contents.
-        
-        UINavigationBar.changeBackgroundColor(color: UIColor(named: "Color/Foundation/Orange/500") ?? .clear)
+        UINavigationBar.changeBackgroundColor(color: UIColor(Color.orange500))
 
         if let windowScene = scene as? UIWindowScene {
+            let appState = AppState()
+            let rootView = AppRootView(appState: appState)
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = makePlaceholderRootViewController()
+            window.rootViewController = UIHostingController(rootView: rootView)
             self.window = window
             window.makeKeyAndVisible()
-
-            Task { [weak self, weak window] in
-                let authState = await AppContainer.shared.useCases.resolveInitialAuthStateUseCase.execute()
-
-                await MainActor.run {
-                    guard let self,
-                          let window,
-                          self.window === window else {
-                        return
-                    }
-
-                    window.rootViewController = self.makeRootViewController(for: authState)
-                }
-            }
-        }
-    }
-
-    private func makePlaceholderRootViewController() -> UIViewController {
-        UIHostingController(
-            rootView: Color("Color/Foundation/Orange/500")
-                .ignoresSafeArea()
-        )
-    }
-
-    private func makeRootViewController(for authState: AuthState) -> UIViewController {
-        switch authState {
-        case .authenticated:
-            let appState = AppState()
-            let contentView = ContentView().environmentObject(appState)
-            return UIHostingController(rootView: contentView)
-        case .requiresLogin:
-            return UIHostingController(rootView: LoginView())
         }
     }
 

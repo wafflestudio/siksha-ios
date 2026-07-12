@@ -78,6 +78,7 @@
 		3333F90C2F13F2E6004B13CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AppStateTests.swift,
 				SikshaTests.swift,
 			);
 			target = 1E3A56FC25C6FCE900DBB3F4 /* SikshaTests */;
