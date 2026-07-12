@@ -10,7 +10,6 @@ import UIKit
 
 struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
-    @ObservedObject var userModel = UserManager.shared
     @ObservedObject var viewModel: RenewalSettingsViewModel
     @ObservedObject var orderViewModel: RestaurantOrderViewModel
     
@@ -52,16 +51,20 @@ struct RenewalSettingsView: View {
         .background(Color.backgroundPrimary)
         .customNavigationBar(title: "icon")
         .errorAlert(error: $viewModel.error)
+        .task {
+            await viewModel.loadIfNeeded()
+        }
     }
     
     var profileState: some View {
-        NavigationLink(destination: ProfileEditView(viewModel: ProfileEditViewModel())) {
+        NavigationLink(destination: ProfileEditView(viewModel: ProfileEditViewModel(
+            fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
+            updateUserProfileUseCase: AppContainer.shared.useCases.updateUserProfileUseCase,
+            onUserUpdated: viewModel.applyUpdatedUser
+        ))) {
             HStack(spacing: 11) {
-                if let profileImageData = userModel.imageData,
-                let uiImage = UIImage(data: profileImageData) {
-                    Image(uiImage: uiImage)
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
+                if let profileImageURL = viewModel.user?.profileUrl {
+                    RemoteImage(url: profileImageURL)
                         .clipShape(Circle())
                         .frame(width: 48, height: 48)
                 } else {
@@ -70,7 +73,7 @@ struct RenewalSettingsView: View {
                         .frame(width: 48, height: 48)
                 }
                 
-                Text(userModel.nickname ?? "무명의 미식가")
+                Text(viewModel.user?.nickname ?? "무명의 미식가")
                     .customFont(font: .text16(weight: .Bold))
                     .foregroundColor(gray900)
                 
@@ -285,7 +288,10 @@ struct RenewalSettingsView_Previews: PreviewProvider {
         Group {
             RenewalSettingsView(
                 viewModel: RenewalSettingsViewModel(
-                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
+                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+                    fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
+                    submitVOCUseCase: AppContainer.shared.useCases.submitVOCUseCase,
+                    fetchAppStoreVersionUseCase: AppContainer.shared.useCases.fetchAppStoreVersionUseCase
                 ),
                 orderViewModel: RestaurantOrderViewModel(
                     fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,

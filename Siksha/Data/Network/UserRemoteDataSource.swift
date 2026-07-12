@@ -39,11 +39,15 @@ final class UserRemoteDataSourceImpl: UserRemoteDataSource {
             changeToDefaultImage: changeToDefaultImage
         )
 
-        return try await AF
-            .upload(multipartFormData: endpoint.multipartFormData!, with: endpoint)
-            .validate()
-            .serializingDecodable(UserDTO.self, decoder: NetworkDecoder.make())
-            .value
+        do {
+            return try await AF
+                .upload(multipartFormData: endpoint.multipartFormData!, with: endpoint)
+                .validate()
+                .serializingDecodable(UserDTO.self, decoder: NetworkDecoder.make())
+                .value
+        } catch let error as AFError where error.responseCode == 409 {
+            throw NetworkError.conflict
+        }
     }
 
     func submitVOC(comment: String, platform: String) async throws {

@@ -184,7 +184,10 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
 #Preview {
     AlertView(
         RenewalSettingsViewModel(
-            manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
+            manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+            fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
+            submitVOCUseCase: AppContainer.shared.useCases.submitVOCUseCase,
+            fetchAppStoreVersionUseCase: AppContainer.shared.useCases.fetchAppStoreVersionUseCase
         ),
         CommunityPostViewModel(communityRepository: AppContainer.shared.domain.communityRepository, postId: 1)
     )

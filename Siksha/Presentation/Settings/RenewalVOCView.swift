@@ -80,7 +80,9 @@ struct RenewalVOCView: View {
                 Spacer()
                 
                 Button(action: {
-                    viewModel.sendVOC()
+                    Task {
+                        await viewModel.sendVOC()
+                    }
                 }, label: {
                     ZStack {
                         RoundedRectangle(cornerRadius: 8)
@@ -126,7 +128,10 @@ struct RenewalVOCView: View {
 #Preview {
     RenewalVOCView(
         RenewalSettingsViewModel(
-            manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
+            manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+            fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
+            submitVOCUseCase: AppContainer.shared.useCases.submitVOCUseCase,
+            fetchAppStoreVersionUseCase: AppContainer.shared.useCases.fetchAppStoreVersionUseCase
         )
     )
 }

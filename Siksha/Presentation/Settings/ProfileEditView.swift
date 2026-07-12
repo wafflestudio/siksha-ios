@@ -32,8 +32,8 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 UIApplication.shared.endEditing()
                 viewModel.setPreviousNickname()
             }
-            .onAppear {
-                viewModel.loadInfo()
+            .task {
+                await viewModel.loadInfo()
             }
             .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
                 if shouldDismiss {
@@ -92,6 +92,10 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
+                        .clipShape(Circle())
+                        .frame(width: 171, height: 171)
+                } else if let profileImageURL = viewModel.profileImageURL {
+                    RemoteImage(url: profileImageURL)
                         .clipShape(Circle())
                         .frame(width: 171, height: 171)
                 } else {
@@ -186,7 +190,9 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     }
     
     private func done() {
-        viewModel.updateUserProfile()
+        Task {
+            await viewModel.updateUserProfile()
+        }
     }
     
     private var backButton: some View {
@@ -255,5 +261,9 @@ struct ClearableTextField: View {
 }
 
 #Preview {
-    ProfileEditView(viewModel: ProfileEditViewModel())
+    ProfileEditView(viewModel: ProfileEditViewModel(
+        fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
+        updateUserProfileUseCase: AppContainer.shared.useCases.updateUserProfileUseCase,
+        onUserUpdated: { _ in }
+    ))
 }
