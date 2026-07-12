@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24765" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24743"/>
         <capability name="Named colors" minToolsVersion="9.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -17,14 +17,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="sikshaSplash" translatesAutoresizingMaskIntoConstraints="NO" id="5ZA-cO-opA">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logos/sikshaSplash" translatesAutoresizingMaskIntoConstraints="NO" id="5ZA-cO-opA">
                                 <rect key="frame" x="164.5" y="423.5" width="85.5" height="49.5"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="49.5" id="X44-lH-nr6"/>
                                     <constraint firstAttribute="width" constant="85.5" id="tLR-Rj-Upz"/>
                                 </constraints>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="wafflestudioTextLogo" translatesAutoresizingMaskIntoConstraints="NO" id="5bu-sA-IZp">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Logos/wafflestudioTextLogo" translatesAutoresizingMaskIntoConstraints="NO" id="5bu-sA-IZp">
                                 <rect key="frame" x="111.5" y="790" width="191" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="191" id="A1q-Qn-4UB"/>
@@ -49,8 +49,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="sikshaSplash" width="86" height="50"/>
-        <image name="wafflestudioTextLogo" width="189.5" height="11"/>
+        <image name="Logos/sikshaSplash" width="85.5" height="49.5"/>
+        <image name="Logos/wafflestudioTextLogo" width="189.5" height="11"/>
         <namedColor name="Orange500">
             <color red="1" green="0.58431372549019611" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </namedColor>
