@@ -80,6 +80,7 @@
 			membershipExceptions = (
 				AppStateTests.swift,
 				ProfileEditViewModelTests.swift,
+				RemoteImageLoaderTests.swift,
 				RenewalSettingsViewModelTests.swift,
 				SikshaTests.swift,
 			);

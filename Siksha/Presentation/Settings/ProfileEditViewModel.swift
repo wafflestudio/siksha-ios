@@ -15,6 +15,7 @@ protocol ProfileEditViewModelType: ObservableObject {
     var profileImageData: Data? { get set }
     var profileImageURL: String? { get }
     var enableDoneButton: Bool { get }
+    var isLoading: Bool { get }
     var showNicknameExistsToast: Bool { get }
     var shouldDismiss: Bool { get }
 
@@ -32,6 +33,7 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     @Published var profileImageData: Data?
     @Published private(set) var profileImageURL: String?
     @Published private(set) var enableDoneButton = false
+    @Published private(set) var isLoading = true
     @Published private(set) var showNicknameExistsToast = false
     @Published private(set) var shouldDismiss = false
     @Published private var isProfileImageChanged = false
@@ -44,13 +46,15 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     private var originalNickname: String?
     private var previousNickname: String?
     private var shouldUseDefaultProfileImage = false
-    private var hasLoaded = false
+    @Published private var hasLoaded = false
+    private var isLoadInProgress = false
 
     private var doneButtonEnabledPublisher: AnyPublisher<Bool, Never> {
-        Publishers.CombineLatest($nickname, $isProfileImageChanged)
-            .map { [weak self] nickname, isProfileImageChanged in
+        Publishers.CombineLatest3($nickname, $isProfileImageChanged, $hasLoaded)
+            .map { [weak self] nickname, isProfileImageChanged, hasLoaded in
                 guard let self else { return false }
-                return !nickname.isEmpty
+                return hasLoaded
+                    && !nickname.isEmpty
                     && (nickname != self.originalNickname || isProfileImageChanged)
             }
             .eraseToAnyPublisher()
@@ -68,12 +72,20 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
     }
 
     func loadInfo() async {
-        guard !hasLoaded else { return }
+        guard !hasLoaded, !isLoadInProgress else { return }
+        isLoadInProgress = true
+        isLoading = true
+        defer {
+            isLoadInProgress = false
+            isLoading = false
+        }
 
         do {
             let user = try await fetchCurrentUserUseCase.execute()
             applyInitialUser(user)
             hasLoaded = true
+        } catch is CancellationError {
+            return
         } catch {
             self.error = ErrorHelper.categorize(error)
         }
@@ -115,10 +127,11 @@ final class ProfileEditViewModel: ProfileEditViewModelType {
         originalNickname = user.nickname
         previousNickname = user.nickname
         nickname = user.nickname ?? ""
-        profileImageURL = user.profileUrl
-        profileImageData = nil
-        shouldUseDefaultProfileImage = false
-        isProfileImageChanged = false
+        if !isProfileImageChanged {
+            profileImageURL = user.profileUrl
+            profileImageData = nil
+            shouldUseDefaultProfileImage = false
+        }
     }
 
     private func showToast() {

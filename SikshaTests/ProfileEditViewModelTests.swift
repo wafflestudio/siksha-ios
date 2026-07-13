@@ -4,6 +4,7 @@
 //
 
 import XCTest
+import UIKit
 @testable import Siksha
 
 @MainActor
@@ -20,6 +21,51 @@ final class ProfileEditViewModelTests: XCTestCase {
         XCTAssertNil(viewModel.profileImageData)
         XCTAssertFalse(viewModel.enableDoneButton)
         XCTAssertEqual(fetch.executionCount, 1)
+    }
+
+    func testImageSelectedWhileInitialLoadIsPendingIsNotOverwritten() async {
+        let fetchStarted = expectation(description: "fetch started")
+        let fetch = DelayedFetchCurrentUserUseCaseStub(
+            user: .fixture(),
+            onStart: { fetchStarted.fulfill() }
+        )
+        let viewModel = makeViewModel(fetch: fetch)
+        let selectedImage = Data([0x01, 0x02, 0x03])
+
+        let loadTask = Task { await viewModel.loadInfo() }
+        await fulfillment(of: [fetchStarted], timeout: 1)
+        XCTAssertTrue(viewModel.isLoading)
+        XCTAssertFalse(viewModel.enableDoneButton)
+
+        viewModel.setProfileImage(with: selectedImage)
+        fetch.complete()
+        await loadTask.value
+
+        XCTAssertEqual(viewModel.profileImageData, selectedImage)
+        XCTAssertNil(viewModel.profileImageURL)
+        XCTAssertFalse(viewModel.isLoading)
+        XCTAssertTrue(viewModel.enableDoneButton)
+    }
+
+    func testResizeLimitsLongestPixelDimensionAndPreservesAspectRatio() throws {
+        let source = UIGraphicsImageRenderer(size: CGSize(width: 4_000, height: 1_000)).image { context in
+            UIColor.orange.setFill()
+            context.fill(CGRect(x: 0, y: 0, width: 4_000, height: 1_000))
+        }
+
+        let resized = try XCTUnwrap(source.resizedToFit(maxPixelDimension: 800))
+
+        XCTAssertEqual(resized.scale, 1)
+        XCTAssertEqual(resized.size.width, 800)
+        XCTAssertEqual(resized.size.height, 200)
+    }
+
+    func testResizeDoesNotUpscaleSmallImage() throws {
+        let source = UIGraphicsImageRenderer(size: CGSize(width: 200, height: 100)).image { _ in }
+
+        let resized = try XCTUnwrap(source.resizedToFit(maxPixelDimension: 800))
+
+        XCTAssertTrue(resized === source)
     }
 
     func testUpdatePassesOnlyChangedNicknameAndCallsBackWithUpdatedUser() async {
@@ -81,8 +127,8 @@ final class ProfileEditViewModelTests: XCTestCase {
     }
 
     private func makeViewModel(
-        fetch: FetchCurrentUserUseCaseStub = FetchCurrentUserUseCaseStub(user: .fixture()),
-        update: UpdateUserProfileUseCaseStub = UpdateUserProfileUseCaseStub(result: .success(.fixture())),
+        fetch: FetchCurrentUserUseCase = FetchCurrentUserUseCaseStub(user: .fixture()),
+        update: UpdateUserProfileUseCase = UpdateUserProfileUseCaseStub(result: .success(.fixture())),
         onUserUpdated: @escaping (User) -> Void = { _ in }
     ) -> ProfileEditViewModel {
         ProfileEditViewModel(
@@ -90,6 +136,29 @@ final class ProfileEditViewModelTests: XCTestCase {
             updateUserProfileUseCase: update,
             onUserUpdated: onUserUpdated
         )
+    }
+}
+
+private final class DelayedFetchCurrentUserUseCaseStub: FetchCurrentUserUseCase {
+    let user: User
+    let onStart: () -> Void
+    private var continuation: CheckedContinuation<User, Never>?
+
+    init(user: User, onStart: @escaping () -> Void) {
+        self.user = user
+        self.onStart = onStart
+    }
+
+    func execute() async throws -> User {
+        onStart()
+        return await withCheckedContinuation { continuation in
+            self.continuation = continuation
+        }
+    }
+
+    func complete() {
+        continuation?.resume(returning: user)
+        continuation = nil
     }
 }
 

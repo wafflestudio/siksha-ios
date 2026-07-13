@@ -14,12 +14,16 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     @StateObject private var keyboardResponder = KeyboardResponder()
     @State private var isShowingActionSheet = false
     @State private var isShowingPhotoLibrary = false
+    @State private var selectedProfileImages: [UIImage] = []
     
     var body: some View {
         GeometryReader { _ in
             ZStack {
                 mainContent
                 keyboardToolbarContent
+                if viewModel.isLoading {
+                    ProgressView()
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(Color.backgroundPrimary)
@@ -58,6 +62,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             doneButton
                 .padding(.bottom, 20)
         }
+        .disabled(viewModel.isLoading)
     }
     
     private var keyboardToolbarContent: some View {
@@ -112,6 +117,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         .actionSheet(isPresented: $isShowingActionSheet) {
             ActionSheet(title: Text("프로필 사진 설정"), buttons: [
                 .default(Text("앨범에서 사진 선택"), action: {
+                    selectedProfileImages.removeAll()
                     isShowingPhotoLibrary = true
                 }),
                 .default(Text("기본 이미지 적용"), action: {
@@ -121,11 +127,15 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             ])
         }
         .sheet(isPresented: $isShowingPhotoLibrary) {
-            ImagePickerCoordinatorView(selectedImages: .constant([]), maxSelection: 1) { images in
+            ImagePickerCoordinatorView(selectedImages: $selectedProfileImages, maxSelection: 1) { images in
                 if let firstImage = images.first,
                    let imageData = firstImage.jpegData(compressionQuality: 0.8) {
                     viewModel.setProfileImage(with: imageData)
+                } else {
+                    viewModel.error = .unknownError(ImagePickerError.imageProcessingFailed.localizedDescription)
                 }
+            } onError: { error in
+                viewModel.error = .unknownError(error.localizedDescription)
             }
         }
         

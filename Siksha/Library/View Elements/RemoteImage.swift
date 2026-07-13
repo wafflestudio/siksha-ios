@@ -6,81 +6,116 @@
 //
 
 import SwiftUI
-import Combine
 
-struct RemoteImage: View {
-    private class ImageLoader: ObservableObject {
-        private static let imageProcessingQueue = DispatchQueue.global(qos: .userInteractive)
-        
-        @Published var image: UIImage?
-        private let url: URL?
-        private var cache: ImageCache?
-        private var cancellable: AnyCancellable?
-        
-        private var isLoading = false
-        
-        init(url: String, cache: ImageCache? = nil) {
-            self.url = URL(string: url)
-            self.cache = cache
+protocol RemoteImageDataLoading {
+    func data(from url: URL) async throws -> (Data, URLResponse)
+}
+
+extension URLSession: RemoteImageDataLoading {}
+
+@MainActor
+final class RemoteImageLoader: ObservableObject {
+    enum Phase {
+        case idle
+        case loading
+        case success(UIImage)
+        case failed
+    }
+
+    @Published private(set) var phase: Phase = .idle
+
+    private let dataLoader: RemoteImageDataLoading
+    private var representedURL: URL?
+
+    init(dataLoader: RemoteImageDataLoading = URLSession.shared) {
+        self.dataLoader = dataLoader
+    }
+
+    func load(url urlString: String, cache: ImageCache) async {
+        guard let url = URL(string: urlString) else {
+            representedURL = nil
+            phase = .failed
+            return
         }
-        
-        deinit {
-            cancel()
+
+        representedURL = url
+
+        if let cachedImage = cache[url] {
+            phase = .success(cachedImage)
+            return
         }
-        
-        func load() {
-            guard !isLoading else { return }
-            guard let url = url else { return }
-            
-            if let image = cache?[url] {
-                self.image = image
+
+        phase = .loading
+
+        do {
+            let (data, response) = try await dataLoader.data(from: url)
+            try Task.checkCancellation()
+            guard representedURL == url else { return }
+
+            if let response = response as? HTTPURLResponse,
+               !(200..<300).contains(response.statusCode) {
+                phase = .failed
                 return
             }
-            
-            cancellable = URLSession.shared.dataTaskPublisher(for: url)
-                .subscribe(on: Self.imageProcessingQueue)
-                .map { UIImage(data: $0.data) }
-                .replaceError(with: nil)
-                .handleEvents(receiveOutput: { [weak self] in self?.cache($0) })
-                .receive(on: RunLoop.main)
-                .assign(to: \.image, on: self)
-        }
-        
-        func cancel() {
-            cancellable?.cancel()
-        }
-        
-        private func cache(_ image: UIImage?) {
-            guard let url = url else { return }
-            image.map { cache?[url] = $0 }
-        }
-    }
-    
-    @ObservedObject private var imageLoader: ImageLoader
-    
-    init(url: String) {
-        _imageLoader = ObservedObject(wrappedValue: ImageLoader(url: url, cache: Environment(\.imageCache).wrappedValue))
-    }
-    
-    var body: some View {
-        Group {
-            if let image = imageLoader.image {
-                Image(uiImage: image)
-                    .resizable()
-                    .renderingMode(.original)
-                    .scaledToFill()
-            } else {
-                ActivityIndicator(isAnimating: .constant(true), style: .medium)
+
+            guard let image = UIImage(data: data) else {
+                phase = .failed
+                return
             }
-        }
-        .onAppear {
-            imageLoader.load()
+
+            cache[url] = image
+            phase = .success(image)
+        } catch is CancellationError {
+            return
+        } catch {
+            guard representedURL == url else { return }
+            phase = .failed
         }
     }
 }
 
-//struct RemoteImage_Previews: PreviewProvider {
-//    static var previews: some View {
-//        RemoteImage()
-//    }
-//}
+struct RemoteImage: View {
+    private struct RequestID: Hashable {
+        let url: String
+        let cacheIdentifier: ObjectIdentifier
+    }
+
+    @Environment(\.imageCache) private var imageCache
+    @StateObject private var imageLoader = RemoteImageLoader()
+
+    private let url: String
+
+    init(url: String) {
+        self.url = url
+    }
+
+    var body: some View {
+        Group {
+            switch imageLoader.phase {
+            case .idle, .loading:
+                ActivityIndicator(isAnimating: .constant(true), style: .medium)
+            case .success(let image):
+                Image(uiImage: image)
+                    .resizable()
+                    .renderingMode(.original)
+                    .scaledToFill()
+            case .failed:
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
+                    .foregroundColor(.gray)
+                    .padding()
+            }
+        }
+        .task(id: requestID) {
+            await imageLoader.load(url: url, cache: imageCache)
+        }
+    }
+
+    private var requestID: RequestID {
+        RequestID(
+            url: url,
+            cacheIdentifier: ObjectIdentifier(imageCache)
+        )
+    }
+}
