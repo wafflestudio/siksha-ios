@@ -10,10 +10,10 @@ import SwiftUI
 struct AccountManageView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject private var appState: AppState
-    @ObservedObject var viewModel:RenewalSettingsViewModel
+    @StateObject private var viewModel: AccountManageViewModel
     
-    init(viewModel: RenewalSettingsViewModel) {
-        self.viewModel = viewModel
+    init(viewModel: AccountManageViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
     }
     
     var backButton: some View {
@@ -37,7 +37,7 @@ struct AccountManageView: View {
         VStack {
             VStack(alignment: .leading, spacing: 8) {
                 Button(action: {
-                    viewModel.showSignOutAlert = true
+                    viewModel.showLogoutConfirmation = true
                 }) {
                     HStack(alignment: .center) {
                         Text("로그아웃")
@@ -47,18 +47,12 @@ struct AccountManageView: View {
                         Spacer()
                     }
                 }
-                .actionSheet(isPresented: $viewModel.showSignOutAlert) {
+                .actionSheet(isPresented: $viewModel.showLogoutConfirmation) {
                     ActionSheet(
                         title: Text("로그아웃"),
                         message: Text("앱에서 로그아웃합니다."),
                         buttons: [
-                            .destructive(Text("로그아웃")){
-                                viewModel.logOutAccount(){ result in
-                                    if result{
-                                        transitionToLogin()
-                                    }
-                                }
-                            },
+                            .destructive(Text("로그아웃"), action: performLogout),
                             .cancel(Text("취소"))
                         ]
                     )
@@ -67,7 +61,7 @@ struct AccountManageView: View {
                 partitionBar
                 
                 Button(action: {
-                    viewModel.showRemoveAccountAlert = true
+                    viewModel.showDeleteAccountConfirmation = true
                 }) {
                     HStack(alignment: .center) {
                         Text("회원탈퇴")
@@ -77,17 +71,11 @@ struct AccountManageView: View {
                         Spacer()
                     }
                 }
-                .actionSheet(isPresented: $viewModel.showRemoveAccountAlert) {
+                .actionSheet(isPresented: $viewModel.showDeleteAccountConfirmation) {
                     ActionSheet(title: Text("회원 탈퇴"),
                                 message: Text("앱 계정을 삭제합니다.\n이 계정으로 등록된 리뷰 정보들도 모두 함께 삭제됩니다."),
                                 buttons: [
-                                    .destructive(Text("회원 탈퇴")) {
-                                        viewModel.removeAccount { success in
-                                            if success {
-                                                transitionToLogin()
-                                            }
-                                        }
-                                    },
+                                    .destructive(Text("회원 탈퇴"), action: performDeleteAccount),
                                     .cancel(Text("취소"))
                                 ]
                     )
@@ -104,12 +92,13 @@ struct AccountManageView: View {
             )
             .padding(.top, 24)
             .padding(.horizontal, 20)
+            .disabled(viewModel.isProcessing)
             
             Spacer()
         }
         .background(Color.backgroundPrimary)
         
-        .alert(isPresented: $viewModel.removeAccountFailed) {
+        .alert(isPresented: $viewModel.deleteAccountFailed) {
             Alert(title: Text("회원 탈퇴"),
                   message: Text("회원 탈퇴에 실패했습니다."),
                   dismissButton: .default(Text("확인")))
@@ -125,8 +114,22 @@ struct AccountManageView: View {
     }
 
     private func transitionToLogin() {
-        Task { @MainActor in
-            appState.didLogout()
+        appState.didLogout()
+    }
+
+    private func performLogout() {
+        Task {
+            if await viewModel.logout() {
+                transitionToLogin()
+            }
+        }
+    }
+
+    private func performDeleteAccount() {
+        Task {
+            if await viewModel.deleteAccount() {
+                transitionToLogin()
+            }
         }
     }
 }
@@ -135,11 +138,9 @@ struct AccountManageView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
             AccountManageView(
-                viewModel: RenewalSettingsViewModel(
-                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
-                    fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
-                    submitVOCUseCase: AppContainer.shared.useCases.submitVOCUseCase,
-                    fetchAppStoreVersionUseCase: AppContainer.shared.useCases.fetchAppStoreVersionUseCase
+                viewModel: AccountManageViewModel(
+                    logoutUseCase: AppContainer.shared.useCases.logoutUseCase,
+                    deleteAccountUseCase: AppContainer.shared.useCases.deleteAccountUseCase
                 )
             )
             .environmentObject(AppState())

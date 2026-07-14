@@ -3,7 +3,6 @@
 //  SikshaTests
 //
 
-import Combine
 import XCTest
 @testable import Siksha
 
@@ -74,8 +73,6 @@ final class RenewalSettingsViewModelTests: XCTestCase {
             fetchCurrentUserUseCase: fetchUser,
             submitVOCUseCase: submitVOC,
             fetchAppStoreVersionUseCase: fetchVersion,
-            repository: LegacyUserRepositoryStub(),
-            authRepository: LegacyAuthRepositoryStub(),
             version: "1.0.0"
         )
     }
@@ -136,18 +133,6 @@ private enum TestError: Error {
 private final class ManageRestaurantsWithoutMenuVisibilityUseCaseStub: ManageRestaurantsWithoutMenuVisibilityUseCase {
     func shouldHideRestaurantsWithoutMenu() -> Bool { false }
     func setShouldHideRestaurantsWithoutMenu(_ shouldHide: Bool) {}
-}
-
-private final class LegacyUserRepositoryStub: LegacyUserRepositoryProtocol {
-    func loadUserInfo() -> AnyPublisher<User, AppError> { Empty().eraseToAnyPublisher() }
-    func updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool) -> AnyPublisher<User, AppError> { Empty().eraseToAnyPublisher() }
-    func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, AppError> { Empty().eraseToAnyPublisher() }
-    func deleteUser() -> AnyPublisher<Void, AppError> { Empty().eraseToAnyPublisher() }
-}
-
-private final class LegacyAuthRepositoryStub: LegacyAuthRepositoryProtocol {
-    func postUserDevice(fcmToken: String) -> AnyPublisher<Void, AppError> { Empty().eraseToAnyPublisher() }
-    func deleteUserDevice(fcmToken: String) -> AnyPublisher<Void, AppError> { Empty().eraseToAnyPublisher() }
 }
 
 private extension User {

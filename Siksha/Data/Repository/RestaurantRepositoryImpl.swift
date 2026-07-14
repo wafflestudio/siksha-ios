@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class RestaurantRepositoryImpl: RestaurantRepositoryProtocol {
+final class RestaurantRepositoryImpl: RestaurantRepositoryProtocol, PersonalRestaurantStateRepositoryProtocol {
     private let remote: RestaurantRemoteDataSource
     private let local: RestaurantLocalDataSource
 
@@ -61,6 +61,10 @@ final class RestaurantRepositoryImpl: RestaurantRepositoryProtocol {
         let order = try await remote.setRestaurantOrder(order: order).order
         local.updateRestaurantOrder(order)
         return order
+    }
+
+    func clearPersonalRestaurants() {
+        local.clearPersonalRestaurants()
     }
 }
 

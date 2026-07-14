@@ -78,9 +78,14 @@
 		3333F90C2F13F2E6004B13CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AccountManageViewModelTests.swift,
+				AccountUseCaseTests.swift,
 				AppStateTests.swift,
+				DeviceTokenRemoteDataSourceTests.swift,
+				DeviceTokenUseCaseTests.swift,
 				ProfileEditViewModelTests.swift,
 				RemoteImageLoaderTests.swift,
+				RestaurantLocalDataSourceTests.swift,
 				RenewalSettingsViewModelTests.swift,
 				SikshaTests.swift,
 			);

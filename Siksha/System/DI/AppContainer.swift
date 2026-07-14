@@ -11,18 +11,23 @@ final class AppContainer {
     let domain: RepositoryProvider
     let useCases: UseCaseProvider
     let socialLoginService: SocialLoginService
-    let menuAlarmNotificationManager: DefaultMenuAlarmNotificationManager
+    let menuAlarmNotificationManager: MenuAlarmNotificationManaging
     
     init() {
         let networkModule = AlamofireNetworking()
         let repository = Repository(networkModule: networkModule)
         let domain = RepositoryProvider(repository: repository)
+        let pushMessagingTokenService = FirebaseMessagingServiceImpl()
+        let useCases = UseCaseProvider(
+            pushMessagingTokenService: pushMessagingTokenService
+        )
         
         self.domain = domain
-        self.useCases = UseCaseProvider()
+        self.useCases = useCases
         self.socialLoginService = SocialLoginServiceImpl()
         self.menuAlarmNotificationManager = DefaultMenuAlarmNotificationManager(
-            authRepository: domain.authRepository
+            messagingTokenService: pushMessagingTokenService,
+            registerUserDeviceUseCase: useCases.registerUserDeviceUseCase
         )
     }
 }

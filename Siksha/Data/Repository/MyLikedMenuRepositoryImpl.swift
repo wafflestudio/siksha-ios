@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class MyLikedMenuRepositoryImpl: MyLikedMenuRepositoryProtocol {
+final class MyLikedMenuRepositoryImpl: MyLikedMenuRepositoryProtocol, MenuAlarmPreferenceRepositoryProtocol {
     private let remote: MyLikedMenuRemoteDataSource
     private let local: MenuAlarmLocalDataSource
     

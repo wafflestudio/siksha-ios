@@ -210,7 +210,12 @@ struct RenewalSettingsView: View {
             
             partitionBar
             
-            NavigationLink(destination: AccountManageView(viewModel: viewModel)) {
+            NavigationLink(destination: AccountManageView(
+                viewModel: AccountManageViewModel(
+                    logoutUseCase: AppContainer.shared.useCases.logoutUseCase,
+                    deleteAccountUseCase: AppContainer.shared.useCases.deleteAccountUseCase
+                )
+            )) {
                 HStack(alignment: .center) {
                     Text("계정 관리")
                         .customFont(font: .text15(weight: .Regular))
