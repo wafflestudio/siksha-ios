@@ -13,6 +13,7 @@ import KakaoSDKUser
 import UIKit
 
 protocol SocialLoginService: AnyObject {
+    @MainActor
     func login(
         provider: LoginProvider,
         presentingViewController: UIViewController?
@@ -29,6 +30,7 @@ enum SocialLoginServiceError: Error {
 final class SocialLoginServiceImpl: SocialLoginService {
     private var appleAuthorizationCoordinator: AppleAuthorizationCoordinator?
 
+    @MainActor
     func login(
         provider: LoginProvider,
         presentingViewController: UIViewController?
@@ -52,6 +54,7 @@ final class SocialLoginServiceImpl: SocialLoginService {
         return GIDSignIn.sharedInstance.handle(url)
     }
 
+    @MainActor
     private func loginWithKakao() async throws -> LoginCredential {
         let oauthToken = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<OAuthToken, Error>) in
             let completion: (OAuthToken?, Error?) -> Void = { oauthToken, error in
@@ -78,6 +81,7 @@ final class SocialLoginServiceImpl: SocialLoginService {
         return LoginCredential(provider: .kakao, token: oauthToken.accessToken)
     }
 
+    @MainActor
     private func loginWithGoogle(
         presentingViewController: UIViewController?
     ) async throws -> LoginCredential {
@@ -85,21 +89,9 @@ final class SocialLoginServiceImpl: SocialLoginService {
             throw SocialLoginServiceError.missingPresentingViewController
         }
 
-        let signInResult = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<GIDSignInResult, Error>) in
-            GIDSignIn.sharedInstance.signIn(withPresenting: presentingViewController) { signInResult, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                    return
-                }
-
-                guard let signInResult else {
-                    continuation.resume(throwing: SocialLoginServiceError.missingCredential)
-                    return
-                }
-
-                continuation.resume(returning: signInResult)
-            }
-        }
+        let signInResult = try await GIDSignIn.sharedInstance.signIn(
+            withPresenting: presentingViewController
+        )
 
         guard let token = signInResult.user.idToken?.tokenString else {
             throw SocialLoginServiceError.missingCredential
@@ -108,6 +100,7 @@ final class SocialLoginServiceImpl: SocialLoginService {
         return LoginCredential(provider: .google, token: token)
     }
 
+    @MainActor
     private func loginWithApple(
         presentingViewController: UIViewController?
     ) async throws -> LoginCredential {
@@ -123,6 +116,7 @@ final class SocialLoginServiceImpl: SocialLoginService {
     }
 }
 
+@MainActor
 private final class AppleAuthorizationCoordinator: NSObject {
     private weak var presentingViewController: UIViewController?
     private var continuation: CheckedContinuation<LoginCredential, Error>?
