@@ -13,7 +13,7 @@ protocol NetworkModuleProtocol {
     func requestWithNoContent(endpoint: SikshaAPI) -> AnyPublisher<Void, AppError>
 }
 
-final class Repository: RepositoryProtocol {
+final class Repository {
     private let networkModule: NetworkModuleProtocol
     init(networkModule: NetworkModuleProtocol) {
         self.networkModule = networkModule
@@ -109,40 +109,6 @@ extension Repository: CommunityRepositoryProtocol {
     func reportComment(commentId: Int, reason: String) -> AnyPublisher<CommentReportResponse, AppError> {
         let endpoint = SikshaAPI.reportComment(commentId: commentId, reason: reason)
         return self.networkModule.request(endpoint: endpoint)
-
-    }
-}
-
-
-extension Repository: LegacyUserRepositoryProtocol {
-    func loadUserInfo() -> AnyPublisher<User, AppError> {
-        let endpoint = SikshaAPI.getUserInfo
-        return self.networkModule.request(endpoint: endpoint)
-    }
-    func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, AppError> {
-        let endpoint = SikshaAPI.submitVOC(comment: comment, platform: platform)
-        return self.networkModule.requestWithNoContent(endpoint: endpoint)
-    }
-    func deleteUser() -> AnyPublisher<Void, AppError> {
-        let endpoint = SikshaAPI.deleteUser
-        return self.networkModule.requestWithNoContent(endpoint: endpoint)
-    }
-    
-    func updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool) -> AnyPublisher<User, AppError> {
-        let endpoint = SikshaAPI.updateUserProfile(nickname: nickname, image: image, changeToDefaultImage: changeToDefaultImage)
-        return self.networkModule.request(endpoint: endpoint)
-    }
-}
-
-extension Repository: LegacyAuthRepositoryProtocol {
-    func postUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>{
-        let endpoint = SikshaAPI.postUserDevice(fcmToken: fcmToken)
-        return self.networkModule.requestWithNoContent(endpoint: endpoint)
-
-    }
-    func deleteUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>{
-        let endpoint = SikshaAPI.deleteUserDevice(fcmToken: fcmToken)
-        return self.networkModule.requestWithNoContent(endpoint: endpoint)
 
     }
 }

@@ -5,24 +5,14 @@
 //  Created by 한상현 on 2023/09/11.
 //
 
-import Foundation
-
 final class RepositoryProvider {
-    private let repository: RepositoryProtocol
+    private let repository: CommunityRepositoryProtocol
     
-    init(repository: RepositoryProtocol) {
+    init(repository: CommunityRepositoryProtocol) {
         self.repository = repository
     }
     
     var communityRepository: CommunityRepositoryProtocol {
-        return self.repository
-    }
-    
-    var userRepository: LegacyUserRepositoryProtocol {
-        return self.repository
-    }
-    
-    var authRepository: LegacyAuthRepositoryProtocol {
         return self.repository
     }
 }

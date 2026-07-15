@@ -85,8 +85,8 @@
 				DeviceTokenUseCaseTests.swift,
 				ProfileEditViewModelTests.swift,
 				RemoteImageLoaderTests.swift,
-				RestaurantLocalDataSourceTests.swift,
 				RenewalSettingsViewModelTests.swift,
+				RestaurantLocalDataSourceTests.swift,
 				SikshaTests.swift,
 			);
 			target = 1E3A56FC25C6FCE900DBB3F4 /* SikshaTests */;
