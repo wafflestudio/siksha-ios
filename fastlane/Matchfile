@@ -1,5 +1,8 @@
 git_url("git@github.com:wafflestudio/siksha-ios-private.git")
+git_branch("master")
 
 storage_mode("git")
 
 username("apple@wafflestudio.com")
+team_id("K9883YB4VR")
+
