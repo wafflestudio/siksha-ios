@@ -64,7 +64,10 @@ struct ContentView: View {
     )
     @StateObject private var communityViewModel = CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository)
     @StateObject private var settingsViewModel = RenewalSettingsViewModel(
-        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase
+        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+        fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
+        submitVOCUseCase: AppContainer.shared.useCases.submitVOCUseCase,
+        fetchAppStoreVersionUseCase: AppContainer.shared.useCases.fetchAppStoreVersionUseCase
     )
     @StateObject private var myLikedMenuViewModel = MyLikedMenuViewModel(
         fetchMyLikedMenusUseCase: AppContainer.shared.useCases.fetchMyLikedMenusUseCase,

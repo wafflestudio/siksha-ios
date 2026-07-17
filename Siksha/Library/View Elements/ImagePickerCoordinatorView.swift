@@ -9,11 +9,26 @@ import SwiftUI
 import Photos
 import BSImagePicker
 
+enum ImagePickerError: LocalizedError {
+    case imageUnavailable
+    case imageProcessingFailed
+
+    var errorDescription: String? {
+        switch self {
+        case .imageUnavailable:
+            return "선택한 사진을 불러올 수 없습니다. 네트워크 연결을 확인한 후 다시 시도해 주세요."
+        case .imageProcessingFailed:
+            return "선택한 사진을 처리할 수 없습니다. 다른 사진을 선택해 주세요."
+        }
+    }
+}
+
 struct ImagePickerCoordinatorView {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @Binding var selectedImages: [UIImage]
     var maxSelection: Int
     var onImagesSelected: (([UIImage]) -> Void)?
+    var onError: ((Error) -> Void)?
     
     private func dismiss() {
         self.presentationMode.wrappedValue.dismiss()
@@ -66,10 +81,21 @@ extension ImagePickerCoordinatorView {
         
         public func imagePicker(_ imagePicker: ImagePickerController, didFinishWithAssets assets: [PHAsset]) {
             print("Finished with selections: \(assets)")
-            
-            let newImages = getAssetThumbnail(assets: assets)
-            parent.selectedImages.append(contentsOf: newImages)
-            parent.onImagesSelected?(newImages)
+
+            Task { @MainActor in
+                do {
+                    let result = try await loadImages(from: assets)
+                    if !result.images.isEmpty {
+                        parent.selectedImages.append(contentsOf: result.images)
+                        parent.onImagesSelected?(result.images)
+                    }
+                    if let error = result.error {
+                        parent.onError?(error)
+                    }
+                } catch is CancellationError {
+                    return
+                }
+            }
         }
         
         public func imagePicker(_ imagePicker: ImagePickerController, didCancelWithAssets assets: [PHAsset]) {
@@ -80,22 +106,53 @@ extension ImagePickerCoordinatorView {
             print("Did Reach Selection Limit: \(count)")
         }
         
-        func getAssetThumbnail(assets: [PHAsset]) -> [UIImage] {
-            var images = [UIImage]()
+        private func loadImages(from assets: [PHAsset]) async throws -> (images: [UIImage], error: Error?) {
+            var images: [UIImage] = []
+            var firstError: Error?
+            images.reserveCapacity(assets.count)
+
             for asset in assets {
-                let manager = PHImageManager.default()
-                let option = PHImageRequestOptions()
-                var image: UIImage?
-                option.isSynchronous = true
-                manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFit, options: option, resultHandler: {(result, info)->Void in
-                    image = result
-                })
-                image = image?.resizeWithWidth(width: 800)
-                if let image {
-                    images.append(image)
+                try Task.checkCancellation()
+                do {
+                    let image = try await requestImage(for: asset)
+                    guard let resizedImage = image.resizedToFit(maxPixelDimension: 800) else {
+                        throw ImagePickerError.imageProcessingFailed
+                    }
+                    images.append(resizedImage)
+                } catch is CancellationError {
+                    throw CancellationError()
+                } catch {
+                    firstError = firstError ?? error
                 }
             }
-            return images
+
+            return (images, firstError)
+        }
+
+        private func requestImage(for asset: PHAsset) async throws -> UIImage {
+            try await withCheckedThrowingContinuation { continuation in
+                let options = PHImageRequestOptions()
+                options.deliveryMode = .highQualityFormat
+                options.resizeMode = .exact
+                options.isNetworkAccessAllowed = true
+
+                PHImageManager.default().requestImage(
+                    for: asset,
+                    targetSize: CGSize(width: 1_600, height: 1_600),
+                    contentMode: .aspectFit,
+                    options: options
+                ) { image, info in
+                    if (info?[PHImageCancelledKey] as? Bool) == true {
+                        continuation.resume(throwing: CancellationError())
+                    } else if let error = info?[PHImageErrorKey] as? Error {
+                        continuation.resume(throwing: error)
+                    } else if let image {
+                        continuation.resume(returning: image)
+                    } else {
+                        continuation.resume(throwing: ImagePickerError.imageUnavailable)
+                    }
+                }
+            }
         }
     }
 }

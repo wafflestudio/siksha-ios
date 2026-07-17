@@ -7,9 +7,6 @@
 
 import UIKit
 import SwiftUI
-import AuthenticationServices
-import KakaoSDKAuth
-import GoogleSignIn
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
@@ -17,59 +14,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {
-            if (AuthApi.isKakaoTalkLoginUrl(url)) {
-                _ = AuthController.handleOpenUrl(url: url)
-            } else {
-                _ = GIDSignIn.sharedInstance.handle(url)
-            }
+            _ = AppContainer.shared.socialLoginService.handleOpenURL(url)
         }
     }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-        // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
-        // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
-        // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
+        UINavigationBar.changeBackgroundColor(color: UIColor(Color.orange500))
 
-        // Create the SwiftUI view that provides the window contents.
-        
-        let appleUserIdentifier = UserDefaults.standard.string(forKey: "appleUserIdentifier")
-        var accessToken = UserDefaults.standard.string(forKey: "accessToken")
-        
-        let appleIDProvider = ASAuthorizationAppleIDProvider()
-        
-        if UserDefaults.standard.bool(forKey: "signedInWithApple") {
-            if let identifier = appleUserIdentifier {
-                appleIDProvider.getCredentialState(forUserID: appleUserIdentifier ?? "") { (credentialState, error) in
-                    switch credentialState {
-                    case .authorized:
-                        break // The Apple ID credential is valid.
-                    case .revoked, .notFound:
-                        accessToken = nil
-                        UserDefaults.standard.removeObject(forKey:  "userToken")
-                    default:
-                        break
-                    }
-                }
-            } else {
-                accessToken = nil
-                UserDefaults.standard.removeObject(forKey:  "userToken")
-            }
-        }
-
-        // Navigation Bar 배경색 세팅
-        UINavigationBar.changeBackgroundColor(color: UIColor(named: "Color/Foundation/Orange/500") ?? .clear)
-
-        // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
+            let appState = AppState()
+            let rootView = AppRootView(appState: appState)
             let window = UIWindow(windowScene: windowScene)
-            if accessToken != nil {
-                print(accessToken!)
-                let appState = AppState()
-                let contentView = ContentView().environmentObject(appState)
-                window.rootViewController = UIHostingController(rootView: contentView)
-            } else {
-                window.rootViewController = UIHostingController(rootView: LoginView())
-            }
+            window.rootViewController = UIHostingController(rootView: rootView)
             self.window = window
             window.makeKeyAndVisible()
         }
@@ -105,4 +61,3 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 }
-

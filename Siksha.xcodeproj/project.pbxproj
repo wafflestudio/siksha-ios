@@ -78,6 +78,19 @@
 		3333F90C2F13F2E6004B13CA /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				AccountManageViewModelTests.swift,
+				AccountUseCaseTests.swift,
+				AppStateTests.swift,
+				AuthRepositoryImplTests.swift,
+				AuthSessionLocalDataSourceTests.swift,
+				AuthUseCaseTests.swift,
+				DeviceTokenRemoteDataSourceTests.swift,
+				DeviceTokenUseCaseTests.swift,
+				ProfileEditViewModelTests.swift,
+				RemoteImageLoaderTests.swift,
+				RenewalSettingsViewModelTests.swift,
+				ResolveInitialAuthStateUseCaseTests.swift,
+				RestaurantLocalDataSourceTests.swift,
 				SikshaTests.swift,
 			);
 			target = 1E3A56FC25C6FCE900DBB3F4 /* SikshaTests */;

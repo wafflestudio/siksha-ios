@@ -8,10 +8,6 @@
 import Foundation
 import Combine
 
-protocol RepositoryProtocol: CommunityRepositoryProtocol, UserRepositoryProtocol, AuthRepositoryProtocol {
-
-}
-
 protocol CommunityRepositoryProtocol {
     func loadBoardList() -> AnyPublisher<[Board], AppError>
     func submitPost(boardId:Int,title:String,content:String,images:[Data],anonymous:Bool) ->AnyPublisher<SubmitPostResponse,AppError>
@@ -31,17 +27,4 @@ protocol CommunityRepositoryProtocol {
     func unlikeComment(commentId: Int) -> AnyPublisher<Comment, AppError>
     func reportPost(postId:Int,reason:String)->AnyPublisher<PostReportResponse,AppError>
     func reportComment(commentId:Int,reason:String)->AnyPublisher<CommentReportResponse,AppError>
-    
-}
-
-protocol UserRepositoryProtocol {
-    func loadUserInfo() -> AnyPublisher<User, AppError>
-    func updateUserProfile(nickname: String?, image: Data?, changeToDefaultImage: Bool) -> AnyPublisher<User, AppError>
-    func submitVOC(comment: String, platform: String) -> AnyPublisher<Void, AppError>
-    func deleteUser() -> AnyPublisher<Void, AppError>
-}
-
-protocol AuthRepositoryProtocol{
-    func postUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>
-    func deleteUserDevice(fcmToken: String)-> AnyPublisher<Void,AppError>
 }

@@ -6,6 +6,16 @@
 //
 
 final class UseCaseProvider {
+    let loginUseCase: LoginUseCase
+    let refreshAccessTokenUseCase: RefreshAccessTokenUseCase
+    let resolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCase
+    let registerUserDeviceUseCase: RegisterUserDeviceUseCase
+    let logoutUseCase: LogoutUseCase
+    let deleteAccountUseCase: DeleteAccountUseCase
+    let fetchCurrentUserUseCase: FetchCurrentUserUseCase
+    let updateUserProfileUseCase: UpdateUserProfileUseCase
+    let submitVOCUseCase: SubmitVOCUseCase
+    let fetchAppStoreVersionUseCase: FetchAppStoreVersionUseCase
     let manageMenuFiltersUseCase: ManageMenuFiltersUseCase
     let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
     let manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase
@@ -38,6 +48,18 @@ final class UseCaseProvider {
     let updateMenuAlarmTimeUseCase: UpdateMenuAlarmTimeUseCase
 
     init(
+        pushMessagingTokenService: PushMessagingTokenServiceProtocol,
+        loginUseCase: LoginUseCase? = nil,
+        refreshAccessTokenUseCase: RefreshAccessTokenUseCase? = nil,
+        resolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCase? = nil,
+        deviceTokenLifecycle: DeviceTokenLifecycle? = nil,
+        registerUserDeviceUseCase: RegisterUserDeviceUseCase? = nil,
+        logoutUseCase: LogoutUseCase? = nil,
+        deleteAccountUseCase: DeleteAccountUseCase? = nil,
+        fetchCurrentUserUseCase: FetchCurrentUserUseCase? = nil,
+        updateUserProfileUseCase: UpdateUserProfileUseCase? = nil,
+        submitVOCUseCase: SubmitVOCUseCase? = nil,
+        fetchAppStoreVersionUseCase: FetchAppStoreVersionUseCase? = nil,
         manageMenuFiltersUseCase: ManageMenuFiltersUseCase? = nil,
         manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase? = nil,
         manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase? = nil,
@@ -99,7 +121,76 @@ final class UseCaseProvider {
             remote: MyLikedMenuRemoteDataSourceImpl(),
             local: UserDefaultsMenuAlarmLocalDataSource()
         )
+        let deviceTokenRepository = DeviceTokenRepositoryImpl(
+            remote: DeviceTokenRemoteDataSourceImpl(),
+            local: UserDefaultsDeviceTokenLocalDataSource()
+        )
+        let authSessionLocalDataSource = AuthSessionLocalDataSourceImpl()
+        let authRepository = AuthRepositoryImpl(
+            remote: AuthRemoteDataSourceImpl(),
+            local: authSessionLocalDataSource
+        )
+        let appleCredentialRepository = AppleCredentialRepositoryImpl(
+            service: AppleCredentialServiceImpl()
+        )
+        let userRepository = UserRepositoryImpl(
+            remote: UserRemoteDataSourceImpl()
+        )
+        let appVersionRepository = AppVersionRepositoryImpl(
+            remote: AppVersionRemoteDataSourceImpl()
+        )
+        let defaultRefreshAccessTokenUseCase = refreshAccessTokenUseCase ?? DefaultRefreshAccessTokenUseCase(
+            repository: authRepository
+        )
+        let defaultSetMenuAlarmEnabledUseCase = setMenuAlarmEnabledUseCase ?? DefaultSetMenuAlarmEnabledUseCase(
+            repository: myLikedMenuRepository
+        )
+        let defaultDeviceTokenLifecycle = deviceTokenLifecycle ?? DefaultDeviceTokenLifecycle(
+            deviceTokenRepository: deviceTokenRepository,
+            authRepository: authRepository
+        )
+        let defaultRegisterUserDeviceUseCase = registerUserDeviceUseCase ?? DefaultRegisterUserDeviceUseCase(
+            lifecycle: defaultDeviceTokenLifecycle
+        )
+        let accountLocalStateCleaner = DefaultAccountLocalStateCleaner(
+            messagingTokenService: pushMessagingTokenService,
+            deviceTokenRepository: deviceTokenRepository,
+            authRepository: authRepository,
+            menuAlarmPreferenceRepository: myLikedMenuRepository,
+            personalRestaurantStateRepository: restaurantRepository
+        )
 
+        self.loginUseCase = loginUseCase ?? DefaultLoginUseCase(
+            repository: authRepository
+        )
+        self.refreshAccessTokenUseCase = defaultRefreshAccessTokenUseCase
+        self.resolveInitialAuthStateUseCase = resolveInitialAuthStateUseCase ?? DefaultResolveInitialAuthStateUseCase(
+            authRepository: authRepository,
+            refreshAccessTokenUseCase: defaultRefreshAccessTokenUseCase,
+            appleCredentialRepository: appleCredentialRepository
+        )
+        self.registerUserDeviceUseCase = defaultRegisterUserDeviceUseCase
+        self.logoutUseCase = logoutUseCase ?? DefaultLogoutUseCase(
+            deviceTokenLifecycle: defaultDeviceTokenLifecycle,
+            accountLocalStateCleaner: accountLocalStateCleaner
+        )
+        self.deleteAccountUseCase = deleteAccountUseCase ?? DefaultDeleteAccountUseCase(
+            deviceTokenLifecycle: defaultDeviceTokenLifecycle,
+            userRepository: userRepository,
+            accountLocalStateCleaner: accountLocalStateCleaner
+        )
+        self.fetchCurrentUserUseCase = fetchCurrentUserUseCase ?? DefaultFetchCurrentUserUseCase(
+            repository: userRepository
+        )
+        self.updateUserProfileUseCase = updateUserProfileUseCase ?? DefaultUpdateUserProfileUseCase(
+            repository: userRepository
+        )
+        self.submitVOCUseCase = submitVOCUseCase ?? DefaultSubmitVOCUseCase(
+            repository: userRepository
+        )
+        self.fetchAppStoreVersionUseCase = fetchAppStoreVersionUseCase ?? DefaultFetchAppStoreVersionUseCase(
+            repository: appVersionRepository
+        )
         self.manageMenuFiltersUseCase = manageMenuFiltersUseCase ?? DefaultManageMenuFiltersUseCase(
             repository: userPreferenceRepository
         )
@@ -173,9 +264,7 @@ final class UseCaseProvider {
         self.getMenuAlarmEnabledUseCase = getMenuAlarmEnabledUseCase ?? DefaultGetMenuAlarmEnabledUseCase(
             repository: myLikedMenuRepository
         )
-        self.setMenuAlarmEnabledUseCase = setMenuAlarmEnabledUseCase ?? DefaultSetMenuAlarmEnabledUseCase(
-            repository: myLikedMenuRepository
-        )
+        self.setMenuAlarmEnabledUseCase = defaultSetMenuAlarmEnabledUseCase
         self.updateMenuAlarmUseCase = updateMenuAlarmUseCase ?? DefaultUpdateMenuAlarmUseCase(
             repository: myLikedMenuRepository
         )

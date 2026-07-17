@@ -7,16 +7,18 @@
 
 import UIKit
 import UserNotifications
-import FirebaseMessaging
-import Combine
 
 final class DefaultMenuAlarmNotificationManager: MenuAlarmNotificationManaging {
-    private let authRepository: AuthRepositoryProtocol
-    private var cancellables = Set<AnyCancellable>()
-    private var isSendingFCMToken = false
+    private let messagingTokenService: PushMessagingTokenServiceProtocol
+    private let registerUserDeviceUseCase: RegisterUserDeviceUseCase
+    private var registrationTask: Task<Void, Never>?
     
-    init(authRepository: AuthRepositoryProtocol) {
-        self.authRepository = authRepository
+    init(
+        messagingTokenService: PushMessagingTokenServiceProtocol,
+        registerUserDeviceUseCase: RegisterUserDeviceUseCase
+    ) {
+        self.messagingTokenService = messagingTokenService
+        self.registerUserDeviceUseCase = registerUserDeviceUseCase
     }
     
     func requestAuthorization() async -> Bool {
@@ -29,65 +31,34 @@ final class DefaultMenuAlarmNotificationManager: MenuAlarmNotificationManaging {
         }
     }
     
+    @MainActor
     func registerRemoteNotificationsIfNeeded() {
-        guard !UserDefaults.standard.bool(forKey: "alreadySentFCM") else {
-            return
-        }
-        
-        DispatchQueue.main.async {
-            UIApplication.shared.registerForRemoteNotifications()
-        }
+        UIApplication.shared.registerForRemoteNotifications()
     }
     
+    @MainActor
     func didRegisterForRemoteNotifications(with deviceToken: Data) {
-        guard !UserDefaults.standard.bool(forKey: "alreadySentFCM") else {
+        messagingTokenService.setAPNSToken(deviceToken)
+
+        guard registrationTask == nil else {
             return
         }
-        
-        Messaging.messaging().apnsToken = deviceToken
-        Messaging.messaging().token { [weak self] token, error in
-            if let error {
-                print(error)
-                print("Token Registration fail")
-                return
+
+        registrationTask = Task { [weak self] in
+            guard let self else { return }
+            defer { registrationTask = nil }
+
+            do {
+                let token = try await messagingTokenService.fetchToken()
+                try await registerUserDeviceUseCase.execute(fcmToken: token)
+            } catch {
+                // Registration remains retryable on the next APNs callback.
             }
-            
-            guard let token else {
-                print("Token Registration fail")
-                return
-            }
-            
-            UserDefaults.standard.set(token, forKey: "fcmToken")
-            self?.sendFCMToken(token)
         }
     }
     
+    @MainActor
     func didFailToRegisterForRemoteNotifications(error: Error) {
-        print(error)
-        print("Token Registration fail")
-    }
-    
-    private func sendFCMToken(_ token: String) {
-        DispatchQueue.main.async { [weak self] in
-            guard let self, !self.isSendingFCMToken else {
-                return
-            }
-            
-            self.isSendingFCMToken = true
-            self.authRepository.postUserDevice(fcmToken: token)
-                .receive(on: RunLoop.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    self?.isSendingFCMToken = false
-                    
-                    if case .failure(let error) = completion {
-                        print(error)
-                        print("Token Registration fail")
-                    }
-                }, receiveValue: {
-                    UserDefaults.standard.set(true, forKey: "alreadySentFCM")
-                    print("Token Registration success")
-                })
-                .store(in: &self.cancellables)
-        }
+        // A later app launch or alarm-enable action will request registration again.
     }
 }

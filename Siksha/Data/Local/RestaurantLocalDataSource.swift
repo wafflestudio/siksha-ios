@@ -10,6 +10,7 @@ import Foundation
 protocol RestaurantLocalDataSource {
     func savePersonalRestaurants(_ restaurants: [PersonalRestaurantDTO])
     func fetchPersonalRestaurants() -> [PersonalRestaurantDTO]?
+    func clearPersonalRestaurants()
     func updateRestaurantLike(restaurantId: Int, liked: Bool)
     func updateRestaurantVisible(restaurantId: Int, visible: Bool)
     func updateRestaurantOrder(_ order: [Int])
@@ -41,6 +42,10 @@ final class RestaurantLocalDataSourceImpl: RestaurantLocalDataSource {
             return nil
         }
         return restaurants
+    }
+
+    func clearPersonalRestaurants() {
+        userDefaults.removeObject(forKey: Key.personalRestaurants)
     }
 
     func updateRestaurantLike(restaurantId: Int, liked: Bool) {

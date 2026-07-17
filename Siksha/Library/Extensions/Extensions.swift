@@ -117,11 +117,11 @@ extension URLRequest {
     }
 }
 
-protocol ImageCache {
+protocol ImageCache: AnyObject {
     subscript(_ url: URL) -> UIImage? { get set }
 }
 
-struct TemporaryImageCache: ImageCache {
+final class TemporaryImageCache: ImageCache {
     private let cache = NSCache<NSURL, UIImage>()
     
     subscript(_ key: URL) -> UIImage? {
@@ -208,15 +208,28 @@ extension Date {
 }
 
 extension UIImage {
-    func resizeWithWidth(width: CGFloat) -> UIImage? {
-        let imageView = UIImageView(frame: CGRect(origin: .zero, size: CGSize(width: width, height: CGFloat(ceil(width/size.width * size.height)))))
-        imageView.contentMode = .scaleAspectFit
-        imageView.image = self
-        UIGraphicsBeginImageContextWithOptions(imageView.bounds.size, false, scale)
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-        imageView.layer.render(in: context)
-        guard let result = UIGraphicsGetImageFromCurrentImageContext() else { return nil }
-        UIGraphicsEndImageContext()
-        return result
+    func resizedToFit(maxPixelDimension: CGFloat) -> UIImage? {
+        guard maxPixelDimension > 0, size.width > 0, size.height > 0 else {
+            return nil
+        }
+
+        let pixelSize = CGSize(width: size.width * scale, height: size.height * scale)
+        let longestDimension = max(pixelSize.width, pixelSize.height)
+        guard longestDimension > maxPixelDimension else {
+            return self
+        }
+
+        let ratio = maxPixelDimension / longestDimension
+        let targetSize = CGSize(
+            width: max(1, floor(pixelSize.width * ratio)),
+            height: max(1, floor(pixelSize.height * ratio))
+        )
+        let format = UIGraphicsImageRendererFormat.default()
+        format.scale = 1
+        format.opaque = false
+
+        return UIGraphicsImageRenderer(size: targetSize, format: format).image { _ in
+            draw(in: CGRect(origin: .zero, size: targetSize))
+        }
     }
 }

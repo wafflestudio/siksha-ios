@@ -5,189 +5,111 @@
 //  Created by 김령교 on 3/3/24.
 //
 
-import Foundation
 import Combine
-import SwiftyJSON
-import FirebaseMessaging
+import Foundation
 
-class RenewalSettingsViewModel: ObservableObject {
-    private var cancellables = Set<AnyCancellable>()
-    
-    private let repository: UserRepositoryProtocol = AppContainer.shared.domain.userRepository
-    private let authRepository:AuthRepositoryProtocol = AppContainer.shared.domain.authRepository
-    private let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
+@MainActor
+final class RenewalSettingsViewModel: ObservableObject {
     @Published var error: AppError?
-
     @Published var noMenuHide = false
-  
     @Published var networkStatus: NetworkStatus = .idle
-    @Published var showSignOutAlert: Bool = false
-    @Published var showRemoveAccountAlert: Bool = false
-    @Published var removeAccountFailed: Bool = false
-    @Published var logoutFailed: Bool = false
-    @Published var version: String = ""
-    @Published var appStoreVersion: String = ""
-   
-    @Published var showVOC: Bool = false
+    @Published var version: String
+    @Published var appStoreVersion = ""
+    @Published var showVOC = false
     @Published var postVOCStatus: NetworkStatus = .idle
-    @Published var userId: Int = 0
-    @Published var vocComment: String = ""
-    @Published var alertMessage: String = ""
-    @Published var showAlert: Bool = false
-    
-    
-    func getVersion() {
-        guard let dictionary = Bundle.main.infoDictionary,
-            let version = dictionary["CFBundleShortVersionString"] as? String else {
-            return
-        }
-        self.version = version
-    }
-    
-    func loadInfo() {
-        UserManager.shared.loadUserInfo()
-    }
-    
-    func getAppStoreVersion() {
-        guard let url = URL(string: "http://itunes.apple.com/lookup?id=1032700617"),
-            let data = try? Data(contentsOf: url),
-            let json = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any],
-            let results = json["results"] as? [[String: Any]],
-            results.count > 0,
-            let appStoreVersion = results[0]["version"] as? String
-            else { return }
-        self.appStoreVersion = appStoreVersion
-    }
-    
+    @Published private(set) var user: User?
+    @Published var userId = 0
+    @Published var vocComment = ""
+    @Published var alertMessage = ""
+    @Published var showAlert = false
+
+    private let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
+    private let fetchCurrentUserUseCase: FetchCurrentUserUseCase
+    private let submitVOCUseCase: SubmitVOCUseCase
+    private let fetchAppStoreVersionUseCase: FetchAppStoreVersionUseCase
+    private var cancellables = Set<AnyCancellable>()
+    private var hasLoadedUser = false
+    private var hasLoadedAppStoreVersion = false
+    private var isLoading = false
+
     var isUpdateAvailable: Bool {
-        if self.version == self.appStoreVersion && self.version != "" {
-            return false
-        } else {
-            return true
-        }
+        version != appStoreVersion || version.isEmpty
     }
-    
-    init(manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase) {
+
+    init(
+        manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase,
+        fetchCurrentUserUseCase: FetchCurrentUserUseCase,
+        submitVOCUseCase: SubmitVOCUseCase,
+        fetchAppStoreVersionUseCase: FetchAppStoreVersionUseCase,
+        version: String = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+    ) {
         self.manageRestaurantsWithoutMenuVisibilityUseCase = manageRestaurantsWithoutMenuVisibilityUseCase
+        self.fetchCurrentUserUseCase = fetchCurrentUserUseCase
+        self.submitVOCUseCase = submitVOCUseCase
+        self.fetchAppStoreVersionUseCase = fetchAppStoreVersionUseCase
+        self.version = version
         noMenuHide = manageRestaurantsWithoutMenuVisibilityUseCase.shouldHideRestaurantsWithoutMenu()
-        
-        getUserId()
-        getVersion()
-        getAppStoreVersion()
-        loadInfo()
-        
+
         $noMenuHide
+            .dropFirst()
             .sink { [weak self] hide in
                 self?.manageRestaurantsWithoutMenuVisibilityUseCase.setShouldHideRestaurantsWithoutMenu(hide)
             }
             .store(in: &cancellables)
-         
-      
     }
-    
-    
-    func getUserId() {
-        repository.loadUserInfo()
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.error = ErrorHelper.categorize(error)
-                }
-            }, receiveValue: { [weak self] user in
-                self?.userId = user.id
-            })
-            .store(in: &cancellables)
+
+    func loadIfNeeded() async {
+        guard !isLoading else { return }
+        guard !hasLoadedUser || !hasLoadedAppStoreVersion else { return }
+        isLoading = true
+        defer { isLoading = false }
+
+        if !hasLoadedUser {
+            hasLoadedUser = await loadUser()
+        }
+        if !hasLoadedAppStoreVersion {
+            hasLoadedAppStoreVersion = await loadAppStoreVersion()
+        }
     }
-    
-    func sendVOC() {
+
+    func applyUpdatedUser(_ user: User) {
+        self.user = user
+        userId = user.id
+    }
+
+    func sendVOC() async {
         postVOCStatus = .loading
-        repository.submitVOC(comment: vocComment, platform: "iOS")
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    self?.postVOCStatus = .succeeded
-                    self?.alertMessage = "전송했습니다."
-                    self?.showAlert = true
-                case .failure(let error):
-                    self?.postVOCStatus = .failed
-                    self?.error = ErrorHelper.categorize(error)
-                    self?.alertMessage = "전송에 실패했습니다. 다시 시도해주세요."
-                    self?.showAlert = true
-                }
-            }, receiveValue: { value in
-                
-            })
-            .store(in: &cancellables)
-    }
-    
-    func logOutAccount(completion:@escaping(Bool)->()) {
-        if UserDefaults.standard.string(forKey: "fcmToken") == nil{
-            UserDefaults.standard.removeObject(forKey: "accessToken")
-            UserDefaults.standard.set(false,forKey: "isAlarmEnabled")
-            completion(true)
-        }
-        else{
-            authRepository.deleteUserDevice(fcmToken: UserDefaults.standard.string(forKey: "fcmToken")!)
-                .receive(on: RunLoop.main)
-                .sink(receiveCompletion: { [weak self] completionStatus in
-                    switch completionStatus {
-                    case .finished:
-                        print("delete success fcm")
-                        Messaging.messaging().deleteToken { error in
-                            if let error = error {
-                                print("Failed to delete FCM token:", error)
-                                print(error)
-                                self?.error = ErrorHelper.categorize(error)
-                                self?.logoutFailed = true
-                                completion(false)
 
-                            }
-                            else{
-                                print("delete done")
-                                UserDefaults.standard.removeObject(forKey: "fcmToken")
-                                UserDefaults.standard.removeObject(forKey: "accessToken")
-                                UserDefaults.standard.removeObject( forKey: "alreadySentFCM")
-                                UserDefaults.standard.set(false,forKey: "isAlarmEnabled")
-
-
-                                completion(true)
-
-                            }
-                        }
-                    case .failure(let error):
-                        print("delete fail fcm")
-                        print(error)
-                        self?.error = ErrorHelper.categorize(error)
-                        self?.logoutFailed = true
-                        completion(false)
-                    }
-                }, receiveValue: { value in
-                    
-                })
-                .store(in: &cancellables)
+        do {
+            try await submitVOCUseCase.execute(comment: vocComment, platform: "iOS")
+            postVOCStatus = .succeeded
+            alertMessage = "전송했습니다."
+            showAlert = true
+        } catch {
+            postVOCStatus = .failed
+            self.error = ErrorHelper.categorize(error)
+            alertMessage = "전송에 실패했습니다. 다시 시도해주세요."
+            showAlert = true
         }
     }
-    
-    func removeAccount(completion: @escaping (Bool) -> Void) {
-        guard let accessToken = UserDefaults.standard.string(forKey: "accessToken") else {
-            removeAccountFailed = true
-            return
+
+    private func loadUser() async -> Bool {
+        do {
+            applyUpdatedUser(try await fetchCurrentUserUseCase.execute())
+            return true
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+            return false
         }
-        repository.deleteUser()
-            .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    Utils.shared.removeAllUserDefaults()
-                    completion(true)
-                case .failure(let error):
-                    self?.error = ErrorHelper.categorize(error)
-                    completion(false)
-                }
-            }, receiveValue: { value in
-                
-            })
-            .store(in: &cancellables)
+    }
+
+    private func loadAppStoreVersion() async -> Bool {
+        do {
+            appStoreVersion = try await fetchAppStoreVersionUseCase.execute().rawValue
+            return true
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+            return false
+        }
     }
 }
