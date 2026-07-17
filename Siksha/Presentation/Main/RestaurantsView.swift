@@ -5,28 +5,31 @@
 //  Created by 박종석 on 2021/02/03.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 struct RestaurantsView: View {
     private let fontColor = Color.gray600
-    
+
     var restaurantMenusList: [RestaurantMenusDisplayModel]
-    var selectedPage:Int
-    var dayType:Int
+    var selectedPage: Int
+    var dayType: Int
     var onFavoriteTap: (Int) -> Void
     @State private var restaurantForInfo: RestaurantMenusDisplayModel?
     @State private var restaurantForShare: RestaurantMenusDisplayModel?
     @StateObject private var kakaoShareManager = KakaoShareManager()
     @Environment(\.menuViewModel) private var viewModel: MenuViewModel?
-    
-    init(_ restaurantMenusList: [RestaurantMenusDisplayModel],_ selectedPage:Int,_ dayType:Int,onFavoriteTap: @escaping (Int) -> Void){
+
+    init(
+        _ restaurantMenusList: [RestaurantMenusDisplayModel], _ selectedPage: Int, _ dayType: Int,
+        onFavoriteTap: @escaping (Int) -> Void
+    ) {
         self.restaurantMenusList = restaurantMenusList
         self.selectedPage = selectedPage
         self.dayType = dayType
         self.onFavoriteTap = onFavoriteTap
     }
-    
+
     var body: some View {
         Group {
             if restaurantMenusList.count > 0 {
@@ -53,9 +56,12 @@ struct RestaurantsView: View {
                                         meal: menu,
                                         fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
                                         fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
-                                        fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
-                                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
-                                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
+                                        fetchMealImageReviewsUseCase: AppContainer.shared.useCases
+                                            .fetchMealImageReviewsUseCase,
+                                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases
+                                            .fetchMealReviewScoreDistributionUseCase,
+                                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases
+                                            .fetchMealReviewKeywordDistributionUseCase,
                                         updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
                                     )
                                     NavigationLink(
@@ -70,7 +76,7 @@ struct RestaurantsView: View {
                                     )
                                 }
                             )
-                                .padding([.leading, .trailing], 8)
+                            .padding([.leading, .trailing], 8)
                         }
                     }
                     .padding(.vertical, 8)
@@ -78,7 +84,7 @@ struct RestaurantsView: View {
                 .background(Color.backgroundMain)
             } else {
                 VStack {
-                    HStack{
+                    HStack {
                         Text("식단 정보가 없습니다")
                             .font(.custom("NanumSquareOTFB", size: 15))
                             .foregroundColor(fontColor)
@@ -94,7 +100,8 @@ struct RestaurantsView: View {
         }
         .sheet(isPresented: $kakaoShareManager.showWebView) {
             if let urlString = kakaoShareManager.urlToLoad,
-               let restaurant = restaurantForShare {
+                let restaurant = restaurantForShare
+            {
                 KakaoShareWebView(
                     urlString: urlString,
                     showWebView: $kakaoShareManager.showWebView,

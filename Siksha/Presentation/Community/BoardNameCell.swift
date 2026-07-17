@@ -7,19 +7,19 @@
 
 import SwiftUI
 
-struct BoardNameCell: View{
+struct BoardNameCell: View {
     var isSelected: Bool
     var boardName: String
-    
+
     private var backgroundColor: Color {
         isSelected ? .orange500 : .gray100
     }
-    
+
     private var nameColor: Color {
         isSelected ? .textButton : .textBubble
     }
-    
-    var body: some View{
+
+    var body: some View {
         Text(boardName)
             .customFont(font: .text15(weight: .Bold))
             .padding(.horizontal, 12)
@@ -28,7 +28,7 @@ struct BoardNameCell: View{
             .foregroundColor(nameColor)
             .cornerRadius(12)
     }
-    
+
 }
 
 #Preview {

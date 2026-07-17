@@ -11,11 +11,11 @@ protocol FetchMealReviewScoreDistributionUseCase {
 
 final class DefaultFetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase {
     private let repository: MealReviewRepositoryProtocol
-    
+
     init(repository: MealReviewRepositoryProtocol) {
         self.repository = repository
     }
-    
+
     func execute(menuId: Int) async throws -> [Int] {
         try await repository.fetchScoreDistribution(menuId: menuId)
     }

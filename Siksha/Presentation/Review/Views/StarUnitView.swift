@@ -13,17 +13,17 @@ struct StarUnitView: View {
     private let emptyColor: Color
     private let fillColor: Color
     private let starImage = Image("Star")
-    
+
     init(fraction: Double, emptyColor: Color = .gray200, fillColor: Color = .orange500) {
         self.fraction = max(0, min(1, fraction))
         self.emptyColor = emptyColor
         self.fillColor = fillColor
     }
-    
+
     var body: some View {
         ZStack(alignment: .leading) {
             star(with: emptyColor)
-            
+
             star(with: fillColor)
                 .mask(
                     GeometryReader { geo in
@@ -38,7 +38,7 @@ struct StarUnitView: View {
         }
         .contentShape(Rectangle())
     }
-    
+
     private func star(with color: Color) -> some View {
         starImage
             .resizable()

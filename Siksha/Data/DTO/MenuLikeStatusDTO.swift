@@ -9,7 +9,7 @@ struct MenuLikeStatusDTO: Decodable {
     let menuId: Int
     let isLiked: Bool
     let likeCount: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case menuId = "id"
         case isLiked = "is_liked"

@@ -25,14 +25,16 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
             VStack(spacing: 0) {
                 Spacer().frame(height: 18)
                 BoardList(viewModel: viewModel)
-                
+
                 if !viewModel.trendingPostsListPublisher.isEmpty {
                     Spacer().frame(height: 13)
                     TopPosts(infos: viewModel.trendingPostsListPublisher, needRefresh: $needRefresh)
                 }
                 Spacer().frame(height: 18)
-                
-                if viewModel.loadInitialPostsStatus == .loading && (viewModel.postsListPublisher.isEmpty || viewModel.isChangingBoard) {
+
+                if viewModel.loadInitialPostsStatus == .loading
+                    && (viewModel.postsListPublisher.isEmpty || viewModel.isChangingBoard)
+                {
                     loadingView
                 } else {
                     ScrollView(showsIndicators: false) {
@@ -42,11 +44,11 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                         await viewModel.asyncRefresh()
                     }
                 }
-                
+
                 Spacer(minLength: 0)
             }
             .customNavigationBar(title: "icon")
-            
+
             Button {
                 tag = 1
             } label: {
@@ -54,13 +56,13 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                     destination: CommunityPostPublishView(
                         needRefresh: $needRefresh,
                         viewModel: CommunityPostPublishViewModel(
-                            boardId:selectedBoardId ?? 0,
+                            boardId: selectedBoardId ?? 0,
                             communityRepository: AppContainer.shared.domain.communityRepository
                         )
                     ),
                     tag: 1,
                     selection: self.$tag
-                ){
+                ) {
                     Image("Pencil")
                         .resizable()
                         .frame(width: 28, height: 28)
@@ -102,15 +104,17 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 .transition(.opacity)
             }
         }
-        .onChange(of: needRefresh, perform: { refresh in
-            if refresh{
-                self.viewModel.loadSelectedBoardPosts()
-                self.viewModel.loadTrendingPosts()
-                needRefresh = false
-            }
-        })
+        .onChange(
+            of: needRefresh,
+            perform: { refresh in
+                if refresh {
+                    self.viewModel.loadSelectedBoardPosts()
+                    self.viewModel.loadTrendingPosts()
+                    needRefresh = false
+                }
+            })
     }
-    
+
     var loadingView: some View {
         VStack {
             Spacer()
@@ -119,14 +123,14 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
         }
         .frame(maxWidth: .infinity)
     }
-    
+
     var divider: some View {
         Divider()
             .foregroundColor(.gray100)
-            .frame(height:1)
+            .frame(height: 1)
             .padding(EdgeInsets(top: 0, leading: 7.5, bottom: 0, trailing: 7.5))
     }
-    
+
     var postList: some View {
         LazyVStack(spacing: 0) {
             divider
@@ -140,21 +144,21 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                     divider
                 }
             }
-            
+
             if self.viewModel.hasNextPublisher == true {
                 HStack {
-                  Spacer()
-                  ProgressView()
-                      .onAppear {
-                          self.viewModel.loadMorePosts()
-                      }
-                  Spacer()
+                    Spacer()
+                    ProgressView()
+                        .onAppear {
+                            self.viewModel.loadMorePosts()
+                        }
+                    Spacer()
                 }
                 .frame(height: 40)
             }
         }
     }
-    
+
     var selectedBoardId: Int? {
         let boards = viewModel.boardsListPublisher.filter {
             board in board.isSelected
@@ -167,7 +171,7 @@ struct CommunityPostPreView: View {
     let info: PostInfo
     let boardName: String
     let needRefresh: Binding<Bool>
-    
+
     var body: some View {
         NavigationLink {
             CommunityPostView(
@@ -184,13 +188,13 @@ struct CommunityPostPreView: View {
                         .customFont(font: .text13(weight: .ExtraBold))
                         .foregroundColor(.blackColor)
                         .lineLimit(1)
-                    
+
                     Text(info.content)
                         .customFont(font: .text13(weight: .Regular))
                         .foregroundColor(.gray900)
                         .lineLimit(1)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    
+
                     HStack(spacing: 4) {
                         Image("PostLike-default")
                             .resizable()
@@ -209,9 +213,10 @@ struct CommunityPostPreView: View {
                             .foregroundColor(.gray700)
                     }
                 }
-                
+
                 if let firstImageURL = info.imageURLs?.first,
-                    let url = URL(string: firstImageURL) {
+                    let url = URL(string: firstImageURL)
+                {
                     AsyncImage(url: url) { image in
                         image
                             .resizable()
@@ -237,13 +242,13 @@ struct ComunityView_Previews: PreviewProvider {
 class StubCommunityViewModel: CommunityViewModelType {
     @Published var error: AppError?
     func asyncRefresh() async {
-        
+
     }
-    
+
     func loadTrendingPosts() {
-        
+
     }
-    
+
     var trendingPostsListPublisher: [PostInfo] = [
         .init(
             title: "제목",
@@ -264,38 +269,38 @@ class StubCommunityViewModel: CommunityViewModelType {
             imageURLs: nil,
             isAnonymous: true,
             isMine: false
-        )
+        ),
     ]
-    
+
     var hasNextPublisher: Bool {
         return false
     }
-    
+
     var postsListPublisher: [PostInfo] = (1..<5).map {
-        return PostInfo(title: "name\($0)",
-                     content: "content\($0)",
-                     isLiked: $0 % 2 == 0,
-                     likeCount: $0,
-                     commentCount: $0,
-                     imageURLs: nil,
-                     isAnonymous: false,
-                     isMine: false)
+        return PostInfo(
+            title: "name\($0)",
+            content: "content\($0)",
+            isLiked: $0 % 2 == 0,
+            likeCount: $0,
+            commentCount: $0,
+            imageURLs: nil,
+            isAnonymous: false,
+            isMine: false)
     }
-    
-    
+
     var boardsListPublisher: [BoardInfo] = [
         BoardInfo(id: 1, type: 1, name: "name1", isSelected: true),
         BoardInfo(id: 2, type: 1, name: "name2", isSelected: false),
-        BoardInfo(id: 3, type: 1, name: "name3", isSelected: false)
+        BoardInfo(id: 3, type: 1, name: "name3", isSelected: false),
     ]
-    
+
     var loadInitialPostsStatus: InitialPostsStatus = .idle
     var isChangingBoard: Bool = false
-    
-    func loadBasicInfos() { }
-    func loadMorePosts() { }
-    func loadSelectedBoardPosts() { }
-    func selectBoard(id: Int) { }
+
+    func loadBasicInfos() {}
+    func loadMorePosts() {}
+    func loadSelectedBoardPosts() {}
+    func selectBoard(id: Int) {}
     func getSelectedBoardName() -> String {
         return "board1"
     }

@@ -5,8 +5,8 @@
 //  Created by Jihyeon on 2/25/26.
 //
 
-import SwiftUI
 import Alamofire
+import SwiftUI
 
 struct DevMenuView: View {
     @StateObject private var viewModel = DevMenuViewModel()
@@ -205,7 +205,8 @@ private final class DevMenuViewModel: ObservableObject {
 
         let like = restaurantLikeValue
         await run(.restaurantLike) {
-            let response = try await restaurantRemoteDataSource.setRestaurantLike(restaurantId: restaurantId, like: like)
+            let response = try await restaurantRemoteDataSource.setRestaurantLike(
+                restaurantId: restaurantId, like: like)
             return DevMenuFormatter.restaurantLike(response)
         }
     }
@@ -218,7 +219,8 @@ private final class DevMenuViewModel: ObservableObject {
 
         let visible = restaurantVisibleValue
         await run(.restaurantVisible) {
-            let response = try await restaurantRemoteDataSource.setRestaurantVisible(restaurantId: restaurantId, visible: visible)
+            let response = try await restaurantRemoteDataSource.setRestaurantVisible(
+                restaurantId: restaurantId, visible: visible)
             return DevMenuFormatter.restaurantVisible(response)
         }
     }
@@ -345,9 +347,10 @@ private enum DevAPITest: CaseIterable, Hashable, Identifiable {
     }
 
     static var defaultResults: [DevAPITest: DevAPIResult] {
-        Dictionary(uniqueKeysWithValues: allCases.map { test in
-            (test, DevAPIResult(state: .idle, message: DevAPIText.notRequested))
-        })
+        Dictionary(
+            uniqueKeysWithValues: allCases.map { test in
+                (test, DevAPIResult(state: .idle, message: DevAPIText.notRequested))
+            })
     }
 }
 

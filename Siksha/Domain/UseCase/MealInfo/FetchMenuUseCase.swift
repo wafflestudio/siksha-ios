@@ -11,11 +11,11 @@ protocol FetchMenuUseCase {
 
 final class DefaultFetchMenuUseCase: FetchMenuUseCase {
     private let repository: MealInfoRepositoryProtocol
-    
+
     init(repository: MealInfoRepositoryProtocol) {
         self.repository = repository
     }
-    
+
     func execute(menuId: Int) async throws -> MenuModel {
         try await repository.fetchMenu(menuId: menuId)
     }

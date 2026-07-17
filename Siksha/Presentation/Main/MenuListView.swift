@@ -13,7 +13,7 @@ struct MenuListView: View {
     @State private var isAtLeadingEdge: Bool = true
     @State private var displayedFestivalSwitchOn: Bool
     @State private var festivalSwitchCommitTask: Task<Void, Never>?
-    
+
     private let backgroundColor = Color.backgroundMain
     private let lightGrayColor = Color.gray600
     private let orangeColor = Color.orange500
@@ -22,7 +22,7 @@ struct MenuListView: View {
     private let typeInfos: [TypeInfo] = [
         TypeInfo(type: .breakfast),
         TypeInfo(type: .lunch),
-        TypeInfo(type: .dinner)
+        TypeInfo(type: .dinner),
     ]
 
     init(viewModel: MenuViewModel, selectedFilterType: Binding<MenuFilterType?>) {
@@ -30,14 +30,14 @@ struct MenuListView: View {
         self._selectedFilterType = selectedFilterType
         self._displayedFestivalSwitchOn = State(initialValue: viewModel.isFestivalSwitchOn)
     }
-    
+
     var body: some View {
         VStack(alignment: .center, spacing: 0) {
             mealSelectorView
                 .padding(.top, 15)
-            
+
             filterSelectorView
-            
+
             if viewModel.getMenuStatus == .loading {
                 loadingView
             } else if viewModel.mealSections.count > 0 {
@@ -53,8 +53,8 @@ struct MenuListView: View {
                                 }
                             }
                         )
-                            .environment(\.menuViewModel, viewModel)
-                            .tag(section.type.rawValue)
+                        .environment(\.menuViewModel, viewModel)
+                        .tag(section.type.rawValue)
                     }
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
@@ -63,16 +63,20 @@ struct MenuListView: View {
             }
         }
         .background(backgroundColor)
-        .alert("위치정보 이용에 대한 엑세스 권한이 없어요.", isPresented: $viewModel.showDistanceAlert, actions: {
-            Button("취소", action: {}).keyboardShortcut(.defaultAction)
-            Button("설정하기") {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
+        .alert(
+            "위치정보 이용에 대한 엑세스 권한이 없어요.",
+            isPresented: $viewModel.showDistanceAlert,
+            actions: {
+                Button("취소", action: {}).keyboardShortcut(.defaultAction)
+                Button("설정하기") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
                 }
-            }
-        }, message: {
-            Text("앱 설정으로 가서 위치 권한을 수정할 수 있어요. 이동하시겠어요?")
-        })
+            },
+            message: {
+                Text("앱 설정으로 가서 위치 권한을 수정할 수 있어요. 이동하시겠어요?")
+            })
     }
 }
 
@@ -87,7 +91,7 @@ private extension MenuListView {
         }
         .frame(maxWidth: .infinity)
     }
-    
+
     var mealSelectorView: some View {
         ZStack {
             HStack(alignment: .bottom, spacing: 24) {
@@ -96,7 +100,7 @@ private extension MenuListView {
                 }
             }
             .frame(alignment: .center)
-            
+
             if viewModel.showFestivalSwitch {
                 HStack {
                     Spacer()
@@ -135,7 +139,7 @@ private extension MenuListView {
             viewModel.setFestivalSwitchOn(isOn)
         }
     }
-    
+
     var filterSelectorView: some View {
         HStack(spacing: 5) {
             Image(.Icons.Common.filterSliders)
@@ -154,7 +158,7 @@ private extension MenuListView {
                         ).onTapGesture {
                             selectedFilterType = .distance
                         }
-                        
+
                         FilterItem(
                             text: viewModel.priceLabel,
                             isOn: viewModel.selectedFilters.priceRange != nil,
@@ -163,10 +167,10 @@ private extension MenuListView {
                         .onTapGesture {
                             selectedFilterType = .price
                         }
-                        
+
                         FilterItem(
                             text: "영업 중",
-                            isOn:viewModel.selectedFilters.isOpen ?? false,
+                            isOn: viewModel.selectedFilters.isOpen ?? false,
                             isCheck: true
                         )
                         .onTapGesture {
@@ -175,13 +179,14 @@ private extension MenuListView {
                             }
                             let isEnabled = viewModel.selectedFilters.isOpen == true
                             viewModel.analytics.track(
-                                .instantFilterToggled(filter: .isOpenNow, value: isEnabled, pageName: viewModel.pageName)
+                                .instantFilterToggled(
+                                    filter: .isOpenNow, value: isEnabled, pageName: viewModel.pageName)
                             )
                         }
-                        
+
                         FilterItem(
                             text: "즐겨찾기",
-                            isOn:viewModel.selectedFilters.isFavorite ?? false,
+                            isOn: viewModel.selectedFilters.isFavorite ?? false,
                             isCheck: true
                         )
                         .onTapGesture {
@@ -190,13 +195,14 @@ private extension MenuListView {
                             }
                             let isEnabled = viewModel.selectedFilters.isFavorite == true
                             viewModel.analytics.track(
-                                .instantFilterToggled(filter: .isFavorite, value: isEnabled, pageName: viewModel.pageName)
+                                .instantFilterToggled(
+                                    filter: .isFavorite, value: isEnabled, pageName: viewModel.pageName)
                             )
                         }
-                        
+
                         FilterItem(
                             text: "리뷰",
-                            isOn:viewModel.selectedFilters.hasReview ?? false,
+                            isOn: viewModel.selectedFilters.hasReview ?? false,
                             isCheck: true
                         )
                         .onTapGesture {
@@ -204,12 +210,14 @@ private extension MenuListView {
                                 filters.hasReview = filters.hasReview == true ? nil : true
                             }
                             let isEnabled = viewModel.selectedFilters.hasReview == true
-                            viewModel.analytics.track(.instantFilterToggled(filter: .hasReviews, value: isEnabled, pageName: viewModel.pageName))
+                            viewModel.analytics.track(
+                                .instantFilterToggled(
+                                    filter: .hasReviews, value: isEnabled, pageName: viewModel.pageName))
                         }
-                        
+
                         FilterItem(
-                            text:viewModel.minRatingLabel,
-                            isOn:viewModel.selectedFilters.minimumRating != nil,
+                            text: viewModel.minRatingLabel,
+                            isOn: viewModel.selectedFilters.minimumRating != nil,
                             isCheck: false
                         )
                         .onTapGesture {
@@ -218,8 +226,9 @@ private extension MenuListView {
                     }
                     .background(
                         GeometryReader {
-                            Color.clear.preference(key: HorizontalOffsetKey.self,
-                                                value: $0.frame(in: .named("filterScroll")).origin.x)
+                            Color.clear.preference(
+                                key: HorizontalOffsetKey.self,
+                                value: $0.frame(in: .named("filterScroll")).origin.x)
                         }
                     )
                     .onPreferenceChange(HorizontalOffsetKey.self) { offset in
@@ -229,12 +238,14 @@ private extension MenuListView {
                     }
                 }
                 .coordinateSpace(name: "filterScroll")
-                
+
                 if !isAtLeadingEdge {
                     Rectangle()
                         .foregroundStyle(.clear)
                         .background(
-                            LinearGradient(colors: [.backgroundPrimary, .backgroundPrimary.opacity(0)], startPoint: .leading, endPoint: .trailing)
+                            LinearGradient(
+                                colors: [.backgroundPrimary, .backgroundPrimary.opacity(0)], startPoint: .leading,
+                                endPoint: .trailing)
                         )
                         .frame(width: 16, height: 34)
                 }
@@ -243,11 +254,12 @@ private extension MenuListView {
         .padding(EdgeInsets(top: 17, leading: 9, bottom: 9, trailing: 9))
         .onChange(of: selectedFilterType) { newType in
             if let newType {
-                viewModel.analytics.track(.filterModalOpened(entryPoint: newType.entryPointString, pageName: viewModel.pageName))
+                viewModel.analytics.track(
+                    .filterModalOpened(entryPoint: newType.entryPointString, pageName: viewModel.pageName))
             }
         }
     }
-    
+
     var emptyView: some View {
         VStack {
             Spacer()
@@ -259,7 +271,7 @@ private extension MenuListView {
         .frame(maxWidth: .infinity)
         .background(backgroundColor)
     }
-    
+
     func typeButton(type: TypeInfo) -> some View {
         Button(action: {
             viewModel.selectedPage = type.id
@@ -299,15 +311,17 @@ struct MenuListView_Previews: PreviewProvider {
                     fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
                     updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
                     manageMenuFiltersUseCase: AppContainer.shared.useCases.manageMenuFiltersUseCase,
-                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases
+                        .manageRestaurantsWithoutMenuVisibilityUseCase,
                     manageFestivalPreferencesUseCase: AppContainer.shared.useCases.manageFestivalPreferencesUseCase,
-                    checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases.checkFestivalSwitchVisibilityUseCase
+                    checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases
+                        .checkFestivalSwitchVisibilityUseCase
                 ),
                 selectedFilterType: $selectedFilterType
             )
         }
     }
-    
+
     static var previews: some View {
         ContainerView()
     }

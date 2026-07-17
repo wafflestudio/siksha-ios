@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import SwiftyJSON
 import RealmSwift
+import SwiftyJSON
 
 class Meal: Object {
     @objc dynamic var realmKey: String = ""
@@ -21,15 +21,15 @@ class Meal: Object {
     @objc dynamic var isLiked: Bool = false
     @objc dynamic var likeCnt: Int = 0
     var etc = List<String>()
-    
+
     override static func primaryKey() -> String? {
         return "realmKey"
     }
-    
+
     override init() {
         super.init()
     }
-    
+
     convenience init(_ json: JSON, menuContext: String? = nil) {
         self.init()
         self.id = json["id"].intValue
@@ -42,12 +42,15 @@ class Meal: Object {
         self.isLiked = json["is_liked"].boolValue
         self.reviewCnt = json["review_cnt"].intValue
         self.likeCnt = json["like_cnt"].intValue
-        json["etc"].arrayValue.map{ $0.stringValue }.forEach { self.etc.append($0) }
+        json["etc"].arrayValue.map { $0.stringValue }.forEach { self.etc.append($0) }
     }
-    
-    init(id: Int, code: String, nameKr: String, nameEn: String, price: Int, score: Double, reviewCnt: Int, isLiked: Bool, likeCnt: Int, etc: [String]) {
+
+    init(
+        id: Int, code: String, nameKr: String, nameEn: String, price: Int, score: Double, reviewCnt: Int, isLiked: Bool,
+        likeCnt: Int, etc: [String]
+    ) {
         super.init()
-        
+
         self.id = id
         self.realmKey = Self.makeRealmKey(id: id)
         self.code = code
@@ -60,11 +63,11 @@ class Meal: Object {
         self.likeCnt = likeCnt
         self.etc.append(objectsIn: etc)
     }
-    
+
     func applyMenuContext(_ menuContext: String) {
         realmKey = Self.makeRealmKey(id: id, menuContext: menuContext)
     }
-    
+
     private static func makeRealmKey(id: Int, menuContext: String? = nil) -> String {
         if let menuContext {
             return "\(menuContext):meal:\(id)"

@@ -9,13 +9,13 @@ import SwiftUI
 
 struct MenuView: View {
     @Environment(\.safeAreaInsets) private var safeAreaInsets
-    
+
     @StateObject private var viewModel: MenuViewModel
     @State private var selectedFilterType: MenuFilterType? = nil
     @State private var viewHeight: CGFloat = 0
-    
+
     private let lightGrayColor = Color.gray600
-    
+
     private var isFilterModalPresented: Binding<Bool> {
         Binding(
             get: { selectedFilterType != nil },
@@ -24,12 +24,12 @@ struct MenuView: View {
             }
         )
     }
-    
+
     private var selectedModalHeight: CGFloat {
         guard let selectedFilterType else {
             return 0
         }
-        
+
         if selectedFilterType == .all {
             // viewHeight에 탭바 높이(50)와 추가 높이(3)를 더함
             return viewHeight + 50 + 3
@@ -38,30 +38,30 @@ struct MenuView: View {
             return selectedFilterType.modalSheetHeight - safeAreaInsets.bottom
         }
     }
-    
+
     private let dimBackgroundColor = Color(.sRGB, white: 0, opacity: 0.6)
     private let orangeColor = Color("Color/Foundation/Orange/500")
-    
+
     init(
         viewModel: MenuViewModel
     ) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
-//            if viewModel.isFestivalAvailable {
-//                festivalBanner
-//            }
-            
+            //            if viewModel.isFestivalAvailable {
+            //                festivalBanner
+            //            }
+
             daySelectorView
-            
+
             ZStack(alignment: .top) {
                 MenuListView(
                     viewModel: viewModel,
                     selectedFilterType: $selectedFilterType
                 )
-                
+
                 if viewModel.showCalendar {
                     calendarOverlay
                 }
@@ -69,10 +69,15 @@ struct MenuView: View {
         }
         .measureHeight($viewHeight)
         .customNavigationBar(title: "icon")
-        .alert(isPresented: $viewModel.showNetworkAlert, content: {
-            Alert(title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."), dismissButton: .default(Text("확인")))
-        })
-        .sheet(isPresented: isFilterModalPresented){
+        .alert(
+            isPresented: $viewModel.showNetworkAlert,
+            content: {
+                Alert(
+                    title: Text("식단"), message: Text("식단을 받아오지 못했습니다. 이전에 불러왔던 식단으로 대신 표시합니다."),
+                    dismissButton: .default(Text("확인")))
+            }
+        )
+        .sheet(isPresented: isFilterModalPresented) {
             MenuFilterView(menuViewModel: viewModel, menuFilterType: selectedFilterType ?? .all)
                 .presentationDetents([.height(selectedModalHeight)])
                 .presentationCornerRadius(15)
@@ -83,7 +88,7 @@ struct MenuView: View {
 // MARK: - Subviews
 
 private extension MenuView {
-    
+
     var festivalBanner: some View {
         Button(action: {
             openInstagram()
@@ -94,50 +99,58 @@ private extension MenuView {
                 .frame(maxWidth: .infinity)
         }
     }
-    
+
     var daySelectorView: some View {
         HStack(alignment: .center) {
-            if !viewModel.showCalendar{
-                Button(action: {
-                    viewModel.selectedDate = viewModel.prevDate
-                }, label: {
-                    Image("PrevDate")
-                        .resizable()
-                        .frame(width: 10, height: 16)
-                })
+            if !viewModel.showCalendar {
+                Button(
+                    action: {
+                        viewModel.selectedDate = viewModel.prevDate
+                    },
+                    label: {
+                        Image("PrevDate")
+                            .resizable()
+                            .frame(width: 10, height: 16)
+                    }
+                )
                 .disabled(viewModel.showCalendar)
                 .padding(.leading, 16)
             }
             Spacer()
-            
-            Button(action: {
-                viewModel.showCalendar.toggle()
-            }, label: {
-                HStack(alignment: .center, spacing: 0) {
-                
-                    Text(viewModel.selectedFormatted)
-                        .customFont(font: .text15(weight: .ExtraBold))
-                        .foregroundColor(Color.textAccent)
-                }
-            })
-            
-            Spacer()
-            if !viewModel.showCalendar{
-                Button(action: {
-                    viewModel.selectedDate = viewModel.nextDate
-                }, label: {
-                    Image("NextDate")
-                        .resizable()
-                        .frame(width: 10, height: 16)
+
+            Button(
+                action: {
+                    viewModel.showCalendar.toggle()
+                },
+                label: {
+                    HStack(alignment: .center, spacing: 0) {
+
+                        Text(viewModel.selectedFormatted)
+                            .customFont(font: .text15(weight: .ExtraBold))
+                            .foregroundColor(Color.textAccent)
+                    }
                 })
+
+            Spacer()
+            if !viewModel.showCalendar {
+                Button(
+                    action: {
+                        viewModel.selectedDate = viewModel.nextDate
+                    },
+                    label: {
+                        Image("NextDate")
+                            .resizable()
+                            .frame(width: 10, height: 16)
+                    }
+                )
                 .padding(.trailing, 16)
             }
-            
+
         }
         .frame(height: 50)
         .background(Color.backgroundSecondary)
     }
-    
+
     var calendarOverlay: some View {
         ZStack(alignment: .top) {
             dimBackgroundColor
@@ -146,7 +159,7 @@ private extension MenuView {
                 }
                 .transition(.opacity.animation(.easeInOut(duration: 0.3)))
                 .zIndex(1)
-            
+
             CalendarView(selectedDate: $viewModel.selectedDate)
                 .frame(height: 300)
                 .padding(EdgeInsets(top: 4, leading: 10, bottom: 15, trailing: 10))
@@ -160,7 +173,7 @@ private extension MenuView {
 // MARK: - Functions
 
 private extension MenuView {
-    
+
     func openInstagram() {
         let appURL = URL(string: "instagram://user?username=snufestival")!
         let webURL = URL(string: "https://www.instagram.com/snufestival/")!
@@ -170,7 +183,7 @@ private extension MenuView {
             UIApplication.shared.open(webURL, options: [:], completionHandler: nil)
         }
     }
-    
+
 }
 
 // MARK: - Preview
@@ -186,7 +199,8 @@ struct MainView_Previews: PreviewProvider {
                 fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
                 updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
                 manageMenuFiltersUseCase: AppContainer.shared.useCases.manageMenuFiltersUseCase,
-                manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+                manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases
+                    .manageRestaurantsWithoutMenuVisibilityUseCase,
                 manageFestivalPreferencesUseCase: AppContainer.shared.useCases.manageFestivalPreferencesUseCase,
                 checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases.checkFestivalSwitchVisibilityUseCase
             )

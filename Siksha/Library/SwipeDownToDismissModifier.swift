@@ -10,13 +10,13 @@ import SwiftUI
 struct SwipeDownToDismissModifier: ViewModifier {
     @Environment(\.dismiss) private var dismiss
     @State private var dragOffset: CGFloat = 0
-    
+
     let threshold: CGFloat
-    
+
     init(threshold: CGFloat = 100) {
         self.threshold = threshold
     }
-    
+
     func body(content: Content) -> some View {
         content
             .offset(y: dragOffset)

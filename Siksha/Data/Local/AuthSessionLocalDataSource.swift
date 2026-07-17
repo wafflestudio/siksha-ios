@@ -33,7 +33,8 @@ final class AuthSessionLocalDataSourceImpl: AuthSessionLocalDataSource {
         }
 
         let expiresAt = expirationDate()
-        let appleUserIdentifier = userDefaults.bool(forKey: Key.signedInWithApple)
+        let appleUserIdentifier =
+            userDefaults.bool(forKey: Key.signedInWithApple)
             ? userDefaults.string(forKey: Key.appleUserIdentifier)
             : nil
 

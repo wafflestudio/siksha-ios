@@ -5,46 +5,46 @@
 //  Created by Jihyeon on 10/29/25.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 class ReviewRowViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let updateReviewLikeUseCase: UpdateReviewLikeUseCase
-    
+
     private let review: Review
     let showImage: Bool
-    
+
     var imageUrlString: [String] {
         review.etc?["images"] ?? []
     }
-    
+
     var score: Double {
         review.score
     }
-    
+
     var comment: String {
         review.comment ?? ""
     }
-    
+
     var hasComment: Bool {
         !comment.isEmpty
     }
-    
+
     var legibleDate: String {
         review.createdAt.toLegibleString()
     }
-    
+
     var nickname: String {
         "ID \(review.userId)"
     }
-    
+
     var hasKeywords: Bool {
         !keywords.isEmpty
     }
-    
+
     var keywords: [String] {
-        review.keywordReviews.filter{ !$0.isEmpty }
+        review.keywordReviews.filter { !$0.isEmpty }
     }
 
     @Published var likeCount: Int
@@ -52,7 +52,7 @@ class ReviewRowViewModel: ObservableObject {
     @Published var isImageExpanded: Bool = false
     @Published var tappedIndex: Int = 0
     @Published var error: AppError?
-    
+
     init(
         review: Review,
         showImage: Bool,
@@ -64,13 +64,13 @@ class ReviewRowViewModel: ObservableObject {
         self.likeCount = review.likeCount
         self.isLiked = review.isLiked
     }
-    
+
     private var getLikeStatus: NetworkStatus = .idle
-    
+
     private func likeReview() {
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 try await updateReviewLikeUseCase.execute(reviewId: review.id, isLiked: true)
                 await MainActor.run {
@@ -86,11 +86,11 @@ class ReviewRowViewModel: ObservableObject {
             }
         }
     }
-    
+
     private func unlikeReview() {
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 try await updateReviewLikeUseCase.execute(reviewId: review.id, isLiked: false)
                 await MainActor.run {
@@ -106,12 +106,12 @@ class ReviewRowViewModel: ObservableObject {
             }
         }
     }
-    
-    func toggleLike(){
-        guard getLikeStatus != .loading else{
+
+    func toggleLike() {
+        guard getLikeStatus != .loading else {
             return
         }
-        
+
         getLikeStatus = .loading
         if isLiked {
             unlikeReview()

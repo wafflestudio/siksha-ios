@@ -43,7 +43,8 @@ final class UserDefaultsUserPreferenceLocalDataSource: UserPreferenceLocalDataSo
 
     func menuFilters() -> MenuFilters {
         guard let data = userDefaults.data(forKey: Key.menuFilters),
-              let filters = try? decoder.decode(MenuFilters.self, from: data) else {
+            let filters = try? decoder.decode(MenuFilters.self, from: data)
+        else {
             return MenuFilters()
         }
         return filters

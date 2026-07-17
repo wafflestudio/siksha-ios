@@ -21,7 +21,7 @@ final class MenuPreferenceRemoteDataSourceImpl: MenuPreferenceRemoteDataSource {
             .serializingDecodable(MenuLikeStatusDTO.self, decoder: JSONDecoder())
             .value
     }
-    
+
     func unlikeMenu(menuId: Int) async throws -> MenuLikeStatusDTO {
         try await AF
             .request(SikshaAPI.unlikeMenu(menuId: menuId))

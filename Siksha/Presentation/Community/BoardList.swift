@@ -5,12 +5,12 @@
 //  Created by 박정헌 on 2023/07/29.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
-struct BoardList<ViewModel>: View where ViewModel: CommunityViewModelType{
+struct BoardList<ViewModel>: View where ViewModel: CommunityViewModelType {
     @ObservedObject var viewModel: ViewModel
-    
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .center, spacing: 10) {

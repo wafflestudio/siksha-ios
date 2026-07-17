@@ -17,7 +17,7 @@ struct User: Decodable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
-    
+
     let id: Int
     let type: String
     let identity: String
@@ -43,7 +43,7 @@ struct User: Decodable {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)

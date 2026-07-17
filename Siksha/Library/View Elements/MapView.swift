@@ -5,8 +5,8 @@
 //  Created by You Been Lee on 2021/03/10.
 //
 
-import SwiftUI
 import NMapsMap
+import SwiftUI
 
 struct MapView: UIViewRepresentable {
     @Environment(\.colorScheme) private var colorScheme
@@ -18,23 +18,24 @@ struct MapView: UIViewRepresentable {
         self.coordinate = coordinate
         self.markerText = markerText
     }
-    
+
     func makeUIView(context: Context) -> NMFNaverMapView {
-        let nMapView: NMFNaverMapView = NMFNaverMapView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width-32, height: 250))
+        let nMapView: NMFNaverMapView = NMFNaverMapView(
+            frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width - 32, height: 250))
         nMapView.mapView.allowsTilting = true
         nMapView.showZoomControls = false
         nMapView.showScaleBar = false
         nMapView.showCompass = false
-        
+
         return nMapView
     }
-    
+
     func updateUIView(_ view: NMFNaverMapView, context: Context) {
         let cameraFixCoordinate = NMGLatLng(lat: coordinate.lat, lng: coordinate.lng)
         let cameraUpdate = NMFCameraUpdate(position: NMFCameraPosition(cameraFixCoordinate, zoom: 15))
-        
+
         view.mapView.moveCamera(cameraUpdate)
-        
+
         let marker = NMFMarker(position: coordinate, iconImage: .init(name: "mapMarker"))
         marker.captionText = markerText
         marker.captionTextSize = 14

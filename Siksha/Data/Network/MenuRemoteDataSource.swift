@@ -5,8 +5,8 @@
 //  Created by Jihyeon on 2/23/26.
 //
 
-import Foundation
 import Alamofire
+import Foundation
 
 protocol MenuRemoteDataSource {
     func fetchDailyMenus(from start: String, to end: String) async throws -> DailyMenusResponseDTO

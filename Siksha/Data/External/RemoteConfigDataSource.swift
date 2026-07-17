@@ -5,8 +5,8 @@
 //  Created by Codex on 6/4/26.
 //
 
-import Foundation
 import FirebaseRemoteConfig
+import Foundation
 
 protocol RemoteConfigDataSource {
     func fetchRemoteConfig() async throws -> RemoteConfigDTO

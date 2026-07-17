@@ -63,26 +63,26 @@ struct OperatingHoursDTO: Codable {
     let weekdays: [String]
     let saturday: [String]
     let holiday: [String]
-    
+
     init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.weekdays = try container.decodeIfPresent([String].self, forKey: .weekdays) ?? []
         self.saturday = try container.decodeIfPresent([String].self, forKey: .saturday) ?? []
         self.holiday = try container.decodeIfPresent([String].self, forKey: .holiday) ?? []
     }
-    
-    enum CodingKeys: String, CodingKey { case weekdays, saturday , holiday }
+
+    enum CodingKeys: String, CodingKey { case weekdays, saturday, holiday }
 }
 
 private func normalizedOperatingHours(_ operatingHours: OperatingHoursDTO?) -> [String] {
     guard let operatingHours else {
         return ["", "", ""]
     }
-    
+
     return [
         formattedOperatingHours(operatingHours.weekdays),
         formattedOperatingHours(operatingHours.saturday),
-        formattedOperatingHours(operatingHours.holiday)
+        formattedOperatingHours(operatingHours.holiday),
     ]
 }
 

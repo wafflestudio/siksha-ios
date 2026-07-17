@@ -10,17 +10,17 @@ import SwiftUI
 struct StarRateView: View {
     private let displayRate: Double?
     @Binding private var editableRate: Int?
-    
+
     let spacing: CGFloat
     private let isEditable: Bool
-    
+
     init(rate: Double, spacing: CGFloat) {
         self.displayRate = rate
         self._editableRate = .constant(nil)
         self.spacing = spacing
         self.isEditable = false
     }
-    
+
     init(rate: Binding<Int>, spacing: CGFloat) {
         self._editableRate = Binding<Int?>(
             get: { rate.wrappedValue },
@@ -32,7 +32,7 @@ struct StarRateView: View {
         self.spacing = spacing
         self.isEditable = true
     }
-    
+
     var body: some View {
         HStack(spacing: spacing) {
             ForEach(0..<5, id: \.self) { i in
@@ -73,7 +73,7 @@ struct StarRateView: View {
 
 private struct Preview: View {
     @State var score: Int = 0
-    
+
     var body: some View {
         StarRateView(rate: $score, spacing: 5)
             .frame(height: 50)

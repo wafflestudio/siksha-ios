@@ -10,14 +10,14 @@ struct FilterItem: View {
     var text: String
     var isOn: Bool
     var isCheck: Bool
-    var body:some View {
+    var body: some View {
         HStack(spacing: 2) {
-            if (isOn && isCheck) {
+            if isOn && isCheck {
                 Image("FilterCheck")
                     .resizable()
                     .frame(width: 16, height: 16)
             }
-            if (isOn) {
+            if isOn {
                 Text(text)
                     .customFont(font: .text13(weight: .Bold))
                     .foregroundStyle(Color.blackColor)
@@ -26,7 +26,7 @@ struct FilterItem: View {
                     .customFont(font: .text13(weight: .Regular))
                     .foregroundStyle(Color.blackColor)
             }
-            if (!isCheck) {
+            if !isCheck {
                 Image("select")
                     .resizable()
                     .frame(width: 16, height: 16)

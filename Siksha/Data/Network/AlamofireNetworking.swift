@@ -5,17 +5,19 @@
 //  Created by 한상현 on 2023/09/11.
 //
 
-import Combine
 import Alamofire
+import Combine
 
 final class AlamofireNetworking: NetworkModuleProtocol {
     func request<T: Decodable>(endpoint: SikshaAPI) -> AnyPublisher<T, AppError> {
-        var request:DataRequest
-        if(endpoint.multiPartFormDataNeeded) {
+        var request: DataRequest
+        if endpoint.multiPartFormDataNeeded {
             request = AF.upload(multipartFormData: endpoint.multipartFormData!, with: endpoint)
+        } else {
+            request = AF.request(endpoint)
         }
-        else { request = AF.request(endpoint) }
-        return request
+        return
+            request
             .validate(statusCode: 200..<300)
             .publishDecodable(type: T.self)
             .value()
@@ -24,13 +26,14 @@ final class AlamofireNetworking: NetworkModuleProtocol {
             }
             .eraseToAnyPublisher()
     }
-    
+
     func requestWithNoContent(endpoint: SikshaAPI) -> AnyPublisher<Void, AppError> {
         let request = AF.request(endpoint)
 
-        return request
+        return
+            request
             .validate()
-            .publishData(emptyResponseCodes:[201,200,204])
+            .publishData(emptyResponseCodes: [201, 200, 204])
             .tryMap { response in
                 if let error = response.error {
                     throw error

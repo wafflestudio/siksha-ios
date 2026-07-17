@@ -9,13 +9,13 @@ import SwiftUI
 
 struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
-    @StateObject  var viewModel:ViewModel
+
+    @StateObject var viewModel: ViewModel
     @StateObject private var keyboardResponder = KeyboardResponder()
     @State private var isShowingActionSheet = false
     @State private var isShowingPhotoLibrary = false
     @State private var selectedProfileImages: [UIImage] = []
-    
+
     var body: some View {
         GeometryReader { _ in
             ZStack {
@@ -46,36 +46,36 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }
         }
     }
-    
+
     private var mainContent: some View {
         VStack {
             profileImage
                 .padding(.top, 65.0)
             nicknameTextField
                 .padding(.top, 15.0)
-            
+
             Spacer()
-            
+
             existingNicknameToast
                 .padding(.bottom, 25)
-            
+
             doneButton
                 .padding(.bottom, 20)
         }
         .disabled(viewModel.isLoading)
     }
-    
+
     private var keyboardToolbarContent: some View {
         VStack {
             Spacer()
-                keyboardToolbar
-                    .opacity(keyboardResponder.didKeyboardShow ? 1 : 0)
-                    .offset(y: keyboardResponder.didKeyboardShow ? -keyboardResponder.currentHeight : 50)
-                    .animation(.easeOut(duration: 0.35))
+            keyboardToolbar
+                .opacity(keyboardResponder.didKeyboardShow ? 1 : 0)
+                .offset(y: keyboardResponder.didKeyboardShow ? -keyboardResponder.currentHeight : 50)
+                .animation(.easeOut(duration: 0.35))
         }
         .edgesIgnoringSafeArea(.bottom)
     }
-    
+
     var nicknameTextField: some View {
         RoundedRectangle(cornerRadius: 11)
             .strokeBorder(lineWidth: 1)
@@ -86,14 +86,15 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                     .padding(.horizontal, 13)
             )
     }
-    
+
     var profileImage: some View {
         Button(action: {
             isShowingActionSheet = true
         }) {
             ZStack(alignment: .topTrailing) {
                 if let profileImageData = viewModel.profileImageData,
-                let uiImage = UIImage(data: profileImageData) {
+                    let uiImage = UIImage(data: profileImageData)
+                {
                     Image(uiImage: uiImage)
                         .resizable()
                         .aspectRatio(contentMode: .fill)
@@ -109,27 +110,34 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                         .clipShape(Circle())
                         .frame(width: 171, height: 171)
                 }
-                
+
                 cameraImage
                     .offset(x: -2.5, y: 2.5)
             }
         }
         .actionSheet(isPresented: $isShowingActionSheet) {
-            ActionSheet(title: Text("프로필 사진 설정"), buttons: [
-                .default(Text("앨범에서 사진 선택"), action: {
-                    selectedProfileImages.removeAll()
-                    isShowingPhotoLibrary = true
-                }),
-                .default(Text("기본 이미지 적용"), action: {
-                    viewModel.setProfileImage(with: nil)
-                }),
-                .cancel(Text("취소"))
-            ])
+            ActionSheet(
+                title: Text("프로필 사진 설정"),
+                buttons: [
+                    .default(
+                        Text("앨범에서 사진 선택"),
+                        action: {
+                            selectedProfileImages.removeAll()
+                            isShowingPhotoLibrary = true
+                        }),
+                    .default(
+                        Text("기본 이미지 적용"),
+                        action: {
+                            viewModel.setProfileImage(with: nil)
+                        }),
+                    .cancel(Text("취소")),
+                ])
         }
         .sheet(isPresented: $isShowingPhotoLibrary) {
             ImagePickerCoordinatorView(selectedImages: $selectedProfileImages, maxSelection: 1) { images in
                 if let firstImage = images.first,
-                   let imageData = firstImage.jpegData(compressionQuality: 0.8) {
+                    let imageData = firstImage.jpegData(compressionQuality: 0.8)
+                {
                     viewModel.setProfileImage(with: imageData)
                 } else {
                     viewModel.error = .unknownError(ImagePickerError.imageProcessingFailed.localizedDescription)
@@ -138,9 +146,9 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 viewModel.error = .unknownError(error.localizedDescription)
             }
         }
-        
+
     }
-    
+
     var cameraImage: some View {
         ZStack {
             Circle()
@@ -150,13 +158,13 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                     Circle()
                         .stroke(Color.gray200, lineWidth: 1)
                 )
-            
+
             Image("Camera")
                 .frame(width: 22.5, height: 18)
                 .foregroundColor(.gray600)
         }
     }
-    
+
     var doneButton: some View {
         Button(action: done) {
             ZStack(alignment: .center) {
@@ -171,11 +179,12 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         .frame(height: 56)
         .padding(.horizontal, 16)
     }
-    
+
     var keyboardToolbar: some View {
         HStack {
             Button(action: {
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                UIApplication.shared.sendAction(
+                    #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 viewModel.resetNickname()
             }) {
                 Text("취소")
@@ -185,7 +194,8 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }
             Spacer()
             Button(action: {
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                UIApplication.shared.sendAction(
+                    #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
                 viewModel.setPreviousNickname()
             }) {
                 Text("OK")
@@ -198,13 +208,13 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
         .background(Color.backgroundSecondary)
         .border(Color.gray200, width: 1)
     }
-    
+
     private func done() {
         Task {
             await viewModel.updateUserProfile()
         }
     }
-    
+
     private var backButton: some View {
         Button(action: {
             presentationMode.wrappedValue.dismiss()
@@ -216,13 +226,13 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                 .foregroundColor(Color.iconWhiteIcon)
         }
     }
-    
+
     private var existingNicknameToast: some View {
         VStack {
             ZStack(alignment: .center) {
                 RoundedRectangle(cornerRadius: 8.0)
                     .fill(Color.backgroundToast)
-                
+
                 HStack(spacing: 0) {
                     Image(.Icons.Common.alertCircle)
                         .frame(width: 14, height: 14)
@@ -244,12 +254,12 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
 struct ClearableTextField: View {
     var title: String
     @Binding var text: String
-    
+
     init(_ title: String, text: Binding<String>) {
         self.title = title
         _text = text
     }
-    
+
     var body: some View {
         ZStack(alignment: .trailing) {
             TextField(title, text: $text)
@@ -258,7 +268,7 @@ struct ClearableTextField: View {
                 .foregroundStyle(Color.blackColor)
                 .padding(.leading, 16)
                 .padding(.trailing, 28)
-            if (text != "") {
+            if text != "" {
                 Image("CloseSmall")
                     .frame(width: 28, height: 28)
                     .foregroundColor(Color.iconCloseBg)
@@ -271,9 +281,10 @@ struct ClearableTextField: View {
 }
 
 #Preview {
-    ProfileEditView(viewModel: ProfileEditViewModel(
-        fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
-        updateUserProfileUseCase: AppContainer.shared.useCases.updateUserProfileUseCase,
-        onUserUpdated: { _ in }
-    ))
+    ProfileEditView(
+        viewModel: ProfileEditViewModel(
+            fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
+            updateUserProfileUseCase: AppContainer.shared.useCases.updateUserProfileUseCase,
+            onUserUpdated: { _ in }
+        ))
 }

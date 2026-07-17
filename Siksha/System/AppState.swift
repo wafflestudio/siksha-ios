@@ -1,4 +1,3 @@
-
 //
 //  AppState.swift
 //  Siksha
@@ -21,7 +20,8 @@ public final class AppState: ObservableObject {
     private var didResolveInitialAuthState = false
 
     init(
-        resolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCase = AppContainer.shared.useCases.resolveInitialAuthStateUseCase
+        resolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCase = AppContainer.shared.useCases
+            .resolveInitialAuthStateUseCase
     ) {
         self.resolveInitialAuthStateUseCase = resolveInitialAuthStateUseCase
     }

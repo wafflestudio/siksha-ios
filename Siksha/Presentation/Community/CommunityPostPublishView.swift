@@ -5,19 +5,19 @@
 //  Created by Chaehyun Park on 2023/07/29.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
-struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPublishViewModel {
-    
+struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostPublishViewModel {
+
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
-    @Binding var needRefresh:Bool
-    @Binding var needPostViewRefresh:Bool
+
+    @Binding var needRefresh: Bool
+    @Binding var needPostViewRefresh: Bool
     @State private var isShowingPhotoLibrary = false
     @State private var isExpanded = false
     private var cornerRadius = 7.0
-    @ObservedObject  var viewModel:ViewModel
+    @ObservedObject var viewModel: ViewModel
     @StateObject private var keyboardResponder = KeyboardResponder()
     private var cancellables = Set<AnyCancellable>()
     init(needRefresh: Binding<Bool>, needPostViewRefresh: Binding<Bool> = .constant(false), viewModel: ViewModel) {
@@ -25,8 +25,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         self._needPostViewRefresh = needPostViewRefresh
         self.viewModel = viewModel
     }
- 
-    
+
     var backButton: some View {
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
@@ -39,7 +38,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         }
         .contentShape(Rectangle())
     }
-    
+
     var postAndEditButton: some View {
         HStack {
             Button(action: {
@@ -56,7 +55,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             }
             .frame(maxWidth: .infinity)
             .disabled(viewModel.title.isEmpty || viewModel.content.isEmpty)
-            
+
             Button(action: {
                 viewModel.submitPost()
             }) {
@@ -73,7 +72,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
             .disabled(viewModel.title.isEmpty || viewModel.content.isEmpty)
         }
     }
-    
+
     var postButton: some View {
         Button(action: {
             viewModel.submitPost()
@@ -99,24 +98,24 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         }
         .toggleStyle(CustomCheckboxStyle())
     }
-    
+
     struct CustomCheckboxStyle: ToggleStyle {
         func makeBody(configuration: Configuration) -> some View {
             HStack(spacing: 5) {
-                    if configuration.isOn {
-                        Image("CheckboxTicked")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 13, height: 13)
-                            .foregroundStyle(Color.orange500)
-                    } else {
-                        Image("Checkbox")
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 13, height: 13)
-                            .foregroundStyle(Color.gray600)
-                    }
-                
+                if configuration.isOn {
+                    Image("CheckboxTicked")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 13, height: 13)
+                        .foregroundStyle(Color.orange500)
+                } else {
+                    Image("Checkbox")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 13, height: 13)
+                        .foregroundStyle(Color.gray600)
+                }
+
                 configuration.label
                     .foregroundColor(configuration.isOn ? .orange500 : .gray600)
             }
@@ -128,7 +127,6 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         }
     }
 
-    
     var customDivider: some View {
         HStack {
             Color.borderPrimary
@@ -136,7 +134,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 .frame(maxWidth: .infinity)
         }
     }
-    
+
     var imageSection: some View {
         VStack(spacing: 0) {
             ScrollView(.horizontal, showsIndicators: false) {
@@ -152,7 +150,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                 .cornerRadius(cornerRadius)
                                 .padding(.top, 4)
                                 .padding(.trailing, 5)
-                            
+
                             Button(action: {
                                 viewModel.removeImage(image)
                             }) {
@@ -163,7 +161,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                             }
                         }
                     }
-                    
+
                     Button(action: {
                         self.isShowingPhotoLibrary = true
                     }) {
@@ -202,7 +200,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                         }
                     }
             }
-            
+
             Button(action: {
                 withAnimation {
                     isExpanded.toggle()
@@ -232,7 +230,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                         .stroke(Color.gray200, lineWidth: 1)
                 )
             }
-            
+
             if isExpanded {
                 VStack(spacing: 0) {
                     ForEach(viewModel.boardsList, id: \.id) { board in
@@ -263,7 +261,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                                 }
                             }
                             .frame(height: 35)
-                            
+
                             if board.id != viewModel.boardsList.last?.id {
                                 Divider()
                                     .background(Color.borderPrimary)
@@ -285,14 +283,14 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         .zIndex(1)
     }
 
-    
     var KeyboardToolbar: some View {
         HStack {
-//            anonymousButton
-//                .padding(.leading, 20)
+            //            anonymousButton
+            //                .padding(.leading, 20)
             Spacer()
             Button(action: {
-                UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                UIApplication.shared.sendAction(
+                    #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             }) {
                 Text("OK")
                     .customFont(font: .text16(weight: .Bold))
@@ -304,33 +302,32 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
         .background(Color.backgroundSecondary)
     }
 
-
     var body: some View {
         GeometryReader { geometry in
             let availableHeight = geometry.size.height
-            
+
             ZStack(alignment: .top) {
                 boardPicker
                     .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
-                
+
                 VStack(spacing: 0) {
                     ZStack(alignment: .leading) {
                         RoundedRectangle(cornerRadius: 6)
                             .fill(Color.gray50)
                             .frame(height: 35)
-                        
+
                         TextField("제목", text: $viewModel.title, prompt: Text("제목").foregroundColor(.gray500))
                             .customFont(font: .text14(weight: .Bold))
                             .foregroundStyle(Color.blackColor)
                             .padding(.horizontal, 12)
                     }
                     .frame(maxWidth: .infinity)
-                    
+
                     Spacer().frame(height: 6)
-                    
+
                     ZStack(alignment: .topLeading) {
                         let placeholder: String = "내용을 입력하세요."
-                        
+
                         TextEditor(text: $viewModel.content)
                             .frame(minHeight: 120, maxHeight: max(120, availableHeight - 350))
                             .customFont(font: .text14(weight: .Regular))
@@ -348,21 +345,21 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
 
                     if keyboardResponder.currentHeight == 0 {
                         HStack {
-//                            anonymousButton
+                            //                            anonymousButton
                             Spacer()
                         }
                         .padding(.vertical, 11)
                     }
-                    
+
                     customDivider
-                    
+
                     Spacer().frame(height: 13)
-                    
+
                     imageSection
-                    
+
                     Spacer()
-                    
-                    if let _ = viewModel.postInfo {
+
+                    if viewModel.postInfo != nil {
                         postAndEditButton
                             .padding(.bottom, 20)
                     } else {
@@ -374,24 +371,26 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
                 .padding(EdgeInsets(top: 56, leading: 20, bottom: 0, trailing: 20))
                 .customNavigationBar(title: "글쓰기")
                 .navigationBarItems(leading: backButton)
-                .alert(isPresented: $viewModel.isErrorAlert, content: {
-                    Alert(title: Text("게시글 작성"), message: Text(alertMessage), dismissButton: alertButton)
-                })
-                    VStack {
-                        Spacer()
-                        KeyboardToolbar
-                            .frame(height: 44)
-                            .offset(y: keyboardResponder.currentHeight == 0 ? 50 : -keyboardResponder.currentHeight)
-                            .animation(.easeOut(duration: 0.25))
-                    }
-                    .edgesIgnoringSafeArea(.bottom)
+                .alert(
+                    isPresented: $viewModel.isErrorAlert,
+                    content: {
+                        Alert(title: Text("게시글 작성"), message: Text(alertMessage), dismissButton: alertButton)
+                    })
+                VStack {
+                    Spacer()
+                    KeyboardToolbar
+                        .frame(height: 44)
+                        .offset(y: keyboardResponder.currentHeight == 0 ? 50 : -keyboardResponder.currentHeight)
+                        .animation(.easeOut(duration: 0.25))
+                }
+                .edgesIgnoringSafeArea(.bottom)
             }
             .background(Color.backgroundPrimary)
         }
         .ignoresSafeArea(.keyboard)
         .navigationBarBackButtonHidden(true)
     }
-    
+
     var alertButton: Alert.Button {
         var action: (() -> Void)? = nil
         if viewModel.isSubmitted {
@@ -407,7 +406,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     }
 
     var alertMessage: String {
-        if let _ = viewModel.postInfo {
+        if viewModel.postInfo != nil {
             viewModel.isSubmitted ? "게시물이 수정되었습니다." : "게시물을 수정하지 못했습니다. 다시 시도해주세요."
         } else {
             viewModel.isSubmitted ? "게시물이 등록되었습니다." : "게시물을 등록하지 못했습니다. 다시 시도해주세요."
@@ -415,13 +414,18 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel:CommunityPostPu
     }
 }
 
-
 struct CommunityPostPublishView_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityPostPublishView(needRefresh: .constant(false), viewModel: CommunityPostPublishViewModel(boardId: 1, communityRepository: AppContainer.shared.domain.communityRepository, postInfo: .init(title: "title", content: "content", isLiked: false, likeCount: 5, commentCount: 4, imageURLs: [
-            "https://images.unsplash.com/photo-1751193978006-4c19abfb5f3f?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            "https://images.unsplash.com/photo-1754404053324-8f910c2b7e2d?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            "https://plus.unsplash.com/premium_photo-1754067486503-e3f98909b13a?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        ], isAnonymous: true, isMine: true)))
+        CommunityPostPublishView(
+            needRefresh: .constant(false),
+            viewModel: CommunityPostPublishViewModel(
+                boardId: 1, communityRepository: AppContainer.shared.domain.communityRepository,
+                postInfo: .init(
+                    title: "title", content: "content", isLiked: false, likeCount: 5, commentCount: 4,
+                    imageURLs: [
+                        "https://images.unsplash.com/photo-1751193978006-4c19abfb5f3f?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        "https://images.unsplash.com/photo-1754404053324-8f910c2b7e2d?q=80&w=2340&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                        "https://plus.unsplash.com/premium_photo-1754067486503-e3f98909b13a?q=80&w=1587&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                    ], isAnonymous: true, isMine: true)))
     }
 }

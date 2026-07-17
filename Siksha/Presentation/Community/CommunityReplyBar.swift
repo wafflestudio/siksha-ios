@@ -10,35 +10,35 @@ import SwiftUI
 struct CommunityReplyBar: View {
     @State var commentText: String = ""
     @State var isAnonymous: Bool = UserDefaults.standard.bool(forKey: "isAnonymous")
-    var onCommentSubmit: (String,Bool) -> Void
-    
+    var onCommentSubmit: (String, Bool) -> Void
+
     var body: some View {
         ZStack {
             Rectangle()
                 .fill(Color.backgroundPrimary)
                 .frame(height: 52)
-            
+
             RoundedRectangle(cornerRadius: 8)
                 .fill(Color.gray50)
                 .frame(height: 40)
                 .frame(maxWidth: .infinity)
                 .overlay(
                     HStack(spacing: 0) {
-//                        anonymousButton
-//                            .padding(EdgeInsets(top: 11.5, leading: 12, bottom: 7.5, trailing: 8))
+                        //                        anonymousButton
+                        //                            .padding(EdgeInsets(top: 11.5, leading: 12, bottom: 7.5, trailing: 8))
                         TextField(
                             "댓글을 입력하세요.",
                             text: $commentText,
                             prompt: Text("댓글을 입력하세요.").foregroundColor(.gray500)
                         )
-                            .customFont(font: .text13(weight: .Bold))
-                            .padding(.top, 3)
+                        .customFont(font: .text13(weight: .Bold))
+                        .padding(.top, 3)
                         Button(action: {
-                            if(commentText != "") {
-                                onCommentSubmit(commentText,isAnonymous)
+                            if commentText != "" {
+                                onCommentSubmit(commentText, isAnonymous)
                                 commentText = ""
                             }
-                        }){
+                        }) {
                             Text("올리기")
                                 .padding(EdgeInsets(top: 4.5, leading: 10, bottom: 4.5, trailing: 10))
                                 .customFont(font: .text13(weight: .Bold))
@@ -78,7 +78,7 @@ struct CommunityReplyBar: View {
                         .frame(width: 13, height: 13)
                         .foregroundStyle(Color.gray600)
                 }
-                
+
                 configuration.label
                     .customFont(font: .text12(weight: .ExtraBold))
                     .foregroundColor(configuration.isOn ? .orange500 : .gray600)
@@ -94,7 +94,7 @@ struct CommunityReplyBar: View {
 
 struct CommunityReplyBar_Previews: PreviewProvider {
     static var previews: some View {
-        CommunityReplyBar(onCommentSubmit: { commentText,isAnonymous in
+        CommunityReplyBar(onCommentSubmit: { commentText, isAnonymous in
             print("Comment submitted: \(commentText)\nisAnonymous: \(isAnonymous)")
         })
     }

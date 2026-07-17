@@ -40,7 +40,8 @@ final class UserRemoteDataSourceImpl: UserRemoteDataSource {
         )
 
         do {
-            return try await AF
+            return
+                try await AF
                 .upload(multipartFormData: endpoint.multipartFormData!, with: endpoint)
                 .validate()
                 .serializingDecodable(UserDTO.self, decoder: NetworkDecoder.make())
@@ -59,7 +60,8 @@ final class UserRemoteDataSourceImpl: UserRemoteDataSource {
     }
 
     private func validateNoContentRequest(_ request: DataRequest) async throws {
-        _ = try await request
+        _ =
+            try await request
             .validate()
             .serializingData(emptyResponseCodes: [200, 201, 204])
             .value

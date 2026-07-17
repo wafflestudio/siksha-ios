@@ -5,9 +5,9 @@
 //  Created by 이수민 on 9/14/25.
 //
 
+import Combine
 import SwiftUI
 import SwiftyJSON
-import Combine
 
 struct MyReviewManageView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -16,11 +16,11 @@ struct MyReviewManageView: View {
     @State private var showToast = false
     @State private var selectedReview: RestaurantReview?
     @State private var isDeleting = false
-    
+
     init(viewModel: MyReviewViewModel) {
         self._viewModel = StateObject(wrappedValue: viewModel)
     }
-    
+
     var body: some View {
         ZStack {
             Group {
@@ -36,7 +36,7 @@ struct MyReviewManageView: View {
                         Spacer()
                         Text("내가 쓴 리뷰가 없어요")
                             .font(.custom("NanumSquareOTF", size: 15))
-                            .foregroundColor(Color(white: 166/255))
+                            .foregroundColor(Color(white: 166 / 255))
                         Spacer()
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -68,7 +68,7 @@ struct MyReviewManageView: View {
                     }
                 }
             }
-            
+
             if showReviewDeleteAlert {
                 Color.backgroundDim
                     .ignoresSafeArea(.all)
@@ -77,12 +77,12 @@ struct MyReviewManageView: View {
                             showReviewDeleteAlert = false
                         }
                     }
-                
+
                 reviewDeleteAlert
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .padding(.horizontal, 30)
             }
-            
+
             ToastView(
                 type: .check,
                 message: "평가가 삭제되었습니다.",
@@ -97,7 +97,7 @@ struct MyReviewManageView: View {
             viewModel.loadReviews()
         }
     }
-    
+
     private var backButton: some View {
         Button(action: {
             presentationMode.wrappedValue.dismiss()
@@ -109,7 +109,7 @@ struct MyReviewManageView: View {
                 .foregroundColor(.white)
         }
     }
-    
+
     var reviewDeleteAlert: some View {
         VStack(spacing: 0) {
             Spacer()
@@ -138,22 +138,22 @@ struct MyReviewManageView: View {
                 .foregroundColor(.orange500)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .disabled(isDeleting)
-                
+
                 Divider()
                     .foregroundStyle(Color.borderPrimary)
-                
+
                 Button(action: {
                     guard let reviewToDelete = selectedReview, !isDeleting else { return }
-                    
+
                     isDeleting = true
-                    
+
                     viewModel.deleteReview(reviewToDelete.id) { success in
                         isDeleting = false
                         showReviewDeleteAlert = false
-                        
+
                         if success {
                             viewModel.removeReviewFromSection(reviewId: reviewToDelete.id)
-                            
+
                             showToast = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                                 showToast = false
@@ -187,7 +187,7 @@ struct RestaurantSectionView: View {
     @Binding var isExpanded: Bool
     @Binding var showDeleteAlert: Bool
     @Binding var selectedReview: RestaurantReview?
-    
+
     var body: some View {
         VStack(spacing: 0) {
             Button(action: {
@@ -200,20 +200,20 @@ struct RestaurantSectionView: View {
                         .customFont(font: .text16(weight: .Bold))
                         .foregroundColor(Color.blackColor)
                     Spacer()
-                    
+
                     Image("SelectGray")
                         .rotationEffect(.degrees(isExpanded ? 0 : 180))
                 }
                 .padding(.init(top: 13, leading: 16, bottom: 13, trailing: 16))
             }
-            
+
             if isExpanded {
                 Rectangle()
                     .fill(Color.orange500)
                     .frame(height: 1.5)
                     .padding(.horizontal, 15.5)
                     .padding(.bottom, 12)
-                
+
                 VStack(spacing: 16) {
                     ForEach(section.reviews) { review in
                         ReviewCardView(
@@ -237,7 +237,7 @@ struct ReviewCardView: View {
     @Binding var selectedReview: RestaurantReview?
     @Environment(\.menuViewModel) var menuViewModel: MenuViewModel?
     @State private var cancellables = Set<AnyCancellable>()
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             NavigationLink(
@@ -248,53 +248,55 @@ struct ReviewCardView: View {
                         fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
                         fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
                         fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
-                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
-                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
+                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases
+                            .fetchMealReviewScoreDistributionUseCase,
+                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases
+                            .fetchMealReviewKeywordDistributionUseCase,
                         updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
                     )
                     mealInfoVM.updateMealFromId()
-                    
+
                     return MealInfoView(viewModel: mealInfoVM)
                         .environment(\.menuViewModel, menuViewModel)
                         .onAppear {
                             menuViewModel?.reloadOnAppear = false
                         }
                 },
-            label: {
-                HStack(alignment: .center) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack(spacing: 4) {
-                            Text(review.menuName)
-                                .customFont(font: .text15(weight: .ExtraBold))
-                                .foregroundStyle(Color.blackColor)
-                                .lineLimit(1)
-                                .truncationMode(.tail)
-                            
-                            Image("ArrowGray800")
-                                .frame(width: 20, height: 20)
-                            
-                            Spacer()
-                            
-                            Text(review.date)
-                                .customFont(font: .text12(weight: .Bold))
-                                .foregroundColor(Color.gray600)
+                label: {
+                    HStack(alignment: .center) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 4) {
+                                Text(review.menuName)
+                                    .customFont(font: .text15(weight: .ExtraBold))
+                                    .foregroundStyle(Color.blackColor)
+                                    .lineLimit(1)
+                                    .truncationMode(.tail)
+
+                                Image("ArrowGray800")
+                                    .frame(width: 20, height: 20)
+
+                                Spacer()
+
+                                Text(review.date)
+                                    .customFont(font: .text12(weight: .Bold))
+                                    .foregroundColor(Color.gray600)
+                            }
+
+                            RatingStar(.constant(Double(review.rating)), size: 13, spacing: 2, emptyStarType: .filled)
                         }
-                        
-                        RatingStar(.constant(Double(review.rating)), size: 13, spacing: 2, emptyStarType: .filled)
+                        .padding(.init(top: 12, leading: 12, bottom: 16, trailing: 0))
+                        Spacer()
                     }
-                    .padding(.init(top: 12, leading: 12, bottom: 16, trailing: 0))
-                    Spacer()
-                }
-                .background(
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color.elementTooltip2)
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(Color.gray200, lineWidth: 1)
-                )
-            })
-            
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color.elementTooltip2)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color.gray200, lineWidth: 1)
+                    )
+                })
+
             if !review.reviewText.isEmpty {
                 Text(review.reviewText)
                     .customFont(font: .text12(weight: .Regular))
@@ -303,7 +305,7 @@ struct ReviewCardView: View {
                     .padding(.top, 8)
                     .padding(.leading, 4)
             }
-            
+
             if !review.tags.isEmpty {
                 HStack(spacing: 10) {
                     ForEach(review.tags, id: \.self) { tag in
@@ -318,7 +320,7 @@ struct ReviewCardView: View {
                 }
                 .padding(.leading, 4)
             }
-            
+
             if !review.imageUrls.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 8) {
@@ -340,17 +342,20 @@ struct ReviewCardView: View {
                 .padding(.top, 4)
                 .padding(.leading, 4)
             }
-            
+
             HStack(spacing: 16) {
                 Spacer()
-                
-                Button("삭제하기", action: {
-                    selectedReview = review
-                    showDeleteAlert = true
-                })
+
+                Button(
+                    "삭제하기",
+                    action: {
+                        selectedReview = review
+                        showDeleteAlert = true
+                    }
+                )
                 .customFont(font: .text11(weight: .Bold))
                 .foregroundColor(.gray600)
-                
+
                 NavigationLink(destination: {
                     let meal = review.menuDisplayModel
                     let mealInfoVM = MealInfoViewModel(
@@ -358,12 +363,14 @@ struct ReviewCardView: View {
                         fetchMenuUseCase: AppContainer.shared.useCases.fetchMenuUseCase,
                         fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
                         fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase,
-                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewScoreDistributionUseCase,
-                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases.fetchMealReviewKeywordDistributionUseCase,
+                        fetchMealReviewScoreDistributionUseCase: AppContainer.shared.useCases
+                            .fetchMealReviewScoreDistributionUseCase,
+                        fetchMealReviewKeywordDistributionUseCase: AppContainer.shared.useCases
+                            .fetchMealReviewKeywordDistributionUseCase,
                         updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase
                     )
                     mealInfoVM.updateMealFromId()
-                    
+
                     return MealReviewView(meal, mealInfoViewModel: mealInfoVM, editingReview: review)
                         .environment(\.menuViewModel, menuViewModel)
                 }) {
@@ -395,8 +402,9 @@ private extension RestaurantReview {
 }
 
 #Preview {
-    MyReviewManageView(viewModel: MyReviewViewModel(
-        fetchMyReviewsUseCase: AppContainer.shared.useCases.fetchMyReviewsUseCase,
-        deleteMyReviewUseCase: AppContainer.shared.useCases.deleteMyReviewUseCase
-    ))
+    MyReviewManageView(
+        viewModel: MyReviewViewModel(
+            fetchMyReviewsUseCase: AppContainer.shared.useCases.fetchMyReviewsUseCase,
+            deleteMyReviewUseCase: AppContainer.shared.useCases.deleteMyReviewUseCase
+        ))
 }

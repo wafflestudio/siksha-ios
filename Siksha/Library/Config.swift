@@ -9,31 +9,32 @@ import Foundation
 
 final class Config {
     static let shared = Config()
-    
+
     let baseURL: String
     let googleClientId: String
     let nmfNcpKeyId: String
     let kakaoAppKey: String
     let kakaoShareTemplateId: Int64
     let mixpanelToken: String
-    
+
     private let envDict: NSDictionary
-    
+
     private init() {
         #if DEBUG
-        let configKey = "debug"
+            let configKey = "debug"
         #else
-        let configKey = "release"
+            let configKey = "release"
         #endif
-        
+
         guard let path = Bundle.main.path(forResource: "config", ofType: "plist"),
-              let fullDict = NSDictionary(contentsOfFile: path),
-              let envDict = fullDict[configKey] as? NSDictionary else {
+            let fullDict = NSDictionary(contentsOfFile: path),
+            let envDict = fullDict[configKey] as? NSDictionary
+        else {
             fatalError("Failed to load config.plist or parse \(configKey) environment.")
         }
-        
+
         self.envDict = envDict
-        
+
         self.baseURL = Self.getString(from: envDict, key: .serverURL)
         self.googleClientId = Self.getString(from: envDict, key: .googleClientId)
         self.nmfNcpKeyId = Self.getString(from: envDict, key: .nmfNcpKeyId)
@@ -41,7 +42,7 @@ final class Config {
         self.kakaoShareTemplateId = Self.getInt64(from: envDict, key: .kakaoShareTemplateId)
         self.mixpanelToken = Self.getString(from: envDict, key: .mixpanelToken)
     }
-    
+
     enum Key: String {
         case serverURL = "server_url"
         case googleClientId = "google_client_id"
@@ -50,17 +51,18 @@ final class Config {
         case kakaoShareTemplateId = "kakao_share_template_id"
         case mixpanelToken = "mixpanel_token"
     }
-    
+
     private static func getString(from dict: NSDictionary, key: Key) -> String {
         guard let value = dict[key.rawValue] as? String else {
             fatalError("Missing or invalid string for key '\(key.rawValue)' in config.plist.")
         }
         return value
     }
-    
+
     private static func getInt64(from dict: NSDictionary, key: Key) -> Int64 {
         guard let str = dict[key.rawValue] as? String,
-              let value = Int64(str) else {
+            let value = Int64(str)
+        else {
             fatalError("Missing or invalid Int64 string for key '\(key.rawValue)' in config.plist.")
         }
         return value

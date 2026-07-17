@@ -12,12 +12,12 @@ struct RestaurantOrderRow: View {
     var isVisible: Bool = true
     var onLikeTap: () -> Void = {}
     var onVisibilityTap: () -> Void = {}
-    
+
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
             ZStack(alignment: .leading) {
                 Color.elementTooltip2.cornerRadius(12).shadow(color: .black.opacity(0.16), radius: 1.5, x: 0, y: 0)
-                
+
                 HStack(alignment: .center, spacing: 4) {
                     Button(action: onLikeTap) {
                         Image(isLiked ? .Icons.Common.Star.filled20 : .Icons.Common.Star.unfilled20)
@@ -43,7 +43,7 @@ struct RestaurantOrderRow: View {
             .padding(.vertical, 6)
             .padding(.horizontal, 8)
             .background(Color.gray50)
-            
+
             Image("ReorderHandle")
                 .renderingMode(.template)
                 .foregroundStyle(Color.iconGrayIcon)

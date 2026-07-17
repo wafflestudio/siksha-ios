@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct MyLikedMenuView: View {
-    @Environment(\.presentationMode) var presentationMode:
-        Binding<PresentationMode>
-    @ObservedObject var viewModel:MyLikedMenuViewModel
+    @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @ObservedObject var viewModel: MyLikedMenuViewModel
     var backButton: some View {
         Button(action: {
             ContentViewModel.contentViewModel.showPopUp = false
@@ -22,7 +21,7 @@ struct MyLikedMenuView: View {
                 .foregroundColor(.white)
         }
     }
-    init(viewModel:MyLikedMenuViewModel){
+    init(viewModel: MyLikedMenuViewModel) {
         self.viewModel = viewModel
 
     }
@@ -30,24 +29,26 @@ struct MyLikedMenuView: View {
         ZStack(alignment: .topTrailing) {
             contentView
         }
-     
+
         .padding(.zero)
 
         .customNavigationBar(title: "내가 찜한 메뉴")
         .navigationBarItems(leading: backButton)
         .navigationBarItems(
-            trailing: NavigationLink(destination:AlarmView(viewModel:viewModel)){Image("notification").padding(
-                EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
-            })
-        .onAppear{
+            trailing: NavigationLink(destination: AlarmView(viewModel: viewModel)) {
+                Image("notification").padding(
+                    EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
+            }
+        )
+        .onAppear {
             ContentViewModel.contentViewModel.showPopUp = true
 
         }
         .task {
             await viewModel.loadMyLikedMenu()
         }
-       
-        .onDisappear{
+
+        .onDisappear {
             viewModel.unLikedMenuCleanup()
             ContentViewModel.contentViewModel.showPopUp = false
 
@@ -80,28 +81,34 @@ private extension MyLikedMenuView {
             }
         }
     }
-    
+
     var emptyView: some View {
-        ZStack(alignment: .center, content: {
-            Text("내가 찜한 메뉴가 없어요")
-                .customFont(font: .text15(weight: .Bold))
-                .foregroundColor(Color.gray600)
-        })
-        .frame(maxWidth: .infinity,maxHeight: .infinity)
+        ZStack(
+            alignment: .center,
+            content: {
+                Text("내가 찜한 메뉴가 없어요")
+                    .customFont(font: .text15(weight: .Bold))
+                    .foregroundColor(Color.gray600)
+            }
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     var loadFailedView: some View {
-        ZStack(alignment: .center, content: {
-            Text("내가 찜한 메뉴를 불러오지 못했어요")
-                .customFont(font: .text15(weight: .Bold))
-                .foregroundColor(Color.gray600)
-        })
-        .frame(maxWidth: .infinity,maxHeight: .infinity)
+        ZStack(
+            alignment: .center,
+            content: {
+                Text("내가 찜한 메뉴를 불러오지 못했어요")
+                    .customFont(font: .text15(weight: .Bold))
+                    .foregroundColor(Color.gray600)
+            }
+        )
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     var likedMenuListView: some View {
         ScrollView {
-            VStack(spacing:12){
+            VStack(spacing: 12) {
                 ForEach(viewModel.likedMenuGroups, id: \.self) { group in
                     LikedMenuRestaurantCell(viewModel, group)
                 }

@@ -38,7 +38,7 @@ struct MenuIdResponse: Codable {
     let reviewCnt: Int
     let isLiked: Bool
     let likeCnt: Int
-    
+
     enum CodingKeys: String, CodingKey {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
@@ -54,7 +54,7 @@ struct MenuIdResponse: Codable {
 
 struct FestivalDatesResponse: Codable {
     var festivalDates: [String]
-    
+
     enum CodingKeys: String, CodingKey {
         case festivalDates = "festival_dates"
     }
@@ -63,11 +63,11 @@ struct KeywordDistributionResponse: Codable {
     let tasteKeyword: String
     let tasteCnt: Int
     let tasteTotal: Int
-    
+
     let priceKeyword: String
     let priceCnt: Int
     let priceTotal: Int
-    
+
     let foodCompositionKeyword: String
     let foodCompositionCnt: Int
     let foodCompositionTotal: Int

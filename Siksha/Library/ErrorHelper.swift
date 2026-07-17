@@ -12,7 +12,7 @@ struct ErrorHelper {
         if let urlError = error as? URLError {
             return handleURLError(urlError)
         }
-        
+
         if let decodingError = error as? DecodingError {
             return handleDecodingError(decodingError)
         }
@@ -53,7 +53,7 @@ struct ErrorHelper {
             return .parsingError("알 수 없는 디코딩 오류가 발생했습니다.")
         }
     }
-    
+
     private static func handleAPIError(_ error: Error) -> AppError? {
         if let networkError = error as? NetworkError {
             switch networkError {

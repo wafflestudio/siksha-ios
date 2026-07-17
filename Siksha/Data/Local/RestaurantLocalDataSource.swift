@@ -38,7 +38,8 @@ final class RestaurantLocalDataSourceImpl: RestaurantLocalDataSource {
 
     func fetchPersonalRestaurants() -> [PersonalRestaurantDTO]? {
         guard let data = userDefaults.data(forKey: Key.personalRestaurants),
-              let restaurants = try? decoder.decode([PersonalRestaurantDTO].self, from: data) else {
+            let restaurants = try? decoder.decode([PersonalRestaurantDTO].self, from: data)
+        else {
             return nil
         }
         return restaurants
@@ -103,7 +104,8 @@ final class RestaurantLocalDataSourceImpl: RestaurantLocalDataSource {
         transform: (PersonalRestaurantDTO) -> PersonalRestaurantDTO
     ) {
         guard var cachedRestaurants = fetchPersonalRestaurants(),
-              let index = cachedRestaurants.firstIndex(where: { $0.id == restaurantId }) else {
+            let index = cachedRestaurants.firstIndex(where: { $0.id == restaurantId })
+        else {
             return
         }
 

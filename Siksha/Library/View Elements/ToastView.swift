@@ -11,48 +11,40 @@ struct ToastView: View {
     enum ToastType {
         case error
         case check
-        
+
         var image: Image {
             switch self {
             case .error: return Image(.Icons.Common.alertCircle)
             case .check: return Image("CheckCircleOrange")
             }
         }
-//        
-//        var iconColor: Color {
-//            switch self {
-//            case .error: return .orange500
-//            case .check: return .orange500
-//            }
-//        }
     }
-    
+
     let type: ToastType
     let message: String
     let bottomMargin: CGFloat
     let isVisible: Bool
-    
+
     init(type: ToastType = .error, message: String, bottomMargin: CGFloat = 20, isVisible: Bool) {
         self.type = type
         self.message = message
         self.bottomMargin = bottomMargin
         self.isVisible = isVisible
     }
-    
+
     var body: some View {
         VStack {
             Spacer()
-            
+
             ZStack(alignment: .center) {
                 RoundedRectangle(cornerRadius: 8.0)
                     .fill(Color.backgroundToast)
-                
+
                 HStack(spacing: 0) {
                     type.image
                         .frame(width: 14, height: 14)
-//                        .foregroundColor(type.iconColor)
                         .padding(.trailing, 10)
-                    
+
                     Text(message)
                         .font(.custom("NanumSquareOTFB", size: 12))
                         .lineLimit(1)

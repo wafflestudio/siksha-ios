@@ -15,32 +15,40 @@ enum AnalyticsEvent {
 
     var name: String {
         switch self {
-        case .filterModalOpened:   return "filter_modal_opened"
-        case .filterModalApplied:  return "filter_modal_applied"
-        case .filterReset:         return "filter_reset"
-        case .instantFilterToggled:return "instant_filter_toggled"
+        case .filterModalOpened: return "filter_modal_opened"
+        case .filterModalApplied: return "filter_modal_applied"
+        case .filterReset: return "filter_reset"
+        case .instantFilterToggled: return "instant_filter_toggled"
         }
     }
 
     var properties: Properties {
         switch self {
         case let .filterModalOpened(entryPoint, pageName):
-            return [AnalyticsKey.entryPoint: entryPoint,
-                    AnalyticsKey.pageName: pageName]
+            return [
+                AnalyticsKey.entryPoint: entryPoint,
+                AnalyticsKey.pageName: pageName,
+            ]
 
         case let .filterModalApplied(entryPoint, applied, pageName):
-            return [AnalyticsKey.entryPoint: entryPoint,
-                    AnalyticsKey.appliedFilterOptions: applied,
-                    AnalyticsKey.pageName: pageName]
+            return [
+                AnalyticsKey.entryPoint: entryPoint,
+                AnalyticsKey.appliedFilterOptions: applied,
+                AnalyticsKey.pageName: pageName,
+            ]
 
         case let .filterReset(entryPoint, pageName):
-            return [AnalyticsKey.entryPoint: entryPoint,
-                    AnalyticsKey.pageName: pageName]
+            return [
+                AnalyticsKey.entryPoint: entryPoint,
+                AnalyticsKey.pageName: pageName,
+            ]
 
         case let .instantFilterToggled(filter, value, pageName):
-            return [AnalyticsKey.filterType: filter.rawValue,
-                    AnalyticsKey.filterValue: value,
-                    AnalyticsKey.pageName: pageName]
+            return [
+                AnalyticsKey.filterType: filter.rawValue,
+                AnalyticsKey.filterValue: value,
+                AnalyticsKey.pageName: pageName,
+            ]
         }
     }
 }

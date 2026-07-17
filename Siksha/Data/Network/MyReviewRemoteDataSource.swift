@@ -21,9 +21,10 @@ final class MyReviewRemoteDataSourceImpl: MyReviewRemoteDataSource {
             .serializingDecodable(MyReviewPageResponseDTO.self)
             .value
     }
-    
+
     func deleteMyReview(reviewId: Int) async throws {
-        _ = try await AF
+        _ =
+            try await AF
             .request(SikshaAPI.deleteMyReview(reviewId: reviewId))
             .validate()
             .serializingData(emptyResponseCodes: [200, 201, 204])

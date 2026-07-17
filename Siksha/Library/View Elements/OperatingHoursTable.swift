@@ -10,38 +10,38 @@ import SwiftUI
 struct OperatingHoursCell: View {
     private let type: String
     private var hours = [(String, String)]()
-    
+
     init(type: String, hours: [String], isFestivalRestaurant: Bool) {
         self.type = type
-        
+
         if hours.count == 3 {
-    
-                self.hours.append(("아침", hours[0]))
-                self.hours.append(("점심", hours[1]))
-                self.hours.append(("저녁", hours[2]))
-            
+
+            self.hours.append(("아침", hours[0]))
+            self.hours.append(("점심", hours[1]))
+            self.hours.append(("저녁", hours[2]))
+
         } else if hours.count == 2 {
-                self.hours.append(("점심", hours[0]))
-                self.hours.append(("저녁", hours[1]))
-            
+            self.hours.append(("점심", hours[0]))
+            self.hours.append(("저녁", hours[1]))
+
         } else if hours.count == 1 {
             self.hours.append(("", hours[0]))
         }
     }
-    
+
     var body: some View {
         HStack(alignment: .top) {
             Text(type)
                 .customFont(font: .text14(weight: .Bold))
             Spacer()
-        
+
             if hours.count > 0 {
                 VStack(alignment: .trailing, spacing: 4) {
                     ForEach(hours, id: \.0) { hourType, hour in
                         HStack(spacing: 0.5) {
                             Image(hourType)
                                 .resizable()
-                                .frame(width:20,height:20)
+                                .frame(width: 20, height: 20)
                             Text(hour)
                                 .customFont(font: .text14(weight: .Regular))
                                 .foregroundStyle(Color.gray900)
@@ -64,32 +64,32 @@ struct OperatingHoursTable: View {
     private let weHours: [String]
     private let hoHours: [String]
     private let isFestivalRestaurant: Bool
-    
+
     private let dividerColor = Color.borderPrimary
-    
+
     init(hours: [String], isFestivalRestaurant: Bool) {
         self.wdHours = hours.indices.contains(0) ? hours[0].split(separator: "\n").map { String($0) } : []
         self.weHours = hours.indices.contains(1) ? hours[1].split(separator: "\n").map { String($0) } : []
         self.hoHours = hours.indices.contains(2) ? hours[2].split(separator: "\n").map { String($0) } : []
         self.isFestivalRestaurant = isFestivalRestaurant
     }
-    
+
     var body: some View {
-        VStack(spacing:0) {
+        VStack(spacing: 0) {
             OperatingHoursCell(type: "주중", hours: wdHours, isFestivalRestaurant: self.isFestivalRestaurant)
-            
+
             dividerColor
                 .frame(height: 1)
                 .frame(maxWidth: .infinity)
                 .padding([.leading, .trailing], 16)
-            
+
             OperatingHoursCell(type: "토요일", hours: weHours, isFestivalRestaurant: self.isFestivalRestaurant)
-            
+
             dividerColor
                 .frame(height: 1)
                 .frame(maxWidth: .infinity)
                 .padding([.leading, .trailing], 16)
-            
+
             OperatingHoursCell(type: "휴일", hours: hoHours, isFestivalRestaurant: self.isFestivalRestaurant)
         }
     }
@@ -104,7 +104,7 @@ struct OperatingHoursTable_Previews: PreviewProvider {
             return hours
         }
 
-        VStack(spacing:0){
+        VStack(spacing: 0) {
             OperatingHoursTable(hours: operatingHours, isFestivalRestaurant: false)
         }
         .preferredColorScheme(.light)

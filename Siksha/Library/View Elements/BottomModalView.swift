@@ -13,14 +13,14 @@ struct BottomModalView<Content: View>: View {
     let height: CGFloat
     let content: Content
     let title: String
-    
+
     init(isPresented: Binding<Bool>, title: String, height: CGFloat, @ViewBuilder content: @escaping () -> Content) {
         self.height = height
         self.title = title
         self.content = content()
         self._isPresented = isPresented
     }
-    
+
     var body: some View {
         GeometryReader { geometry in
             VStack {
@@ -28,12 +28,15 @@ struct BottomModalView<Content: View>: View {
                     .fill(Color.init("Color/Foundation/Gray/600"))
                     .frame(width: 50, height: 5)
                     .padding(.top, 10)
-                
+
                 content
             }
             .background(Color(.systemBackground).cornerRadius(25))
             .edgesIgnoringSafeArea(.bottom)
-            .position(x: geometry.size.width/2, y: geometry.size.height*3/2 - height + geometry.safeAreaInsets.bottom/2)
+            .position(
+                x: geometry.size.width / 2,
+                y: geometry.size.height * 3 / 2 - height + geometry.safeAreaInsets.bottom / 2
+            )
             .offset(y: max(self.translation, -5))
             .simultaneousGesture(
                 DragGesture().updating($translation) { (value, state, transaction) in

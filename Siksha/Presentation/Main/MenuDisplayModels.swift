@@ -52,7 +52,7 @@ struct KakaoShareRestaurantModel {
         let nameKr: String
         let price: Int
     }
-    
+
     let nameKr: String
     let menus: [Menu]
 }
@@ -72,7 +72,7 @@ extension MenuItemDisplayModel {
             imageURLStrings: menu.imageURLStrings
         )
     }
-    
+
     var menuModel: MenuModel {
         MenuModel(
             id: id,
@@ -87,7 +87,7 @@ extension MenuItemDisplayModel {
             imageURLStrings: imageURLStrings
         )
     }
-    
+
     func updatingLike(isLiked: Bool, likeCount: Int) -> MenuItemDisplayModel {
         MenuItemDisplayModel(
             id: id,
@@ -102,13 +102,14 @@ extension MenuItemDisplayModel {
             imageURLStrings: imageURLStrings
         )
     }
-    
+
     func updatingAfterReviewSubmission(score submittedScore: Int) -> MenuItemDisplayModel {
         let newReviewCount = reviewCount + 1
-        let newScore = newReviewCount > 0
+        let newScore =
+            newReviewCount > 0
             ? ((score * Double(reviewCount)) + Double(submittedScore)) / Double(newReviewCount)
             : score
-        
+
         return MenuItemDisplayModel(
             id: id,
             code: code,
@@ -134,7 +135,7 @@ extension RestaurantMenusDisplayModel {
             operatingHours: operatingHours
         )
     }
-    
+
     var kakaoShareModel: KakaoShareRestaurantModel {
         KakaoShareRestaurantModel(
             nameKr: nameKr,

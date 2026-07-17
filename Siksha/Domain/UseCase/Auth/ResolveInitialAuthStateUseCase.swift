@@ -58,10 +58,12 @@ final class DefaultResolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCas
             }
         }
 
-        guard session.needsRefresh(
-            asOf: currentDate,
-            refreshWindow: refreshWindow
-        ) else {
+        guard
+            session.needsRefresh(
+                asOf: currentDate,
+                refreshWindow: refreshWindow
+            )
+        else {
             return .authenticated(session)
         }
 

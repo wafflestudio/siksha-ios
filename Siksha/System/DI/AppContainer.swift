@@ -7,12 +7,12 @@
 
 final class AppContainer {
     static let shared = AppContainer()
-    
+
     let domain: RepositoryProvider
     let useCases: UseCaseProvider
     let socialLoginService: SocialLoginService
     let menuAlarmNotificationManager: MenuAlarmNotificationManaging
-    
+
     init() {
         let networkModule = AlamofireNetworking()
         let repository = Repository(networkModule: networkModule)
@@ -21,7 +21,7 @@ final class AppContainer {
         let useCases = UseCaseProvider(
             pushMessagingTokenService: pushMessagingTokenService
         )
-        
+
         self.domain = domain
         self.useCases = useCases
         self.socialLoginService = SocialLoginServiceImpl()

@@ -16,14 +16,14 @@ struct Board: Decodable {
         case createdAt = "created_at"
         case updatedAt = "updated_at"
     }
-    
+
     let id: Int
     let type: Int
     let name: String
     let description: String
     let createdAt: Date
     let updatedAt: Date
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
@@ -41,11 +41,11 @@ struct PostsPage: Decodable {
         case totalCount = "total_count"
         case hasNext = "has_next"
     }
-    
+
     let posts: [Post]
     let totalCount: Int
     let hasNext: Bool
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.posts = try container.decode([Post].self, forKey: .posts)
@@ -72,7 +72,7 @@ struct Post: Decodable {
         case anonymous
         case isMine = "is_mine"
     }
-    
+
     let id: Int
     let boardId: Int
     let nickname: String?
@@ -88,7 +88,7 @@ struct Post: Decodable {
     let anonymous: Bool
     let isMine: Bool
     var images: [String]?
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.id = try container.decode(Int.self, forKey: .id)
@@ -108,7 +108,7 @@ struct Post: Decodable {
         let etc = try container.decodeIfPresent([String: [String]].self, forKey: .etc)
         images = etc?["images"] ?? nil
     }
-    
+
     init() {
         self.id = 0
         self.boardId = 0
@@ -126,9 +126,9 @@ struct Post: Decodable {
         self.profileUrl = nil
     }
 }
-struct SubmitPostResponse:Codable{
+struct SubmitPostResponse: Codable {
     var board_id: Int
-    var title : String
+    var title: String
     var content: String
     var created_at: String
     var updated_at: String
@@ -141,18 +141,17 @@ struct SubmitPostResponse:Codable{
     var is_mine: Bool
 }
 
-
 struct CommentsPage: Decodable {
     enum CodingKeys: String, CodingKey {
         case comments = "result"
         case totalCount = "total_count"
         case hasNext = "has_next"
     }
-    
+
     let comments: [Comment]
     let totalCount: Int
     let hasNext: Bool
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.comments = try container.decode([Comment].self, forKey: .comments)
@@ -161,8 +160,7 @@ struct CommentsPage: Decodable {
     }
 }
 
-
-struct Comment: Decodable,Identifiable {
+struct Comment: Decodable, Identifiable {
     enum CodingKeys: String, CodingKey {
         case id
         case postId = "post_id"
@@ -177,7 +175,7 @@ struct Comment: Decodable,Identifiable {
         case anonymous
         case isMine = "is_mine"
     }
-    
+
     let id: Int
     let postId: Int
     let content: String
@@ -207,16 +205,16 @@ struct Comment: Decodable,Identifiable {
         isMine = try container.decode(Bool.self, forKey: .isMine)
     }
 }
-struct PostReportResponse: Codable{
+struct PostReportResponse: Codable {
     var id: Int
     var reason: String
     var post_id: Int
 }
-struct CommentReportResponse: Codable{
+struct CommentReportResponse: Codable {
     var id: Int
     var reason: String
     var comment_id: Int
 }
-struct TrendingPostsResponse:Decodable {
-    var result:[Post]
+struct TrendingPostsResponse: Decodable {
+    var result: [Post]
 }

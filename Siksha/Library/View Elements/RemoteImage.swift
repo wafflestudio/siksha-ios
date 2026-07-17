@@ -53,7 +53,8 @@ final class RemoteImageLoader: ObservableObject {
             guard representedURL == url else { return }
 
             if let response = response as? HTTPURLResponse,
-               !(200..<300).contains(response.statusCode) {
+                !(200..<300).contains(response.statusCode)
+            {
                 phase = .failed
                 return
             }

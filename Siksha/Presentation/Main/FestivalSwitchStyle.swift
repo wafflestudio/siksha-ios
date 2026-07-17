@@ -8,13 +8,15 @@
 import SwiftUI
 
 struct FestivalSwitchStyle: ToggleStyle {
-    private let onColor = LinearGradient(colors: [Color("Color/Foundation/Orange/500"), Color(hex: 0xFF9DA4)], startPoint: .leading, endPoint: .trailing)
-    private let offColor = LinearGradient(colors: [Color("Color/Foundation/Gray/500")], startPoint: .leading, endPoint: .trailing)
-    
+    private let onColor = LinearGradient(
+        colors: [Color("Color/Foundation/Orange/500"), Color(hex: 0xFF9DA4)], startPoint: .leading, endPoint: .trailing)
+    private let offColor = LinearGradient(
+        colors: [Color("Color/Foundation/Gray/500")], startPoint: .leading, endPoint: .trailing)
+
     func makeBody(configuration: Configuration) -> some View {
         RoundedRectangle(cornerRadius: 25)
             .fill(configuration.isOn ? onColor : offColor)
-            .frame(width:50, height:24)
+            .frame(width: 50, height: 24)
             .overlay(
                 Circle()
                     .fill(Color.white)
@@ -25,15 +27,13 @@ struct FestivalSwitchStyle: ToggleStyle {
                         Circle()
                             .stroke(Color.black.opacity(0.04), lineWidth: 0.7)
                     )
-                    .offset(x: configuration.isOn ? 28 : 2)
-                , alignment: .leading
+                    .offset(x: configuration.isOn ? 28 : 2), alignment: .leading
             )
             .overlay(
                 Text("축제")
                     .foregroundColor(Color.white)
                     .font(.custom("NanumSquareOTFB", size: 10))
-                    .offset(x: configuration.isOn ? 6 : 26, y:0)
-                , alignment: .leading
+                    .offset(x: configuration.isOn ? 6 : 26, y: 0), alignment: .leading
             )
             .onTapGesture {
                 configuration.$isOn.wrappedValue.toggle()
@@ -44,7 +44,7 @@ struct FestivalSwitchStyle: ToggleStyle {
 
 struct FestivalSwitchStylePreviewWrapper: View {
     @State private var isOn = false
-    
+
     var body: some View {
         Toggle(isOn: $isOn) {
             EmptyView()

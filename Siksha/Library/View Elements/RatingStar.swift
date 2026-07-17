@@ -17,33 +17,33 @@ struct RatingStar: View {
     private var starSize: CGFloat
     private var spacing: CGFloat
     private var emptyStarType: EmptyStarType
-    
-    init(_ score: Binding<Double>, size: CGFloat, spacing: CGFloat = 8, emptyStarType: EmptyStarType = .empty){
+
+    init(_ score: Binding<Double>, size: CGFloat, spacing: CGFloat = 8, emptyStarType: EmptyStarType = .empty) {
         self._score = score
         self.starSize = size
         self.spacing = spacing
         self.emptyStarType = emptyStarType
     }
-    
+
     func starImage(_ index: Int) -> some View {
         let intScore = Int(score * 2)
 
         var image: String
-        
+
         if index * 2 < intScore - 1 {
             image = "RatingFilled"
         } else if index * 2 < intScore {
             image = "RatingHalf"
         } else {
-            image = emptyStarType == .empty ? "RatingEmpty" :"RatingEmptyFilled"
+            image = emptyStarType == .empty ? "RatingEmpty" : "RatingEmptyFilled"
         }
-        
+
         return Image(image)
             .resizable()
             .aspectRatio(contentMode: .fill)
-            .frame(width: starSize * 13/12, height: starSize)
+            .frame(width: starSize * 13 / 12, height: starSize)
     }
-    
+
     var body: some View {
         HStack(spacing: spacing) {
             ForEach(0..<5) { index in

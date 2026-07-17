@@ -10,9 +10,9 @@ import SwiftUI
 struct MapMarker: View {
     @Environment(\.colorScheme) private var colorScheme
 
-    let name:String
+    let name: String
     var body: some View {
-        ZStack{
+        ZStack {
             Image("mapMarker")
             Text(name)
                 .customFont(font: .text14(weight: .Bold))
@@ -24,5 +24,5 @@ struct MapMarker: View {
 }
 
 #Preview {
-    MapMarker(name:"학생회관")
+    MapMarker(name: "학생회관")
 }

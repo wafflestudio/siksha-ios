@@ -11,7 +11,7 @@ struct MyReviewPageResponseDTO: Decodable {
     let totalCount: Int
     let hasNext: Bool
     let result: [MyReviewRestaurantDTO]
-    
+
     enum CodingKeys: String, CodingKey {
         case totalCount = "total_count"
         case hasNext = "has_next"
@@ -24,7 +24,7 @@ struct MyReviewRestaurantDTO: Decodable {
     let nameKr: String
     let nameEn: String?
     let reviews: [MyReviewDTO]
-    
+
     enum CodingKeys: String, CodingKey {
         case restaurantId = "restaurant_id"
         case nameKr = "name_kr"
@@ -46,7 +46,7 @@ struct MyReviewDTO: Decodable {
     let updatedAt: String
     let keywordReviews: [String?]
     let isLiked: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case menuId = "menu_id"
@@ -101,7 +101,7 @@ private extension MyReviewDTO {
             isLiked: isLiked
         )
     }
-    
+
     static func date(from string: String) -> Date? {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime]

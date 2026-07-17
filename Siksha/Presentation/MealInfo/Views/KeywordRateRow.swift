@@ -9,9 +9,9 @@ import SwiftUI
 
 struct KeywordRateRow: View {
     let summary: ReviewKeywordSummary
-    
+
     @State private var barWidth: CGFloat = 0
-    
+
     var body: some View {
         HStack(spacing: 0) {
             summary.type.displayIcon
@@ -20,13 +20,13 @@ struct KeywordRateRow: View {
                 .frame(width: 24, height: 24)
                 .padding(.trailing, 6)
                 .padding(.leading, 14)
-            
+
             Text(summary.keyword.isEmpty ? summary.type.displayTitle : summary.keyword)
                 .customFont(font: .text13(weight: .Bold))
                 .foregroundStyle(summary.keyword.isEmpty ? Color.gray600 : Color.gray800)
-            
+
             Spacer()
-            
+
             Text("\(summary.count)")
                 .customFont(font: .text14(weight: .ExtraBold))
                 .foregroundStyle(Color.orange500)
@@ -38,7 +38,7 @@ struct KeywordRateRow: View {
         .background {
             ZStack(alignment: .leading) {
                 Color.gray100
-                
+
                 if summary.total > 0 {
                     RoundedRectangle(cornerRadius: 8)
                         .fill(Color.orangeTint)

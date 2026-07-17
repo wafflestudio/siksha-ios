@@ -5,8 +5,8 @@
 //  Created by 권현구 on 1/26/25.
 //
 
-import SwiftUI
 import CoreLocation
+import SwiftUI
 
 enum MenuFilterType {
     case all
@@ -14,7 +14,7 @@ enum MenuFilterType {
     case price
     case minimumRating
     case category
-    
+
     var modalSheetHeight: CGFloat {
         switch self {
         case .all:
@@ -30,14 +30,14 @@ enum MenuFilterType {
 extension MenuFilterType {
     var entryPoint: EntryPoint {
         switch self {
-        case .all:            return .mainFilter
-        case .distance:       return .distanceFilter
-        case .price:          return .priceFilter
-        case .minimumRating:  return .ratingFilter
-        case .category:       return .categoryFilter
+        case .all: return .mainFilter
+        case .distance: return .distanceFilter
+        case .price: return .priceFilter
+        case .minimumRating: return .ratingFilter
+        case .category: return .categoryFilter
         }
     }
-    
+
     var entryPointString: String {
         entryPoint.rawValue
     }
@@ -64,9 +64,9 @@ struct MenuFilterView: View {
     let maxPrice = 10000.0
     let minPrice = 2500.0
     let maxDistance = 1000.0
-    
+
     var menuFilterType: MenuFilterType
-    
+
     // menuViewModel 사용
     init(menuViewModel: MenuViewModel, menuFilterType: MenuFilterType) {
         self.menuViewModel = menuViewModel
@@ -96,7 +96,7 @@ struct MenuFilterView: View {
             menuFilterViewModel.selectedCategories = selectedCategories
         }
     }
-    
+
     var body: some View {
         VStack(spacing: 0) {
             switch menuFilterType {
@@ -106,15 +106,15 @@ struct MenuFilterView: View {
                     .frame(width: 46, height: 4)
                     .padding(.top, 15)
                     .padding(.bottom, 10)
-                
+
                 ZStack {
                     Text("필터")
                         .customFont(font: .text14(weight: .Bold))
                         .foregroundStyle(Color.blackColor)
-                    
+
                     HStack {
                         Spacer()
-                        
+
                         Button(action: { dismiss() }) {
                             Image("Close")
                                 .resizable()
@@ -126,15 +126,16 @@ struct MenuFilterView: View {
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.bottom, 4)
-                
+
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 40) {
                         SectionHeader(title: "거리")
                         DistanceSliderView(targetValue: $menuFilterViewModel.distanceValue)
-                        
+
                         SectionHeader(title: "가격")
-                        PriceRangeSliderView(lowerValue: $menuFilterViewModel.lowerPrice, upperValue: $menuFilterViewModel.upperPrice)
-                        
+                        PriceRangeSliderView(
+                            lowerValue: $menuFilterViewModel.lowerPrice, upperValue: $menuFilterViewModel.upperPrice)
+
                         PickerFilterSection(title: "영업시간") {
                             SegmentedPicker(
                                 selectedOption: $menuFilterViewModel.isOpen,
@@ -143,7 +144,7 @@ struct MenuFilterView: View {
                                 isRateFilter: false
                             )
                         }
-                        
+
                         PickerFilterSection(title: "즐겨찾기") {
                             SegmentedPicker(
                                 selectedOption: $menuFilterViewModel.isFavorite,
@@ -152,7 +153,7 @@ struct MenuFilterView: View {
                                 isRateFilter: false
                             )
                         }
-                        
+
                         PickerFilterSection(title: "리뷰") {
                             SegmentedPicker(
                                 selectedOption: $menuFilterViewModel.hasReview,
@@ -161,7 +162,7 @@ struct MenuFilterView: View {
                                 isRateFilter: false
                             )
                         }
-                        
+
                         PickerFilterSection(title: "최소 평점") {
                             SegmentedPicker(
                                 selectedOption: $menuFilterViewModel.minimumRating,
@@ -170,12 +171,12 @@ struct MenuFilterView: View {
                                 isRateFilter: true
                             )
                         }
-                        
-//                        VStack(spacing: 14.5) {
-//                            SectionHeader(title: "카테고리")
-//                            CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
-//                        }
-                        
+
+                        //                        VStack(spacing: 14.5) {
+                        //                            SectionHeader(title: "카테고리")
+                        //                            CategoriesFlowLayout(items: categories, selected: $menuFilterViewModel.selectedCategories)
+                        //                        }
+
                         // bottom padding
                         Rectangle()
                             .frame(height: 48)
@@ -183,7 +184,7 @@ struct MenuFilterView: View {
                     }
                 }
                 .padding(.horizontal, 16)
-                
+
             case .distance:
                 VStack(spacing: 0) {
                     SectionHeader(title: "거리")
@@ -197,7 +198,8 @@ struct MenuFilterView: View {
                 VStack(spacing: 0) {
                     SectionHeader(title: "가격")
                         .padding(.bottom, 56.5)
-                    PriceRangeSliderView(lowerValue: $menuFilterViewModel.lowerPrice, upperValue: $menuFilterViewModel.upperPrice)
+                    PriceRangeSliderView(
+                        lowerValue: $menuFilterViewModel.lowerPrice, upperValue: $menuFilterViewModel.upperPrice)
                     Spacer()
                 }
                 .padding(.horizontal, 16)
@@ -225,7 +227,7 @@ struct MenuFilterView: View {
                 .padding(.horizontal, 16)
                 .padding(.top, 16)
             }
-            
+
             ZStack {
                 if menuFilterType == .all {
                     Rectangle()
@@ -234,7 +236,7 @@ struct MenuFilterView: View {
                         .shadow(color: Color.black.opacity(0.05), radius: 3, y: -1)
                         .zIndex(0)
                 }
-                
+
                 HStack {
                     Text("초기화")
                         .customFont(font: .text16(weight: .Bold))
@@ -247,9 +249,11 @@ struct MenuFilterView: View {
                         )
                         .onTapGesture {
                             resetFilters()
-                            menuViewModel.analytics.track(.filterReset(entryPoint: menuFilterType.entryPointString, pageName: menuViewModel.pageName))
+                            menuViewModel.analytics.track(
+                                .filterReset(
+                                    entryPoint: menuFilterType.entryPointString, pageName: menuViewModel.pageName))
                         }
-                    
+
                     Text("적용")
                         .customFont(font: .text16(weight: .Bold))
                         .frame(maxWidth: .infinity)
@@ -263,7 +267,11 @@ struct MenuFilterView: View {
                             applyFilters()
                         }
                 }
-                .padding(EdgeInsets(top: menuFilterType == .all ? 19 : 0, leading: 16, bottom: menuFilterType == .all ? 54 : 45, trailing: 16))
+                .padding(
+                    EdgeInsets(
+                        top: menuFilterType == .all ? 19 : 0, leading: 16, bottom: menuFilterType == .all ? 54 : 45,
+                        trailing: 16)
+                )
                 .background(Color.backgroundSecondary)
                 .zIndex(1)
             }
@@ -271,18 +279,21 @@ struct MenuFilterView: View {
         .ignoresSafeArea()
         .background(Color.backgroundSecondary)
         .filterCloseButton(filterType: menuFilterType, closeAction: dismiss)
-        .alert("위치정보 이용에 대한 엑세스 권한이 없어요.", isPresented: $isDistanceAlertPresented, actions: {
-            Button("취소", action: {}).keyboardShortcut(.defaultAction)
-            Button("설정하기") {
-                if let url = URL(string: UIApplication.openSettingsURLString) {
-                    UIApplication.shared.open(url)
+        .alert(
+            "위치정보 이용에 대한 엑세스 권한이 없어요.", isPresented: $isDistanceAlertPresented,
+            actions: {
+                Button("취소", action: {}).keyboardShortcut(.defaultAction)
+                Button("설정하기") {
+                    if let url = URL(string: UIApplication.openSettingsURLString) {
+                        UIApplication.shared.open(url)
+                    }
                 }
-            }
-        }, message: {
-            Text("앱 설정으로 가서 위치 권한을 수정할 수 있어요. 이동하시겠어요?")
-        })
+            },
+            message: {
+                Text("앱 설정으로 가서 위치 권한을 수정할 수 있어요. 이동하시겠어요?")
+            })
     }
-    
+
     func resetFilters() {
         switch menuFilterType {
         case .all:
@@ -304,15 +315,15 @@ struct MenuFilterView: View {
         case .category:
             menuFilterViewModel.selectedCategories = []
         }
-        
+
     }
-    
+
     func applyFilters() {
-        
+
         // 거리 설정 시 위치 권한 확인
         if menuFilterViewModel.distanceValue < maxDistance {
             let locationManager = CLLocationManager()
-            
+
             switch locationManager.authorizationStatus {
             case .notDetermined:
                 locationManager.requestWhenInUseAuthorization()
@@ -327,13 +338,14 @@ struct MenuFilterView: View {
                 break
             }
         }
-        
+
         var updatedFilters = menuViewModel.selectedFilters
-        
+
         switch menuFilterType {
-            /// 거리만, 가격만 필터 선택 시 다른 필터 바뀌는 거 방지
+        /// 거리만, 가격만 필터 선택 시 다른 필터 바뀌는 거 방지
         case .distance:
-            updatedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
+            updatedFilters.distance =
+                menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
         case .price:
             if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
                 updatedFilters.priceRange = nil
@@ -342,26 +354,32 @@ struct MenuFilterView: View {
                 updatedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
             }
         default:
-            updatedFilters.distance = menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
+            updatedFilters.distance =
+                menuFilterViewModel.distanceValue < maxDistance ? Int(menuFilterViewModel.distanceValue) : nil
             if menuFilterViewModel.lowerPrice == minPrice && menuFilterViewModel.upperPrice == maxPrice {
                 updatedFilters.priceRange = nil
             } else {
                 let lowerPrice = menuFilterViewModel.lowerPrice == minPrice ? 0 : menuFilterViewModel.lowerPrice
                 updatedFilters.priceRange = Int(lowerPrice)...Int(menuFilterViewModel.upperPrice)
             }
-            updatedFilters.minimumRating = menuFilterViewModel.minimumRating > 0 ? menuFilterViewModel.minimumRating : nil
+            updatedFilters.minimumRating =
+                menuFilterViewModel.minimumRating > 0 ? menuFilterViewModel.minimumRating : nil
             updatedFilters.isOpen = menuFilterViewModel.isOpen ? true : nil
             updatedFilters.isFavorite = menuFilterViewModel.isFavorite ? true : nil
             updatedFilters.hasReview = menuFilterViewModel.hasReview ? true : nil
-            updatedFilters.categories = menuFilterViewModel.selectedCategories.isEmpty ? nil : menuFilterViewModel.selectedCategories
+            updatedFilters.categories =
+                menuFilterViewModel.selectedCategories.isEmpty ? nil : menuFilterViewModel.selectedCategories
         }
         menuViewModel.setFilters(updatedFilters)
-        
+
         let applied = AppliedFilterOptions(
             priceMin: updatedFilters.priceRange?.lowerBound,
             priceMax: {
                 if let range = updatedFilters.priceRange,
-                   range.upperBound != Int(maxPrice) { return range.upperBound }
+                    range.upperBound != Int(maxPrice)
+                {
+                    return range.upperBound
+                }
                 return nil
             }(),
             minRating: updatedFilters.minimumRating,
@@ -375,8 +393,11 @@ struct MenuFilterView: View {
                 return nil
             }()
         )
-        menuViewModel.analytics.track(.filterModalApplied(entryPoint: menuFilterType.entryPointString, applied: applied.asDictionary, pageName: menuViewModel.pageName))
-        
+        menuViewModel.analytics.track(
+            .filterModalApplied(
+                entryPoint: menuFilterType.entryPointString, applied: applied.asDictionary,
+                pageName: menuViewModel.pageName))
+
         dismiss()
     }
 }
@@ -384,12 +405,12 @@ struct MenuFilterView: View {
 fileprivate struct PickerFilterSection<Content: View>: View {
     let title: String
     let pickerView: Content
-    
+
     init(title: String, @ViewBuilder pickerView: () -> Content) {
         self.title = title
         self.pickerView = pickerView()
     }
-    
+
     var body: some View {
         VStack(spacing: 20.5) {
             SectionHeader(title: self.title)
@@ -401,7 +422,7 @@ fileprivate struct PickerFilterSection<Content: View>: View {
 
 fileprivate struct SectionHeader: View {
     let title: String
-    
+
     var body: some View {
         Text(title)
             .customFont(font: .text16(weight: .ExtraBold))
@@ -414,7 +435,7 @@ fileprivate struct SectionHeader: View {
 fileprivate struct CategoryButton: View {
     let category: String
     let isSelected: Bool
-    
+
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
             .stroke(isSelected ? Color.orange500 : Color.gray200)
@@ -431,10 +452,10 @@ fileprivate struct CategoryButton: View {
 fileprivate struct CategoriesFlowLayout: View {
     let items: [String]
     @Binding var selected: [String]
-    
+
     private let spacing: CGFloat = 8
     private let itemWidth: CGFloat = 56
-    
+
     var body: some View {
         VStack {
             GeometryReader { geometry in
@@ -445,12 +466,12 @@ fileprivate struct CategoriesFlowLayout: View {
                         .onTapGesture {
                             selected = []
                         }
-                    
+
                     ForEach(items, id: \.self) { item in
                         CategoryButton(category: item, isSelected: selected.contains(item))
                             .onTapGesture {
                                 if selected.contains(item) {
-                                    selected = selected.filter{$0 != item}
+                                    selected = selected.filter { $0 != item }
                                 } else {
                                     selected.append(item)
                                 }
@@ -467,16 +488,16 @@ fileprivate struct CategoriesFlowLayout: View {
 fileprivate struct MenuFilterViewCloseButtonModifier: ViewModifier {
     let filterType: MenuFilterType
     let closeAction: DismissAction
-        
+
     init(filterType: MenuFilterType, closeAction: DismissAction) {
         self.filterType = filterType
         self.closeAction = closeAction
     }
-    
+
     func body(content: Content) -> some View {
         ZStack(alignment: .topTrailing) {
             content
-            
+
             if filterType != .all {
                 Button(action: { closeAction() }) {
                     Image("Close")
