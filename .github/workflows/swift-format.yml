@@ -35,7 +35,7 @@ jobs:
     timeout-minutes: 10
 
     container:
-      image: "swift:6.3-jammy@sha256:c4d35325fd0640f5ed3737180e1f00094a8da78689b8d94c60f9e5ea40e5c132"
+      image: "swift:6.3.0-jammy@sha256:d339e10abdbee683f26cf5a16b89036902e3af694311e00ec74caafe333ef2a7"
 
     defaults:
       run:
