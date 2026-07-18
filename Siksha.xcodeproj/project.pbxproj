@@ -87,6 +87,7 @@
 				DeviceTokenRemoteDataSourceTests.swift,
 				DeviceTokenUseCaseTests.swift,
 				ProfileEditViewModelTests.swift,
+				RemoteConfigRepositoryImplTests.swift,
 				RemoteImageLoaderTests.swift,
 				RenewalSettingsViewModelTests.swift,
 				ResolveInitialAuthStateUseCaseTests.swift,

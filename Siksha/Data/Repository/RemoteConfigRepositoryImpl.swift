@@ -19,9 +19,16 @@ final class RemoteConfigRepositoryImpl: RemoteConfigRepositoryProtocol {
     }
 
     func observeRemoteConfigUpdates() -> AsyncStream<RemoteConfigModel> {
-        AsyncStream { continuation in
+        let dataSource = dataSource
+
+        return AsyncStream { continuation in
             let task = Task {
-                for await config in dataSource.observeRemoteConfigUpdates() {
+                let updates = await dataSource.observeRemoteConfigUpdates()
+
+                for await config in updates {
+                    guard !Task.isCancelled else {
+                        break
+                    }
                     continuation.yield(config.toDomain())
                 }
                 continuation.finish()
