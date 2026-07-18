@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Review: Hashable {
+struct Review: Hashable, Sendable {
     let id: Int
     let menuId: Int
     let userId: Int

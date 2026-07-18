@@ -5,7 +5,7 @@
 //  Created by Codex on 6/24/26.
 //
 
-struct MenuLikeStatusDTO: Decodable {
+struct MenuLikeStatusDTO: Decodable, Sendable {
     let menuId: Int
     let isLiked: Bool
     let likeCount: Int

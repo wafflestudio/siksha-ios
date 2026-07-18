@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MenuModel: Identifiable {
+struct MenuModel: Identifiable, Sendable {
     let id: Int
     let code: String
     let nameKr: String

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AuthSession {
+struct AuthSession: Sendable {
     let accessToken: String
     let expiresAt: Date?
     let appleUserIdentifier: String?

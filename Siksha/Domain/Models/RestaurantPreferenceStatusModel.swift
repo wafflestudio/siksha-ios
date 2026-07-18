@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RestaurantPreferenceStatusModel {
+struct RestaurantPreferenceStatusModel: Sendable {
     let id: Int
     let liked: Bool
     let visible: Bool

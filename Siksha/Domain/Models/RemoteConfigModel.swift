@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RemoteConfigModel {
+struct RemoteConfigModel: Sendable {
     let festivalFeatureEnabled: Bool
     let festivalAppIconEnabled: Bool
 }

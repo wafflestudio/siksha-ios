@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RestaurantDTO: Decodable {
+struct RestaurantDTO: Decodable, Sendable {
     let createdAt: Date
     let updatedAt: Date
     let id: Int
@@ -21,12 +21,12 @@ struct RestaurantDTO: Decodable {
     let menus: [MenuDTO]
 }
 
-struct PersonalRestaurantsResponseDTO: Decodable {
+struct PersonalRestaurantsResponseDTO: Decodable, Sendable {
     let count: Int
     let result: [PersonalRestaurantDTO]
 }
 
-struct PersonalRestaurantDTO: Codable {
+struct PersonalRestaurantDTO: Codable, Sendable {
     let createdAt: Date
     let updatedAt: Date
     let id: Int
@@ -41,25 +41,25 @@ struct PersonalRestaurantDTO: Codable {
     let etc: RestaurantEtcDTO?
 }
 
-struct RestaurantLikeResponseDTO: Decodable {
+struct RestaurantLikeResponseDTO: Decodable, Sendable {
     let id: Int
     let liked: Bool
 }
 
-struct RestaurantVisibleResponseDTO: Decodable {
+struct RestaurantVisibleResponseDTO: Decodable, Sendable {
     let id: Int
     let visible: Bool
 }
 
-struct RestaurantOrderResponseDTO: Decodable {
+struct RestaurantOrderResponseDTO: Decodable, Sendable {
     let order: [Int]
 }
 
-struct RestaurantEtcDTO: Codable {
+struct RestaurantEtcDTO: Codable, Sendable {
     let operatingHours: OperatingHoursDTO?
 }
 
-struct OperatingHoursDTO: Codable {
+struct OperatingHoursDTO: Codable, Sendable {
     let weekdays: [String]
     let saturday: [String]
     let holiday: [String]

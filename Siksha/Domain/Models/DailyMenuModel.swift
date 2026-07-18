@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum DateType {
+enum DateType: Sendable {
     case weekdays
     case saturday
     case holiday
@@ -23,7 +23,7 @@ enum DateType {
     }
 }
 
-struct DailyMenuModel {
+struct DailyMenuModel: Sendable {
     let date: String
     let dateType: DateType
     let breakfast: [RestaurantModel]

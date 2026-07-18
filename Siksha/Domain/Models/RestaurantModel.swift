@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RestaurantModel {
+struct RestaurantModel: Sendable {
     let id: Int
     let code: String
     let nameKr: String?

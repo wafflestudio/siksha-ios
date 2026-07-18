@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Coordinate {
+struct Coordinate: Sendable {
     let latitude: Double
     let longitude: Double
 }

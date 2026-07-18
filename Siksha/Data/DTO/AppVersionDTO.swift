@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct AppVersionLookupResponseDTO: Decodable {
+struct AppVersionLookupResponseDTO: Decodable, Sendable {
     let results: [AppVersionResultDTO]
 }
 
-struct AppVersionResultDTO: Decodable {
+struct AppVersionResultDTO: Decodable, Sendable {
     let version: String
 }

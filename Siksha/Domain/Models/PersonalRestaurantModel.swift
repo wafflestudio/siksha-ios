@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct PersonalRestaurantModel {
+struct PersonalRestaurantModel: Sendable {
     let id: Int
     let code: String
     let nameKr: String?
@@ -19,12 +19,12 @@ struct PersonalRestaurantModel {
     let operatingHours: [String]
 }
 
-struct RestaurantLikeStatusModel {
+struct RestaurantLikeStatusModel: Sendable {
     let id: Int
     let liked: Bool
 }
 
-struct RestaurantVisibilityStatusModel {
+struct RestaurantVisibilityStatusModel: Sendable {
     let id: Int
     let visible: Bool
 }

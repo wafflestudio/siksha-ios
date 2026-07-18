@@ -5,7 +5,7 @@
 //  Created by Codex on 6/24/26.
 //
 
-enum AlarmTime: String {
+enum AlarmTime: String, Sendable {
     case DAILY = "DAILY"
     case EVERY_MEAL = "EVERY_MEAL"
 }

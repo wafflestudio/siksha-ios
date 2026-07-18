@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct ReviewPageModel {
+struct ReviewPageModel: Sendable {
     let totalCount: Int
     let hasNext: Bool
     let reviews: [Review]
 }
 
-struct KeywordDistributionModel {
+struct KeywordDistributionModel: Sendable {
     let tasteKeyword: String
     let tasteCount: Int
     let tasteTotal: Int
@@ -25,7 +25,7 @@ struct KeywordDistributionModel {
     let foodCompositionTotal: Int
 }
 
-struct MealReviewSubmissionModel {
+struct MealReviewSubmissionModel: Sendable {
     let menuId: Int
     let score: Int
     let comment: String

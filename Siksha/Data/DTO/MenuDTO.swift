@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MenuDTO: Decodable {
+struct MenuDTO: Decodable, Sendable {
     let createdAt: Date
     let updatedAt: Date
     let id: Int
