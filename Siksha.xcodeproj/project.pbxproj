@@ -190,6 +190,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E3A571125C6FCE900DBB3F4 /* Build configuration list for PBXNativeTarget "Siksha" */;
 			buildPhases = (
+				336CC572300B1C9A001E45E6 /* Swift Format */,
 				1E3A56E325C6FCE600DBB3F4 /* Sources */,
 				1E3A56E425C6FCE600DBB3F4 /* Frameworks */,
 				1E3A56E525C6FCE600DBB3F4 /* Resources */,
@@ -213,6 +214,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E3A571425C6FCE900DBB3F4 /* Build configuration list for PBXNativeTarget "SikshaTests" */;
 			buildPhases = (
+				336CC573300B20EC001E45E6 /* Swift Format */,
 				1E3A56F925C6FCE900DBB3F4 /* Sources */,
 				1E3A56FA25C6FCE900DBB3F4 /* Frameworks */,
 				1E3A56FB25C6FCE900DBB3F4 /* Resources */,
@@ -231,6 +233,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1E3A571725C6FCE900DBB3F4 /* Build configuration list for PBXNativeTarget "SikshaUITests" */;
 			buildPhases = (
+				336CC574300B2122001E45E6 /* Swift Format */,
 				1E3A570425C6FCE900DBB3F4 /* Sources */,
 				1E3A570525C6FCE900DBB3F4 /* Frameworks */,
 				1E3A570625C6FCE900DBB3F4 /* Resources */,
@@ -325,6 +328,63 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		336CC572300B1C9A001E45E6 /* Swift Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Format";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -euo pipefail\n\nif [[ \"${CONFIGURATION}\" != \"Debug\" ]]; then\n    exit 0\nfi\n\nif [[ \"${XCODE_RUNNING_FOR_PREVIEWS:-0}\" == \"1\" ]]; then\n    exit 0\nfi\n\nFORMATTER=\"$(xcrun --find swift-format)\"\nEXPECTED_VERSION=\"6.3.0\"\nACTUAL_VERSION=\"$(\"${FORMATTER}\" --version)\"\n\nif [[ \"${ACTUAL_VERSION}\" != \"${EXPECTED_VERSION}\" ]]; then\n    echo \"warning: Skipping swift-format; expected ${EXPECTED_VERSION}, found ${ACTUAL_VERSION}\"\n    exit 0\nfi\n\n\"${FORMATTER}\" format \\\n    --configuration \"${SRCROOT}/.swift-format\" \\\n    --recursive \\\n    --parallel \\\n    --in-place \\\n    \"${SRCROOT}/Siksha\"\n";
+		};
+		336CC573300B20EC001E45E6 /* Swift Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Format";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -euo pipefail\n\nif [[ \"${CONFIGURATION}\" != \"Debug\" ]]; then\n    exit 0\nfi\n\nif [[ \"${XCODE_RUNNING_FOR_PREVIEWS:-0}\" == \"1\" ]]; then\n    exit 0\nfi\n\nFORMATTER=\"$(xcrun --find swift-format)\"\nEXPECTED_VERSION=\"6.3.0\"\nACTUAL_VERSION=\"$(\"${FORMATTER}\" --version)\"\n\nif [[ \"${ACTUAL_VERSION}\" != \"${EXPECTED_VERSION}\" ]]; then\n    echo \"warning: Skipping swift-format; expected ${EXPECTED_VERSION}, found ${ACTUAL_VERSION}\"\n    exit 0\nfi\n\n\"${FORMATTER}\" format \\\n    --configuration \"${SRCROOT}/.swift-format\" \\\n    --recursive \\\n    --parallel \\\n    --in-place \\\n    \"${SRCROOT}/SikshaTests\"\n";
+		};
+		336CC574300B2122001E45E6 /* Swift Format */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Swift Format";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/bash;
+			shellScript = "set -euo pipefail\n\nif [[ \"${CONFIGURATION}\" != \"Debug\" ]]; then\n    exit 0\nfi\n\nif [[ \"${XCODE_RUNNING_FOR_PREVIEWS:-0}\" == \"1\" ]]; then\n    exit 0\nfi\n\nFORMATTER=\"$(xcrun --find swift-format)\"\nEXPECTED_VERSION=\"6.3.0\"\nACTUAL_VERSION=\"$(\"${FORMATTER}\" --version)\"\n\nif [[ \"${ACTUAL_VERSION}\" != \"${EXPECTED_VERSION}\" ]]; then\n    echo \"warning: Skipping swift-format; expected ${EXPECTED_VERSION}, found ${ACTUAL_VERSION}\"\n    exit 0\nfi\n\n\"${FORMATTER}\" format \\\n    --configuration \"${SRCROOT}/.swift-format\" \\\n    --recursive \\\n    --parallel \\\n    --in-place \\\n    \"${SRCROOT}/SikshaUITests\"\n";
+		};
 		33DDF0E72DC2170B00E202F1 /* Firebase plist */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 12;
