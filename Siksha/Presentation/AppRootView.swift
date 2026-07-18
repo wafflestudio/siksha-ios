@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AppRootView:View {
+struct AppRootView: View {
     @StateObject private var appState: AppState
 
     init(appState: AppState) {
