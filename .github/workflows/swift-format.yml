@@ -1,0 +1,89 @@
+name: Swift Format
+
+on:
+  workflow_dispatch:
+
+  pull_request:
+    branches:
+      - develop
+      - main
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - ready_for_review
+      - converted_to_draft
+
+  push:
+    branches:
+      - develop
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  format:
+    name: Check formatting
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    container:
+      image: "swift:6.3-jammy@sha256:c4d35325fd0640f5ed3737180e1f00094a8da78689b8d94c60f9e5ea40e5c132"
+
+    defaults:
+      run:
+        shell: bash
+
+    env:
+      EXPECTED_SWIFT_FORMAT_VERSION: "6.3.0"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Verify swift-format
+        run: |
+          set -euo pipefail
+
+          actual_version="$(swift-format --version)"
+          echo "swift-format version: ${actual_version}"
+
+          if [[ "${actual_version}" != "${EXPECTED_SWIFT_FORMAT_VERSION}" ]]; then
+            echo "::error::Expected swift-format ${EXPECTED_SWIFT_FORMAT_VERSION}, found ${actual_version}"
+            exit 1
+          fi
+
+          swift-format dump-configuration --effective > /dev/null
+
+      - name: Format tracked Swift files
+        run: |
+          set -euo pipefail
+
+          git ls-files -z -- '*.swift' |
+            xargs -0 swift-format format \
+              --configuration .swift-format \
+              --parallel \
+              --in-place
+
+      - name: Check for formatting differences
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- '*.swift'; then
+            echo "All Swift files are correctly formatted."
+            exit 0
+          fi
+
+          echo "::error::Swift formatting differences were found."
+          echo "Build a Debug target locally to apply formatting, then commit the changes."
+          git diff -- '*.swift'
+          exit 1
