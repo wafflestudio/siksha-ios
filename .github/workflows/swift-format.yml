@@ -50,6 +50,9 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Mark repository as safe
+        run: git config --global --add safe.directory "${GITHUB_WORKSPACE}"
+
       - name: Verify swift-format
         run: |
           set -euo pipefail
@@ -69,7 +72,7 @@ jobs:
           set -euo pipefail
 
           git ls-files -z -- '*.swift' |
-            xargs -0 swift-format format \
+            xargs -0 --no-run-if-empty swift-format format \
               --configuration .swift-format \
               --parallel \
               --in-place
