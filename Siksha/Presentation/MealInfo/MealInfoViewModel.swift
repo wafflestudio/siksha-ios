@@ -15,19 +15,19 @@ public class MealInfoViewModel: ObservableObject {
     private let fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase
     private let fetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase
     private let updateMenuLikeUseCase: UpdateMenuLikeUseCase
-    
+
     @Published var meal: MenuItemDisplayModel
     @Published var mealReviews: [Review] = []
     @Published var hasMorePages = true
-    
+
     @Published var images: [String] = []
     @Published var totalImageCount = 0
-    
+
     @Published var scoreDistribution: [CGFloat] = []
     @Published var tasteSummary: ReviewKeywordSummary = .init(type: .taste, keyword: "", count: 0, total: 0)
     @Published var priceSummary: ReviewKeywordSummary = .init(type: .price, keyword: "", count: 0, total: 0)
     @Published var compositionSummary: ReviewKeywordSummary = .init(type: .composition, keyword: "", count: 0, total: 0)
-    
+
     @Published var getReviewStatus: NetworkStatus = .idle
     @Published var getImageStatus: NetworkStatus = .idle
     @Published var getDistributionStatus: NetworkStatus = .idle
@@ -35,11 +35,11 @@ public class MealInfoViewModel: ObservableObject {
     @Published var likeStatus: NetworkStatus = .idle
     @Published var isLiked = false
     @Published var loadedReviews: Bool = false
-    
+
     var isUpdatingLike: Bool {
         likeStatus == .loading
     }
-    
+
     init(
         meal: MenuItemDisplayModel,
         fetchMenuUseCase: FetchMenuUseCase,
@@ -57,17 +57,17 @@ public class MealInfoViewModel: ObservableObject {
         self.fetchMealReviewKeywordDistributionUseCase = fetchMealReviewKeywordDistributionUseCase
         self.updateMenuLikeUseCase = updateMenuLikeUseCase
     }
-    
-    func toggleLike(){
-        guard likeStatus != .loading else{
+
+    func toggleLike() {
+        guard likeStatus != .loading else {
             return
         }
-        
+
         likeStatus = .loading
-        
+
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 let menuId = meal.id
                 let isCurrentlyLiked = meal.isLiked
@@ -75,7 +75,7 @@ public class MealInfoViewModel: ObservableObject {
                     menuId: menuId,
                     isLiked: !isCurrentlyLiked
                 )
-                
+
                 await MainActor.run {
                     self.likeStatus = .succeeded
                     self.meal = self.meal.updatingLike(
@@ -90,17 +90,17 @@ public class MealInfoViewModel: ObservableObject {
             }
         }
     }
-    
+
     func loadReviews() {
         guard getReviewStatus != .loading else {
             return
         }
-        
+
         getReviewStatus = .loading
 
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 let response = try await fetchMealReviewsUseCase.execute(menuId: meal.id, page: 1, perPage: 5)
                 await MainActor.run {
@@ -115,17 +115,17 @@ public class MealInfoViewModel: ObservableObject {
             }
         }
     }
-    
+
     func loadImages() {
         guard getImageStatus != .loading else {
             return
         }
-        
+
         getImageStatus = .loading
-        
+
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 let response = try await fetchMealImageReviewsUseCase.execute(menuId: meal.id, page: 1, perPage: 6)
                 await MainActor.run {
@@ -140,17 +140,17 @@ public class MealInfoViewModel: ObservableObject {
             }
         }
     }
-    
+
     func loadDistribution() {
         guard getDistributionStatus != .loading else {
             return
         }
-        
+
         getDistributionStatus = .loading
-        
+
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 let distribution = try await fetchMealReviewScoreDistributionUseCase.execute(menuId: meal.id)
                 await MainActor.run {
@@ -164,36 +164,36 @@ public class MealInfoViewModel: ObservableObject {
             }
         }
     }
-    
+
     func loadKeywordDistribution() {
         guard getKeywordDistributionStatus != .loading else {
             return
         }
-        
+
         getKeywordDistributionStatus = .loading
-        
+
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 let dist = try await fetchMealReviewKeywordDistributionUseCase.execute(menuId: meal.id)
                 await MainActor.run {
                     self.getKeywordDistributionStatus = .succeeded
-                    
+
                     self.tasteSummary = ReviewKeywordSummary(
                         type: .taste,
                         keyword: dist.tasteKeyword,
                         count: dist.tasteCount,
                         total: dist.tasteTotal
                     )
-                    
+
                     self.priceSummary = ReviewKeywordSummary(
                         type: .price,
                         keyword: dist.priceKeyword,
                         count: dist.priceCount,
                         total: dist.priceTotal
                     )
-                    
+
                     self.compositionSummary = ReviewKeywordSummary(
                         type: .composition,
                         keyword: dist.foodCompositionKeyword,
@@ -208,12 +208,12 @@ public class MealInfoViewModel: ObservableObject {
             }
         }
     }
-    
+
     /// 서버 MealID로 Meal 호출 속도 느림 -> 불가피하게 아는 정보가 mealId뿐일 때만 사용
     func updateMealFromId() {
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 let menu = try await fetchMenuUseCase.execute(menuId: meal.id)
                 await MainActor.run {

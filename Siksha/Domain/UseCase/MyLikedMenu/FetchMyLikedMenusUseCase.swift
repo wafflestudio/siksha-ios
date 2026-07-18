@@ -11,11 +11,11 @@ protocol FetchMyLikedMenusUseCase {
 
 final class DefaultFetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase {
     private let repository: MyLikedMenuRepositoryProtocol
-    
+
     init(repository: MyLikedMenuRepositoryProtocol) {
         self.repository = repository
     }
-    
+
     func execute() async throws -> [RestaurantLikedMenuGroup] {
         try await repository.fetchMyLikedMenus()
     }

@@ -6,6 +6,7 @@
 //
 
 import XCTest
+
 @testable import Siksha
 
 final class DeviceTokenUseCaseTests: XCTestCase {
@@ -201,7 +202,8 @@ private final class AuthRepositorySessionStub: AuthRepositoryProtocol {
     private var session: AuthSession?
 
     init(hasSession: Bool) {
-        session = hasSession
+        session =
+            hasSession
             ? AuthSession(accessToken: "access-token", expiresAt: nil)
             : nil
     }

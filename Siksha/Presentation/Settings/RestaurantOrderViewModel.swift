@@ -18,7 +18,7 @@ class RestaurantOrderViewModel: ObservableObject {
     private let fetchPersonalRestaurantsUseCase: FetchPersonalRestaurantsUseCase
     private let updateRestaurantPreferenceUseCase: UpdateRestaurantPreferenceUseCase
     private let setRestaurantOrderUseCase: SetRestaurantOrderUseCase
-    
+
     @Published var personalRestaurants = [PersonalRestaurantModel]()
     @Published var networkStatus: NetworkStatus = .idle
     @Published var toastMessage: String = ""
@@ -63,7 +63,8 @@ class RestaurantOrderViewModel: ObservableObject {
     @MainActor
     func togglePersonalRestaurantLike(restaurantId: Int) async {
         guard !updatingLikeRestaurantIds.contains(restaurantId),
-              !updatingVisibleRestaurantIds.contains(restaurantId) else {
+            !updatingVisibleRestaurantIds.contains(restaurantId)
+        else {
             showToast(message: "즐겨찾기 변경을 처리 중입니다.")
             return
         }
@@ -102,7 +103,8 @@ class RestaurantOrderViewModel: ObservableObject {
     @MainActor
     func togglePersonalRestaurantVisibility(restaurantId: Int) async {
         guard !updatingVisibleRestaurantIds.contains(restaurantId),
-              !updatingLikeRestaurantIds.contains(restaurantId) else {
+            !updatingLikeRestaurantIds.contains(restaurantId)
+        else {
             showToast(message: "보이기 설정 변경을 처리 중입니다.")
             return
         }

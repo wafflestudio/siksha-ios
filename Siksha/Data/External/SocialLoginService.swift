@@ -56,7 +56,8 @@ final class SocialLoginServiceImpl: SocialLoginService {
 
     @MainActor
     private func loginWithKakao() async throws -> LoginCredential {
-        let oauthToken = try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<OAuthToken, Error>) in
+        let oauthToken = try await withCheckedThrowingContinuation {
+            (continuation: CheckedContinuation<OAuthToken, Error>) in
             let completion: (OAuthToken?, Error?) -> Void = { oauthToken, error in
                 if let error {
                     continuation.resume(throwing: error)
@@ -164,8 +165,9 @@ extension AppleAuthorizationCoordinator: ASAuthorizationControllerDelegate {
         didCompleteWithAuthorization authorization: ASAuthorization
     ) {
         guard let appleIDCredential = authorization.credential as? ASAuthorizationAppleIDCredential,
-              let tokenData = appleIDCredential.identityToken,
-              let token = String(data: tokenData, encoding: .utf8) else {
+            let tokenData = appleIDCredential.identityToken,
+            let token = String(data: tokenData, encoding: .utf8)
+        else {
             complete(with: .failure(SocialLoginServiceError.missingCredential))
             return
         }
@@ -198,7 +200,8 @@ extension AppleAuthorizationCoordinator: ASAuthorizationControllerPresentationCo
         if let keyWindow = UIApplication.shared.connectedScenes
             .compactMap({ $0 as? UIWindowScene })
             .flatMap(\.windows)
-            .first(where: \.isKeyWindow) {
+            .first(where: \.isKeyWindow)
+        {
             return keyWindow
         }
 

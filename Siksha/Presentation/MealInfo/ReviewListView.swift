@@ -10,16 +10,17 @@ import SwiftUI
 struct ReviewListView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject var viewModel: ReviewListViewModel
-    
+
     init(mealID: Int, imageReviewOnly: Bool = false) {
-        self._viewModel = StateObject(wrappedValue: ReviewListViewModel(
-            mealID: mealID,
-            imageOnly: imageReviewOnly,
-            fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
-            fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase
-        ))
+        self._viewModel = StateObject(
+            wrappedValue: ReviewListViewModel(
+                mealID: mealID,
+                imageOnly: imageReviewOnly,
+                fetchMealReviewsUseCase: AppContainer.shared.useCases.fetchMealReviewsUseCase,
+                fetchMealImageReviewsUseCase: AppContainer.shared.useCases.fetchMealImageReviewsUseCase
+            ))
     }
-    
+
     var body: some View {
         ZStack {
             if !viewModel.reviews.isEmpty {
@@ -31,7 +32,7 @@ struct ReviewListView: View {
                                     viewModel.loadMoreReviewsIfNeeded(current: review)
                                 }
                         }
-                        
+
                         if viewModel.hasMorePages && viewModel.getReviewStatus == .loading {
                             HStack {
                                 Spacer()
@@ -60,7 +61,7 @@ struct ReviewListView: View {
                         .font(.custom("NanumSquareOTFB", size: 13))
                         .foregroundColor(Color.gray600)
                         .padding(.top, 20)
-                    
+
                     Spacer()
                 }
                 .frame(maxWidth: .infinity)
@@ -75,7 +76,7 @@ struct ReviewListView: View {
             viewModel.loadMoreReviewsIfNeeded()
         }
     }
-    
+
     private var backButton: some View {
         Button {
             dismiss()

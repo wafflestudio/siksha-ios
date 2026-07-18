@@ -35,7 +35,8 @@ final class AuthRemoteDataSourceImpl: AuthRemoteDataSource {
         var request = try SikshaAPI.refreshAccessToken(token: accessToken).asURLRequest()
         request.setToken(token: accessToken)
 
-        return try await AF
+        return
+            try await AF
             .request(request)
             .validate()
             .serializingDecodable(AuthTokenResponseDTO.self)

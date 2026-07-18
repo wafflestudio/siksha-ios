@@ -9,35 +9,35 @@ import Foundation
 
 final class MealInfoRepositoryImpl: MealInfoRepositoryProtocol, MealReviewRepositoryProtocol {
     private let remote: MealInfoRemoteDataSource
-    
+
     init(remote: MealInfoRemoteDataSource) {
         self.remote = remote
     }
-    
+
     func fetchMenu(menuId: Int) async throws -> MenuModel {
         try await remote.fetchMenu(menuId: menuId).toDomain()
     }
-    
+
     func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
         try await remote.fetchReviews(menuId: menuId, page: page, perPage: perPage).toDomain()
     }
-    
+
     func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
         try await remote.fetchImageReviews(menuId: menuId, page: page, perPage: perPage).toDomain()
     }
-    
+
     func fetchScoreDistribution(menuId: Int) async throws -> [Int] {
         try await remote.fetchScoreDistribution(menuId: menuId).dist
     }
-    
+
     func fetchKeywordDistribution(menuId: Int) async throws -> KeywordDistributionModel {
         try await remote.fetchKeywordDistribution(menuId: menuId).toDomain()
     }
-    
+
     func fetchCommentRecommendation(score: Int) async throws -> String {
         try await remote.fetchCommentRecommendation(score: score).comment
     }
-    
+
     func submitReview(_ submission: MealReviewSubmissionModel) async throws {
         if submission.images?.isEmpty == false {
             try await remote.submitReviewImages(submission)
@@ -45,15 +45,15 @@ final class MealInfoRepositoryImpl: MealInfoRepositoryProtocol, MealReviewReposi
             try await remote.submitReview(submission)
         }
     }
-    
+
     func editReview(reviewId: Int, submission: MealReviewSubmissionModel) async throws {
         try await remote.editReview(reviewId: reviewId, submission: submission)
     }
-    
+
     func likeReview(reviewId: Int) async throws {
         try await remote.likeReview(reviewId: reviewId)
     }
-    
+
     func unlikeReview(reviewId: Int) async throws {
         try await remote.unlikeReview(reviewId: reviewId)
     }

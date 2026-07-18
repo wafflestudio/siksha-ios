@@ -8,11 +8,11 @@ import SwiftUI
 
 struct BackButton: View {
     var presentationMode: Binding<PresentationMode>
-    
+
     init(_ presentationMode: Binding<PresentationMode>) {
         self.presentationMode = presentationMode
     }
-    
+
     var body: some View {
         Button(action: {
             presentationMode.wrappedValue.dismiss()
@@ -23,7 +23,7 @@ struct BackButton: View {
                     .renderingMode(.original)
                     .frame(width: 13, height: 21)
                     .padding(.trailing, 5)
-                
+
                 Text("설정")
                     .font(.custom("NanumSquareOTFB", size: 14))
                     .foregroundColor(.init("Color/Foundation/Gray/600"))

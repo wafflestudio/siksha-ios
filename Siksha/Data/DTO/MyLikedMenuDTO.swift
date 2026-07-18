@@ -9,7 +9,7 @@ import Foundation
 
 struct MyLikedMenuResponseDTO: Decodable {
     let groups: [RestaurantLikedMenuGroupDTO]
-    
+
     enum CodingKeys: String, CodingKey {
         case groups = "result"
     }
@@ -19,7 +19,7 @@ struct RestaurantLikedMenuGroupDTO: Decodable {
     let id: Int
     let name: String
     let menus: [MyLikedMenuDTO]
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name = "name_kr"
@@ -39,7 +39,7 @@ struct MyLikedMenuDTO: Decodable {
     let likeCount: Int
     let etc: [String]
     let alarm: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case code
@@ -53,10 +53,10 @@ struct MyLikedMenuDTO: Decodable {
         case etc
         case alarm
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
+
         id = try container.decode(Int.self, forKey: .id)
         code = try container.decodeIfPresent(String.self, forKey: .code) ?? ""
         nameKr = try container.decodeIfPresent(String.self, forKey: .nameKr) ?? ""
@@ -79,7 +79,7 @@ struct AlarmMenuDTO: Decodable {
     let isLiked: Bool
     let etc: [String]
     let alarm: Bool
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case nameKr = "name_kr"
@@ -93,7 +93,7 @@ struct AlarmMenuDTO: Decodable {
 
 struct AlarmTimeResponseDTO: Decodable {
     let alarmType: String
-    
+
     enum CodingKeys: String, CodingKey {
         case alarmType = "alarm_type"
     }

@@ -87,7 +87,8 @@ struct DistanceRestaurantSpecification: RestaurantDisplaySpecification {
         }
 
         guard let currentLocation = context.currentLocation,
-              let restaurantLocation = restaurant.coordinate?.location else {
+            let restaurantLocation = restaurant.coordinate?.location
+        else {
             return false
         }
 

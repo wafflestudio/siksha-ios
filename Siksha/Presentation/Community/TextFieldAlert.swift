@@ -1,4 +1,5 @@
 import SwiftUI
+
 public struct TextFieldAlertModifier: ViewModifier {
 
     @State private var alertController: UIAlertController?
@@ -9,7 +10,7 @@ public struct TextFieldAlertModifier: ViewModifier {
     let text: String
     let placeholder: String
     let action: (String?) -> Void
-    
+
     public func body(content: Content) -> some View {
         content.onChange(of: isPresented) { isPresented in
             if isPresented, alertController == nil {
@@ -31,16 +32,19 @@ public struct TextFieldAlertModifier: ViewModifier {
         controller.addTextField {
             $0.placeholder = self.placeholder
             $0.text = self.text
-            $0.addTarget(self, action: #selector(controller.alertTextFieldDidChange(_:)), for: UIControl.Event.editingChanged)
-           
+            $0.addTarget(
+                self, action: #selector(controller.alertTextFieldDidChange(_:)), for: UIControl.Event.editingChanged)
+
         }
-        controller.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-            shutdown()
-        })
-        controller.addAction(UIAlertAction(title: "OK", style: .default) { _ in
-            self.action(controller.textFields?.first?.text)
-            shutdown()
-        })
+        controller.addAction(
+            UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                shutdown()
+            })
+        controller.addAction(
+            UIAlertAction(title: "OK", style: .default) { _ in
+                self.action(controller.textFields?.first?.text)
+                shutdown()
+            })
         controller.actions[1].isEnabled = false
         return controller
     }
@@ -50,11 +54,10 @@ public struct TextFieldAlertModifier: ViewModifier {
         alertController = nil
     }
 
-
 }
-extension UIAlertController{
+extension UIAlertController {
     @objc func alertTextFieldDidChange(_ sender: UITextField) {
-      actions[1].isEnabled = sender.text!.count > 0
+        actions[1].isEnabled = sender.text!.count > 0
     }
 }
 extension View {
@@ -66,7 +69,9 @@ extension View {
         placeholder: String = "",
         action: @escaping (String?) -> Void
     ) -> some View {
-        self.modifier(TextFieldAlertModifier(isPresented: isPresented, title: title, text: text, placeholder: placeholder, action: action))
+        self.modifier(
+            TextFieldAlertModifier(
+                isPresented: isPresented, title: title, text: text, placeholder: placeholder, action: action))
     }
-    
+
 }

@@ -5,28 +5,29 @@
 //  Created by Jihyeon on 9/14/25.
 //
 
-import SwiftUI
 import Kingfisher
+import SwiftUI
 
 struct ReviewRow: View {
-    @StateObject var viewModel:ReviewRowViewModel
+    @StateObject var viewModel: ReviewRowViewModel
     @State var isImageExpanded: Bool = false
     @State var tappedIndex: Int? = nil
-    
+
     init(_ review: Review, showImage: Bool = true) {
-        self._viewModel = StateObject(wrappedValue: ReviewRowViewModel(
-            review: review,
-            showImage: showImage,
-            updateReviewLikeUseCase: AppContainer.shared.useCases.updateReviewLikeUseCase
-        ))
+        self._viewModel = StateObject(
+            wrappedValue: ReviewRowViewModel(
+                review: review,
+                showImage: showImage,
+                updateReviewLikeUseCase: AppContainer.shared.useCases.updateReviewLikeUseCase
+            ))
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ReviewProfileInfoView(viewModel: viewModel)
-            
+
             Spacer().frame(height: 4)
-            
+
             HStack(spacing: 9.5) {
                 ZStack(alignment: .topLeading) {
                     Image("SpeechArrow")
@@ -37,7 +38,7 @@ struct ReviewRow: View {
                         .padding(.top, 7)
                         .padding(.leading, 15)
                         .foregroundStyle(Color.backgroundSecondary)
-                    
+
                     Text(viewModel.comment)
                         .customFont(font: .text13(weight: .Regular))
                         .foregroundStyle(Color.blackColor)
@@ -52,7 +53,7 @@ struct ReviewRow: View {
                 }
                 .drawingGroup()
                 .shadow(color: .blackColor.opacity(0.15), radius: 1.5)
-                
+
                 Button {
                     viewModel.toggleLike()
                 } label: {
@@ -75,10 +76,10 @@ struct ReviewRow: View {
                     .cornerRadius(6)
                 }
             }
-            
+
             Spacer()
                 .frame(height: 8)
-            
+
             if viewModel.hasKeywords {
                 HStack(spacing: 8) {
                     ForEach(viewModel.keywords, id: \.self) { keyword in
@@ -87,11 +88,11 @@ struct ReviewRow: View {
                 }
                 .padding(.leading, 30)
             }
-            
+
             if viewModel.showImage {
                 Spacer()
                     .frame(height: 8)
-                
+
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 4) {
                         ForEach(Array(viewModel.imageUrlString.enumerated()), id: \.offset) { i, url in
@@ -112,9 +113,10 @@ struct ReviewRow: View {
                 .fullScreenCover(isPresented: $isImageExpanded) {
                     ImageViewer(
                         imageURLs: viewModel.imageUrlString
-                            .filter { !$0.isEmpty}
+                            .filter { !$0.isEmpty }
                             .map { URL(string: $0)! },
-                        initialIndex: tappedIndex ?? 0)
+                        initialIndex: tappedIndex ?? 0
+                    )
                     .onAppear {
                         tappedIndex = nil
                     }
@@ -127,7 +129,7 @@ struct ReviewRow: View {
 
 struct keywordTag: View {
     let text: String
-    
+
     var body: some View {
         Text(text)
             .customFont(font: .text11(weight: .Bold))
@@ -142,10 +144,10 @@ struct keywordTag: View {
 
 struct ReviewProfileInfoView: View {
     let viewModel: ReviewRowViewModel
-    
+
     @State private var showActionSheet = false
     @Environment(\.openURL) var openURL
-    
+
     var body: some View {
         HStack(alignment: .top, spacing: 7) {
             Image(.Icons.Common.profileImagePlaceholder)
@@ -154,19 +156,19 @@ struct ReviewProfileInfoView: View {
                 .frame(width: 32, height: 32)
                 .clipShape(Circle())
                 .padding(.top, 1)
-                
+
             VStack(alignment: .leading, spacing: 2) {
                 HStack(alignment: .center) {
                     Text(viewModel.nickname)
                         .customFont(font: .text12(weight: .Bold))
                         .foregroundStyle(Color.blackColor)
-                    
+
                     StarRateView(rate: viewModel.score, spacing: 1)
                         .frame(height: 10)
                         .padding(.bottom, 4)
-                        
+
                     Spacer()
-                    
+
                     Button(action: {
                         showActionSheet = true
                     }) {
@@ -177,7 +179,7 @@ struct ReviewProfileInfoView: View {
                     }
                 }
             }
-                
+
             Text(viewModel.legibleDate)
                 .customFont(font: .text12(weight: .Bold))
                 .foregroundStyle(Color.gray600)
@@ -191,7 +193,7 @@ struct ReviewProfileInfoView: View {
                             openURL(url)
                         }
                     },
-                    .cancel(Text("취소"))
+                    .cancel(Text("취소")),
                 ]
             )
         }

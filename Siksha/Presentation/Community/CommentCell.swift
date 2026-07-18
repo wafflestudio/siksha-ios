@@ -6,35 +6,34 @@
 //
 
 import Foundation
-import SwiftUI
-
 import Kingfisher
+import SwiftUI
 
 struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType {
     var comment: CommentInfo
     var viewModel: ViewModel
-    var onMenuPressed: () -> ()
-    
+    var onMenuPressed: () -> Void
+
     private var relativeDate: String {
         let formatter = RelativeDateTimeFormatter()
         formatter.unitsStyle = .full
         return formatter.localizedString(for: comment.createdAt, relativeTo: Date())
     }
-    
+
     @State private var showingDeleteAlert = false
     @State private var showingEditView = false
     @State private var editedContent: String
-    
-    init(comment: CommentInfo, viewModel: ViewModel,onMenuPressed:@escaping()->()) {
+
+    init(comment: CommentInfo, viewModel: ViewModel, onMenuPressed: @escaping () -> Void) {
         self.comment = comment
         self.viewModel = viewModel
         _editedContent = State(initialValue: comment.content)
         self.onMenuPressed = onMenuPressed
     }
-    
+
     var body: some View {
         HStack(alignment: .top, spacing: 11) {
-            if (comment.available) {
+            if comment.available {
                 VStack(alignment: .leading, spacing: 5.5) {
                     HStack(spacing: 5) {
                         if let profileUrl = comment.profileUrl, !comment.isAnonymous {
@@ -56,12 +55,12 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                             .foregroundColor(.gray600)
                     }
                     .padding(.leading, 5)
-                    
+
                     Text(comment.content)
                         .customFont(font: .text13(weight: .Regular))
                         .foregroundStyle(Color.gray900)
                         .padding(.leading, 5)
-                    
+
                     Image("etc")
                         .renderingMode(.template)
                         .resizable()
@@ -72,9 +71,9 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                             onMenuPressed()
                         }
                 }
-                
+
                 Spacer()
-                
+
                 Button(action: {
                     viewModel.toggleCommentLike(id: comment.id)
                 }) {
@@ -94,7 +93,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                 }
                 .buttonStyle(PlainButtonStyle())
                 .padding(.top, 8)
-                
+
             } else {
                 Text("신고가 누적되어 숨겨진 댓글입니다.")
                     .customFont(font: .text13(weight: .Regular))
@@ -114,26 +113,26 @@ struct EditCommentView: View {
     @State var editedContent: String
     let onSave: (String) -> Void
     let onCancel: () -> Void
-    
+
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .bottom) {
                 Color("Color/Foundation/Orange/500")
                     .edgesIgnoringSafeArea(.top)
-                
+
                 HStack {
                     Button("취소", action: onCancel)
                         .foregroundColor(.white)
                         .font(.custom("NanumSquareOTFR", size: 15))
-                    
+
                     Spacer()
-                    
+
                     Text("댓글 수정")
                         .foregroundColor(.white)
                         .font(.custom("NanumSquareOTFEB", size: 20))
-                    
+
                     Spacer()
-                    
+
                     Button("확인", action: { onSave(editedContent) })
                         .foregroundColor(.white)
                         .font(.custom("NanumSquareOTFR", size: 15))
@@ -142,16 +141,18 @@ struct EditCommentView: View {
                 .background(Color("Color/Foundation/Orange/500").opacity(0))
             }
             .frame(height: 40)
-            
+
             TextField("수정할 내용", text: $editedContent)
                 .textFieldStyle(PlainTextFieldStyle())
                 .padding()
-            
+
             Spacer()
         }
     }
 }
 
 #Preview {
-    CommentCell(comment: CommentInfo(content: "test", likeCnt: 2, isLiked: true), viewModel: StubCommunityPostViewModel(), onMenuPressed: {})
+    CommentCell(
+        comment: CommentInfo(content: "test", likeCnt: 2, isLiked: true), viewModel: StubCommunityPostViewModel(),
+        onMenuPressed: {})
 }

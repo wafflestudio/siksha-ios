@@ -5,9 +5,9 @@
 //  Created by 박종석 on 2021/02/01.
 //
 
+import Combine
 import Foundation
 import SwiftUI
-import Combine
 
 struct ViewControllerHolder {
     weak var value: UIViewController?
@@ -32,7 +32,7 @@ struct SafeAreaInsetsKey: EnvironmentKey {
 }
 
 extension UIEdgeInsets {
-    
+
     var insets: EdgeInsets {
         EdgeInsets(top: top, leading: left, bottom: bottom, trailing: right)
     }
@@ -43,12 +43,12 @@ extension EnvironmentValues {
         get { return self[ViewControllerKey.self].value }
         set { self[ViewControllerKey.self].value = newValue }
     }
-    
+
     var menuViewModel: MenuViewModel? {
         get { return self[MenuViewModelKey.self] }
         set { self[MenuViewModelKey.self] = newValue }
     }
-    
+
     var safeAreaInsets: EdgeInsets {
         self[SafeAreaInsetsKey.self]
     }
@@ -71,35 +71,39 @@ extension UINavigationController: UIGestureRecognizerDelegate {
         super.viewDidLoad()
         interactivePopGestureRecognizer?.delegate = self
     }
-    
+
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         return viewControllers.count > 1
     }
 }
 
 extension View {
-    func sheet<Content: View>(isPresented: Binding<Bool>, title: String = "", height: CGFloat, @ViewBuilder content: @escaping () -> Content) -> some View {
+    func sheet<Content: View>(
+        isPresented: Binding<Bool>, title: String = "", height: CGFloat, @ViewBuilder content: @escaping () -> Content
+    ) -> some View {
         self
             .blur(radius: isPresented.wrappedValue ? 5 : 0)
             .overlay(
-                !isPresented.wrappedValue ? nil :
-                    Color.init(white: 0, opacity: 0.3)
-                    .edgesIgnoringSafeArea(.all)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .onTapGesture {
-                        withAnimation {
-                            isPresented.wrappedValue = false
+                !isPresented.wrappedValue
+                    ? nil
+                    : Color.init(white: 0, opacity: 0.3)
+                        .edgesIgnoringSafeArea(.all)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .onTapGesture {
+                            withAnimation {
+                                isPresented.wrappedValue = false
+                            }
                         }
-                    }
             )
             .overlay(
-                !isPresented.wrappedValue ? nil :
-                    BottomModalView(isPresented: isPresented, title: title, height: height, content: content)
-                    .transition(.move(edge: .bottom))
-                    .animation(.easeInOut)
+                !isPresented.wrappedValue
+                    ? nil
+                    : BottomModalView(isPresented: isPresented, title: title, height: height, content: content)
+                        .transition(.move(edge: .bottom))
+                        .animation(.easeInOut)
             )
     }
-    
+
     func customNavigationBar(title: String) -> some View {
         self.modifier(NavigationBarModifier(title: title))
     }
@@ -123,10 +127,13 @@ protocol ImageCache: AnyObject {
 
 final class TemporaryImageCache: ImageCache {
     private let cache = NSCache<NSURL, UIImage>()
-    
+
     subscript(_ key: URL) -> UIImage? {
         get { cache.object(forKey: key as NSURL) }
-        set { newValue == nil ? cache.removeObject(forKey: key as NSURL) : cache.setObject(newValue!, forKey: key as NSURL) }
+        set {
+            newValue == nil
+                ? cache.removeObject(forKey: key as NSURL) : cache.setObject(newValue!, forKey: key as NSURL)
+        }
     }
 }
 
@@ -148,13 +155,13 @@ extension String {
         case hasConsonant
         case exceptionConsonant // ㄹ 종성 + '으로'인 경우
     }
-    
+
     func inspectFinalConsonant() -> FinalConsonantState {
         let last = self.last
-        
-        if let lastUtf = last?.utf16.first, (lastUtf > 0xAC00 && lastUtf < 0xD7A3) {
+
+        if let lastUtf = last?.utf16.first, lastUtf > 0xAC00 && lastUtf < 0xD7A3 {
             let lastConsonantIndex = (lastUtf.advanced(by: -0xAC00)) % 28
-            
+
             if lastConsonantIndex > 0 {
                 if lastConsonantIndex == 8 {
                     return .exceptionConsonant
@@ -162,10 +169,10 @@ extension String {
                     return .hasConsonant
                 }
             }
-            
+
             return .noConsonant
         }
-        
+
         return .notKorean
     }
 }
@@ -173,18 +180,18 @@ extension String {
 extension Date {
     func toLegibleString() -> String {
         let formatter = DateFormatter()
-        
+
         formatter.locale = Locale(identifier: "ko_kr")
         formatter.dateFormat = "yyyy년 M월 d일"
-        
+
         let diff = Date().timeIntervalSince(self)
-        
+
         let def = formatter.string(from: self)
-        
-        let days = Int(diff/86400)
-        let hours = Int(diff/3600)
-        let minutes = Int(diff/60)
-        
+
+        let days = Int(diff / 86400)
+        let hours = Int(diff / 3600)
+        let minutes = Int(diff / 60)
+
         if days < 0 {
             return def
         } else if days == 0 {
@@ -197,7 +204,7 @@ extension Date {
             } else {
                 return "\(hours)시간 전"
             }
-        } else if days == 1{
+        } else if days == 1 {
             return "어제"
         } else if days < 7 {
             return "\(days)일 전"

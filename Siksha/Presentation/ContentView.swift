@@ -28,7 +28,12 @@ private extension ContentView {
             Spacer()
         }
         .padding(.top, 5)
-        .padding(.bottom, geometry.safeAreaInsets.bottom == 0 ? geometry.safeAreaInsets.bottom + 13 : geometry.safeAreaInsets.bottom - 2)
+        .padding(
+            .bottom,
+            geometry.safeAreaInsets.bottom == 0
+                ? geometry.safeAreaInsets.bottom + 13
+                : geometry.safeAreaInsets.bottom - 2
+        )
         .background(
             Color.backgroundSecondary
                 .shadow(color: .black.opacity(0.05), radius: 3, x: 0, y: -2)
@@ -41,10 +46,10 @@ class ContentViewModel: ObservableObject {
     @Published var showPopUp = false
     @Published var popUpOpacity = 0.0
     @Published var showModal = !UserDefaults.standard.bool(forKey: "isAlreadyDisplayedMyLikedMenuModal")
-    
+
     @Published var showMyMenuViewFromPopup = false
     static var contentViewModel = ContentViewModel()
-    
+
 }
 struct ContentView: View {
     @State var selectedTab = 0
@@ -58,13 +63,16 @@ struct ContentView: View {
         fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
         updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
         manageMenuFiltersUseCase: AppContainer.shared.useCases.manageMenuFiltersUseCase,
-        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases
+            .manageRestaurantsWithoutMenuVisibilityUseCase,
         manageFestivalPreferencesUseCase: AppContainer.shared.useCases.manageFestivalPreferencesUseCase,
         checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases.checkFestivalSwitchVisibilityUseCase
     )
-    @StateObject private var communityViewModel = CommunityViewModel(communityRepository: AppContainer.shared.domain.communityRepository)
+    @StateObject private var communityViewModel = CommunityViewModel(
+        communityRepository: AppContainer.shared.domain.communityRepository)
     @StateObject private var settingsViewModel = RenewalSettingsViewModel(
-        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+        manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases
+            .manageRestaurantsWithoutMenuVisibilityUseCase,
         fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
         submitVOCUseCase: AppContainer.shared.useCases.submitVOCUseCase,
         fetchAppStoreVersionUseCase: AppContainer.shared.useCases.fetchAppStoreVersionUseCase
@@ -89,37 +97,44 @@ struct ContentView: View {
     )
     @State private var hidePopupWorkItem: DispatchWorkItem?
     @State private var previousSelectedTab = 0
-    
+
     struct TabItem: Identifiable {
         var id: Int
         var content: AnyView
         var buttonImage: [String]
     }
-    
+
     var tabItems: [TabItem] {
         [
-            TabItem(id: 0, content: AnyView(MenuView(viewModel: menuViewModel).id("main")), buttonImage: ["Icons/Tabbar/main_orange", "Icons/Tabbar/main_grey"]),
-            TabItem(id: 1, content: AnyView(CommunityView(viewModel: communityViewModel)), buttonImage: ["Icons/Tabbar/community_orange", "Icons/Tabbar/community_grey"]),
-            TabItem(id: 2, content: AnyView(RenewalSettingsView(
-                viewModel: settingsViewModel,
-                orderViewModel: restaurantOrderViewModel
-            )), buttonImage: ["Icons/Tabbar/settings_orange", "Icons/Tabbar/settings_grey"])
+            TabItem(
+                id: 0, content: AnyView(MenuView(viewModel: menuViewModel).id("main")),
+                buttonImage: ["Icons/Tabbar/main_orange", "Icons/Tabbar/main_grey"]),
+            TabItem(
+                id: 1, content: AnyView(CommunityView(viewModel: communityViewModel)),
+                buttonImage: ["Icons/Tabbar/community_orange", "Icons/Tabbar/community_grey"]),
+            TabItem(
+                id: 2,
+                content: AnyView(
+                    RenewalSettingsView(
+                        viewModel: settingsViewModel,
+                        orderViewModel: restaurantOrderViewModel
+                    )), buttonImage: ["Icons/Tabbar/settings_orange", "Icons/Tabbar/settings_grey"]),
         ]
     }
-    
+
     var body: some View {
         ZStack {
             NavigationStack {
                 GeometryReader { geometry in
                     ZStack {
                         ZStack {
-                            VStack(spacing:0) {
+                            VStack(spacing: 0) {
                                 tabItems[selectedTab].content
                                 tabBar(geometry)
                             }
                             .frame(width: geometry.size.width)
                             .ignoresSafeArea(.all, edges: .bottom)
-                            
+
                             ZStack {
                                 MyLikedMenuModal(viewModel: myLikedMenuViewModel)
                                     .environmentObject(ContentViewModel.contentViewModel)
@@ -140,7 +155,7 @@ struct ContentView: View {
                     }
                 }
             }
-            
+
             if contentViewModel.showPopUp {
                 ZStack(alignment: .topTrailing) {
                     Image("notificationPopup")
@@ -150,17 +165,18 @@ struct ContentView: View {
                 }
                 .onAppear {
                     if UserDefaults.standard.integer(forKey: "alarmPopupCount") < 3 {
-                        UserDefaults.standard.set(UserDefaults.standard.integer(forKey: "alarmPopupCount") + 1, forKey: "alarmPopupCount")
+                        UserDefaults.standard.set(
+                            UserDefaults.standard.integer(forKey: "alarmPopupCount") + 1, forKey: "alarmPopupCount")
                         hidePopupWorkItem = DispatchWorkItem {
                             withAnimation(.easeInOut(duration: 1.0)) {
                                 contentViewModel.popUpOpacity = 0.0
                             }
                         }
-                        
+
                         withAnimation(.easeInOut(duration: 1.0).delay(0.5)) {
                             contentViewModel.popUpOpacity = 1.0
                         }
-                        
+
                         DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: hidePopupWorkItem!)
                     }
                 }

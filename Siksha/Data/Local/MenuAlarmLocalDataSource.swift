@@ -15,15 +15,15 @@ protocol MenuAlarmLocalDataSource {
 final class UserDefaultsMenuAlarmLocalDataSource: MenuAlarmLocalDataSource {
     private let userDefaults: UserDefaults
     private let alarmEnabledKey = "isAlarmEnabled"
-    
+
     init(userDefaults: UserDefaults = .standard) {
         self.userDefaults = userDefaults
     }
-    
+
     func getAlarmEnabled() -> Bool {
         userDefaults.bool(forKey: alarmEnabledKey)
     }
-    
+
     func setAlarmEnabled(_ enabled: Bool) {
         userDefaults.set(enabled, forKey: alarmEnabledKey)
     }

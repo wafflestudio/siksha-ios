@@ -21,12 +21,12 @@ struct TypeInfo: Identifiable {
     var height: CGFloat
     var width: CGFloat
     var name: String
-    
+
     init(type: TypeSelection) {
         self.id = type.rawValue
         self.type = type
 
-        switch(type){
+        switch type {
         case .breakfast:
             self.icon = "BreakfastTime"
             self.width = 20
@@ -73,7 +73,7 @@ enum ReviewErrorCode: Int {
     case signatureVerifyFailed = 401
     case multipleReview = 409
     case invalidId = 404
-    
+
     var message: String {
         switch self {
         case .noNetwork:
@@ -90,28 +90,28 @@ enum ReviewErrorCode: Int {
     }
 }
 
-enum FontType{
-    enum FontWeight: String{
+enum FontType {
+    enum FontWeight: String {
         case Light = "NanumSquareOTFL"
         case Regular = "NanumSquareOTFR"
         case Bold = "NanumSquareOTFB"
         case ExtraBold = "NanumSquareOTFEB"
     }
-    case text9(weight:FontWeight)
-    case text10(weight:FontWeight)
-    case text11(weight:FontWeight)
-    case text12(weight:FontWeight)
-    case text13(weight:FontWeight)
-    case text14(weight:FontWeight)
-    case text15(weight:FontWeight)
-    case text16(weight:FontWeight)
-    case text18(weight:FontWeight)
-    case text20(weight:FontWeight)
-    case text24(weight:FontWeight)
-    case text28(weight:FontWeight)
-    case text32(weight:FontWeight)
-    var fontSize:Int{
-        switch self{
+    case text9(weight: FontWeight)
+    case text10(weight: FontWeight)
+    case text11(weight: FontWeight)
+    case text12(weight: FontWeight)
+    case text13(weight: FontWeight)
+    case text14(weight: FontWeight)
+    case text15(weight: FontWeight)
+    case text16(weight: FontWeight)
+    case text18(weight: FontWeight)
+    case text20(weight: FontWeight)
+    case text24(weight: FontWeight)
+    case text28(weight: FontWeight)
+    case text32(weight: FontWeight)
+    var fontSize: Int {
+        switch self {
         case .text9:
             return 9
         case .text10:
@@ -140,8 +140,8 @@ enum FontType{
             return 32
         }
     }
-    var lineHeight:Int{
-        switch self{
+    var lineHeight: Int {
+        switch self {
         case .text14:
             return 150
         case .text15:
@@ -150,8 +150,8 @@ enum FontType{
             return 140
         }
     }
-    var fontName:String{
-        switch self{
+    var fontName: String {
+        switch self {
         case .text9(let weight):
             return weight.rawValue
         case .text10(let weight):

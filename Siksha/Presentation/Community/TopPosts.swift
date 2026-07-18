@@ -12,16 +12,16 @@ import SwiftUI
 struct TopPosts: View {
     var infos: [PostInfo]
     let needRefresh: Binding<Bool>
-    
+
     private let timer = Timer.publish(every: 5, on: .main, in: .common).autoconnect()
     private let flippingAngle = Angle(degrees: 0)
     @State private var counter = 0
     @State private var select = 0
-    
+
     private var appendedInfos: [PostInfo] {
         infos.count > 0 ? infos + [infos[0]] : []
     }
-    
+
     var body: some View {
         TabView(selection: $select) {
             ForEach(Array(zip(appendedInfos.indices, appendedInfos)), id: \.0) { index, info in

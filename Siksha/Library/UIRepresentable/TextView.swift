@@ -12,15 +12,15 @@ struct TextView: UIViewRepresentable {
     @Binding var text: String
     @Binding var placeHolder: String
     var maxCount: Int = 150
-    
+
     func makeCoordinator() -> Coordinator {
         Coordinator(self, maxCount: self.maxCount)
     }
-    
+
     func makeUIView(context: Context) -> UITextView {
         let view = UITextView()
         view.delegate = context.coordinator
-        
+
         view.isScrollEnabled = true
         view.isEditable = true
         view.isUserInteractionEnabled = true
@@ -30,7 +30,7 @@ struct TextView: UIViewRepresentable {
         view.font = .systemFont(ofSize: 14)
         return view
     }
-    
+
     func updateUIView(_ uiView: UITextView, context: Context) {
         if !self.text.isEmpty {
             uiView.text = self.text
@@ -46,41 +46,41 @@ struct TextView: UIViewRepresentable {
             uiView.text = ""
             uiView.textColor = UIColor(Color.blackColor)
         }
-        
+
     }
-    
-    class Coordinator : NSObject, UITextViewDelegate {
+
+    class Coordinator: NSObject, UITextViewDelegate {
         var parent: TextView
         let maxCount: Int
-        
+
         init(_ uiTextView: TextView, maxCount: Int) {
             self.parent = uiTextView
             self.maxCount = maxCount
         }
-        
+
         func textViewDidBeginEditing(_ textView: UITextView) {
-              /// 플레이스홀더 텍스트이면 지우기
-              if textView.text == self.parent.placeHolder {
-                  textView.text = ""
-                  textView.textColor = UIColor(Color.blackColor)
-              }
-          }
-          
-          func textViewDidEndEditing(_ textView: UITextView) {
-              /// 텍스트가 비어있으면 플레이스홀더 표시
-              if textView.text.isEmpty {
-                  textView.text = self.parent.placeHolder
-                  textView.textColor = UIColor(Color.textBubble)
-              }
-          }
-          
-          func textViewDidChange(_ textView: UITextView) {
-              /// 플레이스홀더가 아닌 경우에만 text 업데이트
-              if textView.text != self.parent.placeHolder {
-                  self.parent.text = textView.text
-              }
-          }
-        
+            /// 플레이스홀더 텍스트이면 지우기
+            if textView.text == self.parent.placeHolder {
+                textView.text = ""
+                textView.textColor = UIColor(Color.blackColor)
+            }
+        }
+
+        func textViewDidEndEditing(_ textView: UITextView) {
+            /// 텍스트가 비어있으면 플레이스홀더 표시
+            if textView.text.isEmpty {
+                textView.text = self.parent.placeHolder
+                textView.textColor = UIColor(Color.textBubble)
+            }
+        }
+
+        func textViewDidChange(_ textView: UITextView) {
+            /// 플레이스홀더가 아닌 경우에만 text 업데이트
+            if textView.text != self.parent.placeHolder {
+                self.parent.text = textView.text
+            }
+        }
+
         func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
             let currentText = textView.text ?? ""
             guard let stringRange = Range(range, in: currentText) else { return false }

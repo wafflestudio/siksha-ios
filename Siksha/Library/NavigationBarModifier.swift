@@ -10,11 +10,11 @@ import SwiftUI
 
 struct NavigationBarModifier: ViewModifier {
     var title: String
-    
+
     init(title: String) {
         self.title = title
     }
-    
+
     func body(content: Content) -> some View {
         content
             .navigationBarTitleDisplayMode(.inline)
@@ -40,7 +40,7 @@ struct NavigationBarModifier: ViewModifier {
 
 private struct Preview: View {
     @Environment(\.presentationMode) var presentationMode
-    
+
     var body: some View {
         NavigationView {
             Text("navigation")
@@ -48,7 +48,7 @@ private struct Preview: View {
                 .navigationBarItems(leading: backButton)
         }
     }
-    
+
     var backButton: some View {
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()

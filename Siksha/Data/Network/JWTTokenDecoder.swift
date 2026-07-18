@@ -23,8 +23,9 @@ struct JWTTokenDecoder {
         }
 
         guard let data = base64URLDecode(segments[1]),
-              let json = try? JSONSerialization.jsonObject(with: data),
-              let payload = json as? [String: Any] else {
+            let json = try? JSONSerialization.jsonObject(with: data),
+            let payload = json as? [String: Any]
+        else {
             return [:]
         }
 
@@ -32,7 +33,8 @@ struct JWTTokenDecoder {
     }
 
     private func base64URLDecode(_ value: String) -> Data? {
-        var base64 = value
+        var base64 =
+            value
             .replacingOccurrences(of: "-", with: "+")
             .replacingOccurrences(of: "_", with: "/")
 

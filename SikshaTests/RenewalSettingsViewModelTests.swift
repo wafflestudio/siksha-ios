@@ -4,6 +4,7 @@
 //
 
 import XCTest
+
 @testable import Siksha
 
 @MainActor
@@ -66,7 +67,8 @@ final class RenewalSettingsViewModelTests: XCTestCase {
     private func makeViewModel(
         fetchUser: SettingsFetchCurrentUserUseCaseStub = SettingsFetchCurrentUserUseCaseStub(user: .settingsFixture()),
         submitVOC: SubmitVOCUseCaseStub = SubmitVOCUseCaseStub(result: .success(())),
-        fetchVersion: FetchAppStoreVersionUseCaseStub = FetchAppStoreVersionUseCaseStub(version: AppVersion(rawValue: "1.0.0"))
+        fetchVersion: FetchAppStoreVersionUseCaseStub = FetchAppStoreVersionUseCaseStub(
+            version: AppVersion(rawValue: "1.0.0"))
     ) -> RenewalSettingsViewModel {
         RenewalSettingsViewModel(
             manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCaseStub(),

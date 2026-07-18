@@ -19,11 +19,11 @@ protocol FetchDailyMenuUseCase {
 
 final class DefaultFetchDailyMenuUseCase: FetchDailyMenuUseCase {
     private let repository: MenuRepositoryProtocol
-    
+
     init(repository: MenuRepositoryProtocol) {
         self.repository = repository
     }
-    
+
     @MainActor
     func execute(date: String) async -> FetchDailyMenuResult {
         do {
@@ -31,7 +31,7 @@ final class DefaultFetchDailyMenuUseCase: FetchDailyMenuUseCase {
             guard hasRemoteMenu else {
                 return .empty
             }
-            
+
             if let menu = repository.getMenu(date: date) {
                 return .succeeded(menu)
             }
@@ -40,7 +40,7 @@ final class DefaultFetchDailyMenuUseCase: FetchDailyMenuUseCase {
                 return .cached(cachedMenu)
             }
         }
-        
+
         return .failed
     }
 }

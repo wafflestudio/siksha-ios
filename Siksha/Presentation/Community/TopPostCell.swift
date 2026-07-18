@@ -7,10 +7,10 @@
 
 import SwiftUI
 
-struct TopPostCell: View{
+struct TopPostCell: View {
     var post: PostInfo
     let needRefresh: Binding<Bool>
-    
+
     var body: some View {
         NavigationLink {
             CommunityPostView(
@@ -18,23 +18,23 @@ struct TopPostCell: View{
                     communityRepository: AppContainer.shared.domain.communityRepository,
                     postId: post.id
                 ),
-                needPostViewRefresh:needRefresh
+                needPostViewRefresh: needRefresh
             )
         } label: {
             HStack(spacing: 0) {
                 Text(post.title)
                     .customFont(font: .text13(weight: .Regular))
                     .foregroundColor(.blackColor)
-                
+
                 Spacer()
-                
+
                 HStack(spacing: 4) {
                     Image("like")
                         .resizable()
                         .scaledToFill()
                         .frame(width: 11.5, height: 11)
                         .foregroundStyle(Color.orange500)
-                    
+
                     Text("\(post.likeCount)")
                         .foregroundColor(Color.orange500)
                         .customFont(font: .text11(weight: .Bold))

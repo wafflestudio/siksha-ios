@@ -30,7 +30,7 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             .serializingDecodable(MenuIdResponse.self, decoder: JSONDecoder())
             .value
     }
-    
+
     func fetchReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO {
         try await AF
             .request(SikshaAPI.getReviews(menuId: menuId, page: page, perPage: perPage))
@@ -38,7 +38,7 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             .serializingDecodable(ReviewPageResponseDTO.self, decoder: reviewDecoder())
             .value
     }
-    
+
     func fetchImageReviews(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageResponseDTO {
         try await AF
             .request(SikshaAPI.getImageReviews(menuId: menuId, page: page, perPage: perPage))
@@ -46,7 +46,7 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             .serializingDecodable(ReviewPageResponseDTO.self, decoder: reviewDecoder())
             .value
     }
-    
+
     func fetchScoreDistribution(menuId: Int) async throws -> ScoreDistributionResponse {
         try await AF
             .request(SikshaAPI.getScoreDistribution(menuId: menuId))
@@ -54,7 +54,7 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             .serializingDecodable(ScoreDistributionResponse.self, decoder: JSONDecoder())
             .value
     }
-    
+
     func fetchKeywordDistribution(menuId: Int) async throws -> KeywordDistributionResponse {
         try await AF
             .request(SikshaAPI.getKeywordDistribution(menuId: menuId))
@@ -62,7 +62,7 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             .serializingDecodable(KeywordDistributionResponse.self, decoder: NetworkDecoder.make())
             .value
     }
-    
+
     func fetchCommentRecommendation(score: Int) async throws -> CommentRecommendationResponse {
         try await AF
             .request(SikshaAPI.getCommentRecommendation(score: score))
@@ -70,7 +70,7 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             .serializingDecodable(CommentRecommendationResponse.self, decoder: JSONDecoder())
             .value
     }
-    
+
     func submitReview(_ submission: MealReviewSubmissionModel) async throws {
         let endpoint = SikshaAPI.submitReview(
             menuId: submission.menuId,
@@ -80,10 +80,10 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             price: submission.price,
             foodComposition: submission.foodComposition
         )
-        
+
         try await validateNoContentRequest(AF.request(endpoint))
     }
-    
+
     func editReview(reviewId: Int, submission: MealReviewSubmissionModel) async throws {
         let endpoint = SikshaAPI.editReview(
             reviewId: reviewId,
@@ -95,18 +95,18 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             foodComposition: submission.foodComposition,
             images: submission.images
         )
-        
+
         try await validateNoContentRequest(AF.upload(multipartFormData: endpoint.multipartFormData!, with: endpoint))
     }
-    
+
     func likeReview(reviewId: Int) async throws {
         try await validateNoContentRequest(AF.request(SikshaAPI.likeReview(reviewId: reviewId)))
     }
-    
+
     func unlikeReview(reviewId: Int) async throws {
         try await validateNoContentRequest(AF.request(SikshaAPI.unlikeReview(reviewId: reviewId)))
     }
-    
+
     func submitReviewImages(_ submission: MealReviewSubmissionModel) async throws {
         let endpoint = SikshaAPI.submitReviewImages(
             menuId: submission.menuId,
@@ -117,40 +117,42 @@ final class MealInfoRemoteDataSourceImpl: MealInfoRemoteDataSource {
             foodComposition: submission.foodComposition,
             images: submission.images ?? []
         )
-        
+
         try await validateNoContentRequest(AF.upload(multipartFormData: endpoint.multipartFormData!, with: endpoint))
     }
-    
+
     private func validateNoContentRequest(_ request: DataRequest) async throws {
-        let response = await request
+        let response =
+            await request
             .validate()
             .serializingData()
             .response
-        
+
         if let statusCode = response.response?.statusCode,
-           200..<300 ~= statusCode {
+            200..<300 ~= statusCode
+        {
             return
         }
-        
+
         if let statusCode = response.response?.statusCode {
             throw MealReviewSubmissionError.statusCode(statusCode)
         }
-        
+
         if let error = response.error {
             throw MealReviewSubmissionError.underlying(error)
         }
-        
+
         throw MealReviewSubmissionError.statusCode(0)
     }
-    
+
     private func reviewDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        
+
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         decoder.dateDecodingStrategy = .formatted(formatter)
-        
+
         return decoder
     }
 }

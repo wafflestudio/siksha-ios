@@ -11,7 +11,7 @@ enum DateType {
     case weekdays
     case saturday
     case holiday
-    
+
     static func getType(from num: Int) -> Self {
         if num == 2 {
             return .holiday

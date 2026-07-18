@@ -12,8 +12,7 @@ struct RenewalSettingsView: View {
     @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @ObservedObject var viewModel: RenewalSettingsViewModel
     @ObservedObject var orderViewModel: RestaurantOrderViewModel
-    
-    
+
     init(
         viewModel: RenewalSettingsViewModel,
         orderViewModel: RestaurantOrderViewModel
@@ -21,29 +20,29 @@ struct RenewalSettingsView: View {
         self.viewModel = viewModel
         self.orderViewModel = orderViewModel
     }
-    
+
     private let borderColor = Color.gray200
     private let partitionColor = Color.borderPrimary
     private let blackColor = Color.blackColor
     private let gray500 = Color.gray500
     private let gray900 = Color.gray900
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .center, spacing: 20) {
                 profileState
-                
+
                 myWritings
-                
+
                 additionalSettings
-                
+
                 contact
-                
+
                 Spacer()
-                
+
                 versionInfo
                     .padding(.bottom, 35)
-                
+
             }
             .padding(.top, 24)
             .padding([.leading, .trailing], 20)
@@ -55,13 +54,16 @@ struct RenewalSettingsView: View {
             await viewModel.loadIfNeeded()
         }
     }
-    
+
     var profileState: some View {
-        NavigationLink(destination: ProfileEditView(viewModel: ProfileEditViewModel(
-            fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
-            updateUserProfileUseCase: AppContainer.shared.useCases.updateUserProfileUseCase,
-            onUserUpdated: viewModel.applyUpdatedUser
-        ))) {
+        NavigationLink(
+            destination: ProfileEditView(
+                viewModel: ProfileEditViewModel(
+                    fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
+                    updateUserProfileUseCase: AppContainer.shared.useCases.updateUserProfileUseCase,
+                    onUserUpdated: viewModel.applyUpdatedUser
+                ))
+        ) {
             HStack(spacing: 11) {
                 if let profileImageURL = viewModel.user?.profileUrl {
                     RemoteImage(url: profileImageURL)
@@ -72,13 +74,13 @@ struct RenewalSettingsView: View {
                         .resizable()
                         .frame(width: 48, height: 48)
                 }
-                
+
                 Text(viewModel.user?.nickname ?? "무명의 미식가")
                     .customFont(font: .text16(weight: .Bold))
                     .foregroundColor(gray900)
-                
+
                 Spacer()
-                
+
                 arrow
             }
             .padding(.vertical, 11)
@@ -91,7 +93,7 @@ struct RenewalSettingsView: View {
             )
         }
     }
-    
+
     var arrow: some View {
         Image("ArrowSmall")
             .resizable()
@@ -99,60 +101,70 @@ struct RenewalSettingsView: View {
             .foregroundColor(Color.gray500)
             .frame(width: 16, height: 16)
     }
-    
+
     var myWritings: some View {
 
         VStack(spacing: 8) {
-            NavigationLink(destination: MyPostView(viewModel: MyPostViewModel(communityRepository: AppContainer.shared.domain.communityRepository))) {
+            NavigationLink(
+                destination: MyPostView(
+                    viewModel: MyPostViewModel(communityRepository: AppContainer.shared.domain.communityRepository))
+            ) {
                 HStack(alignment: .center) {
                     Text("내가 쓴 글")
                         .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
-                    
+
                     Spacer()
-                    
+
                     arrow
                 }
             }
-            
+
             partitionBar
-            
-            NavigationLink(destination: MyReviewManageView(viewModel: MyReviewViewModel(
-                fetchMyReviewsUseCase: AppContainer.shared.useCases.fetchMyReviewsUseCase,
-                deleteMyReviewUseCase: AppContainer.shared.useCases.deleteMyReviewUseCase
-            ))) {
+
+            NavigationLink(
+                destination: MyReviewManageView(
+                    viewModel: MyReviewViewModel(
+                        fetchMyReviewsUseCase: AppContainer.shared.useCases.fetchMyReviewsUseCase,
+                        deleteMyReviewUseCase: AppContainer.shared.useCases.deleteMyReviewUseCase
+                    ))
+            ) {
                 HStack(alignment: .center) {
                     Text("나의 평가 관리")
                         .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
-                    
+
                     Spacer()
-                    
+
                     arrow
                 }
             }
-            
+
             partitionBar
-            NavigationLink(destination: MyLikedMenuView(viewModel: MyLikedMenuViewModel(
-                fetchMyLikedMenusUseCase: AppContainer.shared.useCases.fetchMyLikedMenusUseCase,
-                getMenuAlarmEnabledUseCase: AppContainer.shared.useCases.getMenuAlarmEnabledUseCase,
-                setMenuAlarmEnabledUseCase: AppContainer.shared.useCases.setMenuAlarmEnabledUseCase,
-                updateMenuAlarmUseCase: AppContainer.shared.useCases.updateMenuAlarmUseCase,
-                updateAllMenuAlarmsUseCase: AppContainer.shared.useCases.updateAllMenuAlarmsUseCase,
-                fetchMenuAlarmTimeUseCase: AppContainer.shared.useCases.fetchMenuAlarmTimeUseCase,
-                updateMenuAlarmTimeUseCase: AppContainer.shared.useCases.updateMenuAlarmTimeUseCase,
-                updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase,
-                menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager,
-                fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
-                updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase
-            ))) {
+            NavigationLink(
+                destination: MyLikedMenuView(
+                    viewModel: MyLikedMenuViewModel(
+                        fetchMyLikedMenusUseCase: AppContainer.shared.useCases.fetchMyLikedMenusUseCase,
+                        getMenuAlarmEnabledUseCase: AppContainer.shared.useCases.getMenuAlarmEnabledUseCase,
+                        setMenuAlarmEnabledUseCase: AppContainer.shared.useCases.setMenuAlarmEnabledUseCase,
+                        updateMenuAlarmUseCase: AppContainer.shared.useCases.updateMenuAlarmUseCase,
+                        updateAllMenuAlarmsUseCase: AppContainer.shared.useCases.updateAllMenuAlarmsUseCase,
+                        fetchMenuAlarmTimeUseCase: AppContainer.shared.useCases.fetchMenuAlarmTimeUseCase,
+                        updateMenuAlarmTimeUseCase: AppContainer.shared.useCases.updateMenuAlarmTimeUseCase,
+                        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase,
+                        menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager,
+                        fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+                        updateRestaurantPreferenceUseCase: AppContainer.shared.useCases
+                            .updateRestaurantPreferenceUseCase
+                    ))
+            ) {
                 HStack(alignment: .center) {
                     Text("내가 찜한 메뉴")
                         .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
-                    
+
                     Spacer()
-                    
+
                     arrow
                 }
             }
@@ -166,12 +178,12 @@ struct RenewalSettingsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         )
     }
-    
+
     var partitionBar: some View {
         partitionColor
             .frame(height: 1)
     }
-    
+
     var additionalSettings: some View {
         VStack(spacing: 8) {
             NavigationLink(destination: RestaurantOrderView(orderViewModel)) {
@@ -179,15 +191,15 @@ struct RenewalSettingsView: View {
                     Text("식당 순서 변경")
                         .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
-                    
+
                     Spacer()
-                    
+
                     arrow
                 }
             }
-            
+
             partitionBar
-            
+
             Button(action: {
                 // change button
                 viewModel.noMenuHide.toggle()
@@ -196,9 +208,9 @@ struct RenewalSettingsView: View {
                     Text("메뉴 없는 식당 숨기기")
                         .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
-                    
+
                     Spacer()
-                    
+
                     Image("CheckCircle")
                         .resizable()
                         .renderingMode(.template)
@@ -207,39 +219,41 @@ struct RenewalSettingsView: View {
                         .padding(.trailing, 2)
                 }
             }
-            
+
             partitionBar
-            
-            NavigationLink(destination: AccountManageView(
-                viewModel: AccountManageViewModel(
-                    logoutUseCase: AppContainer.shared.useCases.logoutUseCase,
-                    deleteAccountUseCase: AppContainer.shared.useCases.deleteAccountUseCase
+
+            NavigationLink(
+                destination: AccountManageView(
+                    viewModel: AccountManageViewModel(
+                        logoutUseCase: AppContainer.shared.useCases.logoutUseCase,
+                        deleteAccountUseCase: AppContainer.shared.useCases.deleteAccountUseCase
+                    )
                 )
-            )) {
+            ) {
                 HStack(alignment: .center) {
                     Text("계정 관리")
                         .customFont(font: .text15(weight: .Regular))
                         .foregroundColor(blackColor)
-                    
+
                     Spacer()
-                    
+
                     arrow
                 }
             }
             #if DEBUG
-            partitionBar
-            
-            NavigationLink(destination: DevMenuView()) {
-                HStack(alignment: .center) {
-                    Text("개발자 메뉴")
-                        .customFont(font: .text15(weight: .Regular))
-                        .foregroundColor(blackColor)
-                    
-                    Spacer()
-                    
-                    arrow
+                partitionBar
+
+                NavigationLink(destination: DevMenuView()) {
+                    HStack(alignment: .center) {
+                        Text("개발자 메뉴")
+                            .customFont(font: .text15(weight: .Regular))
+                            .foregroundColor(blackColor)
+
+                        Spacer()
+
+                        arrow
+                    }
                 }
-            }
             #endif
         }
         .padding([.vertical, .trailing], 12)
@@ -251,16 +265,16 @@ struct RenewalSettingsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         )
     }
-    
+
     var contact: some View {
         NavigationLink(destination: RenewalVOCView(viewModel)) {
             HStack(alignment: .center) {
                 Text("1:1 문의하기")
                     .customFont(font: .text15(weight: .Bold))
                     .foregroundColor(.orange500)
-                
+
                 Spacer()
-                
+
                 arrow
             }
         }
@@ -274,7 +288,7 @@ struct RenewalSettingsView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 8))
         )
     }
-    
+
     var versionInfo: some View {
         VStack(spacing: 0) {
             Text("siksha-\(viewModel.version)")
@@ -293,7 +307,8 @@ struct RenewalSettingsView_Previews: PreviewProvider {
         Group {
             RenewalSettingsView(
                 viewModel: RenewalSettingsViewModel(
-                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+                    manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases
+                        .manageRestaurantsWithoutMenuVisibilityUseCase,
                     fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
                     submitVOCUseCase: AppContainer.shared.useCases.submitVOCUseCase,
                     fetchAppStoreVersionUseCase: AppContainer.shared.useCases.fetchAppStoreVersionUseCase

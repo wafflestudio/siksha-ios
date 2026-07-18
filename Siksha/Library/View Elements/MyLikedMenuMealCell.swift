@@ -20,11 +20,11 @@ struct MyLikedMenuMealCell: View {
         formatter.numberStyle = .decimal
         let price = menu.price ?? 0
         let formattedNumber = price > 0 ? formatter.string(from: NSNumber(value: price)) : "-"
-        
+
         return formattedNumber!
     }
-    
-    init(viewModel: MyLikedMenuViewModel,menu:MyLikedMenu) {
+
+    init(viewModel: MyLikedMenuViewModel, menu: MyLikedMenu) {
         self.viewModel = viewModel
         self.menu = menu
         if menu.etc.contains("No meat") {
@@ -32,15 +32,15 @@ struct MyLikedMenuMealCell: View {
         }
         self.price = menu.price ?? 0
     }
-    
+
     var body: some View {
         HStack(alignment: .top) {
             Text("\(menu.nameKr)")
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: 168,alignment: .leading)
+                .frame(maxWidth: 168, alignment: .leading)
                 .customFont(font: .text15(weight: .Regular))
                 .foregroundColor(.blackColor)
-            
+
             if vegetarian {
                 Image("Vegetarian")
                     .resizable()
@@ -49,30 +49,29 @@ struct MyLikedMenuMealCell: View {
             }
 
             Spacer()
-            if price < 10000{
+            if price < 10000 {
                 Text(price > 0 ? String(formattedPrice) : "-")
-                    .customFont(font: .text14(weight:.Regular))
-                    .foregroundColor(.blackColor)
-                    .frame(width: 38)
-            }
-            else{
-                Text(price > 0 ? String(formattedPrice) : "-")
-                    .customFont(font: .text14(weight:.Regular))
-                    .foregroundColor(.blackColor)
-            }
-            Spacer()
-                .frame(width:16)
-                Text(menu.reviewCnt > 0 ? String(format: "%.1f", menu.score ?? 0) : "-")
                     .customFont(font: .text14(weight: .Regular))
                     .foregroundColor(.blackColor)
-                    .frame(width:23)
-                    
+                    .frame(width: 38)
+            } else {
+                Text(price > 0 ? String(formattedPrice) : "-")
+                    .customFont(font: .text14(weight: .Regular))
+                    .foregroundColor(.blackColor)
+            }
             Spacer()
-                .frame(width:16)
+                .frame(width: 16)
+            Text(menu.reviewCnt > 0 ? String(format: "%.1f", menu.score ?? 0) : "-")
+                .customFont(font: .text14(weight: .Regular))
+                .foregroundColor(.blackColor)
+                .frame(width: 23)
+
+            Spacer()
+                .frame(width: 16)
 
             Button(action: {
                 viewModel.toggleMenu(menuId: menu.id)
-            }){
+            }) {
                 Image(menu.isLiked ? "Heart-selected" : "Heart-default")
                     .frame(width: 24, height: 24)
             }

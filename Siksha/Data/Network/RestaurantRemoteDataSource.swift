@@ -5,8 +5,8 @@
 //  Created by 권현구 on 6/1/26.
 //
 
-import Foundation
 import Alamofire
+import Foundation
 
 protocol RestaurantRemoteDataSource {
     func fetchPersonalRestaurants() async throws -> PersonalRestaurantsResponseDTO

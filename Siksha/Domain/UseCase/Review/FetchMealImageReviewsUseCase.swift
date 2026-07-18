@@ -11,11 +11,11 @@ protocol FetchMealImageReviewsUseCase {
 
 final class DefaultFetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase {
     private let repository: MealReviewRepositoryProtocol
-    
+
     init(repository: MealReviewRepositoryProtocol) {
         self.repository = repository
     }
-    
+
     func execute(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
         try await repository.fetchImageReviews(menuId: menuId, page: page, perPage: perPage)
     }

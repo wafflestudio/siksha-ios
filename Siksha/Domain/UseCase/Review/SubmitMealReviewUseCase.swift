@@ -11,11 +11,11 @@ protocol SubmitMealReviewUseCase {
 
 final class DefaultSubmitMealReviewUseCase: SubmitMealReviewUseCase {
     private let repository: MealReviewRepositoryProtocol
-    
+
     init(repository: MealReviewRepositoryProtocol) {
         self.repository = repository
     }
-    
+
     func execute(_ submission: MealReviewSubmissionModel) async throws {
         try await repository.submitReview(submission)
     }

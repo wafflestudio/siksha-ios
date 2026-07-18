@@ -7,6 +7,7 @@
 
 import Foundation
 import XCTest
+
 @testable import Siksha
 
 final class AuthRepositoryImplTests: XCTestCase {
@@ -183,7 +184,8 @@ final class AuthRepositoryImplTests: XCTestCase {
         }
 
         let payloadData = try JSONSerialization.data(withJSONObject: payload)
-        let payloadSegment = payloadData
+        let payloadSegment =
+            payloadData
             .base64EncodedString()
             .replacingOccurrences(of: "+", with: "-")
             .replacingOccurrences(of: "/", with: "_")

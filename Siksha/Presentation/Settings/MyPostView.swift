@@ -12,13 +12,18 @@ struct MyPostPreView: View {
     private let likeColor = Color.orange500
     private let replyColor = Color.gray700
     private let defaultImageColor = Color.gray100
-    
+
     let info: PostInfo
     let boardName: String
-    let needRefresh:Binding<Bool>
-    
+    let needRefresh: Binding<Bool>
+
     var body: some View {
-        NavigationLink(destination: CommunityPostView(viewModel: CommunityPostViewModel(communityRepository: AppContainer.shared.domain.communityRepository, postId: info.id), needPostViewRefresh:needRefresh)) {
+        NavigationLink(
+            destination: CommunityPostView(
+                viewModel: CommunityPostViewModel(
+                    communityRepository: AppContainer.shared.domain.communityRepository, postId: info.id),
+                needPostViewRefresh: needRefresh)
+        ) {
             HStack {
                 VStack(alignment: .leading) {
                     Text(info.title)
@@ -39,7 +44,7 @@ struct MyPostPreView: View {
                                 .frame(width: 4)
                             Text(String(info.likeCount))
                                 .font(.custom("Inter-Regular", size: 9))
-                            
+
                                 .foregroundColor(likeColor)
                         }
                         HStack(alignment: .center) {
@@ -51,7 +56,7 @@ struct MyPostPreView: View {
                                 .font(.custom("Inter-Regular", size: 9))
                                 .foregroundColor(Color.init("Color/Foundation/Gray/700"))
                                 .frame(height: 11, alignment: .center)
-                            
+
                         }
                     }
                 }
@@ -67,17 +72,17 @@ struct MyPostPreView: View {
 
 struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
+
     @State var tag: Int? = nil
     @State var needRefresh = false
     let dividerColor = Color("Color/Foundation/Gray/100")
-    
+
     @ObservedObject private var viewModel: ViewModel
-    
+
     init(viewModel: ViewModel) {
         self.viewModel = viewModel
     }
-    
+
     var backButton: some View {
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
@@ -100,17 +105,17 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if self.viewModel.postsListPublisher.count == 0 {
-                VStack(alignment: .center){
+                VStack(alignment: .center) {
                     Spacer()
                     Text("내가 쓴 글이 없어요")
                         .font(.custom("NanumSquareOTF", size: 15))
-                        .foregroundColor(Color(white: 166/255))
+                        .foregroundColor(Color(white: 166 / 255))
                     Spacer()
                 }
                 .errorAlert(error: $viewModel.error)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
-                ScrollView{
+                ScrollView {
                     postList
                 }
             }
@@ -121,35 +126,37 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
         .onAppear {
             viewModel.loadPosts()
         }
-        .onChange(of: needRefresh, perform: { refresh in
-            if refresh{
-                self.viewModel.loadPosts()
-                needRefresh = false
-            }
-        })
+        .onChange(
+            of: needRefresh,
+            perform: { refresh in
+                if refresh {
+                    self.viewModel.loadPosts()
+                    needRefresh = false
+                }
+            })
     }
-    
+
     var divider: some View {
         Divider()
             .foregroundColor(dividerColor)
             .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 8))
     }
-    
+
     var postList: some View {
         LazyVStack(spacing: 0) {
             ForEach(self.viewModel.postsListPublisher) { postInfo in
                 CommunityPostPreView(info: postInfo, boardName: "MyPost", needRefresh: $needRefresh) // TODO
                 divider
             }
-            
+
             if self.viewModel.hasNextPublisher == true {
                 HStack {
-                  Spacer()
-                  ProgressView()
-                      .onAppear {
-                          self.viewModel.loadMorePosts()
-                      }
-                  Spacer()
+                    Spacer()
+                    ProgressView()
+                        .onAppear {
+                            self.viewModel.loadMorePosts()
+                        }
+                    Spacer()
                 }
                 .frame(height: 40)
             }
@@ -166,22 +173,23 @@ struct MyPostView_Previews: PreviewProvider {
 class StubMyPostViewModel: MyPostViewModelType {
     var error: AppError?
     var isInitialLoading: Bool = false
-    
+
     var hasNextPublisher: Bool {
         return false
     }
-    
+
     var postsListPublisher: [PostInfo] = (1..<5).map {
-        return PostInfo(title: "name\($0)",
-                     content: "content\($0)",
-                     isLiked: $0 % 2 == 0,
-                     likeCount: $0,
-                     commentCount: $0,
-                     imageURLs: [""],
-                     isAnonymous: false,
-                     isMine: false)
+        return PostInfo(
+            title: "name\($0)",
+            content: "content\($0)",
+            isLiked: $0 % 2 == 0,
+            likeCount: $0,
+            commentCount: $0,
+            imageURLs: [""],
+            isAnonymous: false,
+            isMine: false)
     }
-    
-    func loadMorePosts() { }
-    func loadPosts() { }
+
+    func loadMorePosts() {}
+    func loadPosts() {}
 }

@@ -5,6 +5,7 @@
 
 import UIKit
 import XCTest
+
 @testable import Siksha
 
 @MainActor
@@ -28,12 +29,13 @@ final class RemoteImageLoaderTests: XCTestCase {
         let url = try XCTUnwrap(URL(string: "https://example.com/downloaded.png"))
         let downloadedImage = makeImage(color: .blue)
         let imageData = try XCTUnwrap(downloadedImage.pngData())
-        let response = try XCTUnwrap(HTTPURLResponse(
-            url: url,
-            statusCode: 200,
-            httpVersion: nil,
-            headerFields: nil
-        ))
+        let response = try XCTUnwrap(
+            HTTPURLResponse(
+                url: url,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            ))
         let cache = ImageCacheStub()
         let dataLoader = RemoteImageDataLoaderStub(result: .success((imageData, response)))
         let loader = RemoteImageLoader(dataLoader: dataLoader)
@@ -48,12 +50,13 @@ final class RemoteImageLoaderTests: XCTestCase {
 
     func testInvalidImageDataProducesFailedPhase() async throws {
         let url = try XCTUnwrap(URL(string: "https://example.com/invalid.png"))
-        let response = try XCTUnwrap(HTTPURLResponse(
-            url: url,
-            statusCode: 200,
-            httpVersion: nil,
-            headerFields: nil
-        ))
+        let response = try XCTUnwrap(
+            HTTPURLResponse(
+                url: url,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            ))
         let dataLoader = RemoteImageDataLoaderStub(result: .success((Data([0x00]), response)))
         let loader = RemoteImageLoader(dataLoader: dataLoader)
 

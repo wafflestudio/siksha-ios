@@ -10,7 +10,7 @@ import SwiftUI
 struct PhotoAddView: View {
     @State private var isShowingPhotoLibrary = false
     @ObservedObject var viewModel: MealReviewViewModel
-    
+
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: 6) {
@@ -21,7 +21,7 @@ struct PhotoAddView: View {
                         RoundedRectangle(cornerRadius: 8)
                             .frame(width: 80, height: 80)
                             .foregroundStyle(Color.gray100)
-                        
+
                         Image("Plus")
                             .renderingMode(.template)
                             .resizable()
@@ -31,7 +31,7 @@ struct PhotoAddView: View {
                     .padding(.top, 6)
                     .padding(.trailing, 5)
                 }
-                
+
                 ForEach(viewModel.selectedImages, id: \.self) { image in
                     ZStack(alignment: .topTrailing) {
                         Image(uiImage: image)
@@ -41,7 +41,7 @@ struct PhotoAddView: View {
                             .cornerRadius(8)
                             .padding(.top, 6)
                             .padding(.trailing, 5)
-                        
+
                         Button {
                             viewModel.deleteImage(image)
                         } label: {

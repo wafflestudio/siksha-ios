@@ -8,26 +8,26 @@
 import SwiftUI
 
 struct HorizontalGraph: View {
-    private var distribution = Array<CGFloat>(repeating: 0, count: 5)
+    private var distribution = [CGFloat](repeating: 0, count: 5)
     private var multiple: CGFloat = 1
-//    var barGraph: BarGraph
-    
+    //    var barGraph: BarGraph
+
     init(_ distribution: [CGFloat]) {
         if !distribution.isEmpty {
             self.distribution = distribution.reversed()
-            
+
             let maxVal = distribution.max() ?? 0
             if maxVal != 0 {
                 multiple = 100.0 / CGFloat(maxVal)
             }
-            
+
         }
     }
-    
+
     private let orangeColor = Color.init("Color/Foundation/Orange/500")
-    
+
     var body: some View {
-                
+
         VStack(alignment: .leading, spacing: 5) {
             ForEach(Array(zip(distribution.indices, distribution)), id: \.0) { (index, value) in
                 HStack {
@@ -40,16 +40,16 @@ struct HorizontalGraph: View {
                         .frame(width: 8, height: 8)
                     ZStack(alignment: .leading) {
                         Rectangle()
-                            .frame(width: value*multiple*0.5, height: 5)
-                        Capsule().frame(width: value*multiple, height: 5)
+                            .frame(width: value * multiple * 0.5, height: 5)
+                        Capsule().frame(width: value * multiple, height: 5)
                     }
                     .foregroundColor(orangeColor)
                 }
             }
         }
-        
+
     }
-        
+
 }
 
 struct HorizontalGraph_Previews: PreviewProvider {

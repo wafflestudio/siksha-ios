@@ -16,7 +16,8 @@ final class AppVersionRepositoryImpl: AppVersionRepositoryProtocol {
 
     func fetchLatestAppStoreVersion() async throws -> AppVersion {
         guard let version = try await remote.fetchLatestAppStoreVersion().results.first?.version,
-              !version.isEmpty else {
+            !version.isEmpty
+        else {
             throw NetworkError.decodingError
         }
 

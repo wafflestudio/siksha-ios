@@ -97,7 +97,7 @@ private extension PersonalRestaurantDTO {
         return [
             operatingHours.weekdays.joined(separator: "\n").replacingOccurrences(of: "-", with: " - "),
             operatingHours.saturday.joined(separator: "\n").replacingOccurrences(of: "-", with: " - "),
-            operatingHours.holiday.joined(separator: "\n").replacingOccurrences(of: "-", with: " - ")
+            operatingHours.holiday.joined(separator: "\n").replacingOccurrences(of: "-", with: " - "),
         ]
     }
 }

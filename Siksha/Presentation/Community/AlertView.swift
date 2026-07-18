@@ -1,21 +1,20 @@
 import SwiftUI
 
-
 struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: CommunityPostViewModelType {
     private let fontColor = Color("Color/Foundation/Gray/700")
     private let orangeColor = Color.init("Color/Foundation/Orange/500")
     private let lightGrayColor = Color.init("Color/Foundation/Gray/600")
-    private var commentId:Int? = nil
-    @EnvironmentObject var appState:AppState
+    private var commentId: Int? = nil
+    @EnvironmentObject var appState: AppState
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    
+
     @State private var reportCompleteAlertIsShown = false
     @State private var isReportSuccessful = false
     @State private var reportReason = ""
     @State private var alertTitle = ""
     @State private var alertMessage = ""
     @ObservedObject var settingsViewModel: RenewalSettingsViewModel
-    @ObservedObject var communityPostViewModel:CommunityPostViewModel
+    @ObservedObject var communityPostViewModel: CommunityPostViewModel
     var backButton: some View {
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
@@ -25,22 +24,23 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                 .scaledToFit()
                 .frame(width: 24, height: 24)
                 .foregroundColor(Color.iconWhiteIcon)
-            
         }
         .contentShape(Rectangle())
     }
 
-    init(_ settingsViewModel: RenewalSettingsViewModel,_ communityPostViewModel:CommunityPostViewModel) {
+    init(_ settingsViewModel: RenewalSettingsViewModel, _ communityPostViewModel: CommunityPostViewModel) {
         self.settingsViewModel = settingsViewModel
         self.communityPostViewModel = communityPostViewModel
     }
-    init(_ settingsViewModel: RenewalSettingsViewModel,_ communityPostViewModel:CommunityPostViewModel,commentId:Int?) {
+    init(
+        _ settingsViewModel: RenewalSettingsViewModel, _ communityPostViewModel: CommunityPostViewModel, commentId: Int?
+    ) {
         self.settingsViewModel = settingsViewModel
         self.communityPostViewModel = communityPostViewModel
         self.commentId = commentId
         print("COMMENT: \(commentId)")
-        if let commentId{
-            if (commentId <= 0){
+        if let commentId {
+            if commentId <= 0 {
                 self.commentId = nil
             }
         }
@@ -48,22 +48,22 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
     var body: some View {
         GeometryReader { geometry in
             VStack {
-                VStack(spacing:0){
-                    ZStack{
+                VStack(spacing: 0) {
+                    ZStack {
                         Color.backgroundGNB
                             .ignoresSafeArea(.all)
-                        HStack{
+                        HStack {
                             backButton
                             Spacer()
                         }.padding(.zero)
-                        HStack{
+                        HStack {
                             Text("신고하기")
                                 .foregroundColor(.textGNB)
                                 .frame(alignment: .center)
                                 .customFont(font: .text18(weight: .ExtraBold))
                         }.padding(.zero)
-                        
-                    }.frame(height:44)
+
+                    }.frame(height: 44)
                     HStack(spacing: 10) {
                         Image("Comment-new")
                             .renderingMode(.template)
@@ -71,8 +71,7 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                             .scaledToFit()
                             .foregroundStyle(Color.gray700)
                             .frame(width: 18, height: 18)
-                        
-                        
+
                         Text("어떤 이유로 신고하시나요?")
                             .customFont(font: .text18(weight: .ExtraBold))
                             .foregroundStyle(Color.blackColor)
@@ -81,25 +80,25 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                     }
                     .frame(maxWidth: .infinity)
                     .padding(EdgeInsets(top: 44, leading: 16, bottom: 20, trailing: 16))
-                    
+
                     HStack {
                         Image(.Icons.Common.profileImagePlaceholder)
                             .renderingMode(.original)
                             .resizable()
                             .frame(width: 24, height: 24)
-                        
+
                         Text("ID \(settingsViewModel.userId)")
                             .customFont(font: .text12(weight: .Bold))
-                        
+
                         Spacer()
                     }
                     .padding(EdgeInsets(top: 0, leading: 28, bottom: 8, trailing: 28))
-                    
+
                     ZStack(alignment: .bottom) {
                         TextView(text: $reportReason, placeHolder: .constant(""), maxCount: 500)
                             .frame(height: 280)
                             .customFont(font: .text13(weight: .Regular))
-                        
+
                         HStack {
                             Spacer()
                             Text("\(reportReason.count)자 / 500자")
@@ -109,82 +108,82 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
                         .padding(EdgeInsets(top: 0, leading: 0, bottom: 16, trailing: 8))
                     }
                     .padding([.leading, .trailing], 28)
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        if(commentId == nil){
-                            communityPostViewModel.reportPost(reason: reportReason ) { success, errorMessage in
-                                if success {
-                                    alertTitle = "신고"
-                                    alertMessage = "신고되었습니다."
-                                    isReportSuccessful = true
 
-                                } else {
-                                    alertTitle = "신고"
-                                    alertMessage = errorMessage ?? "신고에 실패했습니다."
+                    Spacer()
+
+                    Button(
+                        action: {
+                            if commentId == nil {
+                                communityPostViewModel.reportPost(reason: reportReason) { success, errorMessage in
+                                    if success {
+                                        alertTitle = "신고"
+                                        alertMessage = "신고되었습니다."
+                                        isReportSuccessful = true
+
+                                    } else {
+                                        alertTitle = "신고"
+                                        alertMessage = errorMessage ?? "신고에 실패했습니다."
+                                    }
+                                    reportCompleteAlertIsShown = true
                                 }
-                                reportCompleteAlertIsShown = true
-                            }
-                        }
-                        else{
-                            communityPostViewModel.reportComment(commentId:commentId!,reason: reportReason ) { success, errorMessage in
-                                if success {
-                                    alertTitle = "신고"
-                                    alertMessage = "신고되었습니다."
-                                    isReportSuccessful = true
-                                } else {
-                                    alertTitle = "신고"
-                                    alertMessage = errorMessage ?? "신고에 실패했습니다."
+                            } else {
+                                communityPostViewModel.reportComment(commentId: commentId!, reason: reportReason) {
+                                    success, errorMessage in
+                                    if success {
+                                        alertTitle = "신고"
+                                        alertMessage = "신고되었습니다."
+                                        isReportSuccessful = true
+                                    } else {
+                                        alertTitle = "신고"
+                                        alertMessage = errorMessage ?? "신고에 실패했습니다."
+                                    }
+                                    reportCompleteAlertIsShown = true
                                 }
-                                reportCompleteAlertIsShown = true
                             }
-                        }
-                    }, label: {
+                        },
+                        label: {
                             ZStack {
                                 RoundedRectangle(cornerRadius: 8)
                                     .foregroundColor(reportReason.count > 0 ? .orange500 : .gray600)
-                                
+
                                 Text("올리기")
                                     .customFont(font: .text18(weight: .ExtraBold))
                                     .foregroundColor(.textButton)
                             }
-                        })
+                        }
+                    )
                     .disabled(reportReason.count == 0)
                     .frame(height: 56)
                     .padding(16)
                 }
-                //        .edgesIgnoringSafeArea(.all)
-                .background(Color.backgroundPrimary.onTapGesture {
-                    UIApplication.shared.endEditing()
-                })
-                .alert(isPresented: $reportCompleteAlertIsShown, content: {
-                    Alert(title: Text(alertTitle), message: Text(alertMessage), dismissButton: .default(Text("OK")) {
-                        if isReportSuccessful {
-                            self.presentationMode.wrappedValue.dismiss()
-                        }
-                    })
-                })
-                
+                .background(
+                    Color.backgroundPrimary.onTapGesture {
+                        UIApplication.shared.endEditing()
+                    }
+                )
+                .alert(
+                    isPresented: $reportCompleteAlertIsShown,
+                    content: {
+                        Alert(
+                            title: Text(alertTitle), message: Text(alertMessage),
+                            dismissButton: .default(Text("OK")) {
+                                if isReportSuccessful {
+                                    self.presentationMode.wrappedValue.dismiss()
+                                }
+                            })
+                    }
+                )
                 .ignoresSafeArea(.keyboard)
-                //        .navigationBarTitle("", displayMode: .inline)
-                //        .navigationBarHidden(true)
-                
             }
-          
-            
-            
         }
-        
     }
-    
-    
 }
 
 #Preview {
     AlertView(
         RenewalSettingsViewModel(
-            manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases.manageRestaurantsWithoutMenuVisibilityUseCase,
+            manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases
+                .manageRestaurantsWithoutMenuVisibilityUseCase,
             fetchCurrentUserUseCase: AppContainer.shared.useCases.fetchCurrentUserUseCase,
             submitVOCUseCase: AppContainer.shared.useCases.submitVOCUseCase,
             fetchAppStoreVersionUseCase: AppContainer.shared.useCases.fetchAppStoreVersionUseCase

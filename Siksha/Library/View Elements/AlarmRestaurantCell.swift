@@ -9,43 +9,42 @@ import SwiftUI
 
 struct AlarmRestaurantCell: View {
     @ObservedObject var viewModel: MyLikedMenuViewModel
-    var restaurantName:String
-    var menus:[MyLikedMenu]
-    
-    init(viewModel:MyLikedMenuViewModel,restaurantName: String, menus: [MyLikedMenu]) {
+    var restaurantName: String
+    var menus: [MyLikedMenu]
+
+    init(viewModel: MyLikedMenuViewModel, restaurantName: String, menus: [MyLikedMenu]) {
         self.viewModel = viewModel
         self.restaurantName = restaurantName
         self.menus = menus
     }
     var body: some View {
-        VStack(alignment:.leading,spacing:0){
+        VStack(alignment: .leading, spacing: 0) {
             Text((restaurantName).map(String.init).joined(separator: "\u{200B}"))
                 .foregroundStyle(Color.blackColor)
                 .customFont(font: .text16(weight: .ExtraBold))
             Spacer()
-                .frame(height:8)
+                .frame(height: 8)
             Capsule()
-                .frame(height:1.5)
+                .frame(height: 1.5)
                 .foregroundColor(Color.orange500)
             Spacer()
-                .frame(height:14)
-            ForEach(Array(menus.enumerated()),id:\.offset){
-                index,menu in
-                HStack(alignment: .center){
+                .frame(height: 14)
+            ForEach(Array(menus.enumerated()), id: \.offset) {
+                index, menu in
+                HStack(alignment: .center) {
                     Text(menu.nameKr)
                         .foregroundStyle(Color.blackColor)
                         .customFont(font: .text15(weight: .Regular))
                     Spacer()
-                    Image(menu.alarm ?"alarm-checked" : "alarm-unchecked")
+                    Image(menu.alarm ? "alarm-checked" : "alarm-unchecked")
                         .resizable()
-                        .frame(width:20,height:20)
+                        .frame(width: 20, height: 20)
                         .onTapGesture {
                             viewModel.toggleAlarm(menuId: menu.id)
                         }
-                    
+
                 }
                 .padding(EdgeInsets(top: 0, leading: 0, bottom: 12, trailing: 0))
-                
 
             }
         }.padding(EdgeInsets(top: 14, leading: 14, bottom: 2, trailing: 14))
@@ -57,4 +56,3 @@ struct AlarmRestaurantCell: View {
             )
     }
 }
-

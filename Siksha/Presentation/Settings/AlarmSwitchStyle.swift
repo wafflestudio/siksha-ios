@@ -16,38 +16,38 @@ import SwiftUI
 
 struct AlarmSwitchStyle: ToggleStyle {
     @Environment(\.isEnabled) private var isEnabled
-    
-    private let onColor = LinearGradient(colors: [Color.orange500, Color(hex: 0xFF9DA4)], startPoint: .leading, endPoint: .trailing)
+
+    private let onColor = LinearGradient(
+        colors: [Color.orange500, Color(hex: 0xFF9DA4)], startPoint: .leading, endPoint: .trailing)
     private let offColor = LinearGradient(colors: [Color.iconGrayIcon], startPoint: .leading, endPoint: .trailing)
-    
+
     func makeBody(configuration: Configuration) -> some View {
         Button {
             configuration.isOn.toggle()
         } label: {
             RoundedRectangle(cornerRadius: 59.14)
                 .fill(configuration.isOn ? onColor : offColor)
-                .frame(width:36, height:22)
+                .frame(width: 36, height: 22)
                 .overlay(
                     Circle()
                         .fill(Color.white)
                         .frame(width: 18, height: 18)
                         .shadow(color: Color.black.opacity(0.06), radius: 0.64, x: 0, y: 1.93)
                         .shadow(color: Color.black.opacity(0.15), radius: 5.15, x: 0, y: 1.93)
-               
-                        .offset(x: configuration.isOn ? 16 : 2)
-                    , alignment: .leading
+
+                        .offset(x: configuration.isOn ? 16 : 2), alignment: .leading
                 )
                 .opacity(isEnabled ? 1 : 0.6)
         }
         .buttonStyle(.plain)
         .animation(.easeOut(duration: 0.3), value: configuration.isOn)
-      
+
     }
 }
 
 struct AlarmSwitchStylePreviewWrapper: View {
     @State private var isOn = false
-    
+
     var body: some View {
         Toggle(isOn: $isOn) {
             EmptyView()
@@ -55,7 +55,7 @@ struct AlarmSwitchStylePreviewWrapper: View {
         .toggleStyle(AlarmSwitchStyle())
         .padding()
         .previewLayout(.sizeThatFits)
-    
+
     }
 }
 

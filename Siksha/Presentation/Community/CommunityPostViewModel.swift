@@ -5,8 +5,8 @@
 //  Created by Chaehyun Park on 2023/11/29.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 struct CommentInfo: Identifiable, Equatable {
     let id: Int
@@ -21,7 +21,7 @@ struct CommentInfo: Identifiable, Equatable {
     let isLiked: Bool
     let isAnonymous: Bool
     let isMine: Bool
-    
+
     init(comment: Comment) {
         self.id = comment.id
         self.postId = comment.postId
@@ -51,7 +51,7 @@ struct CommentInfo: Identifiable, Equatable {
         self.isAnonymous = false
         self.isMine = false
     }
-    
+
 }
 
 protocol CommunityPostViewModelType: ObservableObject {
@@ -60,7 +60,7 @@ protocol CommunityPostViewModelType: ObservableObject {
     var commentsListPublisher: [CommentInfo] { get }
     var hasNextPublisher: Bool { get }
     var boardNamePublisher: String { get }
-    
+
     func asyncRefresh() async
     func editPost()
     func deletePost(completion: @escaping (Bool) -> Void)
@@ -69,10 +69,10 @@ protocol CommunityPostViewModelType: ObservableObject {
     func loadMoreComments()
     func submitComment(postId: Int, content: String, isAnonymous: Bool)
     func editComment(commentId: Int, content: String)
-    func deleteComment(id: Int,completion:@escaping(Bool)->Void)
+    func deleteComment(id: Int, completion: @escaping (Bool) -> Void)
     func toggleCommentLike(id: Int)
     func reportPost(reason: String, completion: @escaping (Bool, String?) -> Void)
-    func reportComment(commentId:Int,reason:String, completion: @escaping (Bool, String?) -> Void)
+    func reportComment(commentId: Int, reason: String, completion: @escaping (Bool, String?) -> Void)
     func blockPostAuthor(postInfo: PostInfo)
     func blockCommentAuthor(commentInfo: CommentInfo)
 }
@@ -82,24 +82,24 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
         static let initialPage = 1
         static let pageCount = 10
     }
-    
+
     private let postId: Int
-    
+
     private let communityRepository: CommunityRepositoryProtocol
-    
+
     @Published private var post: Post
     @Published private var commentsList: [Comment] = []
     @Published private var boardsList: [Board] = []
     @Published private var hasNext: Bool = false
-    @Published var reportAlert:Bool = false
-    @Published var reportErrorAlert:Bool = false
-    
+    @Published var reportAlert: Bool = false
+    @Published var reportErrorAlert: Bool = false
+
     @Published var error: AppError?
 
     private var currentPage: Int = 0
-    
+
     private var cancellables = Set<AnyCancellable>()
-    
+
     init(communityRepository: CommunityRepositoryProtocol, postId: Int) {
         self.communityRepository = communityRepository
         self.postId = postId
@@ -125,13 +125,13 @@ extension CommunityPostViewModel {
     var postInfo: PostInfo {
         return PostInfo(post: self.post)
     }
-    
+
     var hasNextPublisher: Bool {
         return self.hasNext
     }
     var boardNamePublisher: String {
-        for board in boardsList{
-            if board.id == postInfo.boardId{
+        for board in boardsList {
+            if board.id == postInfo.boardId {
                 return board.name
             }
         }
@@ -145,62 +145,63 @@ extension CommunityPostViewModel {
         self.loadInitialComments()
         self.loadBoardInfo()
     }
-    
+
     func editPost() {
-        
+
     }
-     func asyncRefresh() async{
-        let postPublisher =  self.communityRepository.loadPost(postId: self.postId)
-        let commentsPublisher = self.communityRepository.loadCommentsPage(postId: self.postId, page: Constants.initialPage, perPage: Constants.pageCount)
-         let boardInfoPublisher = self.communityRepository.loadBoardList()
-         do{
-             for try await response in postPublisher.values{
-                 self.post = response
-             }
-             
-         }
-         catch{
-             self.error = ErrorHelper.categorize(error)
-             print("1")
-         }
-         do{
-             for try await response in commentsPublisher.values{
-                 self.commentsList = response.comments
-                 self.currentPage = 1
-                 self.hasNext = response.hasNext
-             }
-         }
-         catch{
-             self.error = ErrorHelper.categorize(error)
-             print("1")
+    func asyncRefresh() async {
+        let postPublisher = self.communityRepository.loadPost(postId: self.postId)
+        let commentsPublisher = self.communityRepository.loadCommentsPage(
+            postId: self.postId, page: Constants.initialPage, perPage: Constants.pageCount)
+        let boardInfoPublisher = self.communityRepository.loadBoardList()
+        do {
+            for try await response in postPublisher.values {
+                self.post = response
+            }
 
-         }
-         do{
-             for try await response in boardInfoPublisher.values{
-                 self.boardsList = response
-             }
-         }
-         catch{
-             self.error = ErrorHelper.categorize(error)
-             print("1")
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+            print("1")
+        }
+        do {
+            for try await response in commentsPublisher.values {
+                self.commentsList = response.comments
+                self.currentPage = 1
+                self.hasNext = response.hasNext
+            }
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+            print("1")
 
-         }
-        
+        }
+        do {
+            for try await response in boardInfoPublisher.values {
+                self.boardsList = response
+            }
+        } catch {
+            self.error = ErrorHelper.categorize(error)
+            print("1")
+
+        }
+
     }
     func deletePost(completion: @escaping (Bool) -> Void) {
         self.communityRepository.deletePost(postId: self.postId)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    completion(true)
-                case .failure(let error):
-                    self?.error = ErrorHelper.categorize(error)
-                    completion(false)
+            .sink(
+                receiveCompletion: { [weak self] completionStatus in
+                    switch completionStatus {
+                    case .finished:
+                        completion(true)
+                    case .failure(let error):
+                        self?.error = ErrorHelper.categorize(error)
+                        completion(false)
+                    }
+                },
+                receiveValue: { value in
+
                 }
-            }, receiveValue: { value in
-                
-            })
+            )
             .store(in: &cancellables)
     }
 
@@ -208,137 +209,161 @@ extension CommunityPostViewModel {
         if self.post.isLiked {
             self.communityRepository.unlikePost(postId: self.postId)
                 .receive(on: RunLoop.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    if case .failure(let error) = completion {
-                        self?.error = ErrorHelper.categorize(error)
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        if case .failure(let error) = completion {
+                            self?.error = ErrorHelper.categorize(error)
+                        }
+                    },
+                    receiveValue: { [weak self] post in
+                        self?.post = post
                     }
-                }, receiveValue: { [weak self] post in
-                    self?.post = post
-                })
+                )
                 .store(in: &cancellables)
         } else {
             self.communityRepository.likePost(postId: self.postId)
                 .receive(on: RunLoop.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    if case .failure(let error) = completion {
-                        self?.error = ErrorHelper.categorize(error)
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        if case .failure(let error) = completion {
+                            self?.error = ErrorHelper.categorize(error)
+                        }
+                    },
+                    receiveValue: { [weak self] post in
+                        self?.post = post
                     }
-                }, receiveValue: { [weak self] post in
-                    self?.post = post
-                })
+                )
                 .store(in: &cancellables)
         }
     }
-    private func loadBoardInfo(){
+    private func loadBoardInfo() {
         self.communityRepository.loadBoardList()
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion:{ [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.error = ErrorHelper.categorize(error)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure(let error) = completion {
+                        self?.error = ErrorHelper.categorize(error)
+                    }
+                },
+                receiveValue: { [weak self] boards in
+                    self?.boardsList = boards
                 }
-            },receiveValue: {[weak self] boards in
-                self?.boardsList = boards
-            })
+            )
             .store(in: &cancellables)
     }
-    
+
     private func loadPost() {
         self.communityRepository
             .loadPost(postId: self.postId)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.error = ErrorHelper.categorize(error)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure(let error) = completion {
+                        self?.error = ErrorHelper.categorize(error)
+                    }
+                },
+                receiveValue: { [weak self] post in
+                    self?.post = post
                 }
-            }, receiveValue: { [weak self] post in
-                self?.post = post
-            })
+            )
             .store(in: &cancellables)
     }
-    
- 
-    
+
     private func loadInitialComments() {
         self.communityRepository
             .loadCommentsPage(postId: self.postId, page: Constants.initialPage, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.error = ErrorHelper.categorize(error)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure(let error) = completion {
+                        self?.error = ErrorHelper.categorize(error)
+                    }
+                },
+                receiveValue: { [weak self] commentsPage in
+                    self?.commentsList = commentsPage.comments
+                    self?.currentPage = 1
+                    self?.hasNext = commentsPage.hasNext
                 }
-            }, receiveValue: { [weak self] commentsPage in
-                self?.commentsList = commentsPage.comments
-                self?.currentPage = 1
-                self?.hasNext = commentsPage.hasNext
-            })
+            )
             .store(in: &cancellables)
     }
-    
+
     func loadMoreComments() {
         guard self.hasNext == true else {
             return
         }
-        
+
         self.communityRepository
             .loadCommentsPage(postId: self.postId, page: self.currentPage + 1, perPage: Constants.pageCount)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.error = ErrorHelper.categorize(error)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure(let error) = completion {
+                        self?.error = ErrorHelper.categorize(error)
+                    }
+                },
+                receiveValue: { [weak self] commentsPage in
+                    self?.commentsList.append(contentsOf: commentsPage.comments)
+                    self?.currentPage += 1
+                    self?.hasNext = commentsPage.hasNext
                 }
-            }, receiveValue: { [weak self] commentsPage in
-                self?.commentsList.append(contentsOf: commentsPage.comments)
-                self?.currentPage += 1
-                self?.hasNext = commentsPage.hasNext
-            })
+            )
             .store(in: &cancellables)
     }
-    
-    
-    func submitComment(postId: Int, content: String,isAnonymous:Bool) {
-        communityRepository.postComment(postId: postId, content: content,anonymous: isAnonymous)
+
+    func submitComment(postId: Int, content: String, isAnonymous: Bool) {
+        communityRepository.postComment(postId: postId, content: content, anonymous: isAnonymous)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.error = ErrorHelper.categorize(error)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure(let error) = completion {
+                        self?.error = ErrorHelper.categorize(error)
+                    }
+                },
+                receiveValue: { [weak self] newComment in
+                    self?.commentsList.append(newComment)
                 }
-            }, receiveValue: { [weak self] newComment in
-                self?.commentsList.append(newComment)
-            })
+            )
             .store(in: &cancellables)
     }
     func editComment(commentId: Int, content: String) {
         self.communityRepository.editComment(commentId: commentId, content: content)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completion in
-                if case .failure(let error) = completion {
-                    self?.error = ErrorHelper.categorize(error)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    if case .failure(let error) = completion {
+                        self?.error = ErrorHelper.categorize(error)
+                    }
+                },
+                receiveValue: { [weak self] updatedComment in
+                    if let index = self?.commentsList.firstIndex(where: { $0.id == updatedComment.id }) {
+                        self?.commentsList[index] = updatedComment
+                    }
                 }
-            }, receiveValue: { [weak self] updatedComment in
-                if let index = self?.commentsList.firstIndex(where: { $0.id == updatedComment.id }) {
-                    self?.commentsList[index] = updatedComment
-                }
-            })
+            )
             .store(in: &cancellables)
     }
 
-    func deleteComment(id:Int,completion: @escaping (Bool) -> Void) {
+    func deleteComment(id: Int, completion: @escaping (Bool) -> Void) {
         self.communityRepository.deleteComment(commentId: id)
             .receive(on: RunLoop.main)
-            .sink(receiveCompletion: { [weak self] completionStatus in
-                switch completionStatus {
-                case .finished:
-                    completion(true)
-                case .failure(let error):
-                    self?.error = ErrorHelper.categorize(error)
-                    completion(false)
+            .sink(
+                receiveCompletion: { [weak self] completionStatus in
+                    switch completionStatus {
+                    case .finished:
+                        completion(true)
+                    case .failure(let error):
+                        self?.error = ErrorHelper.categorize(error)
+                        completion(false)
+                    }
+                },
+                receiveValue: { value in
+
                 }
-            }, receiveValue: { value in
-                
-            })
+            )
             .store(in: &cancellables)
     }
-    
+
     func toggleCommentLike(id: Int) {
         guard let index = self.commentsList.firstIndex(where: { $0.id == id }) else {
             return
@@ -349,55 +374,67 @@ extension CommunityPostViewModel {
         if comment.isLiked {
             self.communityRepository.unlikeComment(commentId: id)
                 .receive(on: RunLoop.main)
-                .sink(receiveCompletion: { [weak self] completion in
-                    if case .failure(let error) = completion {
-                        self?.error = ErrorHelper.categorize(error)
+                .sink(
+                    receiveCompletion: { [weak self] completion in
+                        if case .failure(let error) = completion {
+                            self?.error = ErrorHelper.categorize(error)
+                        }
+                    },
+                    receiveValue: { [weak self] updatedComment in
+                        self?.commentsList[index] = updatedComment
                     }
-                }, receiveValue: { [weak self] updatedComment in
-                    self?.commentsList[index] = updatedComment
-                })
+                )
                 .store(in: &cancellables)
         } else {
             self.communityRepository.likeComment(commentId: id)
                 .receive(on: RunLoop.main)
-                .sink(receiveCompletion: { completion in
-                    if case .failure(let error) = completion {
-                        self.error = ErrorHelper.categorize(error)
+                .sink(
+                    receiveCompletion: { completion in
+                        if case .failure(let error) = completion {
+                            self.error = ErrorHelper.categorize(error)
+                        }
+                    },
+                    receiveValue: { [weak self] updatedComment in
+                        self?.commentsList[index] = updatedComment
                     }
-                }, receiveValue: { [weak self] updatedComment in
-                    self?.commentsList[index] = updatedComment
-                })
+                )
                 .store(in: &cancellables)
         }
     }
-    
+
     func reportPost(reason: String, completion: @escaping (Bool, String?) -> Void) {
         self.communityRepository.reportPost(postId: postId, reason: reason).receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completionStatus in
-                switch completionStatus {
-                case .finished:
-                    break
-                case .failure(let error):
-                    completion(false, "신고에 실패했습니다. 이미 신고한 게시물일 수 있습니다.")
+            .sink(
+                receiveCompletion: { completionStatus in
+                    switch completionStatus {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        completion(false, "신고에 실패했습니다. 이미 신고한 게시물일 수 있습니다.")
+                    }
+                },
+                receiveValue: { _ in
+                    completion(true, nil)
                 }
-            }, receiveValue: { _ in
-                completion(true, nil)
-            })
+            )
             .store(in: &cancellables)
     }
-    
+
     func reportComment(commentId: Int, reason: String, completion: @escaping (Bool, String?) -> Void) {
         self.communityRepository.reportComment(commentId: commentId, reason: reason).receive(on: RunLoop.main)
-            .sink(receiveCompletion: { completionStatus in
-                switch completionStatus {
-                case .finished:
-                    break
-                case .failure(let error):
-                    completion(false, "신고에 실패했습니다. 이미 신고한 게시물일 수 있습니다.")
+            .sink(
+                receiveCompletion: { completionStatus in
+                    switch completionStatus {
+                    case .finished:
+                        break
+                    case .failure(let error):
+                        completion(false, "신고에 실패했습니다. 이미 신고한 게시물일 수 있습니다.")
+                    }
+                },
+                receiveValue: { _ in
+                    completion(true, nil)
                 }
-            }, receiveValue: { _ in
-                completion(true, nil)
-            })
+            )
             .store(in: &cancellables)
     }
 

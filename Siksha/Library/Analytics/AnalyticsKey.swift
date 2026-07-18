@@ -16,26 +16,26 @@ enum AnalyticsKey {
 }
 
 enum EntryPoint: String {
-    case mainFilter     = "main_filter"
+    case mainFilter = "main_filter"
     case distanceFilter = "distance_filter"
-    case priceFilter    = "price_filter"
-    case ratingFilter   = "rating_filter"
+    case priceFilter = "price_filter"
+    case ratingFilter = "rating_filter"
     case categoryFilter = "category_filter"
 }
 
 enum PageName: String {
-    case storeList     = "store_list_page"
+    case storeList = "store_list_page"
     case favoritesList = "favorites_list_page"
 }
 
 enum FilterType: String, CaseIterable {
-    case isOpenNow      = "is_open_now"
-    case isFavorite     = "is_favorite"
-    case hasReviews     = "has_reviews"
-    case distance       = "distance"
-    case price          = "price"
-    case minimumRating  = "min_rating"
-    case category       = "category"
+    case isOpenNow = "is_open_now"
+    case isFavorite = "is_favorite"
+    case hasReviews = "has_reviews"
+    case distance = "distance"
+    case price = "price"
+    case minimumRating = "min_rating"
+    case category = "category"
 }
 
 struct AppliedFilterOptions {
@@ -47,13 +47,15 @@ struct AppliedFilterOptions {
     var hasReviews: Bool?
     var maxDistanceKm: Double?
 
-    init(priceMin: Int? = nil,
-                priceMax: Int? = nil,
-                minRating: Float? = nil,
-                isOpenNow: Bool? = nil,
-                isFavorite: Bool? = nil,
-                hasReviews: Bool? = nil,
-                maxDistanceKm: Double? = nil) {
+    init(
+        priceMin: Int? = nil,
+        priceMax: Int? = nil,
+        minRating: Float? = nil,
+        isOpenNow: Bool? = nil,
+        isFavorite: Bool? = nil,
+        hasReviews: Bool? = nil,
+        maxDistanceKm: Double? = nil
+    ) {
         self.priceMin = priceMin
         self.priceMax = priceMax
         self.minRating = minRating

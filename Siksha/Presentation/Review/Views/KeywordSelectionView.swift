@@ -10,7 +10,7 @@ import SwiftUI
 struct KeywordSelectionView: View {
     var type: KeywordRateType
     @ObservedObject var viewModel: MealReviewViewModel
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 3) {
@@ -22,7 +22,7 @@ struct KeywordSelectionView: View {
                     .customFont(font: .text14(weight: .Bold))
                     .foregroundStyle(Color.blackColor)
             }
-            
+
             KeywordCellContainerView(type: type, viewModel: viewModel)
         }
     }
@@ -31,7 +31,7 @@ struct KeywordSelectionView: View {
 struct KeywordCell: View {
     var text: String
     var isSelected: Bool = false
-    
+
     var body: some View {
         Text(text)
             .customFont(font: .text13(weight: isSelected ? .Bold : .Regular))
@@ -49,18 +49,18 @@ private struct KeywordCellContainerView: View {
     @State var totalHeight: CGFloat = .zero
     let verticalSpacing: CGFloat = 6
     let horizontalSpacing: CGFloat = 6
-    
+
     let type: KeywordRateType
     @ObservedObject var viewModel: MealReviewViewModel
-    
+
     private var items: [String] {
         type.selectionTexts
     }
-    
+
     public var body: some View {
         var width = CGFloat.zero
         var height = CGFloat.zero
-        
+
         GeometryReader { geo in
             ZStack(alignment: .topLeading) {
                 ForEach(0..<5) { index in
@@ -75,19 +75,19 @@ private struct KeywordCellContainerView: View {
                                 height -= verticalSpacing
                             }
                             let result = width
-                            
+
                             if items[index] == items.last {
                                 width = 0
                             } else {
                                 width -= view.width
                                 width -= horizontalSpacing
                             }
-                            
+
                             return result
                         }
                         .alignmentGuide(.top) { _ in
                             let result = height
-                            
+
                             if items[index] == items.last {
                                 height = 0
                             }

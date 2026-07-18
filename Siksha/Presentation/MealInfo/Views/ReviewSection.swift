@@ -9,11 +9,11 @@ import SwiftUI
 
 struct ReviewSection: View {
     @ObservedObject var viewModel: MealInfoViewModel
-    
+
     var body: some View {
         VStack(spacing: 21) {
             titleLabel
-            
+
             if viewModel.mealReviews.isEmpty {
                 Text("아직 작성된 리뷰가 없어요")
                     .customFont(font: .text14(weight: .Bold))
@@ -24,17 +24,17 @@ struct ReviewSection: View {
                         ReviewRow(review)
                     }
                 }
-                
+
                 HStack {
                     Spacer()
-                    
+
                     if viewModel.hasMorePages {
                         NavigationLink(destination: ReviewListView(mealID: viewModel.meal.id)) {
                             HStack(spacing: 11) {
                                 Text("리뷰 더보기")
                                     .foregroundStyle(Color.gray600)
                                     .customFont(font: .text12(weight: .Bold))
-                                
+
                                 Image("Arrow")
                                     .renderingMode(.template)
                                     .resizable()
@@ -48,14 +48,14 @@ struct ReviewSection: View {
             }
         }
     }
-    
+
     var titleLabel: some View {
         HStack(spacing: 0) {
-                Text("리뷰")
-                    .customFont(font: .text18(weight: .Bold))
-                    .foregroundColor(.blackColor)
-                
-                Spacer()
+            Text("리뷰")
+                .customFont(font: .text18(weight: .Bold))
+                .foregroundColor(.blackColor)
+
+            Spacer()
         }
     }
 }

@@ -19,22 +19,22 @@ struct MealCell: View {
         let formattedNumber = formatter.string(from: NSNumber(value: viewModel.meal.price))!
         return formattedNumber
     }
-    
+
     init(viewModel: MealInfoViewModel) {
         self.viewModel = viewModel
         if viewModel.meal.imageURLStrings.contains("No meat") {
             self.vegetarian = true
         }
     }
-    
+
     var body: some View {
         HStack(alignment: .top) {
             Text("\(viewModel.meal.nameKr)")
                 .multilineTextAlignment(.leading)
-                .frame(maxWidth: 168,alignment: .leading)
+                .frame(maxWidth: 168, alignment: .leading)
                 .customFont(font: .text15(weight: .Regular))
                 .foregroundColor(.blackColor)
-            
+
             if vegetarian {
                 Image("Vegetarian")
                     .resizable()
@@ -43,30 +43,29 @@ struct MealCell: View {
             }
 
             Spacer()
-            if viewModel.meal.price < 10000{
+            if viewModel.meal.price < 10000 {
                 Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
-                    .customFont(font: .text14(weight:.Regular))
-                    .foregroundColor(.blackColor)
-                    .frame(width: 38)
-            }
-            else{
-                Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
-                    .customFont(font: .text14(weight:.Regular))
-                    .foregroundColor(.blackColor)
-            }
-            Spacer()
-                .frame(width:16)
-                Text(viewModel.meal.reviewCount > 0 ? String(format: "%.1f", viewModel.meal.score) : "-")
                     .customFont(font: .text14(weight: .Regular))
                     .foregroundColor(.blackColor)
-                    .frame(width:23)
-                    
+                    .frame(width: 38)
+            } else {
+                Text(viewModel.meal.price > 0 ? String(formattedPrice) : "-")
+                    .customFont(font: .text14(weight: .Regular))
+                    .foregroundColor(.blackColor)
+            }
             Spacer()
-                .frame(width:16)
+                .frame(width: 16)
+            Text(viewModel.meal.reviewCount > 0 ? String(format: "%.1f", viewModel.meal.score) : "-")
+                .customFont(font: .text14(weight: .Regular))
+                .foregroundColor(.blackColor)
+                .frame(width: 23)
+
+            Spacer()
+                .frame(width: 16)
 
             Button(action: {
-            viewModel.toggleLike()
-            }){
+                viewModel.toggleLike()
+            }) {
                 Image(viewModel.meal.isLiked ? "Heart-selected" : "Heart-default")
                     .frame(width: 24, height: 24)
             }
@@ -91,18 +90,19 @@ struct MealCell_Previews: PreviewProvider {
             likeCount: 0,
             imageURLStrings: []
         )
-        
-        return MealCell(viewModel: MealInfoViewModel(
-            meal: meal,
-            fetchMenuUseCase: PreviewFetchMenuUseCase(),
-            fetchMealReviewsUseCase: PreviewFetchMealReviewsUseCase(),
-            fetchMealImageReviewsUseCase: PreviewFetchMealImageReviewsUseCase(),
-            fetchMealReviewScoreDistributionUseCase: PreviewFetchMealReviewScoreDistributionUseCase(),
-            fetchMealReviewKeywordDistributionUseCase: PreviewFetchMealReviewKeywordDistributionUseCase(),
-            updateMenuLikeUseCase: PreviewUpdateMenuLikeUseCase()
-        ))
+
+        return MealCell(
+            viewModel: MealInfoViewModel(
+                meal: meal,
+                fetchMenuUseCase: PreviewFetchMenuUseCase(),
+                fetchMealReviewsUseCase: PreviewFetchMealReviewsUseCase(),
+                fetchMealImageReviewsUseCase: PreviewFetchMealImageReviewsUseCase(),
+                fetchMealReviewScoreDistributionUseCase: PreviewFetchMealReviewScoreDistributionUseCase(),
+                fetchMealReviewKeywordDistributionUseCase: PreviewFetchMealReviewKeywordDistributionUseCase(),
+                updateMenuLikeUseCase: PreviewUpdateMenuLikeUseCase()
+            ))
     }
-    
+
     private final class PreviewFetchMenuUseCase: FetchMenuUseCase {
         func execute(menuId: Int) async throws -> MenuModel {
             MenuModel(
@@ -119,31 +119,31 @@ struct MealCell_Previews: PreviewProvider {
             )
         }
     }
-    
+
     private final class PreviewUpdateMenuLikeUseCase: UpdateMenuLikeUseCase {
         func execute(menuId: Int, isLiked: Bool) async throws -> MenuLikeStatusModel {
             MenuLikeStatusModel(menuId: menuId, isLiked: isLiked, likeCount: isLiked ? 1 : 0)
         }
     }
-    
+
     private final class PreviewFetchMealReviewsUseCase: FetchMealReviewsUseCase {
         func execute(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
             ReviewPageModel(totalCount: 0, hasNext: false, reviews: [])
         }
     }
-    
+
     private final class PreviewFetchMealImageReviewsUseCase: FetchMealImageReviewsUseCase {
         func execute(menuId: Int, page: Int, perPage: Int) async throws -> ReviewPageModel {
             ReviewPageModel(totalCount: 0, hasNext: false, reviews: [])
         }
     }
-    
+
     private final class PreviewFetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase {
         func execute(menuId: Int) async throws -> [Int] {
             []
         }
     }
-    
+
     private final class PreviewFetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase {
         func execute(menuId: Int) async throws -> KeywordDistributionModel {
             KeywordDistributionModel(

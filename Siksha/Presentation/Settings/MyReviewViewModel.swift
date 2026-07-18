@@ -6,7 +6,7 @@
 //
 
 import Foundation
- 
+
 struct RestaurantSection: Identifiable {
     let id: Int
     let name: String
@@ -26,19 +26,19 @@ struct RestaurantReview: Identifiable {
 
 @MainActor
 class MyReviewViewModel: ObservableObject {
-    
+
     // MARK: - Published Properties
     @Published var restaurantSections: [RestaurantSection] = []
     @Published var isLoading = false
     @Published var expandedSections: [Int: Bool] = [:]
-    
+
     // MARK: - Private Properties
     private let fetchMyReviewsUseCase: FetchMyReviewsUseCase
     private let deleteMyReviewUseCase: DeleteMyReviewUseCase
     private var currentPage = 1
     private let perPage = 20
     private var hasNext = true
-    
+
     // MARK: - Init
     init(
         fetchMyReviewsUseCase: FetchMyReviewsUseCase,
@@ -47,55 +47,55 @@ class MyReviewViewModel: ObservableObject {
         self.fetchMyReviewsUseCase = fetchMyReviewsUseCase
         self.deleteMyReviewUseCase = deleteMyReviewUseCase
     }
-    
+
     // MARK: - Public Methods
     func loadReviews() {
         guard !isLoading else { return }
-        
+
         isLoading = true
         currentPage = 1
-        
+
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 let response = try await fetchMyReviewsUseCase.execute(page: currentPage, perPage: perPage)
                 handleReviewResponse(response, isLoadMore: false)
             } catch {
             }
-            
+
             isLoading = false
         }
     }
-    
+
     func loadMoreReviews() {
         guard !isLoading, hasNext else { return }
-        
+
         isLoading = true
         currentPage += 1
-        
+
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 let response = try await fetchMyReviewsUseCase.execute(page: currentPage, perPage: perPage)
                 handleReviewResponse(response, isLoadMore: true)
             } catch {
                 currentPage -= 1
             }
-            
+
             isLoading = false
         }
     }
-    
+
     func toggleSection(_ sectionId: Int, expanded: Bool) {
         expandedSections[sectionId] = expanded
     }
-    
+
     func deleteReview(_ reviewId: Int, completion: @escaping (Bool) -> Void) {
         Task { [weak self] in
             guard let self else { return }
-            
+
             do {
                 try await deleteMyReviewUseCase.execute(reviewId: reviewId)
                 completion(true)
@@ -110,7 +110,7 @@ class MyReviewViewModel: ObservableObject {
             if let reviewIndex = section.reviews.firstIndex(where: { $0.id == reviewId }) {
                 var updatedReviews = section.reviews
                 updatedReviews.remove(at: reviewIndex)
-                
+
                 if updatedReviews.isEmpty {
                     restaurantSections.remove(at: index)
                 } else {
@@ -125,19 +125,19 @@ class MyReviewViewModel: ObservableObject {
             }
         }
     }
-    
+
     private func handleReviewResponse(_ response: MyReviewPageModel, isLoadMore: Bool) {
         self.hasNext = response.hasNext
-        
+
         let newSections = response.restaurants.map { restaurant in
             convertToRestaurantSection(restaurant)
         }
-        
+
         if isLoadMore {
             self.restaurantSections.append(contentsOf: newSections)
         } else {
             self.restaurantSections = newSections
-            
+
             for (index, section) in newSections.enumerated() {
                 if self.expandedSections[section.id] == nil {
                     self.expandedSections[section.id] = (index == 0)
@@ -145,7 +145,7 @@ class MyReviewViewModel: ObservableObject {
             }
         }
     }
-    
+
     private func convertToRestaurantSection(_ restaurant: MyReviewRestaurantModel) -> RestaurantSection {
         let reviews = restaurant.reviews.map { review in
             RestaurantReview(
@@ -159,17 +159,17 @@ class MyReviewViewModel: ObservableObject {
                 tags: review.keywordReviews.filter { !$0.isEmpty }
             )
         }
-        
+
         return RestaurantSection(
             id: restaurant.restaurantId,
             name: restaurant.nameKr,
             reviews: reviews
         )
     }
-    
+
     private func formatDate(_ date: Date?) -> String {
         guard let date = date else { return "" }
-        
+
         let formatter = DateFormatter()
         formatter.locale = Locale(identifier: "ko_KR")
         formatter.dateFormat = "yyyy년 M월 d일"

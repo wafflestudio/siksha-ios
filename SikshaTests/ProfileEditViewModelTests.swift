@@ -3,8 +3,9 @@
 //  SikshaTests
 //
 
-import XCTest
 import UIKit
+import XCTest
+
 @testable import Siksha
 
 @MainActor

@@ -11,11 +11,11 @@ struct AccountManageView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject private var appState: AppState
     @StateObject private var viewModel: AccountManageViewModel
-    
+
     init(viewModel: AccountManageViewModel) {
         _viewModel = StateObject(wrappedValue: viewModel)
     }
-    
+
     var backButton: some View {
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
@@ -27,12 +27,12 @@ struct AccountManageView: View {
                 .foregroundColor(Color.iconWhiteIcon)
         }
     }
-    
+
     var partitionBar: some View {
         Color.borderPrimary
             .frame(height: 1)
     }
-    
+
     var body: some View {
         VStack {
             VStack(alignment: .leading, spacing: 8) {
@@ -43,7 +43,7 @@ struct AccountManageView: View {
                         Text("로그아웃")
                             .customFont(font: .text15(weight: .Regular))
                             .foregroundColor(Color.blackColor)
-                        
+
                         Spacer()
                     }
                 }
@@ -53,13 +53,13 @@ struct AccountManageView: View {
                         message: Text("앱에서 로그아웃합니다."),
                         buttons: [
                             .destructive(Text("로그아웃"), action: performLogout),
-                            .cancel(Text("취소"))
+                            .cancel(Text("취소")),
                         ]
                     )
                 }
-                
+
                 partitionBar
-                
+
                 Button(action: {
                     viewModel.showDeleteAccountConfirmation = true
                 }) {
@@ -67,17 +67,18 @@ struct AccountManageView: View {
                         Text("회원탈퇴")
                             .customFont(font: .text15(weight: .Regular))
                             .foregroundColor(.accentLike)
-                        
+
                         Spacer()
                     }
                 }
                 .actionSheet(isPresented: $viewModel.showDeleteAccountConfirmation) {
-                    ActionSheet(title: Text("회원 탈퇴"),
-                                message: Text("앱 계정을 삭제합니다.\n이 계정으로 등록된 리뷰 정보들도 모두 함께 삭제됩니다."),
-                                buttons: [
-                                    .destructive(Text("회원 탈퇴"), action: performDeleteAccount),
-                                    .cancel(Text("취소"))
-                                ]
+                    ActionSheet(
+                        title: Text("회원 탈퇴"),
+                        message: Text("앱 계정을 삭제합니다.\n이 계정으로 등록된 리뷰 정보들도 모두 함께 삭제됩니다."),
+                        buttons: [
+                            .destructive(Text("회원 탈퇴"), action: performDeleteAccount),
+                            .cancel(Text("취소")),
+                        ]
                     )
                 }
             }
@@ -93,22 +94,24 @@ struct AccountManageView: View {
             .padding(.top, 24)
             .padding(.horizontal, 20)
             .disabled(viewModel.isProcessing)
-            
+
             Spacer()
         }
         .background(Color.backgroundPrimary)
-        
+
         .alert(isPresented: $viewModel.deleteAccountFailed) {
-            Alert(title: Text("회원 탈퇴"),
-                  message: Text("회원 탈퇴에 실패했습니다."),
-                  dismissButton: .default(Text("확인")))
+            Alert(
+                title: Text("회원 탈퇴"),
+                message: Text("회원 탈퇴에 실패했습니다."),
+                dismissButton: .default(Text("확인")))
         }
         .alert(isPresented: $viewModel.logoutFailed) {
-            Alert(title: Text("로그아웃"),
-                  message: Text("로그아웃에 실패했습니다."),
-                  dismissButton: .default(Text("확인")))
+            Alert(
+                title: Text("로그아웃"),
+                message: Text("로그아웃에 실패했습니다."),
+                dismissButton: .default(Text("확인")))
         }
-        
+
         .customNavigationBar(title: "계정관리")
         .navigationBarItems(leading: backButton)
     }

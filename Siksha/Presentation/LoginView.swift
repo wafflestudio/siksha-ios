@@ -54,22 +54,26 @@ struct LoginView: View {
                                 .cornerRadius(5.5)
                         }
 
-                        Button(action: {
-                            login(provider: .apple)
-                        }, label: {
-                            Image(.Images.Login.appleButton)
-                                .frame(width: 300, height: 45)
-                                .foregroundColor(.black)
-                                .cornerRadius(5.5)
-                        })
+                        Button(
+                            action: {
+                                login(provider: .apple)
+                            },
+                            label: {
+                                Image(.Images.Login.appleButton)
+                                    .frame(width: 300, height: 45)
+                                    .foregroundColor(.black)
+                                    .cornerRadius(5.5)
+                            })
 
                         #if DEBUG
 
-                        Button(action: {
-                            loginForTest()
-                        }, label: {
-                            Text("테스트 로그인")
-                        })
+                            Button(
+                                action: {
+                                    loginForTest()
+                                },
+                                label: {
+                                    Text("테스트 로그인")
+                                })
 
                         #endif
                     }
@@ -78,12 +82,20 @@ struct LoginView: View {
                     Spacer()
                 }
             }
-            .frame(width: geometry.size.width, height: geometry.size.height + geometry.safeAreaInsets.bottom + geometry.safeAreaInsets.top)
+            .frame(
+                width: geometry.size.width,
+                height: geometry.size.height + geometry.safeAreaInsets.bottom + geometry.safeAreaInsets.top
+            )
             .padding(.top, -geometry.safeAreaInsets.top)
             .background(Color.orange500)
-            .alert(isPresented: $viewModel.signInFailed, content: {
-                Alert(title: Text("로그인"), message: Text("로그인을 실패했습니다. 다시 시도해주세요."), dismissButton: .default(Text("확인")))
-            })
+            .alert(
+                isPresented: $viewModel.signInFailed,
+                content: {
+                    Alert(
+                        title: Text("로그인"), message: Text("로그인을 실패했습니다. 다시 시도해주세요."),
+                        dismissButton: .default(Text("확인")))
+                }
+            )
             .onAppear {
                 viewModel.onSignedIn = appState.didLogin
             }

@@ -5,19 +5,18 @@
 //  Created by 박종석 on 2021/05/07.
 //
 
-import Foundation
 import Alamofire
-
+import Foundation
 
 enum SikshaAPI: URLRequestConvertible {
     func asURLRequest() throws -> URLRequest {
         var request = URLRequest(url: URL(string: Self.baseURL + path)!)
         let accessToken = UserDefaults.standard.string(forKey: "accessToken")
-        
+
         if self.needToken, let token = accessToken {
             request.setToken(token: token)
         }
-        
+
         if self.askingForToken {
             switch self {
             case let .getAccessToken(token, _):
@@ -26,26 +25,27 @@ enum SikshaAPI: URLRequestConvertible {
                 break
             }
         }
-        
-        if self.multiPartFormDataNeeded{
+
+        if self.multiPartFormDataNeeded {
             request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
             request.timeoutInterval = 3
         }
-        
+
         #if DEBUG
-        print("""
-        ---- Siksha API Request ----
-        Method: \(method.rawValue.uppercased())
-        URL: \(Self.baseURL + path)
-        Needs Token: \(needToken)
-        Access Token: \(formattedAccessTokenForDebugLog(accessToken))
-        Multipart: \(multiPartFormDataNeeded)
-        Parameters:
-        \(formattedParametersForDebugLog)
-        ----------------------------
-        """)
+            print(
+                """
+                ---- Siksha API Request ----
+                Method: \(method.rawValue.uppercased())
+                URL: \(Self.baseURL + path)
+                Needs Token: \(needToken)
+                Access Token: \(formattedAccessTokenForDebugLog(accessToken))
+                Multipart: \(multiPartFormDataNeeded)
+                Parameters:
+                \(formattedParametersForDebugLog)
+                ----------------------------
+                """)
         #endif
-        
+
         request.method = self.method
         switch self.method {
         case .get:
@@ -54,7 +54,7 @@ enum SikshaAPI: URLRequestConvertible {
             return try Alamofire.JSONEncoding.default.encode(request, with: self.parameters)
         }
     }
-    
+
     // AUTH
     case getAccessToken(token: String, endPoint: String)
     case refreshAccessToken(token: String)
@@ -66,7 +66,7 @@ enum SikshaAPI: URLRequestConvertible {
     case deleteUserDevice(fcmToken: String)
     case getAlarmTime
     case setAlarmTime(alarmTime: String)
-    
+
     // MENUS
     case getMenus(startDate: String, endDate: String, noMenuHide: Bool)
     case getMenuFromId(menuId: Int)
@@ -78,7 +78,7 @@ enum SikshaAPI: URLRequestConvertible {
     case alarmOff(menuId: Int)
     case alarmOnAll
     case alarmOffAll
-    
+
     // RESTAURANTS
     case getRestaurants
     case getPersonalRestaurants
@@ -86,25 +86,28 @@ enum SikshaAPI: URLRequestConvertible {
     case setRestaurantVisible(restaurantId: Int, visible: Bool)
     case getRestaurantOrder
     case setRestaurantOrder(order: [Int])
-    
+
     // REVIEWS
     case getReviews(menuId: Int, page: Int, perPage: Int)
     case submitReview(menuId: Int, score: Int, comment: String, taste: String, price: String, foodComposition: String)
     case getScoreDistribution(menuId: Int)
     case getKeywordDistribution(menuId: Int)
     case getCommentRecommendation(score: Int)
-    case submitReviewImages(menuId: Int, score: Int, comment: String, taste: String, price: String, foodComposition: String, images: [Data])
+    case submitReviewImages(
+        menuId: Int, score: Int, comment: String, taste: String, price: String, foodComposition: String, images: [Data])
     case getImageReviews(menuId: Int, page: Int, perPage: Int)
     case likeReview(reviewId: Int)
     case unlikeReview(reviewId: Int)
     case getMyReview(page: Int, perPage: Int)
     case deleteMyReview(reviewId: Int)
-    case editReview(reviewId: Int, menuId: Int, score: Int, comment: String?, taste: String, price: String, foodComposition: String, images: [Data]?)
-    
+    case editReview(
+        reviewId: Int, menuId: Int, score: Int, comment: String?, taste: String, price: String, foodComposition: String,
+        images: [Data]?)
+
     // COMMUNITY
     case getBoards
     case getPosts(boardId: Int, page: Int, perPage: Int)
-    case getTrendingPosts(likes: Int,created_before: Int)
+    case getTrendingPosts(likes: Int, created_before: Int)
     case getMyposts(page: Int, perPage: Int)
     case getPost(postId: Int)
     case submitPost(boardId: Int, title: String, content: String, images: [Data], anonymous: Bool)
@@ -123,9 +126,9 @@ enum SikshaAPI: URLRequestConvertible {
 
     // VOC
     case submitVOC(comment: String, platform: String)
-    
+
     static var baseURL = Config.shared.baseURL
-    
+
     var needToken: Bool {
         switch self {
         case .getAccessToken:
@@ -144,7 +147,7 @@ enum SikshaAPI: URLRequestConvertible {
             return true
         }
     }
-    
+
     var askingForToken: Bool {
         switch self {
         case .getAccessToken:
@@ -153,7 +156,7 @@ enum SikshaAPI: URLRequestConvertible {
             return false
         }
     }
-    
+
     var method: HTTPMethod {
         switch self {
         case .getAccessToken, .refreshAccessToken, .testLogin:
@@ -172,7 +175,7 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .setAlarmTime:
             return .post
-            
+
         case .getMenus, .getMenuFromId, .getMyLikedMenu:
             return .get
         case .likeMenu, .unlikeMenu:
@@ -181,7 +184,7 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .alarmOn(menuId: _), .alarmOff(menuId: _), .alarmOnAll, .alarmOffAll:
             return .post
-            
+
         case .getRestaurants, .getPersonalRestaurants:
             return .get
         case .setRestaurantLike, .setRestaurantVisible:
@@ -190,7 +193,7 @@ enum SikshaAPI: URLRequestConvertible {
             return .get
         case .setRestaurantOrder:
             return .patch
-            
+
         case .getReviews:
             return .get
         case .submitReview:
@@ -211,7 +214,7 @@ enum SikshaAPI: URLRequestConvertible {
             return .delete
         case .editReview:
             return .patch
-        
+
         case .getBoards:
             return .get
         case .getPosts, .getTrendingPosts, .getMyposts:
@@ -236,7 +239,7 @@ enum SikshaAPI: URLRequestConvertible {
             return .delete
         case .likeComment, .unlikeComment, .reportComment:
             return .post
-        
+
         case .submitVOC:
             return .post
         }
@@ -265,7 +268,7 @@ enum SikshaAPI: URLRequestConvertible {
             return "/auth/alarm"
         case .setAlarmTime:
             return "/auth/alarm"
-            
+
         // MENUS
         case .getMenus:
             return "/menus"
@@ -279,15 +282,15 @@ enum SikshaAPI: URLRequestConvertible {
             return "/menus/\(menuId)/unlike"
         case .getFestivalDates:
             return "/menus/festival/dates"
-        case .alarmOn(menuId: let menuId):
+        case .alarmOn(let menuId):
             return "/menus/\(menuId)/alarm/on"
-        case .alarmOff(menuId: let menuId):
+        case .alarmOff(let menuId):
             return "/menus/\(menuId)/alarm/off"
         case .alarmOnAll:
             return "/menus/alarm/on"
         case .alarmOffAll:
             return "/menus/alarm/off"
-            
+
         // RESTAURANTS
         case .getRestaurants:
             return "/restaurants"
@@ -299,7 +302,7 @@ enum SikshaAPI: URLRequestConvertible {
             return "/restaurants/visible/\(restaurantId)"
         case .getRestaurantOrder, .setRestaurantOrder:
             return "/restaurants/order"
-            
+
         // REVIEWS
         case .getReviews:
             return "/reviews"
@@ -325,7 +328,7 @@ enum SikshaAPI: URLRequestConvertible {
             return "/reviews/\(reviewId)"
         case let .editReview(reviewId, _, _, _, _, _, _, _):
             return "/reviews/\(reviewId)"
-            
+
         // COMMUNITY
         case .getBoards:
             return "/community/boards"
@@ -339,7 +342,7 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/posts/\(postId)"
         case .submitPost:
             return "/community/posts"
-        case .editPost(postId: let postId, boardId: _, title: _, content: _, images: _, anonymous: _):
+        case .editPost(let postId, boardId: _, title: _, content: _, images: _, anonymous: _):
             return "/community/posts/\(postId)"
         case let .deletePost(postId):
             return "/community/posts/\(postId)"
@@ -363,13 +366,13 @@ enum SikshaAPI: URLRequestConvertible {
             return "/community/comments/\(commentId)/unlike"
         case let .reportComment(commentId, _):
             return "/community/comments/\(commentId)/report"
-            
+
         // VOC
         case .submitVOC:
             return "/voc"
         }
     }
-    
+
     var parameters: [String: Any]? {
         switch self {
         case let .getMenus(startDate, endDate, noMenuHide):
@@ -389,7 +392,10 @@ enum SikshaAPI: URLRequestConvertible {
         case let .getCommentRecommendation(score):
             return ["score": score]
         case let .submitReview(menuId, score, comment, taste, price, foodComposition):
-            return ["menu_id": menuId, "score": score, "comment": comment, "taste": taste, "price": price, "food_composition": foodComposition]
+            return [
+                "menu_id": menuId, "score": score, "comment": comment, "taste": taste, "price": price,
+                "food_composition": foodComposition,
+            ]
         case let .getImageReviews(menuId, page, perPage):
             return ["menu_id": menuId, "page": page, "size": perPage, "image": true]
         case let .submitVOC(comment, platform):
@@ -397,9 +403,9 @@ enum SikshaAPI: URLRequestConvertible {
         case let .getPosts(boardId, page, perPage):
             return ["board_id": boardId, "page": page, "per_page": perPage]
         case let .getTrendingPosts(likes, created_before):
-            return ["likes":likes,"created_before":created_before]
+            return ["likes": likes, "created_before": created_before]
         case let .getMyposts(page, perPage):
-            return ["page":page, "per_page":perPage]
+            return ["page": page, "per_page": perPage]
         case let .getPost(postId):
             return ["post_id": postId]
         case let .likePost(postId):
@@ -414,29 +420,31 @@ enum SikshaAPI: URLRequestConvertible {
             return ["post_id": postId]
         case let .editComment(_, content):
             return ["content": content]
-     
+
         case let .likeComment(commentId):
             return ["comment_id": commentId]
         case let .unlikeComment(commentId):
             return ["comment_id": commentId]
-        
+
         case let .reportPost(postId, reason):
-            return ["post_id": postId,"reason":reason]
+            return ["post_id": postId, "reason": reason]
         case let .reportComment(commentId, reason):
-            return ["comment_id" : commentId,"reason":reason]
+            return ["comment_id": commentId, "reason": reason]
         case let .getMyReview(page, perPage):
             return ["page": page, "per_page": perPage]
         case let .editReview(_, menuId, score, comment, taste, price, foodComposition, _):
-            var parameters: [String: Any] = ["menu_id": menuId, "score": score, "taste": taste, "price": price, "food_composition": foodComposition]
+            var parameters: [String: Any] = [
+                "menu_id": menuId, "score": score, "taste": taste, "price": price, "food_composition": foodComposition,
+            ]
             if let comment {
                 parameters["comment"] = comment
             }
             return parameters
         case let .postUserDevice(fcmToken):
-            return ["fcm_token" : fcmToken]
+            return ["fcm_token": fcmToken]
         case let .deleteUserDevice(fcmToken):
-            return ["fcm_token" : fcmToken]
-        
+            return ["fcm_token": fcmToken]
+
         case let .setAlarmTime(alarmTime):
             return ["type": alarmTime]
         case .testLogin:
@@ -447,40 +455,43 @@ enum SikshaAPI: URLRequestConvertible {
     }
 
     #if DEBUG
-    private var formattedParametersForDebugLog: String {
-        guard let parameters else {
-            return "  nil"
+        private var formattedParametersForDebugLog: String {
+            guard let parameters else {
+                return "  nil"
+            }
+
+            if JSONSerialization.isValidJSONObject(parameters),
+                let data = try? JSONSerialization.data(
+                    withJSONObject: parameters, options: [.prettyPrinted, .sortedKeys]),
+                let json = String(data: data, encoding: .utf8)
+            {
+                return
+                    json
+                    .split(separator: "\n", omittingEmptySubsequences: false)
+                    .map { "  \($0)" }
+                    .joined(separator: "\n")
+            }
+
+            return "  \(parameters)"
         }
 
-        if JSONSerialization.isValidJSONObject(parameters),
-           let data = try? JSONSerialization.data(withJSONObject: parameters, options: [.prettyPrinted, .sortedKeys]),
-           let json = String(data: data, encoding: .utf8) {
-            return json
-                .split(separator: "\n", omittingEmptySubsequences: false)
-                .map { "  \($0)" }
-                .joined(separator: "\n")
+        private func formattedAccessTokenForDebugLog(_ token: String?) -> String {
+            guard let token else {
+                return "nil"
+            }
+
+            guard !token.isEmpty else {
+                return "<empty>"
+            }
+
+            guard token.count > 12 else {
+                return "<\(token.count) characters>"
+            }
+
+            return "\(token.prefix(6))...\(token.suffix(6))"
         }
-
-        return "  \(parameters)"
-    }
-
-    private func formattedAccessTokenForDebugLog(_ token: String?) -> String {
-        guard let token else {
-            return "nil"
-        }
-
-        guard !token.isEmpty else {
-            return "<empty>"
-        }
-
-        guard token.count > 12 else {
-            return "<\(token.count) characters>"
-        }
-
-        return "\(token.prefix(6))...\(token.suffix(6))"
-    }
     #endif
-    
+
     var multiPartFormDataNeeded: Bool {
         switch self {
         case .updateUserProfile:
@@ -497,7 +508,7 @@ enum SikshaAPI: URLRequestConvertible {
             return false
         }
     }
-    
+
     var multipartFormData: MultipartFormData? {
         switch self {
         case let .updateUserProfile(nickname, image, changeToDefaultImage):
@@ -530,7 +541,9 @@ enum SikshaAPI: URLRequestConvertible {
             let data = MultipartFormData()
             data.append("\(menuId)".data(using: .utf8)!, withName: "menu_id", mimeType: "text/plain")
             data.append("\(Int(score))".data(using: .utf8)!, withName: "score", mimeType: "text/plain")
-            if let comment = comment { data.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain") }
+            if let comment = comment {
+                data.append(comment.data(using: .utf8)!, withName: "comment", mimeType: "text/plain")
+            }
             data.append(taste.data(using: .utf8)!, withName: "taste", mimeType: "text/plain")
             data.append(price.data(using: .utf8)!, withName: "price", mimeType: "text/plain")
             data.append(foodComposition.data(using: .utf8)!, withName: "food_composition", mimeType: "text/plain")
@@ -540,22 +553,22 @@ enum SikshaAPI: URLRequestConvertible {
                 }
             }
             return data
-        case let .submitPost(boardId, title, content, images,anonymous):
+        case let .submitPost(boardId, title, content, images, anonymous):
             let data = MultipartFormData()
             data.append("\(boardId)".data(using: .utf8)!, withName: "board_id", mimeType: "text/plain")
             data.append("\(title)".data(using: .utf8)!, withName: "title", mimeType: "text/plain")
             data.append(content.data(using: .utf8)!, withName: "content", mimeType: "text/plain")
-            data.append("\(anonymous)".data(using: .utf8)!,withName: "anonymous",mimeType: "text/plain")
+            data.append("\(anonymous)".data(using: .utf8)!, withName: "anonymous", mimeType: "text/plain")
             for (index, image) in images.enumerated() {
                 data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }
             return data
-        case let .editPost(_, boardId, title, content, images,anonymous):
+        case let .editPost(_, boardId, title, content, images, anonymous):
             let data = MultipartFormData()
             data.append("\(boardId)".data(using: .utf8)!, withName: "board_id", mimeType: "text/plain")
             data.append("\(title)".data(using: .utf8)!, withName: "title", mimeType: "text/plain")
             data.append(content.data(using: .utf8)!, withName: "content", mimeType: "text/plain")
-            data.append("\(anonymous)".data(using: .utf8)!,withName: "anonymous",mimeType: "text/plain")
+            data.append("\(anonymous)".data(using: .utf8)!, withName: "anonymous", mimeType: "text/plain")
             for (index, image) in images.enumerated() {
                 data.append(image, withName: "images", fileName: "image_\(index).jpeg", mimeType: "image/jpeg")
             }

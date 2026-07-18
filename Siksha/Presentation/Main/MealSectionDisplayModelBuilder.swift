@@ -30,7 +30,7 @@ struct MealSectionDisplayModelBuilder {
             specifications: [
                 PriceMenuSpecification(),
                 ReviewedMenuSpecification(),
-                RatingMenuSpecification()
+                RatingMenuSpecification(),
             ]
         )
     ) {
@@ -88,7 +88,7 @@ struct MealSectionDisplayModelBuilder {
                     restaurantContext: restaurantContext,
                     menuContext: menuContext
                 )
-            )
+            ),
         ]
     }
 
@@ -164,7 +164,7 @@ struct MealSectionDisplayModelBuilder {
                 ),
                 FestivalRestaurantSpecification(),
                 FavoriteRestaurantSpecification(),
-                DistanceRestaurantSpecification()
+                DistanceRestaurantSpecification(),
             ]
         )
     }

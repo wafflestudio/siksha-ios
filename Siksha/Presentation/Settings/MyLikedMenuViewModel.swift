@@ -21,7 +21,7 @@ private enum MyLikedMenuLoadResult {
     case failed
 }
 
-class MyLikedMenuViewModel: ObservableObject{
+class MyLikedMenuViewModel: ObservableObject {
     private let fetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase
     private let getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase
     private let setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase
@@ -48,7 +48,7 @@ class MyLikedMenuViewModel: ObservableObject{
     private var initErrorCount = 0
     private var isLoadingLikedMenus = false
     private var hasLoadedLikedMenus = false
-    
+
     init(
         fetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase,
         getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase,
@@ -75,18 +75,18 @@ class MyLikedMenuViewModel: ObservableObject{
         self.updateRestaurantPreferenceUseCase = updateRestaurantPreferenceUseCase
         self.isAlarmEnabled = getMenuAlarmEnabledUseCase.execute()
     }
-    
+
     func setAlarmEnabled(_ enabled: Bool) {
         isUpdatingAlarmEnabled = false
         setMenuAlarmEnabledUseCase.execute(enabled)
         isAlarmEnabled = enabled
     }
-    
+
     func requestAlarmEnabledChange(_ enabled: Bool) {
         guard enabled != isAlarmEnabled, !isUpdatingAlarmEnabled else {
             return
         }
-        
+
         if enabled {
             isUpdatingAlarmEnabled = true
             Task { @MainActor [weak self] in
@@ -98,62 +98,62 @@ class MyLikedMenuViewModel: ObservableObject{
             }
         }
     }
-    
+
     @MainActor
     private func enableAlarmFromUserRequest() async {
         guard !isAlarmEnabled else {
             isUpdatingAlarmEnabled = false
             return
         }
-        
+
         defer {
             isUpdatingAlarmEnabled = false
         }
-        
+
         let isGranted = await menuAlarmNotificationManager.requestAuthorization()
         guard isGranted else {
             noAlarmPermission = true
             return
         }
-        
+
         do {
             try await updateAllMenuAlarmsUseCase.execute(isEnabled: true)
-            
+
             withAnimation(.easeOut(duration: 0.3)) {
                 isAlarmEnabled = true
                 enableAllAlarm()
             }
-            
+
             menuAlarmNotificationManager.registerRemoteNotificationsIfNeeded()
         } catch {
             self.error = ErrorHelper.categorize(error)
         }
     }
-    
+
     func getAlarmTime() {
         Task { @MainActor [weak self] in
             await self?.refreshAlarmTime()
         }
     }
-    
+
     @MainActor
     func loadMyLikedMenu() async {
         guard !isLoadingLikedMenus, !hasLoadedLikedMenus else {
             return
         }
-        
+
         isLoadingLikedMenus = true
         loadState = .loading
         defer {
             isLoadingLikedMenus = false
         }
-        
+
         await refreshPersonalRestaurants()
         guard !Task.isCancelled else {
             loadState = .idle
             return
         }
-        
+
         switch await loadMyLikedMenuItems() {
         case .succeeded:
             hasLoadedLikedMenus = true
@@ -164,7 +164,7 @@ class MyLikedMenuViewModel: ObservableObject{
             loadState = .failed
         }
     }
-    
+
     @MainActor
     private func refreshAlarmTime() async {
         do {
@@ -173,7 +173,7 @@ class MyLikedMenuViewModel: ObservableObject{
             self.error = ErrorHelper.categorize(error)
         }
     }
-    
+
     @MainActor
     private func loadMyLikedMenuItems() async -> MyLikedMenuLoadResult {
         do {
@@ -185,7 +185,7 @@ class MyLikedMenuViewModel: ObservableObject{
             if error is CancellationError {
                 return .cancelled
             }
-            
+
             if initErrorCount == 0 { // 알람 화면에서 뒤로 갈 때 알람이 떠서 잘 안 돌아가지는 문제 해결용
                 self.error = ErrorHelper.categorize(error)
             }
@@ -193,31 +193,32 @@ class MyLikedMenuViewModel: ObservableObject{
             return .failed
         }
     }
-    
+
     func isFavoriteRestaurant(restaurantId: Int) -> Bool {
         personalRestaurantById[restaurantId]?.liked ?? false
     }
-    
+
     func isUpdatingFavoriteRestaurant(restaurantId: Int) -> Bool {
         updatingFavoriteRestaurantIds.contains(restaurantId)
     }
-    
+
     func isUpdatingMenuLike(menuId: Int) -> Bool {
         updatingMenuLikeIds.contains(menuId)
     }
-    
+
     @MainActor
     func toggleRestaurantFavorite(restaurantId: Int) async {
         guard !updatingFavoriteRestaurantIds.contains(restaurantId),
-              let restaurant = personalRestaurantById[restaurantId] else {
+            let restaurant = personalRestaurantById[restaurantId]
+        else {
             return
         }
-        
+
         setUpdatingFavoriteRestaurant(restaurantId, isUpdating: true)
         defer {
             setUpdatingFavoriteRestaurant(restaurantId, isUpdating: false)
         }
-        
+
         do {
             let status = try await updateRestaurantPreferenceUseCase.setLiked(
                 restaurant: restaurant,
@@ -228,27 +229,28 @@ class MyLikedMenuViewModel: ObservableObject{
             self.error = ErrorHelper.categorize(error)
         }
     }
-    
+
     @MainActor
     private func refreshPersonalRestaurants() async {
         do {
             let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
             personalRestaurantById = Dictionary(uniqueKeysWithValues: restaurants.map { ($0.id, $0) })
-            personalRestaurantOrder = Dictionary(uniqueKeysWithValues: restaurants.enumerated().map { ($0.element.id, $0.offset) })
+            personalRestaurantOrder = Dictionary(
+                uniqueKeysWithValues: restaurants.enumerated().map { ($0.element.id, $0.offset) })
         } catch {
             if error is CancellationError {
                 return
             }
-            
+
             self.error = ErrorHelper.categorize(error)
         }
     }
-    
+
     private func updatePersonalRestaurant(_ status: RestaurantPreferenceStatusModel) {
         guard let restaurant = personalRestaurantById[status.id] else {
             return
         }
-        
+
         var restaurants = personalRestaurantById
         restaurants[status.id] = PersonalRestaurantModel(
             id: restaurant.id,
@@ -263,7 +265,7 @@ class MyLikedMenuViewModel: ObservableObject{
         )
         personalRestaurantById = restaurants
     }
-    
+
     private func setUpdatingFavoriteRestaurant(_ restaurantId: Int, isUpdating: Bool) {
         var restaurantIds = updatingFavoriteRestaurantIds
         if isUpdating {
@@ -273,7 +275,7 @@ class MyLikedMenuViewModel: ObservableObject{
         }
         updatingFavoriteRestaurantIds = restaurantIds
     }
-    
+
     private func setUpdatingMenuLike(_ menuId: Int, isUpdating: Bool) {
         var menuIds = updatingMenuLikeIds
         if isUpdating {
@@ -283,20 +285,19 @@ class MyLikedMenuViewModel: ObservableObject{
         }
         updatingMenuLikeIds = menuIds
     }
-    
+
     private func sortByPersonalRestaurantOrder(_ groups: [RestaurantLikedMenuGroup]) -> [RestaurantLikedMenuGroup] {
         groups.sorted {
             let lhsIndex = personalRestaurantOrder[$0.id] ?? Int.max
             let rhsIndex = personalRestaurantOrder[$1.id] ?? Int.max
-            
+
             if lhsIndex == rhsIndex {
                 return $0.id < $1.id
             }
             return lhsIndex < rhsIndex
         }
     }
-    
-    
+
     private func menu(menuId: Int) -> MyLikedMenu? {
         for group in likedMenuGroups {
             if let menu = group.menus.first(where: { $0.id == menuId }) {
@@ -305,47 +306,47 @@ class MyLikedMenuViewModel: ObservableObject{
         }
         return nil
     }
-    
+
     private func updateMenu(menuId: Int, transform: (inout MyLikedMenu) -> Void) {
         for groupIndex in likedMenuGroups.indices {
             guard let menuIndex = likedMenuGroups[groupIndex].menus.firstIndex(where: { $0.id == menuId }) else {
                 continue
             }
-            
+
             transform(&likedMenuGroups[groupIndex].menus[menuIndex])
             return
         }
     }
-    
-    private func isLikedMenu(menuId:Int)->Bool{
+
+    private func isLikedMenu(menuId: Int) -> Bool {
         menu(menuId: menuId)?.isLiked ?? false
     }
-    
+
     private func updateMenuLikeStatus(_ status: MenuLikeStatusModel) {
         updateMenu(menuId: status.menuId) { menu in
             menu.isLiked = status.isLiked
             menu.likeCnt = status.likeCount
         }
     }
-    
-    private func toggleMenuAlarm(menuId:Int){
+
+    private func toggleMenuAlarm(menuId: Int) {
         updateMenu(menuId: menuId) { menu in
             menu.alarm.toggle()
         }
     }
-    
+
     @MainActor
     private func toggleMenuLikePreference(menuId: Int) async {
         guard !updatingMenuLikeIds.contains(menuId) else {
             return
         }
-        
+
         let isCurrentlyLiked = isLikedMenu(menuId: menuId)
         setUpdatingMenuLike(menuId, isUpdating: true)
         defer {
             setUpdatingMenuLike(menuId, isUpdating: false)
         }
-        
+
         do {
             let status = try await updateMenuLikeUseCase.execute(
                 menuId: menuId,
@@ -357,16 +358,16 @@ class MyLikedMenuViewModel: ObservableObject{
             self.error = ErrorHelper.categorize(error)
         }
     }
-    
-    func toggleMenu(menuId: Int){
+
+    func toggleMenu(menuId: Int) {
         Task { @MainActor [weak self] in
             guard let self else { return }
-            
+
             await toggleMenuLikePreference(menuId: menuId)
         }
     }
-    func unLikedMenuCleanup(){
-        for (i,_) in likedMenuGroups.enumerated(){
+    func unLikedMenuCleanup() {
+        for (i, _) in likedMenuGroups.enumerated() {
             likedMenuGroups[i].menus.removeAll(where: {
                 menu in
                 !menu.isLiked
@@ -377,12 +378,12 @@ class MyLikedMenuViewModel: ObservableObject{
             group.menus.isEmpty
         })
     }
-    private func isAlarmOn(menuId:Int)->Bool{
+    private func isAlarmOn(menuId: Int) -> Bool {
         menu(menuId: menuId)?.alarm ?? false
     }
-    
+
     @MainActor
-    private func turnOnAlarm(menuId:Int) async {
+    private func turnOnAlarm(menuId: Int) async {
         do {
             try await updateMenuAlarmUseCase.execute(menuId: menuId, isEnabled: true)
             toggleMenuAlarm(menuId: menuId)
@@ -390,26 +391,26 @@ class MyLikedMenuViewModel: ObservableObject{
             self.error = ErrorHelper.categorize(error)
         }
     }
-    
-    private func enableAllAlarm(){
-        for (i,_) in likedMenuGroups.enumerated(){
-            for (j,_) in likedMenuGroups[i].menus.enumerated(){
-                     likedMenuGroups[i].menus[j].alarm = true
-                
+
+    private func enableAllAlarm() {
+        for (i, _) in likedMenuGroups.enumerated() {
+            for (j, _) in likedMenuGroups[i].menus.enumerated() {
+                likedMenuGroups[i].menus[j].alarm = true
+
             }
         }
     }
-    private func disableAllAlarm(){
-        for (i,_) in likedMenuGroups.enumerated(){
-            for (j,_) in likedMenuGroups[i].menus.enumerated(){
-                     likedMenuGroups[i].menus[j].alarm = false
-                
+    private func disableAllAlarm() {
+        for (i, _) in likedMenuGroups.enumerated() {
+            for (j, _) in likedMenuGroups[i].menus.enumerated() {
+                likedMenuGroups[i].menus[j].alarm = false
+
             }
         }
     }
-    
+
     @MainActor
-    private func turnOffAlarm(menuId:Int) async {
+    private func turnOffAlarm(menuId: Int) async {
         do {
             try await updateMenuAlarmUseCase.execute(menuId: menuId, isEnabled: false)
             toggleMenuAlarm(menuId: menuId)
@@ -417,11 +418,11 @@ class MyLikedMenuViewModel: ObservableObject{
             self.error = ErrorHelper.categorize(error)
         }
     }
-    
-    func toggleAlarm(menuId:Int){
+
+    func toggleAlarm(menuId: Int) {
         Task { @MainActor [weak self] in
             guard let self else { return }
-            
+
             if isAlarmOn(menuId: menuId) {
                 await turnOffAlarm(menuId: menuId)
             } else {
@@ -429,21 +430,21 @@ class MyLikedMenuViewModel: ObservableObject{
             }
         }
     }
-    
+
     @MainActor
     private func disableAlarm() async {
         guard !isUpdatingAlarmEnabled else {
             return
         }
-        
+
         isUpdatingAlarmEnabled = true
         defer {
             isUpdatingAlarmEnabled = false
         }
-        
+
         do {
             try await updateAllMenuAlarmsUseCase.execute(isEnabled: false)
-            
+
             withAnimation(.easeOut(duration: 0.3)) {
                 isAlarmEnabled = false
                 disableAllAlarm()
@@ -452,17 +453,17 @@ class MyLikedMenuViewModel: ObservableObject{
             self.error = ErrorHelper.categorize(error)
         }
     }
-    
-    func toggleAlarmEnabled(){
+
+    func toggleAlarmEnabled() {
         requestAlarmEnabledChange(!isAlarmEnabled)
     }
-    
-    func toggleAlarmTime(){
+
+    func toggleAlarmTime() {
         Task { @MainActor [weak self] in
             guard let self else { return }
-            
+
             let nextAlarmTime = alarmTime == .EVERY_MEAL ? AlarmTime.DAILY : AlarmTime.EVERY_MEAL
-            
+
             do {
                 try await updateMenuAlarmTimeUseCase.execute(nextAlarmTime)
                 alarmTime = nextAlarmTime

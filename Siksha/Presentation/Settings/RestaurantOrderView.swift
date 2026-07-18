@@ -8,10 +8,10 @@ import SwiftUI
 
 struct RestaurantOrderView: View {
     private let backgroundColor = Color.backgroundSecondary
-    
+
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @ObservedObject var viewModel: RestaurantOrderViewModel
-    
+
     var backButton: some View {
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
@@ -24,11 +24,11 @@ struct RestaurantOrderView: View {
         }
         .contentShape(Rectangle())
     }
-    
+
     init(_ viewModel: RestaurantOrderViewModel) {
         self.viewModel = viewModel
     }
-    
+
     var body: some View {
         ZStack {
             VStack(alignment: .center, spacing: 0) {
@@ -42,7 +42,7 @@ struct RestaurantOrderView: View {
                 .padding(.top, 14)
                 .padding(.bottom, 14)
                 .background(backgroundColor)
-                
+
                 switch viewModel.networkStatus {
                 case .idle, .loading:
                     Spacer()
@@ -69,7 +69,8 @@ struct RestaurantOrderView: View {
                                     },
                                     onVisibilityTap: {
                                         Task {
-                                            await viewModel.togglePersonalRestaurantVisibility(restaurantId: restaurant.id)
+                                            await viewModel.togglePersonalRestaurantVisibility(
+                                                restaurantId: restaurant.id)
                                         }
                                     }
                                 )

@@ -37,7 +37,8 @@ final class DeviceTokenRemoteDataSourceImpl: DeviceTokenRemoteDataSource {
         _ endpoint: SikshaAPI,
         acceptedStatusCodes: [Int]
     ) async throws {
-        _ = try await session
+        _ =
+            try await session
             .request(endpoint)
             .validate(statusCode: acceptedStatusCodes)
             .serializingData(emptyResponseCodes: Set(acceptedStatusCodes))

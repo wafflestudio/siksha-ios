@@ -12,7 +12,7 @@ struct SegmentedPicker<T: Hashable>: View {
     let options: [T]
     let format: (T) -> String
     let isRateFilter: Bool
-    
+
     var body: some View {
         RoundedRectangle(cornerRadius: 30)
             .stroke(Color.borderSecondary)
@@ -29,10 +29,12 @@ struct SegmentedPicker<T: Hashable>: View {
                                             .stroke(Color.orange500, lineWidth: 1)
                                     )
                             }
-                            PickerContentView(text: format(option), needStarImage: isRateFilter && format(option) != "전체")
-                                .frame(maxWidth: .infinity)
-                                .frame(height: 34)
-                                .contentShape(Rectangle())
+                            PickerContentView(
+                                text: format(option), needStarImage: isRateFilter && format(option) != "전체"
+                            )
+                            .frame(maxWidth: .infinity)
+                            .frame(height: 34)
+                            .contentShape(Rectangle())
                         }
                         .onTapGesture {
                             self.selectedOption = option
@@ -46,7 +48,7 @@ struct SegmentedPicker<T: Hashable>: View {
 struct PickerContentView: View {
     let text: String
     let needStarImage: Bool
-    
+
     var body: some View {
         HStack {
             Text(text)
@@ -63,12 +65,12 @@ struct CustomSegmentedPicker_Previews: PreviewProvider {
     static var previews: some View {
         PreviewWrapper()
     }
-    
+
     struct PreviewWrapper: View {
         @State private var isOpen: Bool = true
         @State private var hasReview: Bool = true
         @State private var minimumRating: Float = 3.5
-        
+
         var body: some View {
             VStack(spacing: 20) {
                 SegmentedPicker(
@@ -77,14 +79,14 @@ struct CustomSegmentedPicker_Previews: PreviewProvider {
                     format: { $0 ? "영업 중" : "전체" },
                     isRateFilter: false
                 )
-                
+
                 SegmentedPicker(
                     selectedOption: $hasReview,
                     options: [false, true],
                     format: { $0 ? "리뷰 있음" : "전체" },
                     isRateFilter: false
                 )
-                
+
                 SegmentedPicker(
                     selectedOption: $minimumRating,
                     options: [0, 3.5, 4.0, 4.5],

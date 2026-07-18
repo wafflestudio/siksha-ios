@@ -9,15 +9,15 @@ import Foundation
 
 final class MyReviewRepositoryImpl: MyReviewRepositoryProtocol {
     private let remote: MyReviewRemoteDataSource
-    
+
     init(remote: MyReviewRemoteDataSource) {
         self.remote = remote
     }
-    
+
     func fetchMyReviews(page: Int, perPage: Int) async throws -> MyReviewPageModel {
         try await remote.fetchMyReviews(page: page, perPage: perPage).toDomain()
     }
-    
+
     func deleteMyReview(reviewId: Int) async throws {
         try await remote.deleteMyReview(reviewId: reviewId)
     }
