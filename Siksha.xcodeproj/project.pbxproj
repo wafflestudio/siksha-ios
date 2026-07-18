@@ -387,6 +387,7 @@
 		};
 		33DDF0E72DC2170B00E202F1 /* Firebase plist */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 12;
 			files = (
 			);
@@ -405,6 +406,7 @@
 		};
 		BF624A132BB5543F0061602B /* Google Crashlytics */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 12;
 			files = (
 			);
