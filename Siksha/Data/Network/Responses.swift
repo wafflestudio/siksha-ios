@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CommentRecommendationResponse: Codable {
+struct CommentRecommendationResponse: Codable, Sendable {
     var comment: String
 }
 
@@ -18,11 +18,11 @@ struct UserInfoResponse: Codable {
     var etc: String?
 }
 
-struct ScoreDistributionResponse: Codable {
+struct ScoreDistributionResponse: Codable, Sendable {
     var dist: [Int]
 }
 
-struct MenuIdResponse: Codable {
+struct MenuIdResponse: Codable, Sendable {
     let createdAt: String
     let updatedAt: String
     let id: Int
@@ -59,7 +59,7 @@ struct FestivalDatesResponse: Codable {
         case festivalDates = "festival_dates"
     }
 }
-struct KeywordDistributionResponse: Codable {
+struct KeywordDistributionResponse: Codable, Sendable {
     let tasteKeyword: String
     let tasteCnt: Int
     let tasteTotal: Int

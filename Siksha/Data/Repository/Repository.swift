@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 protocol NetworkModuleProtocol {
-    func request<T: Decodable>(endpoint: SikshaAPI) -> AnyPublisher<T, AppError>
+    func request<T: Decodable & Sendable>(endpoint: SikshaAPI) -> AnyPublisher<T, AppError>
     func requestWithNoContent(endpoint: SikshaAPI) -> AnyPublisher<Void, AppError>
 }
 

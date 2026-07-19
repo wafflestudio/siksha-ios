@@ -127,7 +127,7 @@ enum SikshaAPI: URLRequestConvertible {
     // VOC
     case submitVOC(comment: String, platform: String)
 
-    static var baseURL = Config.shared.baseURL
+    static let baseURL = Config.shared.baseURL
 
     var needToken: Bool {
         switch self {
