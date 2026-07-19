@@ -177,6 +177,7 @@ struct CommunityPostPreView: View {
             CommunityPostView(
                 viewModel: CommunityPostViewModel(
                     communityRepository: AppContainer.shared.domain.communityRepository,
+                    blockManager: AppContainer.shared.blockManager,
                     postId: info.id
                 ),
                 needPostViewRefresh: needRefresh
@@ -296,6 +297,9 @@ class StubCommunityViewModel: CommunityViewModelType {
 
     var loadInitialPostsStatus: InitialPostsStatus = .idle
     var isChangingBoard: Bool = false
+
+    @MainActor
+    init() {}
 
     func loadBasicInfos() {}
     func loadMorePosts() {}

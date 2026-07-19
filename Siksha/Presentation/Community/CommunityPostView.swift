@@ -567,6 +567,7 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
     @Published var commentsListPublisher: [CommentInfo]
     @Published var hasNextPublisher: Bool
 
+    @MainActor
     init() {
         self.commentsListPublisher = [
             CommentInfo(content: "test1", likeCnt: 1, isLiked: true),

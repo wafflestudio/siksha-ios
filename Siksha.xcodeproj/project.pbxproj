@@ -94,6 +94,7 @@
 				ResolveInitialAuthStateUseCaseTests.swift,
 				RestaurantLocalDataSourceTests.swift,
 				SikshaAPIRequestTests.swift,
+				SharedStateTests.swift,
 				SikshaTests.swift,
 			);
 			target = 1E3A56FC25C6FCE900DBB3F4 /* SikshaTests */;

@@ -69,7 +69,9 @@ struct ContentView: View {
         checkFestivalSwitchVisibilityUseCase: AppContainer.shared.useCases.checkFestivalSwitchVisibilityUseCase
     )
     @StateObject private var communityViewModel = CommunityViewModel(
-        communityRepository: AppContainer.shared.domain.communityRepository)
+        communityRepository: AppContainer.shared.domain.communityRepository,
+        blockManager: AppContainer.shared.blockManager
+    )
     @StateObject private var settingsViewModel = RenewalSettingsViewModel(
         manageRestaurantsWithoutMenuVisibilityUseCase: AppContainer.shared.useCases
             .manageRestaurantsWithoutMenuVisibilityUseCase,
@@ -147,6 +149,7 @@ struct ContentView: View {
                             .opacity(contentViewModel.showModal ? 1 : 0)
                         }
                     }
+                    .environment(\.safeAreaInsets, geometry.safeAreaInsets)
                     .onAppear {
                         AppContainer.shared.menuAlarmNotificationManager.registerRemoteNotificationsIfNeeded()
                     }

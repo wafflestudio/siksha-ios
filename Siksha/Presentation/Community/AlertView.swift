@@ -188,6 +188,10 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
             submitVOCUseCase: AppContainer.shared.useCases.submitVOCUseCase,
             fetchAppStoreVersionUseCase: AppContainer.shared.useCases.fetchAppStoreVersionUseCase
         ),
-        CommunityPostViewModel(communityRepository: AppContainer.shared.domain.communityRepository, postId: 1)
+        CommunityPostViewModel(
+            communityRepository: AppContainer.shared.domain.communityRepository,
+            blockManager: AppContainer.shared.blockManager,
+            postId: 1
+        )
     )
 }

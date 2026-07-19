@@ -67,6 +67,26 @@ final class RemoteImageLoaderTests: XCTestCase {
         }
     }
 
+    func testMissingCacheStillDownloadsImage() async throws {
+        let url = try XCTUnwrap(URL(string: "https://example.com/uncached.png"))
+        let imageData = try XCTUnwrap(makeImage(color: .purple).pngData())
+        let response = try XCTUnwrap(
+            HTTPURLResponse(
+                url: url,
+                statusCode: 200,
+                httpVersion: nil,
+                headerFields: nil
+            ))
+        let dataLoader = RemoteImageDataLoaderStub(result: .success((imageData, response)))
+        let loader = RemoteImageLoader(dataLoader: dataLoader)
+
+        await loader.load(url: url.absoluteString, cache: nil)
+
+        let requestCount = await dataLoader.requestCount
+        XCTAssertEqual(requestCount, 1)
+        assertSuccess(loader.phase)
+    }
+
     func testCancelledOldRequestCannotOverwriteLatestImage() async throws {
         let firstURL = try XCTUnwrap(URL(string: "https://example.com/first.png"))
         let secondURL = try XCTUnwrap(URL(string: "https://example.com/second.png"))

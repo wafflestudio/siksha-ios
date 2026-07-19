@@ -90,7 +90,9 @@ struct BoardInfo: Hashable {
 
 protocol CommunityViewModelType: ObservableObject {
     var boardsListPublisher: [BoardInfo] { get }
+    @MainActor
     var postsListPublisher: [PostInfo] { get }
+    @MainActor
     var trendingPostsListPublisher: [PostInfo] { get }
     var hasNextPublisher: Bool { get }
     var error: AppError? { get set }
@@ -115,6 +117,7 @@ final class CommunityViewModel: CommunityViewModelType {
     }
 
     private let communityRepository: CommunityRepositoryProtocol
+    private let blockManager: BlockManager
 
     @Published var error: AppError?
 
@@ -133,8 +136,9 @@ final class CommunityViewModel: CommunityViewModelType {
     private var loadInitialPostsCancellable: AnyCancellable?
     var isChangingBoard: Bool = false
 
-    init(communityRepository: CommunityRepositoryProtocol) {
+    init(communityRepository: CommunityRepositoryProtocol, blockManager: BlockManager) {
         self.communityRepository = communityRepository
+        self.blockManager = blockManager
     }
 }
 
@@ -150,8 +154,9 @@ extension CommunityViewModel {
             }
     }
 
+    @MainActor
     var postsListPublisher: [PostInfo] {
-        let blockedNicknames = BlockManager.shared.blockedNicknames()
+        let blockedNicknames = blockManager.blockedNicknames()
         return self.currPostList
             .filter { post in
                 // App Store policy: completely hide all anonymous posts on iOS
@@ -165,8 +170,9 @@ extension CommunityViewModel {
     var hasNextPublisher: Bool {
         return self.hasNext
     }
+    @MainActor
     var trendingPostsListPublisher: [PostInfo] {
-        let blockedNicknames = BlockManager.shared.blockedNicknames()
+        let blockedNicknames = blockManager.blockedNicknames()
         return self.trendingPostList
             .filter { post in
                 // App Store policy: completely hide all anonymous posts on iOS

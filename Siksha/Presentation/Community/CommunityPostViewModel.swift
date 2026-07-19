@@ -57,6 +57,7 @@ struct CommentInfo: Identifiable, Equatable {
 protocol CommunityPostViewModelType: ObservableObject {
     var error: AppError? { get set }
     var postInfo: PostInfo { get }
+    @MainActor
     var commentsListPublisher: [CommentInfo] { get }
     var hasNextPublisher: Bool { get }
     var boardNamePublisher: String { get }
@@ -73,7 +74,9 @@ protocol CommunityPostViewModelType: ObservableObject {
     func toggleCommentLike(id: Int)
     func reportPost(reason: String, completion: @escaping (Bool, String?) -> Void)
     func reportComment(commentId: Int, reason: String, completion: @escaping (Bool, String?) -> Void)
+    @MainActor
     func blockPostAuthor(postInfo: PostInfo)
+    @MainActor
     func blockCommentAuthor(commentInfo: CommentInfo)
 }
 
@@ -86,6 +89,7 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
     private let postId: Int
 
     private let communityRepository: CommunityRepositoryProtocol
+    private let blockManager: BlockManager
 
     @Published private var post: Post
     @Published private var commentsList: [Comment] = []
@@ -100,18 +104,19 @@ final class CommunityPostViewModel: CommunityPostViewModelType {
 
     private var cancellables = Set<AnyCancellable>()
 
-    init(communityRepository: CommunityRepositoryProtocol, postId: Int) {
+    init(communityRepository: CommunityRepositoryProtocol, blockManager: BlockManager, postId: Int) {
         self.communityRepository = communityRepository
+        self.blockManager = blockManager
         self.postId = postId
-        print("POST ID: \(postId)")
         self.post = Post()
         self.loadBasicInfos()
     }
 }
 
 extension CommunityPostViewModel {
+    @MainActor
     var commentsListPublisher: [CommentInfo] {
-        let blockedNicknames = BlockManager.shared.blockedNicknames()
+        let blockedNicknames = blockManager.blockedNicknames()
         return self.commentsList
             .filter { comment in
                 // App Store policy: completely hide all anonymous comments on iOS
@@ -438,20 +443,22 @@ extension CommunityPostViewModel {
             .store(in: &cancellables)
     }
 
+    @MainActor
     func blockPostAuthor(postInfo: PostInfo) {
         if postInfo.isAnonymous {
-            BlockManager.shared.blockPost(id: postInfo.id)
+            blockManager.blockPost(id: postInfo.id)
         } else if let nickname = postInfo.nickname, !nickname.isEmpty {
-            BlockManager.shared.blockNickname(nickname)
+            blockManager.blockNickname(nickname)
         }
         objectWillChange.send()
     }
 
+    @MainActor
     func blockCommentAuthor(commentInfo: CommentInfo) {
         if commentInfo.isAnonymous {
-            BlockManager.shared.blockComment(id: commentInfo.id)
+            blockManager.blockComment(id: commentInfo.id)
         } else if !commentInfo.nickname.isEmpty {
-            BlockManager.shared.blockNickname(commentInfo.nickname)
+            blockManager.blockNickname(commentInfo.nickname)
         }
         objectWillChange.send()
     }

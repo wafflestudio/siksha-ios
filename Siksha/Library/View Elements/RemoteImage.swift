@@ -31,7 +31,7 @@ final class RemoteImageLoader: ObservableObject {
         self.dataLoader = dataLoader
     }
 
-    func load(url urlString: String, cache: ImageCache) async {
+    func load(url urlString: String, cache: ImageCache?) async {
         guard let url = URL(string: urlString) else {
             representedURL = nil
             phase = .failed
@@ -40,7 +40,7 @@ final class RemoteImageLoader: ObservableObject {
 
         representedURL = url
 
-        if let cachedImage = cache[url] {
+        if let cachedImage = cache?[url] {
             phase = .success(cachedImage)
             return
         }
@@ -64,7 +64,7 @@ final class RemoteImageLoader: ObservableObject {
                 return
             }
 
-            cache[url] = image
+            cache?[url] = image
             phase = .success(image)
         } catch is CancellationError {
             return
@@ -78,7 +78,7 @@ final class RemoteImageLoader: ObservableObject {
 struct RemoteImage: View {
     private struct RequestID: Hashable {
         let url: String
-        let cacheIdentifier: ObjectIdentifier
+        let cacheIdentifier: ObjectIdentifier?
     }
 
     @Environment(\.imageCache) private var imageCache
@@ -116,7 +116,7 @@ struct RemoteImage: View {
     private var requestID: RequestID {
         RequestID(
             url: url,
-            cacheIdentifier: ObjectIdentifier(imageCache)
+            cacheIdentifier: imageCache.map(ObjectIdentifier.init)
         )
     }
 }

@@ -13,6 +13,8 @@ final class AppContainer {
     let useCases: UseCaseProvider
     let socialLoginService: SocialLoginService
     let menuAlarmNotificationManager: MenuAlarmNotificationManaging
+    let imageCache: ImageCache
+    let blockManager: BlockManager
 
     init() {
         let networkModule = AlamofireNetworking()
@@ -26,6 +28,8 @@ final class AppContainer {
         self.domain = domain
         self.useCases = useCases
         self.socialLoginService = SocialLoginServiceImpl()
+        self.imageCache = TemporaryImageCache()
+        self.blockManager = BlockManager()
         self.menuAlarmNotificationManager = DefaultMenuAlarmNotificationManager(
             messagingTokenService: pushMessagingTokenService,
             registerUserDeviceUseCase: useCases.registerUserDeviceUseCase

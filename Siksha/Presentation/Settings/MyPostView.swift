@@ -21,7 +21,10 @@ struct MyPostPreView: View {
         NavigationLink(
             destination: CommunityPostView(
                 viewModel: CommunityPostViewModel(
-                    communityRepository: AppContainer.shared.domain.communityRepository, postId: info.id),
+                    communityRepository: AppContainer.shared.domain.communityRepository,
+                    blockManager: AppContainer.shared.blockManager,
+                    postId: info.id
+                ),
                 needPostViewRefresh: needRefresh)
         ) {
             HStack {
