@@ -5,7 +5,7 @@
 //  Created by Codex on 6/7/26.
 //
 
-protocol MenuRepositoryProtocol {
+protocol MenuRepositoryProtocol: Sendable {
     @concurrent
     func refreshMenu(date: String) async throws -> Bool
 
