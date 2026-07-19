@@ -56,8 +56,8 @@ final class SocialLoginServiceImpl: SocialLoginService {
 
     @MainActor
     private func loginWithKakao() async throws -> LoginCredential {
-        let oauthToken = try await withCheckedThrowingContinuation {
-            (continuation: CheckedContinuation<OAuthToken, Error>) in
+        try await withCheckedThrowingContinuation {
+            (continuation: CheckedContinuation<LoginCredential, Error>) in
             let completion: (OAuthToken?, Error?) -> Void = { oauthToken, error in
                 if let error {
                     continuation.resume(throwing: error)
@@ -69,7 +69,12 @@ final class SocialLoginServiceImpl: SocialLoginService {
                     return
                 }
 
-                continuation.resume(returning: oauthToken)
+                continuation.resume(
+                    returning: LoginCredential(
+                        provider: .kakao,
+                        token: oauthToken.accessToken
+                    )
+                )
             }
 
             if UserApi.isKakaoTalkLoginAvailable() {
@@ -78,8 +83,6 @@ final class SocialLoginServiceImpl: SocialLoginService {
                 UserApi.shared.loginWithKakaoAccount(completion: completion)
             }
         }
-
-        return LoginCredential(provider: .kakao, token: oauthToken.accessToken)
     }
 
     @MainActor

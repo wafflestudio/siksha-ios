@@ -5,7 +5,6 @@
 //  Created by 이수민 on 11/12/24.
 //
 
-import KakaoSDKAuth
 import SwiftUI
 @preconcurrency import WebKit
 
@@ -79,7 +78,7 @@ class KakaoShareNavigationDelegate: NSObject, WKNavigationDelegate {
         decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
     ) {
         if let url = navigationAction.request.url {
-            if AuthApi.isKakaoTalkLoginUrl(url) {
+            if kakaoShareManager.isKakaoTalkLoginURL(url) {
                 handleKakaoAuth(url: url)
             }
         }
@@ -90,12 +89,12 @@ class KakaoShareNavigationDelegate: NSObject, WKNavigationDelegate {
         if let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
             let code = components.queryItems?.first(where: { $0.name == "code" })?.value
         {
-            AuthApi.shared.token(code: code) { [weak self] (oauthToken, error) in
-                if let error = error {
-                    print("Token error: \(error)")
-                } else {
-                    self?.handleSuccessfulAuth()
+            kakaoShareManager.exchangeToken(code: code) { [weak self] didSucceed in
+                guard didSucceed else {
+                    return
                 }
+
+                self?.handleSuccessfulAuth()
             }
         }
     }

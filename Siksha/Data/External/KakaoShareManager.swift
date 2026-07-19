@@ -6,9 +6,7 @@
 //
 
 import KakaoSDKAuth
-import KakaoSDKCommon
 import KakaoSDKShare
-import KakaoSDKTemplate
 import SwiftUI
 import UIKit
 
@@ -22,6 +20,21 @@ class KakaoShareManager: ObservableObject {
     var maxMenus = 0
 
     let dateFormatter = DateFormatter()
+
+    func isKakaoTalkLoginURL(_ url: URL) -> Bool {
+        AuthApi.isKakaoTalkLoginUrl(url)
+    }
+
+    func exchangeToken(code: String, completion: @escaping (Bool) -> Void) {
+        AuthApi.shared.token(code: code) { _, error in
+            if let error {
+                print("Token error: \(error)")
+                completion(false)
+            } else {
+                completion(true)
+            }
+        }
+    }
 
     func setTempArgs(restaurant: KakaoShareRestaurantModel, selectedDateString: String) {
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -64,8 +77,14 @@ class KakaoShareManager: ObservableObject {
                     print(error)
                 } else {
                     print("shareCustom() success.")
-                    if let sharingResult = sharingResult {
-                        UIApplication.shared.open(sharingResult.url, options: [:], completionHandler: nil)
+                    if let sharingURL = sharingResult?.url {
+                        Task { @MainActor in
+                            UIApplication.shared.open(
+                                sharingURL,
+                                options: [:],
+                                completionHandler: nil
+                            )
+                        }
                     }
                 }
             }
