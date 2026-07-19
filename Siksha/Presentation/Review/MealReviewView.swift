@@ -265,6 +265,7 @@ private extension MealReviewView {
 
 // MARK: - Preview
 
+@MainActor
 struct MealReviewPreview {
     static var previews: some View {
         let meal = MenuItemDisplayModel(

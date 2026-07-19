@@ -6,7 +6,10 @@
 //
 
 protocol MenuRepositoryProtocol {
+    @concurrent
     func refreshMenu(date: String) async throws -> Bool
+
+    @concurrent
     func getMenus(from start: String, to end: String) async throws -> [DailyMenuModel]
     func getMenu(date: String) -> DailyMenuModel?
 }

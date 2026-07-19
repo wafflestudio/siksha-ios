@@ -106,6 +106,7 @@ extension ImagePickerCoordinatorView {
             print("Did Reach Selection Limit: \(count)")
         }
 
+        @concurrent
         private func loadImages(from assets: [PHAsset]) async throws -> (images: [UIImage], error: Error?) {
             var images: [UIImage] = []
             var firstError: Error?

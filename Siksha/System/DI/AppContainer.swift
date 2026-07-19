@@ -5,6 +5,7 @@
 //  Created by 한상현 on 2023/09/11.
 //
 
+@MainActor
 final class AppContainer {
     static let shared = AppContainer()
 

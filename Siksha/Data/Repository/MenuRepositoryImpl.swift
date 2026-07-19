@@ -23,6 +23,7 @@ final class MenuRepositoryImpl: MenuRepositoryProtocol {
         self.local = local
     }
 
+    @concurrent
     func refreshMenu(date: String) async throws -> Bool {
         let dto = try await remote.fetchDailyMenus(from: date, to: date)
         guard !dto.result.isEmpty else {
@@ -35,6 +36,7 @@ final class MenuRepositoryImpl: MenuRepositoryProtocol {
         return true
     }
 
+    @concurrent
     func getMenus(from start: String, to end: String) async throws -> [DailyMenuModel] {
         let dto = try await remote.fetchDailyMenus(from: start, to: end)
         let realmObjects = dto.result.map { $0.toRealmObject() }
