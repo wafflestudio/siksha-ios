@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import SwiftUI
 
+@MainActor
 class MealReviewViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let fetchReviewCommentRecommendationUseCase: FetchReviewCommentRecommendationUseCase
@@ -33,6 +34,7 @@ class MealReviewViewModel: ObservableObject {
     private var imagesData = [Data]()
     private var recommendedComment = ""
     private var isEditMode = false
+    private var recommendationTask: Task<Void, Never>?
 
     init(
         meal: MenuItemDisplayModel? = nil,
@@ -66,6 +68,7 @@ class MealReviewViewModel: ObservableObject {
                 guard let self = self else { return }
 
                 if score == 0 {
+                    self.recommendationTask?.cancel()
                     self.commentRecommended = false
                 } else {
                     if commentToSubmit.isEmpty || commentToSubmit == recommendedComment {
@@ -86,18 +89,21 @@ class MealReviewViewModel: ObservableObject {
     }
 
     private func getRecommendedComment(_ score: Int) {
-        Task { [weak self] in
+        recommendationTask?.cancel()
+        recommendationTask = Task { [weak self] in
             guard let self else { return }
 
             do {
                 let comment = try await fetchReviewCommentRecommendationUseCase.execute(score: score)
-                guard !comment.isEmpty else { return }
+                try Task.checkCancellation()
+                guard !comment.isEmpty,
+                    self.scoreToSubmit == score,
+                    self.commentToSubmit.isEmpty || self.commentToSubmit == self.recommendedComment
+                else { return }
 
-                await MainActor.run {
-                    self.commentRecommended = true
-                    self.recommendedComment = comment
-                    self.commentToSubmit = comment
-                }
+                self.commentRecommended = true
+                self.recommendedComment = comment
+                self.commentToSubmit = comment
             } catch {
                 return
             }
@@ -116,16 +122,12 @@ class MealReviewViewModel: ObservableObject {
 
             do {
                 try await submitMealReviewUseCase.execute(submission)
-                await MainActor.run {
-                    self.errorCode = nil
-                    self.postReviewSucceeded = true
-                    self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
-                }
+                self.errorCode = nil
+                self.postReviewSucceeded = true
+                self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
             } catch {
-                await MainActor.run {
-                    self.errorCode = self.reviewErrorCode(from: error)
-                    self.postReviewSucceeded = false
-                }
+                self.errorCode = self.reviewErrorCode(from: error)
+                self.postReviewSucceeded = false
             }
         }
     }
@@ -144,16 +146,12 @@ class MealReviewViewModel: ObservableObject {
 
             do {
                 try await submitMealReviewUseCase.execute(submission)
-                await MainActor.run {
-                    self.errorCode = nil
-                    self.postReviewSucceeded = true
-                    self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
-                }
+                self.errorCode = nil
+                self.postReviewSucceeded = true
+                self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
             } catch {
-                await MainActor.run {
-                    self.errorCode = self.reviewErrorCode(from: error)
-                    self.postReviewSucceeded = false
-                }
+                self.errorCode = self.reviewErrorCode(from: error)
+                self.postReviewSucceeded = false
             }
         }
     }
@@ -213,15 +211,11 @@ class MealReviewViewModel: ObservableObject {
 
             do {
                 try await editMealReviewUseCase.execute(reviewId: reviewId, submission: submission)
-                await MainActor.run {
-                    self.errorCode = nil
-                    self.postReviewSucceeded = true
-                }
+                self.errorCode = nil
+                self.postReviewSucceeded = true
             } catch {
-                await MainActor.run {
-                    self.errorCode = self.reviewErrorCode(from: error)
-                    self.postReviewSucceeded = false
-                }
+                self.errorCode = self.reviewErrorCode(from: error)
+                self.postReviewSucceeded = false
             }
         }
     }

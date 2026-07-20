@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 public class MealInfoViewModel: ObservableObject {
     private let fetchMenuUseCase: FetchMenuUseCase
     private let fetchMealReviewsUseCase: FetchMealReviewsUseCase
@@ -15,6 +16,7 @@ public class MealInfoViewModel: ObservableObject {
     private let fetchMealReviewScoreDistributionUseCase: FetchMealReviewScoreDistributionUseCase
     private let fetchMealReviewKeywordDistributionUseCase: FetchMealReviewKeywordDistributionUseCase
     private let updateMenuLikeUseCase: UpdateMenuLikeUseCase
+    private var updateMealTask: Task<Void, Never>?
 
     @Published var meal: MenuItemDisplayModel
     @Published var mealReviews: [Review] = []
@@ -76,17 +78,13 @@ public class MealInfoViewModel: ObservableObject {
                     isLiked: !isCurrentlyLiked
                 )
 
-                await MainActor.run {
-                    self.likeStatus = .succeeded
-                    self.meal = self.meal.updatingLike(
-                        isLiked: status.isLiked,
-                        likeCount: status.likeCount
-                    )
-                }
+                self.likeStatus = .succeeded
+                self.meal = self.meal.updatingLike(
+                    isLiked: status.isLiked,
+                    likeCount: status.likeCount
+                )
             } catch {
-                await MainActor.run {
-                    self.likeStatus = .failed
-                }
+                self.likeStatus = .failed
             }
         }
     }
@@ -103,15 +101,11 @@ public class MealInfoViewModel: ObservableObject {
 
             do {
                 let response = try await fetchMealReviewsUseCase.execute(menuId: meal.id, page: 1, perPage: 5)
-                await MainActor.run {
-                    self.hasMorePages = response.hasNext
-                    self.getReviewStatus = .succeeded
-                    self.mealReviews = response.reviews
-                }
+                self.hasMorePages = response.hasNext
+                self.getReviewStatus = .succeeded
+                self.mealReviews = response.reviews
             } catch {
-                await MainActor.run {
-                    self.getReviewStatus = .failed
-                }
+                self.getReviewStatus = .failed
             }
         }
     }
@@ -128,15 +122,11 @@ public class MealInfoViewModel: ObservableObject {
 
             do {
                 let response = try await fetchMealImageReviewsUseCase.execute(menuId: meal.id, page: 1, perPage: 6)
-                await MainActor.run {
-                    self.totalImageCount = response.totalCount
-                    self.getImageStatus = .succeeded
-                    self.images = response.reviews.map { $0.etc?["images"]?[0] ?? "" }
-                }
+                self.totalImageCount = response.totalCount
+                self.getImageStatus = .succeeded
+                self.images = response.reviews.map { $0.etc?["images"]?[0] ?? "" }
             } catch {
-                await MainActor.run {
-                    self.getImageStatus = .failed
-                }
+                self.getImageStatus = .failed
             }
         }
     }
@@ -153,14 +143,10 @@ public class MealInfoViewModel: ObservableObject {
 
             do {
                 let distribution = try await fetchMealReviewScoreDistributionUseCase.execute(menuId: meal.id)
-                await MainActor.run {
-                    self.getDistributionStatus = .succeeded
-                    self.scoreDistribution = distribution.map { CGFloat($0) }
-                }
+                self.getDistributionStatus = .succeeded
+                self.scoreDistribution = distribution.map { CGFloat($0) }
             } catch {
-                await MainActor.run {
-                    self.getDistributionStatus = .failed
-                }
+                self.getDistributionStatus = .failed
             }
         }
     }
@@ -177,48 +163,44 @@ public class MealInfoViewModel: ObservableObject {
 
             do {
                 let dist = try await fetchMealReviewKeywordDistributionUseCase.execute(menuId: meal.id)
-                await MainActor.run {
-                    self.getKeywordDistributionStatus = .succeeded
+                self.getKeywordDistributionStatus = .succeeded
 
-                    self.tasteSummary = ReviewKeywordSummary(
-                        type: .taste,
-                        keyword: dist.tasteKeyword,
-                        count: dist.tasteCount,
-                        total: dist.tasteTotal
-                    )
+                self.tasteSummary = ReviewKeywordSummary(
+                    type: .taste,
+                    keyword: dist.tasteKeyword,
+                    count: dist.tasteCount,
+                    total: dist.tasteTotal
+                )
 
-                    self.priceSummary = ReviewKeywordSummary(
-                        type: .price,
-                        keyword: dist.priceKeyword,
-                        count: dist.priceCount,
-                        total: dist.priceTotal
-                    )
+                self.priceSummary = ReviewKeywordSummary(
+                    type: .price,
+                    keyword: dist.priceKeyword,
+                    count: dist.priceCount,
+                    total: dist.priceTotal
+                )
 
-                    self.compositionSummary = ReviewKeywordSummary(
-                        type: .composition,
-                        keyword: dist.foodCompositionKeyword,
-                        count: dist.foodCompositionCount,
-                        total: dist.foodCompositionTotal
-                    )
-                }
+                self.compositionSummary = ReviewKeywordSummary(
+                    type: .composition,
+                    keyword: dist.foodCompositionKeyword,
+                    count: dist.foodCompositionCount,
+                    total: dist.foodCompositionTotal
+                )
             } catch {
-                await MainActor.run {
-                    self.getKeywordDistributionStatus = .failed
-                }
+                self.getKeywordDistributionStatus = .failed
             }
         }
     }
 
     /// 서버 MealID로 Meal 호출 속도 느림 -> 불가피하게 아는 정보가 mealId뿐일 때만 사용
     func updateMealFromId() {
-        Task { [weak self] in
+        updateMealTask?.cancel()
+        updateMealTask = Task { [weak self] in
             guard let self else { return }
 
             do {
                 let menu = try await fetchMenuUseCase.execute(menuId: meal.id)
-                await MainActor.run {
-                    self.meal = MenuItemDisplayModel(menu: menu)
-                }
+                try Task.checkCancellation()
+                self.meal = MenuItemDisplayModel(menu: menu)
             } catch {
                 return
             }
