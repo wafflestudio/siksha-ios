@@ -8,12 +8,17 @@
 import Combine
 import SwiftUI
 
-class KeyboardResponder: ObservableObject {
+@MainActor
+final class KeyboardResponder: ObservableObject {
     @Published var currentHeight: CGFloat = 0
     @Published var didKeyboardShow = false
     private var cancellables: Set<AnyCancellable> = []
+    private var didShowTask: Task<Void, Never>?
+    private let showDelayNanoseconds: UInt64
 
-    init() {
+    init(showDelayNanoseconds: UInt64 = 200_000_000) {
+        self.showDelayNanoseconds = showDelayNanoseconds
+
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
             .sink { [weak self] notification in
                 self?.keyboardNotification(notification: notification)
@@ -21,16 +26,29 @@ class KeyboardResponder: ObservableObject {
 
         NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification)
             .sink { [weak self] _ in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    self?.didKeyboardShow = true
-                }
+                self?.scheduleDidShowUpdate()
             }.store(in: &cancellables)
 
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
             .sink { [weak self] _ in
+                self?.didShowTask?.cancel()
                 self?.didKeyboardShow = false
                 self?.currentHeight = 0
             }.store(in: &cancellables)
+    }
+
+    private func scheduleDidShowUpdate() {
+        didShowTask?.cancel()
+        let showDelayNanoseconds = showDelayNanoseconds
+        didShowTask = Task { [weak self] in
+            do {
+                try await Task.sleep(nanoseconds: showDelayNanoseconds)
+                try Task.checkCancellation()
+                self?.didKeyboardShow = true
+            } catch {
+                return
+            }
+        }
     }
 
     private func keyboardNotification(notification: Notification) {
@@ -42,6 +60,6 @@ class KeyboardResponder: ObservableObject {
     }
 
     deinit {
-        cancellables.forEach { $0.cancel() }
+        didShowTask?.cancel()
     }
 }

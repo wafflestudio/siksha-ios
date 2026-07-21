@@ -10,10 +10,11 @@ import SwiftUI
 struct AlarmTimeView: View {
 
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @EnvironmentObject private var contentViewModel: ContentViewModel
     @ObservedObject var viewModel: MyLikedMenuViewModel
     var backButton: some View {
         Button(action: {
-            ContentViewModel.contentViewModel.showPopUp = false
+            contentViewModel.showPopUp = false
             self.presentationMode.wrappedValue.dismiss()
         }) {
             Image("NavigationBack")

@@ -88,6 +88,7 @@
 				DeviceTokenUseCaseTests.swift,
 				MealAndReviewViewModelTests.swift,
 				MenuRepositoryTests.swift,
+				PresentationStateConcurrencyTests.swift,
 				ProfileEditViewModelTests.swift,
 				RemoteConfigRepositoryImplTests.swift,
 				RemoteImageLoaderTests.swift,

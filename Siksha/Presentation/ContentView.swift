@@ -42,19 +42,68 @@ private extension ContentView {
 }
 
 // MARK: - Content View
-class ContentViewModel: ObservableObject {
+@MainActor
+final class ContentViewModel: ObservableObject {
     @Published var showPopUp = false
     @Published var popUpOpacity = 0.0
-    @Published var showModal = !UserDefaults.standard.bool(forKey: "isAlreadyDisplayedMyLikedMenuModal")
-
+    @Published var showModal: Bool
     @Published var showMyMenuViewFromPopup = false
-    static var contentViewModel = ContentViewModel()
 
+    private let userDefaults: UserDefaults
+    private let popupDismissDelayNanoseconds: UInt64
+    private var popupDismissTask: Task<Void, Never>?
+
+    init(
+        userDefaults: UserDefaults = .standard,
+        popupDismissDelayNanoseconds: UInt64 = 5_000_000_000
+    ) {
+        self.userDefaults = userDefaults
+        self.popupDismissDelayNanoseconds = popupDismissDelayNanoseconds
+        self.showModal = !userDefaults.bool(forKey: "isAlreadyDisplayedMyLikedMenuModal")
+    }
+
+    func schedulePopupDismissalIfNeeded() {
+        let popupCountKey = "alarmPopupCount"
+        guard userDefaults.integer(forKey: popupCountKey) < 3 else {
+            return
+        }
+
+        userDefaults.set(userDefaults.integer(forKey: popupCountKey) + 1, forKey: popupCountKey)
+        popupDismissTask?.cancel()
+
+        withAnimation(.easeInOut(duration: 1.0).delay(0.5)) {
+            popUpOpacity = 1.0
+        }
+
+        let popupDismissDelayNanoseconds = popupDismissDelayNanoseconds
+        popupDismissTask = Task { [weak self] in
+            do {
+                try await Task.sleep(nanoseconds: popupDismissDelayNanoseconds)
+                try Task.checkCancellation()
+                withAnimation(.easeInOut(duration: 1.0)) {
+                    self?.popUpOpacity = 0.0
+                }
+            } catch {
+                return
+            }
+        }
+    }
+
+    func cancelPopupDismissal() {
+        popupDismissTask?.cancel()
+        withTransaction(Transaction(animation: nil)) {
+            popUpOpacity = 0.0
+        }
+    }
+
+    deinit {
+        popupDismissTask?.cancel()
+    }
 }
 struct ContentView: View {
     @State var selectedTab = 0
     @EnvironmentObject var appState: AppState
-    @ObservedObject var contentViewModel = ContentViewModel.contentViewModel
+    @EnvironmentObject var contentViewModel: ContentViewModel
     @StateObject private var menuViewModel = MenuViewModel(
         fetchDailyMenuUseCase: AppContainer.shared.useCases.fetchDailyMenuUseCase,
         fetchFestivalDatesUseCase: AppContainer.shared.useCases.fetchFestivalDatesUseCase,
@@ -97,7 +146,6 @@ struct ContentView: View {
         updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase,
         setRestaurantOrderUseCase: AppContainer.shared.useCases.setRestaurantOrderUseCase
     )
-    @State private var hidePopupWorkItem: DispatchWorkItem?
     @State private var previousSelectedTab = 0
 
     struct TabItem: Identifiable {
@@ -139,7 +187,6 @@ struct ContentView: View {
 
                             ZStack {
                                 MyLikedMenuModal(viewModel: myLikedMenuViewModel)
-                                    .environmentObject(ContentViewModel.contentViewModel)
                                     .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
                             }
                             .ignoresSafeArea()
@@ -167,28 +214,11 @@ struct ContentView: View {
                         .opacity(contentViewModel.popUpOpacity)
                 }
                 .onAppear {
-                    if UserDefaults.standard.integer(forKey: "alarmPopupCount") < 3 {
-                        UserDefaults.standard.set(
-                            UserDefaults.standard.integer(forKey: "alarmPopupCount") + 1, forKey: "alarmPopupCount")
-                        hidePopupWorkItem = DispatchWorkItem {
-                            withAnimation(.easeInOut(duration: 1.0)) {
-                                contentViewModel.popUpOpacity = 0.0
-                            }
-                        }
-
-                        withAnimation(.easeInOut(duration: 1.0).delay(0.5)) {
-                            contentViewModel.popUpOpacity = 1.0
-                        }
-
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: hidePopupWorkItem!)
-                    }
+                    contentViewModel.schedulePopupDismissalIfNeeded()
                 }
                 .onChange(of: contentViewModel.showPopUp) { newValue in
                     if newValue == false {
-                        hidePopupWorkItem?.cancel()
-                        withTransaction(Transaction(animation: nil)) {
-                            contentViewModel.popUpOpacity = 0.0
-                        }
+                        contentViewModel.cancelPopupDismissal()
                     }
                 }
             }
@@ -207,6 +237,8 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(AppState())
+            .environmentObject(ContentViewModel())
     }
 }
 

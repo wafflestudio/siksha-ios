@@ -9,10 +9,11 @@ import SwiftUI
 
 struct MyLikedMenuView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @EnvironmentObject private var contentViewModel: ContentViewModel
     @ObservedObject var viewModel: MyLikedMenuViewModel
     var backButton: some View {
         Button(action: {
-            ContentViewModel.contentViewModel.showPopUp = false
+            contentViewModel.showPopUp = false
             self.presentationMode.wrappedValue.dismiss()
         }) {
             Image("NavigationBack")
@@ -41,16 +42,15 @@ struct MyLikedMenuView: View {
             }
         )
         .onAppear {
-            ContentViewModel.contentViewModel.showPopUp = true
+            contentViewModel.showPopUp = true
 
         }
         .task {
             await viewModel.loadMyLikedMenu()
         }
-
         .onDisappear {
             viewModel.unLikedMenuCleanup()
-            ContentViewModel.contentViewModel.showPopUp = false
+            contentViewModel.showPopUp = false
 
         }
         .background(Color.backgroundMain)
