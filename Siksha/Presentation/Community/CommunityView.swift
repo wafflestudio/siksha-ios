@@ -57,7 +57,8 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                         needRefresh: $needRefresh,
                         viewModel: CommunityPostPublishViewModel(
                             boardId: selectedBoardId ?? 0,
-                            communityRepository: AppContainer.shared.domain.communityRepository
+                            communityRepository: AppContainer.shared.domain.communityRepository,
+                            orderedImageDataLoader: AppContainer.shared.orderedImageDataLoader
                         )
                     ),
                     tag: 1,

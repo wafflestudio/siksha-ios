@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import UIKit
 
+@MainActor
 protocol CommunityPostPublishViewType: ObservableObject {
     var content: String { get set }
     var title: String { get set }
@@ -21,10 +22,14 @@ protocol CommunityPostPublishViewType: ObservableObject {
     func submitPost()
 
 }
-class CommunityPostPublishViewModel: CommunityPostPublishViewType {
+@MainActor
+final class CommunityPostPublishViewModel: CommunityPostPublishViewType {
     var postInfo: PostInfo?
     private let communityRepository: CommunityRepositoryProtocol
+    private let orderedImageDataLoader: OrderedImageDataLoading
     private var cancellables = Set<AnyCancellable>()
+    private var imageLoadTask: Task<Void, Never>?
+    private var imageLoadGeneration = 0
     @Published var boardId: Int
     @Published var boardsList: [Board] = []
     @Published var content = ""
@@ -37,9 +42,15 @@ class CommunityPostPublishViewModel: CommunityPostPublishViewType {
     @Published var images: [UIImage] = []
     @Published var isSubmitted = false
     @Published var isErrorAlert = false
-    init(boardId: Int, communityRepository: CommunityRepositoryProtocol, postInfo: PostInfo? = nil) {
+    init(
+        boardId: Int,
+        communityRepository: CommunityRepositoryProtocol,
+        orderedImageDataLoader: OrderedImageDataLoading,
+        postInfo: PostInfo? = nil
+    ) {
         self.boardId = boardId
         self.communityRepository = communityRepository
+        self.orderedImageDataLoader = orderedImageDataLoader
         self.isAnonymous = UserDefaults.standard.bool(forKey: "isAnonymous")
 
         loadBoardInfo()
@@ -50,11 +61,13 @@ class CommunityPostPublishViewModel: CommunityPostPublishViewType {
             self.content = info.content
             self.isAnonymous = info.isAnonymous
             if let imageURLs = info.imageURLs {
-                downloadImages(from: imageURLs) { loadedImages in
-                    self.images = loadedImages
-                }
+                loadImages(from: imageURLs)
             }
         }
+    }
+
+    deinit {
+        imageLoadTask?.cancel()
     }
 
     func submitPost() {
@@ -108,28 +121,28 @@ class CommunityPostPublishViewModel: CommunityPostPublishViewType {
             .store(in: &cancellables)
     }
 
-    func downloadImages(from urls: [String], completion: @escaping ([UIImage]) -> Void) {
-        let group = DispatchGroup()
-        var images = [UIImage]()
+    func loadImages(from urlStrings: [String]) {
+        imageLoadGeneration += 1
+        let generation = imageLoadGeneration
+        imageLoadTask?.cancel()
 
-        for urlString in urls {
-            guard let url = URL(string: urlString) else { continue }
-            group.enter()
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                defer { group.leave() }
-                if let data = data, let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        images.append(image)
-                    }
-                } else {
-                    print(
-                        "Error loading image from url: \(urlString), \(error?.localizedDescription ?? "Unknown error")")
-                }
-            }.resume()
+        let urls = urlStrings.compactMap(URL.init(string:))
+        guard !urls.isEmpty else {
+            images = []
+            return
         }
 
-        group.notify(queue: .main) {
-            completion(images)
+        let orderedImageDataLoader = orderedImageDataLoader
+        imageLoadTask = Task { [weak self] in
+            do {
+                let loadedData = try await orderedImageDataLoader.loadImageData(from: urls)
+                try Task.checkCancellation()
+                let loadedImages = loadedData.compactMap(UIImage.init(data:))
+                guard let self, self.imageLoadGeneration == generation else { return }
+                self.images = loadedImages
+            } catch {
+                return
+            }
         }
     }
 

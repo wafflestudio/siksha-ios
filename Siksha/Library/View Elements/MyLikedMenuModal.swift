@@ -10,31 +10,11 @@ import SwiftUI
 
 struct MyLikedMenuModal: View {
     @EnvironmentObject var contentViewModel: ContentViewModel
-    static let infoText = ["알림 받을 메뉴는 ", "[설정 > 내가 찜한 메뉴]", " 탭에서\n언제든 ", "개별적으로", " ON/OFF 설정할 수 있어요."]
-    let lineheight = UIFont(name: "NanumSquareOTFR", size: CGFloat(13))?.lineHeight ?? 0
-    let padding =
-        Float(UIFont(name: "NanumSquareOTFR", size: CGFloat(13))?.lineHeight ?? 0) * ((Float(140) - 100) / 100) / 2
     @State var isYesSelected = false
     @State var isNoSelected = false
     @State var isConfirmedEnabled = false
     @ObservedObject var viewModel: MyLikedMenuViewModel
 
-    var attributedInfoText: AttributedString {
-        var result = AttributedString("")
-        for (i, infoText) in MyLikedMenuModal.infoText.enumerated() {
-            var attributedText = AttributedString(infoText)
-            attributedText.font = .custom(i % 2 == 0 ? "NanumSquareOTFR" : "NanumSquareOTFB", size: 13)
-            result = result + attributedText
-        }
-        return result
-    }
-    var infoTextView: some View {
-
-        Text(attributedInfoText)
-            .padding(.vertical, CGFloat(padding))
-            .lineSpacing(CGFloat(padding * 2))
-
-    }
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .bottom) {

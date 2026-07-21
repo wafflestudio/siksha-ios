@@ -422,6 +422,7 @@ struct CommunityPostPublishView_Previews: PreviewProvider {
             needRefresh: .constant(false),
             viewModel: CommunityPostPublishViewModel(
                 boardId: 1, communityRepository: AppContainer.shared.domain.communityRepository,
+                orderedImageDataLoader: AppContainer.shared.orderedImageDataLoader,
                 postInfo: .init(
                     title: "title", content: "content", isLiked: false, likeCount: 5, commentCount: 4,
                     imageURLs: [

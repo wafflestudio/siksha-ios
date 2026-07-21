@@ -14,6 +14,7 @@ final class AppContainer {
     let socialLoginService: SocialLoginService
     let menuAlarmNotificationManager: MenuAlarmNotificationManaging
     let imageCache: ImageCache
+    let orderedImageDataLoader: OrderedImageDataLoading
     let blockManager: BlockManager
 
     init() {
@@ -29,6 +30,7 @@ final class AppContainer {
         self.useCases = useCases
         self.socialLoginService = SocialLoginServiceImpl()
         self.imageCache = TemporaryImageCache()
+        self.orderedImageDataLoader = URLSessionOrderedImageDataLoader()
         self.blockManager = BlockManager()
         self.menuAlarmNotificationManager = DefaultMenuAlarmNotificationManager(
             messagingTokenService: pushMessagingTokenService,

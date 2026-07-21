@@ -84,6 +84,7 @@
 				AuthRepositoryImplTests.swift,
 				AuthSessionLocalDataSourceTests.swift,
 				AuthUseCaseTests.swift,
+				CapturedStateRaceTests.swift,
 				DeviceTokenRemoteDataSourceTests.swift,
 				DeviceTokenUseCaseTests.swift,
 				MealAndReviewViewModelTests.swift,
@@ -95,8 +96,8 @@
 				RenewalSettingsViewModelTests.swift,
 				ResolveInitialAuthStateUseCaseTests.swift,
 				RestaurantLocalDataSourceTests.swift,
-				SikshaAPIRequestTests.swift,
 				SharedStateTests.swift,
+				SikshaAPIRequestTests.swift,
 				SikshaTests.swift,
 			);
 			target = 1E3A56FC25C6FCE900DBB3F4 /* SikshaTests */;

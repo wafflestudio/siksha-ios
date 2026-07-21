@@ -481,6 +481,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 viewModel: CommunityPostPublishViewModel(
                     boardId: viewModel.postInfo.boardId,
                     communityRepository: AppContainer.shared.domain.communityRepository,
+                    orderedImageDataLoader: AppContainer.shared.orderedImageDataLoader,
                     postInfo: viewModel.postInfo
                 )
             )
