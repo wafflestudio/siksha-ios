@@ -41,6 +41,7 @@ struct KeywordCell: View {
             .background {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(isSelected ? Color.orange500 : Color.gray200, lineWidth: 1)
+                    .fill(Color.whiteColor)
             }
     }
 }

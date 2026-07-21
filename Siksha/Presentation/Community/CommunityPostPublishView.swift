@@ -333,6 +333,8 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
                             .customFont(font: .text14(weight: .Regular))
                             .foregroundColor(.blackColor)
                             .fixedSize(horizontal: false, vertical: true)
+                            .scrollContentBackground(.hidden)
+                            .background(Color.backgroundPrimary)
 
                         if viewModel.content.isEmpty {
                             Text(placeholder)
