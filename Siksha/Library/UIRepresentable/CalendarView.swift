@@ -8,17 +8,30 @@
 import JTAppleCalendar
 import SwiftUI
 
-class CalendarTapGestureRecognizer: UITapGestureRecognizer {
+@MainActor
+final class CalendarTapGestureRecognizer: UITapGestureRecognizer {
     var calendar: JTACMonthView?
+    var destination: SegmentDestination = .next
 }
 
-class CalendarDelegate: NSObject, JTACMonthViewDelegate, JTACMonthViewDataSource {
+@MainActor
+final class CalendarDelegate: NSObject, @MainActor JTACMonthViewDelegate, @MainActor JTACMonthViewDataSource {
     let formatter = DateFormatter()
     private let cal = Calendar(identifier: .gregorian)
+    private let currentDate: () -> Date
+    private let scrollToSegment: @MainActor (JTACMonthView, SegmentDestination) -> Void
     @Binding var selectedDate: String
 
-    init(selectedDate: Binding<String>) {
+    init(
+        selectedDate: Binding<String>,
+        currentDate: @escaping () -> Date = Date.init,
+        scrollToSegment: @escaping @MainActor (JTACMonthView, SegmentDestination) -> Void = { calendar, destination in
+            calendar.scrollToSegment(destination)
+        }
+    ) {
         self._selectedDate = selectedDate
+        self.currentDate = currentDate
+        self.scrollToSegment = scrollToSegment
     }
 
     func calendar(
@@ -69,12 +82,10 @@ class CalendarDelegate: NSObject, JTACMonthViewDelegate, JTACMonthViewDataSource
         _ calendar: JTACMonthView,
         shouldSelectDate date: Date,
         cell: JTACDayCell?,
-        cellState: CellState
+        cellState: CellState,
+        indexPath: IndexPath
     ) -> Bool {
-        if cellState.dateBelongsTo != .thisMonth {
-            return false
-        }
-        return true
+        cellState.dateBelongsTo == .thisMonth
     }
 
     func configureCell(cell: DateCell, cellState: CellState) {
@@ -127,21 +138,19 @@ class CalendarDelegate: NSObject, JTACMonthViewDelegate, JTACMonthViewDataSource
             as! DateHeader
         header.monthTitle.text = formatter.string(from: range.start)
 
-        let leftTap = CalendarTapGestureRecognizer(target: self, action: #selector(toPrevMonth(sender:)))
-        let rightTap = CalendarTapGestureRecognizer(target: self, action: #selector(toNextMonth(sender:)))
+        let leftTap = CalendarTapGestureRecognizer(target: self, action: #selector(navigateMonth(sender:)))
+        let rightTap = CalendarTapGestureRecognizer(target: self, action: #selector(navigateMonth(sender:)))
         leftTap.calendar = calendar
+        leftTap.destination = .previous
         rightTap.calendar = calendar
         header.leftButton.addGestureRecognizer(leftTap)
         header.rightButton.addGestureRecognizer(rightTap)
         return header
     }
 
-    @objc func toPrevMonth(sender: CalendarTapGestureRecognizer) {
-        sender.calendar?.scrollToSegment(.previous)
-    }
-
-    @objc func toNextMonth(sender: CalendarTapGestureRecognizer) {
-        sender.calendar?.scrollToSegment(.next)
+    @objc func navigateMonth(sender: CalendarTapGestureRecognizer) {
+        guard let calendar = sender.calendar else { return }
+        scrollToSegment(calendar, sender.destination)
     }
 
     func calendarSizeForMonths(_ calendar: JTACMonthView?) -> MonthSize? {
@@ -149,7 +158,7 @@ class CalendarDelegate: NSObject, JTACMonthViewDelegate, JTACMonthViewDataSource
     }
 
     func configureCalendar(_ calendar: JTACMonthView) -> ConfigurationParameters {
-        let now = Date()
+        let now = currentDate()
         let sixMonth = DateComponents(month: 6)
         let minusSixMonth = DateComponents(month: -6)
 
@@ -160,8 +169,9 @@ class CalendarDelegate: NSObject, JTACMonthViewDelegate, JTACMonthViewDataSource
     }
 }
 
-class DateHeader: JTACMonthReusableView {
-    static let reuseID = "dateHeader"
+@MainActor
+final class DateHeader: JTACMonthReusableView {
+    nonisolated static let reuseID = "dateHeader"
 
     var monthTitle: UILabel
     var leftButton: UIButton
@@ -230,8 +240,9 @@ class DateHeader: JTACMonthReusableView {
     }
 }
 
-class DateCell: JTACDayCell {
-    static let reuseID = "dateCell"
+@MainActor
+final class DateCell: JTACDayCell {
+    nonisolated static let reuseID = "dateCell"
 
     var background = UIView()
     var dateLabel = UILabel()
@@ -260,6 +271,7 @@ class DateCell: JTACDayCell {
     }
 }
 
+@MainActor
 struct CalendarView: UIViewRepresentable {
     @Binding var selectedDate: String
 

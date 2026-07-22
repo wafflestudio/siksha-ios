@@ -84,6 +84,7 @@
 				AuthRepositoryImplTests.swift,
 				AuthSessionLocalDataSourceTests.swift,
 				AuthUseCaseTests.swift,
+				CalendarViewTests.swift,
 				CapturedStateRaceTests.swift,
 				DeviceTokenRemoteDataSourceTests.swift,
 				DeviceTokenUseCaseTests.swift,
