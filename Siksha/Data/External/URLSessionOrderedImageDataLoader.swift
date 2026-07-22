@@ -19,24 +19,19 @@ struct URLSessionOrderedImageDataLoader: OrderedImageDataLoading {
     }
 
     func loadImageData(from urls: [URL]) async throws -> [Data] {
-        try await withThrowingTaskGroup(of: (Int, Data?).self) { group in
+        try await withThrowingTaskGroup(of: (Int, Data).self) { group in
             for (index, url) in urls.enumerated() {
                 group.addTask {
-                    do {
-                        let (data, response) = try await transport.data(from: url)
-                        try Task.checkCancellation()
+                    let (data, response) = try await transport.data(from: url)
+                    try Task.checkCancellation()
 
-                        guard let response = response as? HTTPURLResponse,
-                            (200..<300).contains(response.statusCode)
-                        else {
-                            return (index, nil)
-                        }
-
-                        return (index, data)
-                    } catch {
-                        try Task.checkCancellation()
-                        return (index, nil)
+                    guard let response = response as? HTTPURLResponse,
+                        (200..<300).contains(response.statusCode)
+                    else {
+                        throw OrderedImageDataLoadingError.invalidResponse
                     }
+
+                    return (index, data)
                 }
             }
 
@@ -44,7 +39,16 @@ struct URLSessionOrderedImageDataLoader: OrderedImageDataLoading {
             for try await (index, data) in group {
                 loadedData[index] = data
             }
-            return loadedData.compactMap { $0 }
+
+            guard loadedData.allSatisfy({ $0 != nil }) else {
+                throw OrderedImageDataLoadingError.invalidResponse
+            }
+            return try loadedData.map { data in
+                guard let data else {
+                    throw OrderedImageDataLoadingError.invalidResponse
+                }
+                return data
+            }
         }
     }
 }

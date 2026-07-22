@@ -14,7 +14,6 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
 
     @Binding var needRefresh: Bool
     @Binding var needPostViewRefresh: Bool
-    @State private var isShowingPhotoLibrary = false
     @State private var isExpanded = false
     private var cornerRadius = 7.0
     @ObservedObject var viewModel: ViewModel
@@ -61,7 +60,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
             }) {
                 ZStack {
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray600 : Color.orange500)
+                        .fill(viewModel.canSubmit ? Color.orange500 : Color.gray600)
                         .frame(height: 44)
                     Text("완료")
                         .customFont(font: .text16(weight: .Bold))
@@ -69,7 +68,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
                 }
             }
             .frame(maxWidth: .infinity)
-            .disabled(viewModel.title.isEmpty || viewModel.content.isEmpty)
+            .disabled(!viewModel.canSubmit)
         }
     }
 
@@ -79,7 +78,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
         }) {
             ZStack {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(viewModel.title.isEmpty || viewModel.content.isEmpty ? Color.gray600 : Color.orange500)
+                    .fill(viewModel.canSubmit ? Color.orange500 : Color.gray600)
                     .frame(height: 56)
                 Text("올리기")
                     .customFont(font: .text18(weight: .ExtraBold))
@@ -87,7 +86,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
             }
         }
         .frame(maxWidth: .infinity)
-        .disabled(viewModel.title.isEmpty || viewModel.content.isEmpty)
+        .disabled(!viewModel.canSubmit)
     }
 
     var anonymousButton: some View {
@@ -132,58 +131,6 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
             Color.borderPrimary
                 .frame(height: 1)
                 .frame(maxWidth: .infinity)
-        }
-    }
-
-    var imageSection: some View {
-        VStack(spacing: 0) {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 3) {
-                    ForEach(viewModel.images, id: \.self) { image in
-                        ZStack(alignment: .topTrailing) {
-                            Image(uiImage: image)
-                                .resizable()
-                                .renderingMode(.original)
-                                .scaledToFill()
-                                .frame(width: 106, height: 106)
-                                .clipped()
-                                .cornerRadius(cornerRadius)
-                                .padding(.top, 4)
-                                .padding(.trailing, 5)
-
-                            Button(action: {
-                                viewModel.removeImage(image)
-                            }) {
-                                Image("Cancel")
-                                    .frame(width: 18, height: 18)
-                                    .background(Color.white)
-                                    .clipShape(Circle())
-                            }
-                        }
-                    }
-
-                    Button(action: {
-                        self.isShowingPhotoLibrary = true
-                    }) {
-                        ZStack {
-                            RoundedRectangle(cornerRadius: cornerRadius)
-                                .foregroundColor(.gray100)
-                                .frame(width: 106, height: 106)
-
-                            Image(systemName: "plus")
-                                .resizable()
-                                .foregroundColor(.gray600)
-                                .frame(width: 28, height: 28)
-                        }
-                        .padding(.top, 4)
-                        .padding(.trailing, 5)
-                    }
-                    .sheet(isPresented: $isShowingPhotoLibrary) {
-                        ImagePickerCoordinatorView(selectedImages: $viewModel.images, maxSelection: 5)
-                    }
-
-                }
-            }
         }
     }
 
@@ -357,7 +304,14 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
 
                     Spacer().frame(height: 13)
 
-                    imageSection
+                    CommunityPostImageSection(
+                        attachments: viewModel.imageAttachments,
+                        existingImageLoadState: viewModel.existingImageLoadState,
+                        remainingImageCount: viewModel.remainingImageCount,
+                        onImagesSelected: viewModel.addSelectedImages,
+                        onRemoveImage: viewModel.removeImage,
+                        onRetryExistingImages: viewModel.retryExistingImageLoad
+                    )
 
                     Spacer()
 
@@ -423,6 +377,7 @@ struct CommunityPostPublishView_Previews: PreviewProvider {
             viewModel: CommunityPostPublishViewModel(
                 boardId: 1, communityRepository: AppContainer.shared.domain.communityRepository,
                 orderedImageDataLoader: AppContainer.shared.orderedImageDataLoader,
+                uploadImagePreparer: AppContainer.shared.uploadImagePreparer,
                 postInfo: .init(
                     title: "title", content: "content", isLiked: false, likeCount: 5, commentCount: 4,
                     imageURLs: [

@@ -25,16 +25,41 @@ enum ImagePickerError: LocalizedError {
 
 struct ImagePickerCoordinatorView {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-    @Binding var selectedImages: [UIImage]
-    var maxSelection: Int
-    var onImagesSelected: (([UIImage]) -> Void)?
-    var onError: ((Error) -> Void)?
 
-    private func dismiss() {
-        self.presentationMode.wrappedValue.dismiss()
+    let maxSelection: Int
+    private let selectionHandler: ([UIImage]) -> Void
+    private let errorHandler: ((Error) -> Void)?
 
-        // Navigation Bar 배경색 세팅
-        UINavigationBar.changeBackgroundColor(color: UIColor(named: "Color/Foundation/Orange/500") ?? .clear)
+    init(
+        selectedImages: Binding<[UIImage]>,
+        maxSelection: Int,
+        onImagesSelected: (([UIImage]) -> Void)? = nil,
+        onError: ((Error) -> Void)? = nil
+    ) {
+        self.maxSelection = maxSelection
+        self.selectionHandler = { images in
+            selectedImages.wrappedValue.append(contentsOf: images)
+            onImagesSelected?(images)
+        }
+        self.errorHandler = onError
+    }
+
+    init(
+        maxSelection: Int,
+        onImagesSelected: @escaping ([UIImage]) -> Void,
+        onError: ((Error) -> Void)? = nil
+    ) {
+        self.maxSelection = maxSelection
+        self.selectionHandler = onImagesSelected
+        self.errorHandler = onError
+    }
+
+    private func handleSelectedImages(_ images: [UIImage]) {
+        selectionHandler(images)
+    }
+
+    private func handleError(_ error: Error) {
+        errorHandler?(error)
     }
 
 }
@@ -64,7 +89,8 @@ extension ImagePickerCoordinatorView: UIViewControllerRepresentable {
 }
 
 extension ImagePickerCoordinatorView {
-    public class Coordinator: ImagePickerControllerDelegate {
+    @MainActor
+    public class Coordinator: @preconcurrency ImagePickerControllerDelegate {
         private var parent: ImagePickerCoordinatorView
 
         public init(_ parent: ImagePickerCoordinatorView) {
@@ -84,13 +110,12 @@ extension ImagePickerCoordinatorView {
 
             Task { @MainActor in
                 do {
-                    let result = try await loadImages(from: assets)
+                    let result = try await Self.loadImages(from: assets)
                     if !result.images.isEmpty {
-                        parent.selectedImages.append(contentsOf: result.images)
-                        parent.onImagesSelected?(result.images)
+                        parent.handleSelectedImages(result.images)
                     }
                     if let error = result.error {
-                        parent.onError?(error)
+                        parent.handleError(error)
                     }
                 } catch is CancellationError {
                     return
@@ -107,7 +132,7 @@ extension ImagePickerCoordinatorView {
         }
 
         @concurrent
-        private func loadImages(from assets: [PHAsset]) async throws -> (images: [UIImage], error: Error?) {
+        private static func loadImages(from assets: [PHAsset]) async throws -> (images: [UIImage], error: Error?) {
             var images: [UIImage] = []
             var firstError: Error?
             images.reserveCapacity(assets.count)
@@ -130,7 +155,7 @@ extension ImagePickerCoordinatorView {
             return (images, firstError)
         }
 
-        private func requestImage(for asset: PHAsset) async throws -> UIImage {
+        private static func requestImage(for asset: PHAsset) async throws -> UIImage {
             try await withCheckedThrowingContinuation { continuation in
                 let options = PHImageRequestOptions()
                 options.deliveryMode = .highQualityFormat

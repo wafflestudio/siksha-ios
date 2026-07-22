@@ -28,7 +28,7 @@ enum SikshaAPI: URLRequestConvertible {
 
         if self.multiPartFormDataNeeded {
             request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
-            request.timeoutInterval = 3
+            request.timeoutInterval = 15
         }
 
         #if DEBUG

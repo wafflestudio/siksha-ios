@@ -3,6 +3,7 @@
 //  SikshaTests
 //
 
+import UIKit
 import XCTest
 
 @testable import Siksha
@@ -95,7 +96,9 @@ final class MealAndReviewViewModelTests: XCTestCase {
             meal: .fixture(),
             fetchReviewCommentRecommendationUseCase: recommendations,
             submitMealReviewUseCase: SubmitMealReviewUseCaseStub(),
-            editMealReviewUseCase: EditMealReviewUseCaseStub()
+            editMealReviewUseCase: EditMealReviewUseCaseStub(),
+            orderedImageDataLoader: OrderedImageDataLoaderStub(),
+            uploadImagePreparer: JPEGUploadImagePreparer()
         )
 
         viewModel.scoreToSubmit = 1
@@ -113,6 +116,44 @@ final class MealAndReviewViewModelTests: XCTestCase {
 
         XCTAssertEqual(viewModel.commentToSubmit, "new recommendation")
         XCTAssertTrue(viewModel.commentRecommended)
+    }
+
+    func testEditingReviewReusesDownloadedBytesAndCompressesOnlySelectedImage() async throws {
+        let downloadedImage = makeImage(size: CGSize(width: 6, height: 6))
+        let selectedImage = makeImage(size: CGSize(width: 12, height: 12))
+        let downloadedData = try XCTUnwrap(downloadedImage.pngData())
+        let expectedSelectedData = try XCTUnwrap(selectedImage.jpegData(compressionQuality: 0.5))
+        let editReview = EditMealReviewUseCaseSpy()
+        let viewModel = MealReviewViewModel(
+            meal: .fixture(),
+            fetchReviewCommentRecommendationUseCase: ControlledRecommendationUseCase(),
+            submitMealReviewUseCase: SubmitMealReviewUseCaseStub(),
+            editMealReviewUseCase: editReview,
+            orderedImageDataLoader: OrderedImageDataLoaderStub(data: [downloadedData]),
+            uploadImagePreparer: JPEGUploadImagePreparer()
+        )
+        viewModel.loadExistingReview(
+            RestaurantReview(
+                id: 1,
+                menuId: 1,
+                menuName: "meal",
+                rating: 4,
+                date: "",
+                reviewText: "review",
+                imageUrls: ["https://example.com/existing.png"],
+                tags: ["taste", "price", "composition"]
+            )
+        )
+        await waitUntil {
+            viewModel.existingImageLoadState == .ready && viewModel.imageAttachments.count == 1
+        }
+
+        viewModel.addSelectedImages([selectedImage])
+        viewModel.editReview(reviewId: 1)
+        let submission = await waitForSubmission(from: editReview)
+
+        XCTAssertEqual(submission?.images, [downloadedData, expectedSelectedData])
+        XCTAssertEqual(viewModel.imageAttachments.map(\.origin), [.downloaded, .selected])
     }
 
     private func makeMealInfoViewModel(
@@ -142,6 +183,28 @@ final class MealAndReviewViewModelTests: XCTestCase {
             await Task.yield()
         }
         XCTFail("Condition was not satisfied", file: file, line: line)
+    }
+
+    private func waitForSubmission(
+        from useCase: EditMealReviewUseCaseSpy,
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) async -> MealReviewSubmissionModel? {
+        for _ in 0..<1_000 {
+            if let submission = await useCase.lastSubmission {
+                return submission
+            }
+            await Task.yield()
+        }
+        XCTFail("Submission was not captured", file: file, line: line)
+        return nil
+    }
+
+    private func makeImage(size: CGSize) -> UIImage {
+        UIGraphicsImageRenderer(size: size).image { context in
+            UIColor.orange.setFill()
+            context.fill(CGRect(origin: .zero, size: size))
+        }
     }
 }
 
@@ -245,6 +308,26 @@ private final class SubmitMealReviewUseCaseStub: SubmitMealReviewUseCase {
 
 private final class EditMealReviewUseCaseStub: EditMealReviewUseCase {
     func execute(reviewId: Int, submission: MealReviewSubmissionModel) async throws {}
+}
+
+private actor EditMealReviewUseCaseSpy: EditMealReviewUseCase {
+    private(set) var lastSubmission: MealReviewSubmissionModel?
+
+    func execute(reviewId: Int, submission: MealReviewSubmissionModel) async throws {
+        lastSubmission = submission
+    }
+}
+
+private struct OrderedImageDataLoaderStub: OrderedImageDataLoading {
+    let data: [Data]
+
+    init(data: [Data] = []) {
+        self.data = data
+    }
+
+    func loadImageData(from urls: [URL]) async throws -> [Data] {
+        data
+    }
 }
 
 private extension MenuItemDisplayModel {

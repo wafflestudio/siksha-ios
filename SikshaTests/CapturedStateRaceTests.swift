@@ -39,26 +39,20 @@ final class CapturedStateRaceTests: XCTestCase {
         XCTAssertEqual(arrangement.size, CGSize(width: 80, height: 66))
     }
 
-    func testOrderedImageLoaderPreservesOrderAndSkipsFailures() async throws {
-        let firstURL = try XCTUnwrap(URL(string: "https://example.com/first.png"))
-        let failedURL = try XCTUnwrap(URL(string: "https://example.com/failed.png"))
+    func testOrderedImageLoaderFailsWhenAnyResponseIsRejected() async throws {
         let rejectedURL = try XCTUnwrap(URL(string: "https://example.com/rejected.png"))
-        let lastURL = try XCTUnwrap(URL(string: "https://example.com/last.png"))
-        let firstData = Data([0x01])
-        let lastData = Data([0x02])
         let transport = ImageDataTransportStub(results: [
-            firstURL: .success((firstData, response(url: firstURL, statusCode: 200))),
-            failedURL: .failure(TestError.failed),
-            rejectedURL: .success((Data([0x03]), response(url: rejectedURL, statusCode: 500))),
-            lastURL: .success((lastData, response(url: lastURL, statusCode: 200))),
+            rejectedURL: .success((Data([0x03]), response(url: rejectedURL, statusCode: 500)))
         ])
         let loader = URLSessionOrderedImageDataLoader(transport: transport)
 
-        let data = try await loader.loadImageData(from: [firstURL, failedURL, rejectedURL, lastURL])
-
-        XCTAssertEqual(data, [firstData, lastData])
-        let requestedURLs = await transport.requestedURLs
-        XCTAssertEqual(Set(requestedURLs), Set([firstURL, failedURL, rejectedURL, lastURL]))
+        do {
+            _ = try await loader.loadImageData(from: [rejectedURL])
+            XCTFail("Expected invalid response error")
+        } catch OrderedImageDataLoadingError.invalidResponse {
+        } catch {
+            XCTFail("Expected invalid response error, got \(error)")
+        }
     }
 
     func testOrderedImageLoaderPropagatesCancellation() async throws {
@@ -101,7 +95,7 @@ final class CapturedStateRaceTests: XCTestCase {
         XCTAssertEqual(data, [firstData, secondData])
     }
 
-    func testLatestCommunityImageRequestWinsAndFiltersInvalidImageData() async throws {
+    func testLatestCommunityImageRequestWinsAndPreservesImageOrder() async throws {
         let firstURL = "https://example.com/first.png"
         let secondURL = "https://example.com/second.png"
         let thirdURL = "https://example.com/third.png"
@@ -113,21 +107,61 @@ final class CapturedStateRaceTests: XCTestCase {
             boardId: 1,
             communityRepository: CommunityRepositoryStub(),
             orderedImageDataLoader: loader,
+            uploadImagePreparer: JPEGUploadImagePreparer(),
             postInfo: makePostInfo(imageURLs: [firstURL])
         )
         await loader.waitForRequestCount(1)
 
         viewModel.loadImages(from: [secondURL, thirdURL])
         await loader.waitForRequestCount(2)
-        await loader.completeRequest(at: 1, with: [secondImageData, Data([0x00]), thirdImageData])
-        await waitUntil { viewModel.images.count == 2 }
+        await loader.completeRequest(at: 1, with: [secondImageData, thirdImageData])
+        await waitUntil { viewModel.imageAttachments.count == 2 }
 
         await loader.completeRequest(at: 0, with: [firstImageData])
         for _ in 0..<10 {
             await Task.yield()
         }
 
-        assertImageOrder(viewModel.images)
+        assertImageOrder(viewModel.imageAttachments.map(\.previewImage))
+    }
+
+    func testDownloadedImageDataIsNotRecompressedWhenEditingCommunityPost() async throws {
+        let existingURL = "https://example.com/existing.png"
+        let loader = ControlledOrderedImageDataLoader()
+        let repository = CommunityRepositoryStub()
+        let existingData = try XCTUnwrap(makeImage(size: CGSize(width: 5, height: 5)).pngData())
+        let selectedImage = makeImage(size: CGSize(width: 10, height: 10))
+        let expectedSelectedData = try XCTUnwrap(selectedImage.jpegData(compressionQuality: 0.5))
+        let viewModel = CommunityPostPublishViewModel(
+            boardId: 1,
+            communityRepository: repository,
+            orderedImageDataLoader: loader,
+            uploadImagePreparer: JPEGUploadImagePreparer(),
+            postInfo: makePostInfo(imageURLs: [existingURL])
+        )
+        await loader.waitForRequestCount(1)
+        await loader.completeRequest(at: 0, with: [existingData])
+        await waitUntil { viewModel.existingImageLoadState == .ready }
+
+        viewModel.addSelectedImages([selectedImage])
+        viewModel.submitPost()
+
+        XCTAssertEqual(repository.lastEditedImages, [existingData, expectedSelectedData])
+        XCTAssertEqual(viewModel.imageAttachments.map(\.origin), [.downloaded, .selected])
+    }
+
+    func testDownloadedAttachmentKeepsOriginalBytesAndSelectedAttachmentUsesJPEG() throws {
+        let preparer = JPEGUploadImagePreparer()
+        let image = makeImage(size: CGSize(width: 8, height: 8))
+        let downloadedData = try XCTUnwrap(image.pngData())
+
+        let downloaded = try preparer.prepareDownloadedImage(data: downloadedData)
+        let selected = try preparer.prepareSelectedImage(image)
+
+        XCTAssertEqual(downloaded.uploadData, downloadedData)
+        XCTAssertEqual(downloaded.origin, .downloaded)
+        XCTAssertEqual(selected.uploadData, image.jpegData(compressionQuality: 0.5))
+        XCTAssertEqual(selected.origin, .selected)
     }
 
     private func response(url: URL, statusCode: Int) -> HTTPURLResponse {
@@ -253,6 +287,9 @@ private actor ControlledOrderedImageDataLoader: OrderedImageDataLoading {
 }
 
 private final class CommunityRepositoryStub: CommunityRepositoryProtocol {
+    private(set) var lastSubmittedImages: [Data]?
+    private(set) var lastEditedImages: [Data]?
+
     func loadBoardList() -> AnyPublisher<[Board], AppError> {
         Empty().eraseToAnyPublisher()
     }
@@ -264,7 +301,8 @@ private final class CommunityRepositoryStub: CommunityRepositoryProtocol {
         images: [Data],
         anonymous: Bool
     ) -> AnyPublisher<SubmitPostResponse, AppError> {
-        fatalError("Unused")
+        lastSubmittedImages = images
+        return Empty().eraseToAnyPublisher()
     }
 
     func editPost(
@@ -275,7 +313,8 @@ private final class CommunityRepositoryStub: CommunityRepositoryProtocol {
         images: [Data],
         anonymous: Bool
     ) -> AnyPublisher<SubmitPostResponse, AppError> {
-        fatalError("Unused")
+        lastEditedImages = images
+        return Empty().eraseToAnyPublisher()
     }
 
     func loadPostsPage(boardId: Int, page: Int, perPage: Int) -> AnyPublisher<PostsPage, AppError> {

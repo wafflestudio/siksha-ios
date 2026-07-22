@@ -5,14 +5,12 @@
 //  Created by 박종석 on 2021/02/05.
 //
 
-import PhotosUI
 import SwiftUI
 
 struct MealReviewView: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var viewModel: MealReviewViewModel
     @ObservedObject var mealInfoViewModel: MealInfoViewModel
-    @State private var isShowingPhotoLibrary = false
 
     let meal: MenuItemDisplayModel
     let existingReview: RestaurantReview?
@@ -29,7 +27,9 @@ struct MealReviewView: View {
                 fetchReviewCommentRecommendationUseCase: AppContainer.shared.useCases
                     .fetchReviewCommentRecommendationUseCase,
                 submitMealReviewUseCase: AppContainer.shared.useCases.submitMealReviewUseCase,
-                editMealReviewUseCase: AppContainer.shared.useCases.editMealReviewUseCase
+                editMealReviewUseCase: AppContainer.shared.useCases.editMealReviewUseCase,
+                orderedImageDataLoader: AppContainer.shared.orderedImageDataLoader,
+                uploadImagePreparer: AppContainer.shared.uploadImagePreparer
             ))
         UITextView.appearance().backgroundColor = .clear
     }
@@ -45,7 +45,9 @@ struct MealReviewView: View {
             fetchReviewCommentRecommendationUseCase: AppContainer.shared.useCases
                 .fetchReviewCommentRecommendationUseCase,
             submitMealReviewUseCase: AppContainer.shared.useCases.submitMealReviewUseCase,
-            editMealReviewUseCase: AppContainer.shared.useCases.editMealReviewUseCase
+            editMealReviewUseCase: AppContainer.shared.useCases.editMealReviewUseCase,
+            orderedImageDataLoader: AppContainer.shared.orderedImageDataLoader,
+            uploadImagePreparer: AppContainer.shared.uploadImagePreparer
         )
         vm.loadExistingReview(editingReview)
         _viewModel = StateObject(wrappedValue: vm)
@@ -63,8 +65,15 @@ struct MealReviewView: View {
                 Spacer().frame(height: 35)
                 commentSection
                 Spacer().frame(height: 2)
-                PhotoAddView(viewModel: viewModel)
-                    .padding(.horizontal, 16)
+                PhotoAddView(
+                    imageAttachments: viewModel.imageAttachments,
+                    existingImageLoadState: viewModel.existingImageLoadState,
+                    remainingImageCount: viewModel.remainingImageCount,
+                    onImagesSelected: viewModel.addSelectedImages,
+                    onRemoveImage: viewModel.deleteImage,
+                    onRetryExistingImages: viewModel.retryExistingImageLoad
+                )
+                .padding(.horizontal, 16)
                 Spacer().frame(height: 66)
             }
             .contentShape(Rectangle())
@@ -186,11 +195,7 @@ private extension MealReviewView {
             if isEditMode {
                 viewModel.editReview(reviewId: existingReview!.id)
             } else {
-                if viewModel.selectedImages.count > 0 {
-                    viewModel.submitReviewImages(images: viewModel.selectedImages)
-                } else {
-                    viewModel.submitReview()
-                }
+                viewModel.submitReview()
             }
         } label: {
             ZStack(alignment: .top) {

@@ -58,7 +58,8 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                         viewModel: CommunityPostPublishViewModel(
                             boardId: selectedBoardId ?? 0,
                             communityRepository: AppContainer.shared.domain.communityRepository,
-                            orderedImageDataLoader: AppContainer.shared.orderedImageDataLoader
+                            orderedImageDataLoader: AppContainer.shared.orderedImageDataLoader,
+                            uploadImagePreparer: AppContainer.shared.uploadImagePreparer
                         )
                     ),
                     tag: 1,
