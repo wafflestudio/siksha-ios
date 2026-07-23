@@ -6,22 +6,18 @@
 //
 
 import SwiftUI
-@preconcurrency import WebKit
+import WebKit
 
+@MainActor
 struct WebView: UIViewRepresentable {
     let urlString: String
     @Binding var showWebView: Bool
-    var navigationDelegate: WKNavigationDelegate?
+    var navigationDelegate: (any WKNavigationDelegate)?
 
     func makeUIView(context: Context) -> WKWebView {
-        guard let url = URL(string: urlString) else {
-            return WKWebView()
-        }
-
         let webView = WKWebView()
-        webView.navigationDelegate = navigationDelegate ?? context.coordinator
-        let request = URLRequest(url: url)
-        webView.load(request)
+        webView.navigationDelegate = context.coordinator.navigationDelegate ?? context.coordinator
+        context.coordinator.loadURLIfNeeded(urlString, in: webView)
         return webView
     }
 
@@ -29,23 +25,37 @@ struct WebView: UIViewRepresentable {
         Coordinator(self)
     }
 
-    class Coordinator: NSObject, WKNavigationDelegate {
-        var parent: WebView
+    @MainActor
+    final class Coordinator: NSObject, WKNavigationDelegate {
+        let navigationDelegate: (any WKNavigationDelegate)?
+        private var loadedURLString: String?
 
         init(_ parent: WebView) {
-            self.parent = parent
+            self.navigationDelegate = parent.navigationDelegate
+        }
+
+        func loadURLIfNeeded(_ urlString: String, in webView: WKWebView) {
+            guard loadedURLString != urlString, let url = URL(string: urlString) else {
+                return
+            }
+            loadedURLString = urlString
+            webView.load(URLRequest(url: url))
         }
     }
 
-    func updateUIView(_ uiView: WKWebView, context: Context) {}
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        context.coordinator.loadURLIfNeeded(urlString, in: uiView)
+    }
 }
 
 // 카카오 전용 웹뷰
+@MainActor
 struct KakaoShareWebView: View {
     let urlString: String
     @Binding var showWebView: Bool
     let restaurant: KakaoShareRestaurantModel
     let selectedDate: String
+    let kakaoShareManager: any KakaoShareManaging
 
     var body: some View {
         WebView(
@@ -54,35 +64,46 @@ struct KakaoShareWebView: View {
             navigationDelegate: KakaoShareNavigationDelegate(
                 showWebView: $showWebView,
                 restaurant: restaurant,
-                selectedDate: selectedDate
+                selectedDate: selectedDate,
+                kakaoShareManager: kakaoShareManager
             )
         )
+        .id(kakaoShareManager.webViewLoadRevision)
     }
 }
 
-class KakaoShareNavigationDelegate: NSObject, WKNavigationDelegate {
+@MainActor
+final class KakaoShareNavigationDelegate: NSObject, WKNavigationDelegate {
     @Binding var showWebView: Bool
     let restaurant: KakaoShareRestaurantModel
     let selectedDate: String
-    let kakaoShareManager = KakaoShareManager()
+    private let kakaoShareManager: any KakaoShareManaging
 
-    init(showWebView: Binding<Bool>, restaurant: KakaoShareRestaurantModel, selectedDate: String) {
+    init(
+        showWebView: Binding<Bool>,
+        restaurant: KakaoShareRestaurantModel,
+        selectedDate: String,
+        kakaoShareManager: any KakaoShareManaging = KakaoShareManager()
+    ) {
         _showWebView = showWebView
         self.restaurant = restaurant
         self.selectedDate = selectedDate
+        self.kakaoShareManager = kakaoShareManager
     }
 
     func webView(
         _ webView: WKWebView,
         decidePolicyFor navigationAction: WKNavigationAction,
-        decisionHandler: @escaping (WKNavigationActionPolicy) -> Void
+        decisionHandler: @escaping @MainActor @Sendable (WKNavigationActionPolicy) -> Void
     ) {
-        if let url = navigationAction.request.url {
-            if kakaoShareManager.isKakaoTalkLoginURL(url) {
-                handleKakaoAuth(url: url)
-            }
+        decisionHandler(decidePolicy(for: navigationAction.request.url))
+    }
+
+    func decidePolicy(for url: URL?) -> WKNavigationActionPolicy {
+        if let url, kakaoShareManager.isKakaoTalkLoginURL(url) {
+            handleKakaoAuth(url: url)
         }
-        decisionHandler(.allow)
+        return .allow
     }
 
     private func handleKakaoAuth(url: URL) {
@@ -100,9 +121,7 @@ class KakaoShareNavigationDelegate: NSObject, WKNavigationDelegate {
     }
 
     private func handleSuccessfulAuth() {
+        showWebView = false
         kakaoShareManager.shareKakao(restaurant: restaurant, selectedDateString: selectedDate)
-        DispatchQueue.main.async { [weak self] in
-            self?.showWebView = false
-        }
     }
 }

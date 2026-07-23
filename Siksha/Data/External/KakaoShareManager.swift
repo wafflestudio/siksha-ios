@@ -10,9 +10,23 @@ import KakaoSDKShare
 import SwiftUI
 import UIKit
 
-class KakaoShareManager: ObservableObject {
+@MainActor
+protocol KakaoShareManaging: AnyObject {
+    var webViewLoadRevision: Int { get }
+
+    func isKakaoTalkLoginURL(_ url: URL) -> Bool
+    func exchangeToken(
+        code: String,
+        completion: @escaping @MainActor @Sendable (Bool) -> Void
+    )
+    func shareKakao(restaurant: KakaoShareRestaurantModel, selectedDateString: String)
+}
+
+@MainActor
+final class KakaoShareManager: ObservableObject, KakaoShareManaging {
     @Published var showWebView = false
     @Published var urlToLoad: String?
+    @Published private(set) var webViewLoadRevision = 0
 
     let templateId = Config.shared.kakaoShareTemplateId
 
@@ -25,13 +39,17 @@ class KakaoShareManager: ObservableObject {
         AuthApi.isKakaoTalkLoginUrl(url)
     }
 
-    func exchangeToken(code: String, completion: @escaping (Bool) -> Void) {
+    func exchangeToken(
+        code: String,
+        completion: @escaping @MainActor @Sendable (Bool) -> Void
+    ) {
         AuthApi.shared.token(code: code) { _, error in
+            let didSucceed = error == nil
             if let error {
                 print("Token error: \(error)")
-                completion(false)
-            } else {
-                completion(true)
+            }
+            Task { @MainActor in
+                completion(didSucceed)
             }
         }
     }
@@ -92,6 +110,7 @@ class KakaoShareManager: ObservableObject {
             if let sharingResult = ShareApi.shared.makeCustomUrl(templateId: templateId, templateArgs: kakaoShareInfo) {
                 print("makeCustomURL success")
                 urlToLoad = sharingResult.absoluteString
+                webViewLoadRevision += 1
                 showWebView = true
             } else {
                 let error = NSError(

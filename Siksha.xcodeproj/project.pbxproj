@@ -80,6 +80,7 @@
 			membershipExceptions = (
 				AccountManageViewModelTests.swift,
 				AccountUseCaseTests.swift,
+				AdapterConcurrencyTests.swift,
 				AppStateTests.swift,
 				AuthRepositoryImplTests.swift,
 				AuthSessionLocalDataSourceTests.swift,
