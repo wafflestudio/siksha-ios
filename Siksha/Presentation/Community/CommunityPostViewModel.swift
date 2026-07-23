@@ -414,7 +414,7 @@ extension CommunityPostViewModel {
                     switch completionStatus {
                     case .finished:
                         break
-                    case .failure(let error):
+                    case .failure:
                         completion(false, "신고에 실패했습니다. 이미 신고한 게시물일 수 있습니다.")
                     }
                 },
@@ -432,7 +432,7 @@ extension CommunityPostViewModel {
                     switch completionStatus {
                     case .finished:
                         break
-                    case .failure(let error):
+                    case .failure:
                         completion(false, "신고에 실패했습니다. 이미 신고한 게시물일 수 있습니다.")
                     }
                 },

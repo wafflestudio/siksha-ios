@@ -81,7 +81,7 @@ extension View {
                     ? nil
                     : BottomModalView(isPresented: isPresented, title: title, height: height, content: content)
                         .transition(.move(edge: .bottom))
-                        .animation(.easeInOut)
+                        .animation(.easeInOut, value: isPresented.wrappedValue)
             )
     }
 

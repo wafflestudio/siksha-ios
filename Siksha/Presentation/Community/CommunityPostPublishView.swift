@@ -337,7 +337,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
                     KeyboardToolbar
                         .frame(height: 44)
                         .offset(y: keyboardResponder.currentHeight == 0 ? 50 : -keyboardResponder.currentHeight)
-                        .animation(.easeOut(duration: 0.25))
+                        .animation(.easeOut(duration: 0.25), value: keyboardResponder.currentHeight)
                 }
                 .edgesIgnoringSafeArea(.bottom)
             }
