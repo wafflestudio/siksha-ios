@@ -129,14 +129,12 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
         .onAppear {
             viewModel.loadPosts()
         }
-        .onChange(
-            of: needRefresh,
-            perform: { refresh in
-                if refresh {
-                    self.viewModel.loadPosts()
-                    needRefresh = false
-                }
-            })
+        .onChange(of: needRefresh) { _, refresh in
+            if refresh {
+                viewModel.loadPosts()
+                needRefresh = false
+            }
+        }
     }
 
     var divider: some View {

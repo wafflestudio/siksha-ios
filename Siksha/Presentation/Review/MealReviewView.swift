@@ -154,7 +154,7 @@ private extension MealReviewView {
                             viewModel.scoreToSubmit = viewModel.scoreToSubmit
                         }
                     }
-                        .onChange(of: viewModel.commentToSubmit) { comment in
+                        .onChange(of: viewModel.commentToSubmit) { _, comment in
                             viewModel.commentToSubmit = String(comment.prefix(150))
                         }
 

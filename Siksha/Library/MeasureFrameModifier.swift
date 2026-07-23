@@ -17,7 +17,7 @@ struct MeasureFrameModifier: ViewModifier {
                     .onAppear {
                         frame = geometry.frame(in: .global)
                     }
-                    .onChange(of: geometry.frame(in: .global)) { newValue in
+                    .onChange(of: geometry.frame(in: .global)) { _, newValue in
                         frame = newValue
                     }
             }

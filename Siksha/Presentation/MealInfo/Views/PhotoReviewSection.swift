@@ -35,7 +35,7 @@ struct PhotoReviewSection: View {
             }
         }
         .onChange(of: tappedImageUrlString) {
-            guard $0 != nil else { return }
+            guard tappedImageUrlString != nil else { return }
             isImageExpanded = true
         }
         .fullScreenCover(

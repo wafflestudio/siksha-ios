@@ -58,7 +58,7 @@ struct CommunityReplyBar: View {
             Text("익명")
         }
         .toggleStyle(CustomCheckboxStyle())
-        .onChange(of: isAnonymous) { newValue in
+        .onChange(of: isAnonymous) { _, newValue in
             UserDefaults.standard.set(newValue, forKey: "isAnonymous")
         }
     }

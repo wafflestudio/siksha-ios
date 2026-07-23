@@ -39,7 +39,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             .task {
                 await viewModel.loadInfo()
             }
-            .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
+            .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
                 if shouldDismiss {
                     presentationMode.wrappedValue.dismiss()
                 }

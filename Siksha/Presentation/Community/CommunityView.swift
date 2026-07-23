@@ -106,15 +106,13 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 .transition(.opacity)
             }
         }
-        .onChange(
-            of: needRefresh,
-            perform: { refresh in
-                if refresh {
-                    self.viewModel.loadSelectedBoardPosts()
-                    self.viewModel.loadTrendingPosts()
-                    needRefresh = false
-                }
-            })
+        .onChange(of: needRefresh) { _, refresh in
+            if refresh {
+                viewModel.loadSelectedBoardPosts()
+                viewModel.loadTrendingPosts()
+                needRefresh = false
+            }
+        }
     }
 
     var loadingView: some View {

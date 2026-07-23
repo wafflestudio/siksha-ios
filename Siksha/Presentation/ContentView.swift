@@ -216,14 +216,14 @@ struct ContentView: View {
                 .onAppear {
                     contentViewModel.schedulePopupDismissalIfNeeded()
                 }
-                .onChange(of: contentViewModel.showPopUp) { newValue in
+                .onChange(of: contentViewModel.showPopUp) { _, newValue in
                     if newValue == false {
                         contentViewModel.cancelPopupDismissal()
                     }
                 }
             }
         }
-        .onChange(of: selectedTab) { newTab in
+        .onChange(of: selectedTab) { _, newTab in
             if previousSelectedTab != 0 && newTab == 0 {
                 menuViewModel.refreshPersonalRestaurants()
             }

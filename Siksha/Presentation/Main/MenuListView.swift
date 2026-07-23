@@ -111,7 +111,7 @@ private extension MenuListView {
                     .onAppear {
                         displayedFestivalSwitchOn = viewModel.isFestivalSwitchOn
                     }
-                    .onChange(of: viewModel.isFestivalSwitchOn) { isOn in
+                    .onChange(of: viewModel.isFestivalSwitchOn) { _, isOn in
                         displayedFestivalSwitchOn = isOn
                     }
                 }
@@ -252,7 +252,7 @@ private extension MenuListView {
             }
         }
         .padding(EdgeInsets(top: 17, leading: 9, bottom: 9, trailing: 9))
-        .onChange(of: selectedFilterType) { newType in
+        .onChange(of: selectedFilterType) { _, newType in
             if let newType {
                 viewModel.analytics.track(
                     .filterModalOpened(entryPoint: newType.entryPointString, pageName: viewModel.pageName))
