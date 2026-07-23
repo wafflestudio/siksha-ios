@@ -10,6 +10,7 @@ import XCTest
 
 @testable import Siksha
 
+@MainActor
 final class AccountUseCaseTests: XCTestCase {
     func testAccountCleanupContinuesWhenMessagingTokenDeletionFails() async {
         let messaging = MessagingTokenServiceStub(

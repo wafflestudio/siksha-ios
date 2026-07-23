@@ -336,6 +336,8 @@ struct MenuFilterView: View {
                 return
             case .authorizedAlways, .authorizedWhenInUse:
                 break
+            @unknown default:
+                return
             }
         }
 

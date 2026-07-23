@@ -11,15 +11,9 @@ import XCTest
 @testable import Siksha
 
 final class DeviceTokenRemoteDataSourceTests: XCTestCase {
-    override func tearDown() {
-        URLProtocolStub.statusCode = 200
-        super.tearDown()
-    }
-
     func testRegisterAcceptsEmptySuccessResponses() async throws {
         for statusCode in [200, 201, 204] {
-            URLProtocolStub.statusCode = statusCode
-            let dataSource = makeDataSource()
+            let dataSource = makeDataSource(statusCode: statusCode)
 
             try await dataSource.register(fcmToken: "token")
         }
@@ -27,16 +21,14 @@ final class DeviceTokenRemoteDataSourceTests: XCTestCase {
 
     func testUnregisterTreatsNotFoundAsIdempotentSuccess() async throws {
         for statusCode in [200, 204, 404] {
-            URLProtocolStub.statusCode = statusCode
-            let dataSource = makeDataSource()
+            let dataSource = makeDataSource(statusCode: statusCode)
 
             try await dataSource.unregister(fcmToken: "token")
         }
     }
 
     func testServerFailureIsPropagated() async {
-        URLProtocolStub.statusCode = 500
-        let dataSource = makeDataSource()
+        let dataSource = makeDataSource(statusCode: 500)
 
         do {
             try await dataSource.unregister(fcmToken: "token")
@@ -46,9 +38,10 @@ final class DeviceTokenRemoteDataSourceTests: XCTestCase {
         }
     }
 
-    private func makeDataSource() -> DeviceTokenRemoteDataSourceImpl {
+    private func makeDataSource(statusCode: Int) -> DeviceTokenRemoteDataSourceImpl {
         let configuration = URLSessionConfiguration.ephemeral
         configuration.protocolClasses = [URLProtocolStub.self]
+        configuration.httpAdditionalHeaders = [URLProtocolStub.statusCodeHeader: String(statusCode)]
         return DeviceTokenRemoteDataSourceImpl(
             session: Session(configuration: configuration)
         )
@@ -56,15 +49,16 @@ final class DeviceTokenRemoteDataSourceTests: XCTestCase {
 }
 
 private final class URLProtocolStub: URLProtocol {
-    static var statusCode = 200
+    static let statusCodeHeader = "X-Test-Status-Code"
 
     override class func canInit(with request: URLRequest) -> Bool { true }
     override class func canonicalRequest(for request: URLRequest) -> URLRequest { request }
 
     override func startLoading() {
+        let statusCode = Int(request.value(forHTTPHeaderField: Self.statusCodeHeader) ?? "") ?? 200
         let response = HTTPURLResponse(
             url: request.url!,
-            statusCode: Self.statusCode,
+            statusCode: statusCode,
             httpVersion: nil,
             headerFields: nil
         )!
