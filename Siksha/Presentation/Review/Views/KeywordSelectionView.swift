@@ -41,15 +41,12 @@ struct KeywordCell: View {
             .background {
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(isSelected ? Color.orange500 : Color.gray200, lineWidth: 1)
+                    .fill(Color.whiteColor)
             }
     }
 }
 
 private struct KeywordCellContainerView: View {
-    @State var totalHeight: CGFloat = .zero
-    let verticalSpacing: CGFloat = 6
-    let horizontalSpacing: CGFloat = 6
-
     let type: KeywordRateType
     @ObservedObject var viewModel: MealReviewViewModel
 
@@ -57,53 +54,85 @@ private struct KeywordCellContainerView: View {
         type.selectionTexts
     }
 
-    public var body: some View {
-        var width = CGFloat.zero
-        var height = CGFloat.zero
-
-        GeometryReader { geo in
-            ZStack(alignment: .topLeading) {
-                ForEach(0..<5) { index in
-                    KeywordCell(text: items[index], isSelected: viewModel.selectedKeywords[type] == items[index])
-                        .onTapGesture { _ in
-                            viewModel.selectedKeywords[type] = items[index]
-                        }
-                        .alignmentGuide(.leading) { view in
-                            if abs(width - view.width) > geo.size.width {
-                                width = 0
-                                height -= view.height
-                                height -= verticalSpacing
-                            }
-                            let result = width
-
-                            if items[index] == items.last {
-                                width = 0
-                            } else {
-                                width -= view.width
-                                width -= horizontalSpacing
-                            }
-
-                            return result
-                        }
-                        .alignmentGuide(.top) { _ in
-                            let result = height
-
-                            if items[index] == items.last {
-                                height = 0
-                            }
-                            return result
-                        }
-                }
+    var body: some View {
+        KeywordFlowLayout(horizontalSpacing: 6, verticalSpacing: 6) {
+            ForEach(items.indices, id: \.self) { index in
+                KeywordCell(text: items[index], isSelected: viewModel.selectedKeywords[type] == items[index])
+                    .onTapGesture {
+                        viewModel.selectedKeywords[type] = items[index]
+                    }
             }
-            .background(
-                GeometryReader { geometry in
-                    Color.clear
-                        .onAppear {
-                            self.totalHeight = geometry.size.height
-                        }
-                }
+        }
+    }
+}
+
+struct KeywordFlowLayout: Layout {
+    struct Arrangement {
+        let size: CGSize
+        let origins: [CGPoint]
+    }
+
+    let horizontalSpacing: CGFloat
+    let verticalSpacing: CGFloat
+
+    func sizeThatFits(
+        proposal: ProposedViewSize,
+        subviews: Subviews,
+        cache: inout ()
+    ) -> CGSize {
+        let sizes = subviews.map { $0.sizeThatFits(.unspecified) }
+        let availableWidth = proposal.width ?? .greatestFiniteMagnitude
+        return arrangement(for: sizes, availableWidth: availableWidth).size
+    }
+
+    func placeSubviews(
+        in bounds: CGRect,
+        proposal: ProposedViewSize,
+        subviews: Subviews,
+        cache: inout ()
+    ) {
+        let sizes = subviews.map { $0.sizeThatFits(.unspecified) }
+        let origins = arrangement(for: sizes, availableWidth: bounds.width).origins
+
+        for (subview, origin) in zip(subviews, origins) {
+            subview.place(
+                at: CGPoint(x: bounds.minX + origin.x, y: bounds.minY + origin.y),
+                proposal: .unspecified
             )
         }
-        .frame(height: totalHeight)
+    }
+
+    func arrangement(for sizes: [CGSize], availableWidth: CGFloat) -> Arrangement {
+        guard !sizes.isEmpty else {
+            return Arrangement(
+                size: CGSize(width: availableWidth.isFinite ? availableWidth : 0, height: 0), origins: [])
+        }
+
+        var origins: [CGPoint] = []
+        var x: CGFloat = 0
+        var y: CGFloat = 0
+        var rowHeight: CGFloat = 0
+        var contentWidth: CGFloat = 0
+
+        for size in sizes {
+            if x > 0, x + size.width > availableWidth {
+                x = 0
+                y += rowHeight + verticalSpacing
+                rowHeight = 0
+            }
+
+            origins.append(CGPoint(x: x, y: y))
+            contentWidth = max(contentWidth, x + size.width)
+            rowHeight = max(rowHeight, size.height)
+            x += size.width + horizontalSpacing
+        }
+
+        return Arrangement(
+            size: CGSize(
+                width: availableWidth.isFinite ? availableWidth : contentWidth,
+                height: y + rowHeight
+            ),
+            origins: origins
+        )
     }
 }

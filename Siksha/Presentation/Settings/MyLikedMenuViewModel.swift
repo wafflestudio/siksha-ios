@@ -21,7 +21,8 @@ private enum MyLikedMenuLoadResult {
     case failed
 }
 
-class MyLikedMenuViewModel: ObservableObject {
+@MainActor
+final class MyLikedMenuViewModel: ObservableObject {
     private let fetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase
     private let getMenuAlarmEnabledUseCase: GetMenuAlarmEnabledUseCase
     private let setMenuAlarmEnabledUseCase: SetMenuAlarmEnabledUseCase
@@ -48,6 +49,13 @@ class MyLikedMenuViewModel: ObservableObject {
     private var initErrorCount = 0
     private var isLoadingLikedMenus = false
     private var hasLoadedLikedMenus = false
+    private var alarmEnabledChangeTask: Task<Void, Never>?
+    private var alarmEnabledChangeGeneration = 0
+    private var alarmTimeFetchTask: Task<Void, Never>?
+    private var alarmTimeUpdateTask: Task<Void, Never>?
+    private var menuLikeTasks: [Int: Task<Void, Never>] = [:]
+    private var menuAlarmTasks: [Int: Task<Void, Never>] = [:]
+    private var updatingMenuAlarmIds: Set<Int> = []
 
     init(
         fetchMyLikedMenusUseCase: FetchMyLikedMenusUseCase,
@@ -76,7 +84,17 @@ class MyLikedMenuViewModel: ObservableObject {
         self.isAlarmEnabled = getMenuAlarmEnabledUseCase.execute()
     }
 
+    deinit {
+        alarmEnabledChangeTask?.cancel()
+        alarmTimeFetchTask?.cancel()
+        alarmTimeUpdateTask?.cancel()
+        menuLikeTasks.values.forEach { $0.cancel() }
+        menuAlarmTasks.values.forEach { $0.cancel() }
+    }
+
     func setAlarmEnabled(_ enabled: Bool) {
+        alarmEnabledChangeGeneration += 1
+        alarmEnabledChangeTask?.cancel()
         isUpdatingAlarmEnabled = false
         setMenuAlarmEnabledUseCase.execute(enabled)
         isAlarmEnabled = enabled
@@ -87,56 +105,83 @@ class MyLikedMenuViewModel: ObservableObject {
             return
         }
 
+        isUpdatingAlarmEnabled = true
+        alarmEnabledChangeTask?.cancel()
+        alarmEnabledChangeGeneration += 1
+        let generation = alarmEnabledChangeGeneration
+        let updateAllMenuAlarmsUseCase = updateAllMenuAlarmsUseCase
         if enabled {
-            isUpdatingAlarmEnabled = true
-            Task { @MainActor [weak self] in
-                await self?.enableAlarmFromUserRequest()
+            let menuAlarmNotificationManager = menuAlarmNotificationManager
+            alarmEnabledChangeTask = Task { [weak self] in
+                let isGranted = await menuAlarmNotificationManager.requestAuthorization()
+                guard !Task.isCancelled else {
+                    if self?.alarmEnabledChangeGeneration == generation {
+                        self?.isUpdatingAlarmEnabled = false
+                    }
+                    return
+                }
+                guard isGranted else {
+                    guard let self, self.alarmEnabledChangeGeneration == generation else { return }
+                    noAlarmPermission = true
+                    isUpdatingAlarmEnabled = false
+                    return
+                }
+
+                do {
+                    try await updateAllMenuAlarmsUseCase.execute(isEnabled: true)
+                    try Task.checkCancellation()
+                    guard let self, self.alarmEnabledChangeGeneration == generation else { return }
+
+                    withAnimation(.easeOut(duration: 0.3)) {
+                        self.isAlarmEnabled = true
+                        self.enableAllAlarm()
+                    }
+                    isUpdatingAlarmEnabled = false
+                    menuAlarmNotificationManager.registerRemoteNotificationsIfNeeded()
+                } catch {
+                    guard let self, self.alarmEnabledChangeGeneration == generation else { return }
+                    isUpdatingAlarmEnabled = false
+                    guard !(error is CancellationError) else { return }
+                    self.error = ErrorHelper.categorize(error)
+                }
             }
         } else {
-            Task { @MainActor [weak self] in
-                await self?.disableAlarm()
+            alarmEnabledChangeTask = Task { [weak self] in
+                do {
+                    try await updateAllMenuAlarmsUseCase.execute(isEnabled: false)
+                    try Task.checkCancellation()
+                    guard let self, self.alarmEnabledChangeGeneration == generation else { return }
+
+                    withAnimation(.easeOut(duration: 0.3)) {
+                        self.isAlarmEnabled = false
+                        self.disableAllAlarm()
+                    }
+                    isUpdatingAlarmEnabled = false
+                } catch {
+                    guard let self, self.alarmEnabledChangeGeneration == generation else { return }
+                    isUpdatingAlarmEnabled = false
+                    guard !(error is CancellationError) else { return }
+                    self.error = ErrorHelper.categorize(error)
+                }
             }
-        }
-    }
-
-    @MainActor
-    private func enableAlarmFromUserRequest() async {
-        guard !isAlarmEnabled else {
-            isUpdatingAlarmEnabled = false
-            return
-        }
-
-        defer {
-            isUpdatingAlarmEnabled = false
-        }
-
-        let isGranted = await menuAlarmNotificationManager.requestAuthorization()
-        guard isGranted else {
-            noAlarmPermission = true
-            return
-        }
-
-        do {
-            try await updateAllMenuAlarmsUseCase.execute(isEnabled: true)
-
-            withAnimation(.easeOut(duration: 0.3)) {
-                isAlarmEnabled = true
-                enableAllAlarm()
-            }
-
-            menuAlarmNotificationManager.registerRemoteNotificationsIfNeeded()
-        } catch {
-            self.error = ErrorHelper.categorize(error)
         }
     }
 
     func getAlarmTime() {
-        Task { @MainActor [weak self] in
-            await self?.refreshAlarmTime()
+        alarmTimeFetchTask?.cancel()
+        let fetchMenuAlarmTimeUseCase = fetchMenuAlarmTimeUseCase
+        alarmTimeFetchTask = Task { [weak self] in
+            do {
+                let fetchedAlarmTime = try await fetchMenuAlarmTimeUseCase.execute()
+                try Task.checkCancellation()
+                self?.alarmTime = fetchedAlarmTime
+            } catch {
+                guard !(error is CancellationError) else { return }
+                self?.error = ErrorHelper.categorize(error)
+            }
         }
     }
 
-    @MainActor
     func loadMyLikedMenu() async {
         guard !isLoadingLikedMenus, !hasLoadedLikedMenus else {
             return
@@ -165,16 +210,6 @@ class MyLikedMenuViewModel: ObservableObject {
         }
     }
 
-    @MainActor
-    private func refreshAlarmTime() async {
-        do {
-            alarmTime = try await fetchMenuAlarmTimeUseCase.execute()
-        } catch {
-            self.error = ErrorHelper.categorize(error)
-        }
-    }
-
-    @MainActor
     private func loadMyLikedMenuItems() async -> MyLikedMenuLoadResult {
         do {
             let groups = try await fetchMyLikedMenusUseCase.execute()
@@ -206,7 +241,6 @@ class MyLikedMenuViewModel: ObservableObject {
         updatingMenuLikeIds.contains(menuId)
     }
 
-    @MainActor
     func toggleRestaurantFavorite(restaurantId: Int) async {
         guard !updatingFavoriteRestaurantIds.contains(restaurantId),
             let restaurant = personalRestaurantById[restaurantId]
@@ -230,7 +264,6 @@ class MyLikedMenuViewModel: ObservableObject {
         }
     }
 
-    @MainActor
     private func refreshPersonalRestaurants() async {
         do {
             let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
@@ -335,35 +368,28 @@ class MyLikedMenuViewModel: ObservableObject {
         }
     }
 
-    @MainActor
-    private func toggleMenuLikePreference(menuId: Int) async {
+    func toggleMenu(menuId: Int) {
         guard !updatingMenuLikeIds.contains(menuId) else {
             return
         }
 
         let isCurrentlyLiked = isLikedMenu(menuId: menuId)
+        let updateMenuLikeUseCase = updateMenuLikeUseCase
         setUpdatingMenuLike(menuId, isUpdating: true)
-        defer {
-            setUpdatingMenuLike(menuId, isUpdating: false)
-        }
-
-        do {
-            let status = try await updateMenuLikeUseCase.execute(
-                menuId: menuId,
-                isLiked: !isCurrentlyLiked
-            )
-            updateMenuLikeStatus(status)
-        } catch {
-            self.error = nil
-            self.error = ErrorHelper.categorize(error)
-        }
-    }
-
-    func toggleMenu(menuId: Int) {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-
-            await toggleMenuLikePreference(menuId: menuId)
+        menuLikeTasks[menuId] = Task { [weak self] in
+            do {
+                let status = try await updateMenuLikeUseCase.execute(
+                    menuId: menuId,
+                    isLiked: !isCurrentlyLiked
+                )
+                try Task.checkCancellation()
+                self?.updateMenuLikeStatus(status)
+            } catch {
+                if !(error is CancellationError) {
+                    self?.error = ErrorHelper.categorize(error)
+                }
+            }
+            self?.setUpdatingMenuLike(menuId, isUpdating: false)
         }
     }
     func unLikedMenuCleanup() {
@@ -380,16 +406,6 @@ class MyLikedMenuViewModel: ObservableObject {
     }
     private func isAlarmOn(menuId: Int) -> Bool {
         menu(menuId: menuId)?.alarm ?? false
-    }
-
-    @MainActor
-    private func turnOnAlarm(menuId: Int) async {
-        do {
-            try await updateMenuAlarmUseCase.execute(menuId: menuId, isEnabled: true)
-            toggleMenuAlarm(menuId: menuId)
-        } catch {
-            self.error = ErrorHelper.categorize(error)
-        }
     }
 
     private func enableAllAlarm() {
@@ -409,48 +425,25 @@ class MyLikedMenuViewModel: ObservableObject {
         }
     }
 
-    @MainActor
-    private func turnOffAlarm(menuId: Int) async {
-        do {
-            try await updateMenuAlarmUseCase.execute(menuId: menuId, isEnabled: false)
-            toggleMenuAlarm(menuId: menuId)
-        } catch {
-            self.error = ErrorHelper.categorize(error)
-        }
-    }
-
     func toggleAlarm(menuId: Int) {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-
-            if isAlarmOn(menuId: menuId) {
-                await turnOffAlarm(menuId: menuId)
-            } else {
-                await turnOnAlarm(menuId: menuId)
-            }
-        }
-    }
-
-    @MainActor
-    private func disableAlarm() async {
-        guard !isUpdatingAlarmEnabled else {
+        guard !updatingMenuAlarmIds.contains(menuId) else {
             return
         }
 
-        isUpdatingAlarmEnabled = true
-        defer {
-            isUpdatingAlarmEnabled = false
-        }
-
-        do {
-            try await updateAllMenuAlarmsUseCase.execute(isEnabled: false)
-
-            withAnimation(.easeOut(duration: 0.3)) {
-                isAlarmEnabled = false
-                disableAllAlarm()
+        let isEnabled = !isAlarmOn(menuId: menuId)
+        let updateMenuAlarmUseCase = updateMenuAlarmUseCase
+        updatingMenuAlarmIds.insert(menuId)
+        menuAlarmTasks[menuId] = Task { [weak self] in
+            do {
+                try await updateMenuAlarmUseCase.execute(menuId: menuId, isEnabled: isEnabled)
+                try Task.checkCancellation()
+                self?.toggleMenuAlarm(menuId: menuId)
+            } catch {
+                if !(error is CancellationError) {
+                    self?.error = ErrorHelper.categorize(error)
+                }
             }
-        } catch {
-            self.error = ErrorHelper.categorize(error)
+            self?.updatingMenuAlarmIds.remove(menuId)
         }
     }
 
@@ -459,16 +452,18 @@ class MyLikedMenuViewModel: ObservableObject {
     }
 
     func toggleAlarmTime() {
-        Task { @MainActor [weak self] in
-            guard let self else { return }
-
-            let nextAlarmTime = alarmTime == .EVERY_MEAL ? AlarmTime.DAILY : AlarmTime.EVERY_MEAL
-
+        alarmTimeUpdateTask?.cancel()
+        let nextAlarmTime = alarmTime == .EVERY_MEAL ? AlarmTime.DAILY : AlarmTime.EVERY_MEAL
+        let updateMenuAlarmTimeUseCase = updateMenuAlarmTimeUseCase
+        alarmTimeUpdateTask = Task { [weak self] in
             do {
                 try await updateMenuAlarmTimeUseCase.execute(nextAlarmTime)
-                alarmTime = nextAlarmTime
+                try Task.checkCancellation()
+                self?.alarmTime = nextAlarmTime
             } catch {
-                self.error = ErrorHelper.categorize(error)
+                if !(error is CancellationError) {
+                    self?.error = ErrorHelper.categorize(error)
+                }
             }
         }
     }

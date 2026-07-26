@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Board: Decodable {
+struct Board: Decodable, Sendable {
     enum CodingKeys: String, CodingKey {
         case id
         case type
@@ -35,7 +35,7 @@ struct Board: Decodable {
     }
 }
 
-struct PostsPage: Decodable {
+struct PostsPage: Decodable, Sendable {
     enum CodingKeys: String, CodingKey {
         case posts = "result"
         case totalCount = "total_count"
@@ -54,7 +54,7 @@ struct PostsPage: Decodable {
     }
 }
 
-struct Post: Decodable {
+struct Post: Decodable, Sendable {
     enum CodingKeys: String, CodingKey {
         case id
         case boardId = "board_id"
@@ -126,7 +126,7 @@ struct Post: Decodable {
         self.profileUrl = nil
     }
 }
-struct SubmitPostResponse: Codable {
+struct SubmitPostResponse: Codable, Sendable {
     var board_id: Int
     var title: String
     var content: String
@@ -141,7 +141,7 @@ struct SubmitPostResponse: Codable {
     var is_mine: Bool
 }
 
-struct CommentsPage: Decodable {
+struct CommentsPage: Decodable, Sendable {
     enum CodingKeys: String, CodingKey {
         case comments = "result"
         case totalCount = "total_count"
@@ -160,7 +160,7 @@ struct CommentsPage: Decodable {
     }
 }
 
-struct Comment: Decodable, Identifiable {
+struct Comment: Decodable, Identifiable, Sendable {
     enum CodingKeys: String, CodingKey {
         case id
         case postId = "post_id"
@@ -205,16 +205,16 @@ struct Comment: Decodable, Identifiable {
         isMine = try container.decode(Bool.self, forKey: .isMine)
     }
 }
-struct PostReportResponse: Codable {
+struct PostReportResponse: Codable, Sendable {
     var id: Int
     var reason: String
     var post_id: Int
 }
-struct CommentReportResponse: Codable {
+struct CommentReportResponse: Codable, Sendable {
     var id: Int
     var reason: String
     var comment_id: Int
 }
-struct TrendingPostsResponse: Decodable {
+struct TrendingPostsResponse: Decodable, Sendable {
     var result: [Post]
 }

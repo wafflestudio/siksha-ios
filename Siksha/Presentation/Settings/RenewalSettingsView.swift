@@ -6,10 +6,8 @@
 //
 
 import SwiftUI
-import UIKit
 
 struct RenewalSettingsView: View {
-    @Environment(\.viewController) private var viewControllerHolder: UIViewController?
     @ObservedObject var viewModel: RenewalSettingsViewModel
     @ObservedObject var orderViewModel: RestaurantOrderViewModel
 

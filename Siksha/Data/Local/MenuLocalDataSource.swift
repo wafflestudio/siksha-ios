@@ -9,7 +9,7 @@ import Combine
 import Foundation
 import RealmSwift
 
-protocol MenuLocalDataSource {
+protocol MenuLocalDataSource: Sendable {
     func saveDailyMenus(_ menus: [DailyMenu]) throws
     func fetchDailyMenus(from start: String, to end: String) throws -> [DailyMenu]
     func fetchDailyMenu(date: String) throws -> DailyMenu?

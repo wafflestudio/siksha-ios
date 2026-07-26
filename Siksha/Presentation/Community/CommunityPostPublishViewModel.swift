@@ -9,22 +9,40 @@ import Combine
 import Foundation
 import UIKit
 
+@MainActor
 protocol CommunityPostPublishViewType: ObservableObject {
     var content: String { get set }
     var title: String { get set }
     var isAnonymous: Bool { get set }
-    var images: [UIImage] { get set }
+    var imageAttachments: [UploadImageAttachment] { get }
+    var existingImageLoadState: ExistingImageLoadState { get }
     var isSubmitted: Bool { get set }
     var isErrorAlert: Bool { get set }
     var boardId: Int { get }
     var postInfo: PostInfo? { get set }
+    var canSubmit: Bool { get }
+    var remainingImageCount: Int { get }
     func submitPost()
-
+    func addSelectedImages(_ images: [UIImage])
+    func removeImage(id: UUID)
+    func retryExistingImageLoad()
 }
-class CommunityPostPublishViewModel: CommunityPostPublishViewType {
+
+@MainActor
+final class CommunityPostPublishViewModel: CommunityPostPublishViewType {
+    private enum Constants {
+        static let maxImageCount = 5
+    }
+
     var postInfo: PostInfo?
     private let communityRepository: CommunityRepositoryProtocol
+    private let orderedImageDataLoader: OrderedImageDataLoading
+    private let uploadImagePreparer: UploadImagePreparing
     private var cancellables = Set<AnyCancellable>()
+    private var imageLoadTask: Task<Void, Never>?
+    private var imageLoadGeneration = 0
+    private var existingImageURLStrings: [String] = []
+
     @Published var boardId: Int
     @Published var boardsList: [Board] = []
     @Published var content = ""
@@ -34,12 +52,23 @@ class CommunityPostPublishViewModel: CommunityPostPublishViewType {
             UserDefaults.standard.set(isAnonymous, forKey: "isAnonymous")
         }
     }
-    @Published var images: [UIImage] = []
+    @Published private(set) var imageAttachments: [UploadImageAttachment] = []
+    @Published private(set) var existingImageLoadState: ExistingImageLoadState = .ready
+    @Published private(set) var isSubmitting = false
     @Published var isSubmitted = false
     @Published var isErrorAlert = false
-    init(boardId: Int, communityRepository: CommunityRepositoryProtocol, postInfo: PostInfo? = nil) {
+
+    init(
+        boardId: Int,
+        communityRepository: CommunityRepositoryProtocol,
+        orderedImageDataLoader: OrderedImageDataLoading,
+        uploadImagePreparer: UploadImagePreparing,
+        postInfo: PostInfo? = nil
+    ) {
         self.boardId = boardId
         self.communityRepository = communityRepository
+        self.orderedImageDataLoader = orderedImageDataLoader
+        self.uploadImagePreparer = uploadImagePreparer
         self.isAnonymous = UserDefaults.standard.bool(forKey: "isAnonymous")
 
         loadBoardInfo()
@@ -50,47 +79,60 @@ class CommunityPostPublishViewModel: CommunityPostPublishViewType {
             self.content = info.content
             self.isAnonymous = info.isAnonymous
             if let imageURLs = info.imageURLs {
-                downloadImages(from: imageURLs) { loadedImages in
-                    self.images = loadedImages
-                }
+                loadImages(from: imageURLs)
             }
         }
     }
 
+    deinit {
+        imageLoadTask?.cancel()
+    }
+
+    var canSubmit: Bool {
+        !title.isEmpty && !content.isEmpty && existingImageLoadState == .ready && !isSubmitting
+    }
+
+    var remainingImageCount: Int {
+        max(0, Constants.maxImageCount - imageAttachments.count)
+    }
+
     func submitPost() {
-        if let info = postInfo { //edit
-            print("info.id")
-            print(info.id)
-            print(images.count)
-            communityRepository.editPost(
+        guard canSubmit else { return }
+
+        isSubmitting = true
+        isSubmitted = false
+        let images = imageAttachments.map(\.uploadData)
+        let publisher: AnyPublisher<SubmitPostResponse, AppError>
+
+        if let info = postInfo {
+            publisher = communityRepository.editPost(
                 postId: info.id, boardId: boardId, title: title, content: content,
-                images: images.map { image in image.pngData()! }, anonymous: isAnonymous
-            ).sink(
-                receiveCompletion: { [weak self] error in
-                    print(error)
-                    self?.isErrorAlert = true
-                },
-                receiveValue: { [weak self] response in
-                    self?.isSubmitted = true
-
-                }
-            ).store(in: &cancellables)
-        } else { //submit
-            print("submit new")
-            communityRepository.submitPost(
-                boardId: boardId, title: title, content: content, images: images.map { image in image.pngData()! },
-                anonymous: isAnonymous
-            ).sink(
-                receiveCompletion: { [weak self] error in
-                    print(error)
-                    self?.isErrorAlert = true
-                },
-                receiveValue: { [weak self] response in
-                    self?.isSubmitted = true
-
-                }
-            ).store(in: &cancellables)
+                images: images, anonymous: isAnonymous
+            )
+        } else {
+            publisher = communityRepository.submitPost(
+                boardId: boardId, title: title, content: content, images: images, anonymous: isAnonymous
+            )
         }
+
+        publisher
+            .receive(on: RunLoop.main)
+            .sink(
+                receiveCompletion: { [weak self] completion in
+                    guard let self else { return }
+                    self.isSubmitting = false
+                    if case .failure = completion {
+                        self.isSubmitted = false
+                        self.isErrorAlert = true
+                    }
+                },
+                receiveValue: { [weak self] _ in
+                    guard let self else { return }
+                    self.isSubmitted = true
+                    self.isErrorAlert = true
+                }
+            )
+            .store(in: &cancellables)
     }
 
     private func loadBoardInfo() {
@@ -108,34 +150,73 @@ class CommunityPostPublishViewModel: CommunityPostPublishViewType {
             .store(in: &cancellables)
     }
 
-    func downloadImages(from urls: [String], completion: @escaping ([UIImage]) -> Void) {
-        let group = DispatchGroup()
-        var images = [UIImage]()
+    func loadImages(from urlStrings: [String]) {
+        existingImageURLStrings = urlStrings
+        imageLoadGeneration += 1
+        let generation = imageLoadGeneration
+        imageLoadTask?.cancel()
+        existingImageLoadState = .loading
 
-        for urlString in urls {
-            guard let url = URL(string: urlString) else { continue }
-            group.enter()
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                defer { group.leave() }
-                if let data = data, let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
-                        images.append(image)
-                    }
-                } else {
-                    print(
-                        "Error loading image from url: \(urlString), \(error?.localizedDescription ?? "Unknown error")")
-                }
-            }.resume()
+        let urls = urlStrings.compactMap(URL.init(string:))
+        guard urls.count == urlStrings.count else {
+            existingImageLoadState = .failed
+            return
+        }
+        guard !urls.isEmpty else {
+            imageAttachments.removeAll { $0.origin == .downloaded }
+            existingImageLoadState = .ready
+            return
         }
 
-        group.notify(queue: .main) {
-            completion(images)
+        let orderedImageDataLoader = orderedImageDataLoader
+        imageLoadTask = Task { @concurrent [weak self] in
+            do {
+                let loadedData = try await orderedImageDataLoader.loadImageData(from: urls)
+                try Task.checkCancellation()
+                await self?.applyLoadedImageData(loadedData, generation: generation)
+            } catch is CancellationError {
+                return
+            } catch {
+                await self?.applyImageLoadFailure(generation: generation)
+            }
         }
     }
 
-    func removeImage(_ image: UIImage) {
-        self.images.removeAll(where: { $0 == image })
-        print(self.images.count)
+    func addSelectedImages(_ images: [UIImage]) {
+        let imagesToAdd = images.prefix(remainingImageCount)
+
+        do {
+            let attachments = try imagesToAdd.map(uploadImagePreparer.prepareSelectedImage)
+            imageAttachments.append(contentsOf: attachments)
+        } catch {
+            isSubmitted = false
+            isErrorAlert = true
+        }
     }
 
+    func removeImage(id: UUID) {
+        imageAttachments.removeAll { $0.id == id }
+    }
+
+    func retryExistingImageLoad() {
+        loadImages(from: existingImageURLStrings)
+    }
+
+    private func applyLoadedImageData(_ loadedData: [Data], generation: Int) {
+        guard imageLoadGeneration == generation else { return }
+
+        do {
+            let downloadedAttachments = try loadedData.map(uploadImagePreparer.prepareDownloadedImage)
+            let selectedAttachments = imageAttachments.filter { $0.origin == .selected }
+            imageAttachments = downloadedAttachments + selectedAttachments
+            existingImageLoadState = .ready
+        } catch {
+            existingImageLoadState = .failed
+        }
+    }
+
+    private func applyImageLoadFailure(generation: Int) {
+        guard imageLoadGeneration == generation else { return }
+        existingImageLoadState = .failed
+    }
 }

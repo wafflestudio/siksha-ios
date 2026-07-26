@@ -15,7 +15,7 @@ struct ViewControllerHolder {
 
 struct ViewControllerKey: EnvironmentKey {
     static var defaultValue: ViewControllerHolder {
-        return ViewControllerHolder(value: UIApplication.shared.windows.first?.rootViewController)
+        ViewControllerHolder(value: nil)
     }
 }
 
@@ -26,16 +26,7 @@ struct MenuViewModelKey: EnvironmentKey {
 }
 
 struct SafeAreaInsetsKey: EnvironmentKey {
-    static var defaultValue: EdgeInsets {
-        (UIApplication.shared.windows.first(where: { $0.isKeyWindow })?.safeAreaInsets ?? .zero).insets
-    }
-}
-
-extension UIEdgeInsets {
-
-    var insets: EdgeInsets {
-        EdgeInsets(top: top, leading: left, bottom: bottom, trailing: right)
-    }
+    static let defaultValue: EdgeInsets = .init()
 }
 
 extension EnvironmentValues {
@@ -50,7 +41,8 @@ extension EnvironmentValues {
     }
 
     var safeAreaInsets: EdgeInsets {
-        self[SafeAreaInsetsKey.self]
+        get { self[SafeAreaInsetsKey.self] }
+        set { self[SafeAreaInsetsKey.self] = newValue }
     }
 }
 
@@ -63,17 +55,6 @@ extension UIViewController {
                 .environment(\.viewController, toPresent)
         )
         self.present(toPresent, animated: true, completion: nil)
-    }
-}
-
-extension UINavigationController: UIGestureRecognizerDelegate {
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        interactivePopGestureRecognizer?.delegate = self
-    }
-
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1
     }
 }
 
@@ -100,7 +81,7 @@ extension View {
                     ? nil
                     : BottomModalView(isPresented: isPresented, title: title, height: height, content: content)
                         .transition(.move(edge: .bottom))
-                        .animation(.easeInOut)
+                        .animation(.easeInOut, value: isPresented.wrappedValue)
             )
     }
 
@@ -121,10 +102,12 @@ extension URLRequest {
     }
 }
 
+@MainActor
 protocol ImageCache: AnyObject {
     subscript(_ url: URL) -> UIImage? { get set }
 }
 
+@MainActor
 final class TemporaryImageCache: ImageCache {
     private let cache = NSCache<NSURL, UIImage>()
 
@@ -138,11 +121,11 @@ final class TemporaryImageCache: ImageCache {
 }
 
 struct ImageCacheKey: EnvironmentKey {
-    static let defaultValue: ImageCache = TemporaryImageCache()
+    static var defaultValue: ImageCache? { nil }
 }
 
 extension EnvironmentValues {
-    var imageCache: ImageCache {
+    var imageCache: ImageCache? {
         get { self[ImageCacheKey.self] }
         set { self[ImageCacheKey.self] = newValue }
     }

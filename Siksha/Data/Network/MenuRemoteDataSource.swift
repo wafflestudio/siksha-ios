@@ -8,7 +8,7 @@
 import Alamofire
 import Foundation
 
-protocol MenuRemoteDataSource {
+protocol MenuRemoteDataSource: Sendable {
     func fetchDailyMenus(from start: String, to end: String) async throws -> DailyMenusResponseDTO
 }
 

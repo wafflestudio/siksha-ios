@@ -7,13 +7,13 @@
 
 import Foundation
 
-struct ReviewPageResponseDTO: Decodable {
+struct ReviewPageResponseDTO: Decodable, Sendable {
     let totalCount: Int
     let hasNext: Bool
     let result: [ReviewDTO]
 }
 
-struct ReviewDTO: Decodable {
+struct ReviewDTO: Decodable, Sendable {
     let id: Int
     let menuId: Int
     let userId: Int

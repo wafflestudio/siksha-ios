@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum KeywordRateType {
+enum KeywordRateType: Sendable {
     case taste
     case price
     case composition

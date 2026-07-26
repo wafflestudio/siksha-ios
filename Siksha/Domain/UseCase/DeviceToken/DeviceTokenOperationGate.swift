@@ -7,19 +7,20 @@
 
 import Foundation
 
-final class DeviceTokenOperationGate {
+final class DeviceTokenOperationGate: Sendable {
     private let state = State()
 
     func withExclusiveAccess<T>(
         _ operation: () async throws -> T
     ) async throws -> T {
         let waiterID = UUID()
+        let state = state
 
         try await withTaskCancellationHandler {
             try await state.acquire(id: waiterID)
         } onCancel: {
             Task {
-                await self.state.cancelWaiter(id: waiterID)
+                await state.cancelWaiter(id: waiterID)
             }
         }
 

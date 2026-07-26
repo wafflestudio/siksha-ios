@@ -28,7 +28,7 @@ enum SikshaAPI: URLRequestConvertible {
 
         if self.multiPartFormDataNeeded {
             request.setValue("multipart/form-data", forHTTPHeaderField: "Content-Type")
-            request.timeoutInterval = 3
+            request.timeoutInterval = 15
         }
 
         #if DEBUG
@@ -127,7 +127,7 @@ enum SikshaAPI: URLRequestConvertible {
     // VOC
     case submitVOC(comment: String, platform: String)
 
-    static var baseURL = Config.shared.baseURL
+    static let baseURL = Config.shared.baseURL
 
     var needToken: Bool {
         switch self {
@@ -373,7 +373,7 @@ enum SikshaAPI: URLRequestConvertible {
         }
     }
 
-    var parameters: [String: Any]? {
+    var parameters: Alamofire.Parameters? {
         switch self {
         case let .getMenus(startDate, endDate, noMenuHide):
             return ["start_date": startDate, "end_date": endDate, "except_empty": noMenuHide]
@@ -433,7 +433,7 @@ enum SikshaAPI: URLRequestConvertible {
         case let .getMyReview(page, perPage):
             return ["page": page, "per_page": perPage]
         case let .editReview(_, menuId, score, comment, taste, price, foodComposition, _):
-            var parameters: [String: Any] = [
+            var parameters: Alamofire.Parameters = [
                 "menu_id": menuId, "score": score, "taste": taste, "price": price, "food_composition": foodComposition,
             ]
             if let comment {

@@ -12,7 +12,7 @@ public struct TextFieldAlertModifier: ViewModifier {
     let action: (String?) -> Void
 
     public func body(content: Content) -> some View {
-        content.onChange(of: isPresented) { isPresented in
+        content.onChange(of: isPresented) { _, isPresented in
             if isPresented, alertController == nil {
                 let alertController = makeAlertController()
                 self.alertController = alertController

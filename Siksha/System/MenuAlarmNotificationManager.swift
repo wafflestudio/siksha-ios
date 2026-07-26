@@ -8,6 +8,7 @@
 import UIKit
 import UserNotifications
 
+@MainActor
 final class DefaultMenuAlarmNotificationManager: MenuAlarmNotificationManaging {
     private let messagingTokenService: PushMessagingTokenServiceProtocol
     private let registerUserDeviceUseCase: RegisterUserDeviceUseCase
@@ -31,12 +32,10 @@ final class DefaultMenuAlarmNotificationManager: MenuAlarmNotificationManaging {
         }
     }
 
-    @MainActor
     func registerRemoteNotificationsIfNeeded() {
         UIApplication.shared.registerForRemoteNotifications()
     }
 
-    @MainActor
     func didRegisterForRemoteNotifications(with deviceToken: Data) {
         messagingTokenService.setAPNSToken(deviceToken)
 
@@ -57,7 +56,6 @@ final class DefaultMenuAlarmNotificationManager: MenuAlarmNotificationManaging {
         }
     }
 
-    @MainActor
     func didFailToRegisterForRemoteNotifications(error: Error) {
         // A later app launch or alarm-enable action will request registration again.
     }

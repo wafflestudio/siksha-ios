@@ -7,20 +7,20 @@
 
 import Foundation
 
-struct MyReviewPageModel {
+struct MyReviewPageModel: Sendable {
     let totalCount: Int
     let hasNext: Bool
     let restaurants: [MyReviewRestaurantModel]
 }
 
-struct MyReviewRestaurantModel {
+struct MyReviewRestaurantModel: Sendable {
     let restaurantId: Int
     let nameKr: String
     let nameEn: String?
     let reviews: [MyReviewModel]
 }
 
-struct MyReviewModel {
+struct MyReviewModel: Sendable {
     let id: Int
     let menuId: Int
     let nameKr: String

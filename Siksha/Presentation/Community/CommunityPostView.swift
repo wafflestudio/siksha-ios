@@ -385,6 +385,9 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         }
         .customNavigationBar(title: viewModel.boardNamePublisher)
         .navigationBarItems(leading: backButton)
+        .refreshable {
+            await viewModel.asyncRefresh()
+        }
         .actionSheet(item: $showActionSheet) { item in
             switch item {
             case .post(let post):
@@ -481,6 +484,8 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                 viewModel: CommunityPostPublishViewModel(
                     boardId: viewModel.postInfo.boardId,
                     communityRepository: AppContainer.shared.domain.communityRepository,
+                    orderedImageDataLoader: AppContainer.shared.orderedImageDataLoader,
+                    uploadImagePreparer: AppContainer.shared.uploadImagePreparer,
                     postInfo: viewModel.postInfo
                 )
             )
@@ -527,10 +532,6 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     editComment = nil
                 })
         }
-
-        .refreshable {
-            await viewModel.asyncRefresh()
-        }
     }
 }
 
@@ -567,6 +568,7 @@ class StubCommunityPostViewModel: CommunityPostViewModelType {
     @Published var commentsListPublisher: [CommentInfo]
     @Published var hasNextPublisher: Bool
 
+    @MainActor
     init() {
         self.commentsListPublisher = [
             CommentInfo(content: "test1", likeCnt: 1, isLiked: true),

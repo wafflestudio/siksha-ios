@@ -8,23 +8,22 @@
 import FirebaseRemoteConfig
 import Foundation
 
-protocol RemoteConfigDataSource {
+protocol RemoteConfigDataSource: Sendable {
     func fetchRemoteConfig() async throws -> RemoteConfigDTO
-    func observeRemoteConfigUpdates() -> AsyncStream<RemoteConfigDTO>
+    func observeRemoteConfigUpdates() async -> AsyncStream<RemoteConfigDTO>
 }
 
-final class FirebaseRemoteConfigDataSource: RemoteConfigDataSource {
+actor FirebaseRemoteConfigDataSource: RemoteConfigDataSource {
     private let remoteConfig: RemoteConfig
-    private let settings: RemoteConfigSettings
+    private var activeObservations: Set<UUID> = []
+    private var activationTasks: [UUID: Task<Void, Never>] = [:]
 
-    init(
-        remoteConfig: RemoteConfig = RemoteConfig.remoteConfig(),
-        settings: RemoteConfigSettings = RemoteConfigSettings()
-    ) {
+    init() {
+        let remoteConfig = RemoteConfig.remoteConfig()
+        let settings = RemoteConfigSettings()
+        settings.minimumFetchInterval = 0
+        remoteConfig.configSettings = settings
         self.remoteConfig = remoteConfig
-        self.settings = settings
-        self.settings.minimumFetchInterval = 0
-        self.remoteConfig.configSettings = self.settings
     }
 
     func fetchRemoteConfig() async throws -> RemoteConfigDTO {
@@ -32,41 +31,63 @@ final class FirebaseRemoteConfigDataSource: RemoteConfigDataSource {
         return try await activateRemoteConfig()
     }
 
-    func observeRemoteConfigUpdates() -> AsyncStream<RemoteConfigDTO> {
-        AsyncStream { continuation in
-            let activationTaskStore = RemoteConfigActivationTaskStore()
-            let registration = remoteConfig.addOnConfigUpdateListener { [weak self] _, error in
-                guard let self else {
-                    return
-                }
+    func observeRemoteConfigUpdates() async -> AsyncStream<RemoteConfigDTO> {
+        let observationID = UUID()
+        let (stream, continuation) = AsyncStream<RemoteConfigDTO>.makeStream()
+        activeObservations.insert(observationID)
 
-                if let error {
-                    print("Failed to observe remote config updates: \(error)")
-                    return
-                }
-
-                let task = Task {
-                    do {
-                        let config = try await self.activateRemoteConfig()
-                        guard !Task.isCancelled else {
-                            return
-                        }
-                        continuation.yield(config)
-                    } catch {
-                        guard !Task.isCancelled else {
-                            return
-                        }
-                        print("Failed to activate remote config update: \(error)")
-                    }
-                }
-                activationTaskStore.replace(with: task)
+        let registration = remoteConfig.addOnConfigUpdateListener { [weak self] _, error in
+            if let error {
+                print("Failed to observe remote config updates: \(error)")
+                return
             }
 
-            continuation.onTermination = { _ in
-                registration.remove()
-                activationTaskStore.cancel()
+            Task {
+                await self?.replaceActivationTask(
+                    for: observationID,
+                    continuation: continuation
+                )
             }
         }
+
+        continuation.onTermination = { [weak self] _ in
+            registration.remove()
+            Task {
+                await self?.stopObservation(observationID)
+            }
+        }
+
+        return stream
+    }
+
+    private func replaceActivationTask(
+        for observationID: UUID,
+        continuation: AsyncStream<RemoteConfigDTO>.Continuation
+    ) {
+        guard activeObservations.contains(observationID) else {
+            return
+        }
+
+        activationTasks[observationID]?.cancel()
+        activationTasks[observationID] = Task {
+            do {
+                let config = try await activateRemoteConfig()
+                guard !Task.isCancelled else {
+                    return
+                }
+                continuation.yield(config)
+            } catch {
+                guard !Task.isCancelled else {
+                    return
+                }
+                print("Failed to activate remote config update: \(error)")
+            }
+        }
+    }
+
+    private func stopObservation(_ observationID: UUID) {
+        activeObservations.remove(observationID)
+        activationTasks.removeValue(forKey: observationID)?.cancel()
     }
 
     private func activateRemoteConfig() async throws -> RemoteConfigDTO {
@@ -76,24 +97,5 @@ final class FirebaseRemoteConfigDataSource: RemoteConfigDataSource {
             festivalFeatureEnabled: remoteConfig["festivalFeatureEnabled"].boolValue,
             festivalAppIconEnabled: remoteConfig["festivalAppIconEnabled"].boolValue
         )
-    }
-}
-
-private final class RemoteConfigActivationTaskStore {
-    private let lock = NSLock()
-    private var task: Task<Void, Never>?
-
-    func replace(with newTask: Task<Void, Never>) {
-        lock.lock()
-        task?.cancel()
-        task = newTask
-        lock.unlock()
-    }
-
-    func cancel() {
-        lock.lock()
-        task?.cancel()
-        task = nil
-        lock.unlock()
     }
 }

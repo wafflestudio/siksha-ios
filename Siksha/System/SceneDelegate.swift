@@ -25,9 +25,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let windowScene = scene as? UIWindowScene {
             let appState = AppState()
-            let rootView = AppRootView(appState: appState)
+            let rootView = AppRootView(
+                appState: appState,
+                imageCache: AppContainer.shared.imageCache
+            )
+            let rootViewController = UIHostingController(rootView: AnyView(EmptyView()))
+            rootViewController.rootView = AnyView(
+                rootView.environment(\.viewController, rootViewController)
+            )
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: rootView)
+            window.rootViewController = rootViewController
             self.window = window
             window.makeKeyAndVisible()
         }

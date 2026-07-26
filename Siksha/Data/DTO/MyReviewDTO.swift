@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MyReviewPageResponseDTO: Decodable {
+struct MyReviewPageResponseDTO: Decodable, Sendable {
     let totalCount: Int
     let hasNext: Bool
     let result: [MyReviewRestaurantDTO]
@@ -19,7 +19,7 @@ struct MyReviewPageResponseDTO: Decodable {
     }
 }
 
-struct MyReviewRestaurantDTO: Decodable {
+struct MyReviewRestaurantDTO: Decodable, Sendable {
     let restaurantId: Int
     let nameKr: String
     let nameEn: String?
@@ -33,7 +33,7 @@ struct MyReviewRestaurantDTO: Decodable {
     }
 }
 
-struct MyReviewDTO: Decodable {
+struct MyReviewDTO: Decodable, Sendable {
     let id: Int
     let menuId: Int
     let nameKr: String

@@ -10,6 +10,7 @@ import CoreLocation
 import Foundation
 import UIKit
 
+@MainActor
 final class MenuViewModel: NSObject, ObservableObject {
     let analytics: AnalyticsService
 
@@ -33,6 +34,9 @@ final class MenuViewModel: NSObject, ObservableObject {
     private let locationManager = CLLocationManager()
     private var remoteConfigFetchTask: Task<Void, Never>?
     private var remoteConfigUpdatesTask: Task<Void, Never>?
+    private var festivalDatesTask: Task<Void, Never>?
+    private var personalRestaurantsTask: Task<Void, Never>?
+    private var menuLoadTask: Task<Void, Never>?
     private var personalRestaurantById: [Int: PersonalRestaurantModel] = [:]
     private var personalRestaurantOrder: [Int: Int] = [:]
     private var updatingLikeRestaurantIds = Set<Int>()
@@ -152,9 +156,7 @@ final class MenuViewModel: NSObject, ObservableObject {
 
         super.init()
 
-        remoteConfigFetchTask = Task { [weak self] in
-            await self?.loadRemoteConfig()
-        }
+        startLoadingRemoteConfig()
         startObservingRemoteConfigUpdates()
 
         isFestivalSwitchOn = isFestivalAvailable && manageFestivalPreferencesUseCase.isSwitchOn()
@@ -172,27 +174,30 @@ final class MenuViewModel: NSObject, ObservableObject {
         }
 
         loadFilters()
-        Task {
-            await loadFestivalDates()
-        }
+        startLoadingFestivalDates()
         subscribe()
-        Task {
-            await loadPersonalRestaurants()
-        }
+        startLoadingPersonalRestaurants()
     }
 
     deinit {
         remoteConfigFetchTask?.cancel()
         remoteConfigUpdatesTask?.cancel()
+        festivalDatesTask?.cancel()
+        personalRestaurantsTask?.cancel()
+        menuLoadTask?.cancel()
     }
 
-    @MainActor
-    private func loadRemoteConfig() async {
-        do {
-            let config = try await fetchRemoteConfigUseCase.execute()
-            applyRemoteConfig(config)
-        } catch {
-            print("Failed to load remote config: \(error)")
+    private func startLoadingRemoteConfig() {
+        let fetchRemoteConfigUseCase = fetchRemoteConfigUseCase
+        remoteConfigFetchTask = Task { [weak self] in
+            do {
+                let config = try await fetchRemoteConfigUseCase.execute()
+                guard !Task.isCancelled else { return }
+                self?.applyRemoteConfig(config)
+            } catch {
+                guard !Task.isCancelled else { return }
+                print("Failed to load remote config: \(error)")
+            }
         }
     }
 
@@ -203,12 +208,12 @@ final class MenuViewModel: NSObject, ObservableObject {
             }
 
             for await config in updates {
-                await self?.applyRemoteConfig(config)
+                guard !Task.isCancelled else { return }
+                self?.applyRemoteConfig(config)
             }
         }
     }
 
-    @MainActor
     private func applyRemoteConfig(_ config: RemoteConfigModel) {
         isFestivalAvailable = config.festivalFeatureEnabled
         manageFestivalPreferencesUseCase.setFeatureAvailable(config.festivalFeatureEnabled)
@@ -275,37 +280,36 @@ final class MenuViewModel: NSObject, ObservableObject {
             .store(in: &cancellables)
     }
 
-    @MainActor
-    private func loadPersonalRestaurants() async {
+    private func startLoadingPersonalRestaurants() {
         guard !isLoadingPersonalRestaurants else {
             return
         }
 
         isLoadingPersonalRestaurants = true
-        defer {
-            isLoadingPersonalRestaurants = false
-        }
-
-        do {
-            let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
-            shouldUseDefaultRestaurantPreference = false
-            updatePersonalRestaurants(restaurants)
-            requestMealSectionRender()
-        } catch {
-            print("Failed to load personal restaurants: \(error)")
-
-            if personalRestaurantById.isEmpty {
-                shouldUseDefaultRestaurantPreference = true
+        let fetchPersonalRestaurantsUseCase = fetchPersonalRestaurantsUseCase
+        personalRestaurantsTask = Task { [weak self] in
+            do {
+                let restaurants = try await fetchPersonalRestaurantsUseCase.execute()
+                guard !Task.isCancelled, let self else { return }
+                isLoadingPersonalRestaurants = false
+                shouldUseDefaultRestaurantPreference = false
+                updatePersonalRestaurants(restaurants)
                 requestMealSectionRender()
+            } catch {
+                guard !Task.isCancelled, let self else { return }
+                isLoadingPersonalRestaurants = false
+                print("Failed to load personal restaurants: \(error)")
+
+                if personalRestaurantById.isEmpty {
+                    shouldUseDefaultRestaurantPreference = true
+                    requestMealSectionRender()
+                }
             }
         }
     }
 
-    @MainActor
     func refreshPersonalRestaurants() {
-        Task {
-            await loadPersonalRestaurants()
-        }
+        startLoadingPersonalRestaurants()
     }
 
     private func updatePersonalRestaurants(_ restaurants: [PersonalRestaurantModel]) {
@@ -339,7 +343,6 @@ final class MenuViewModel: NSObject, ObservableObject {
         return formatter.date(from: selectedDate) ?? Date()
     }
 
-    @MainActor
     func toggleRestaurantLike(_ restaurantId: Int) async {
         guard !updatingLikeRestaurantIds.contains(restaurantId),
             let restaurant = personalRestaurantById[restaurantId]
@@ -433,16 +436,16 @@ final class MenuViewModel: NSObject, ObservableObject {
             locationManager.requestWhenInUseAuthorization()
             return
         case .restricted:
-            DispatchQueue.main.async { self.showDistanceAlert = true }
+            showDistanceAlert = true
             return
         case .denied:
-            DispatchQueue.main.async { self.showDistanceAlert = true }
+            showDistanceAlert = true
             return
         case .authorizedAlways, .authorizedWhenInUse:
             locationManager.startUpdatingLocation()
             return
         @unknown default:
-            DispatchQueue.main.async { self.showDistanceAlert = true }
+            showDistanceAlert = true
             return
         }
     }
@@ -468,22 +471,14 @@ final class MenuViewModel: NSObject, ObservableObject {
     }
 
     private func getMenu(date: String) {
-        Task { @MainActor [weak self] in
-            guard let self else {
-                return
-            }
-
-            guard getMenuStatus != .loading else {
-                return
-            }
-
-            getMenuStatus = .loading
+        menuLoadTask?.cancel()
+        let fetchDailyMenuUseCase = fetchDailyMenuUseCase
+        menuLoadTask = Task { [weak self] in
+            self?.getMenuStatus = .loading
 
             let result = await fetchDailyMenuUseCase.execute(date: date)
 
-            guard date == selectedDate else {
-                getMenuStatus = .idle
-                getMenu(date: selectedDate)
+            guard !Task.isCancelled, let self, date == selectedDate else {
                 return
             }
 
@@ -542,17 +537,21 @@ final class MenuViewModel: NSObject, ObservableObject {
         mealSectionRenderScheduler.clear()
     }
 
-    @MainActor
-    func loadFestivalDates() async {
-        do {
-            let dates = try await fetchFestivalDatesUseCase.execute()
-            festivalDates = dates
-            refreshFestivalSwitchState()
-        } catch {
-            print("Failed to load festival dates: \(error)")
+    private func startLoadingFestivalDates() {
+        let fetchFestivalDatesUseCase = fetchFestivalDatesUseCase
+        festivalDatesTask = Task { [weak self] in
+            do {
+                let dates = try await fetchFestivalDatesUseCase.execute()
+                guard !Task.isCancelled, let self else { return }
+                festivalDates = dates
+                refreshFestivalSwitchState()
+            } catch {
+                guard !Task.isCancelled else { return }
+                print("Failed to load festival dates: \(error)")
+            }
         }
     }
-    static func getOperatingHours(operatingHours: [String], dayType: Int, selectedPage: Int) -> String {
+    nonisolated static func getOperatingHours(operatingHours: [String], dayType: Int, selectedPage: Int) -> String {
 
         guard operatingHours.count > dayType,
             dayType >= 0

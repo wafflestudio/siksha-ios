@@ -9,9 +9,17 @@ import SwiftUI
 
 struct AppRootView: View {
     @StateObject private var appState: AppState
+    @StateObject private var contentViewModel: ContentViewModel
+    private let imageCache: ImageCache
 
-    init(appState: AppState) {
+    init(
+        appState: AppState,
+        imageCache: ImageCache,
+        contentViewModel: ContentViewModel = ContentViewModel()
+    ) {
         _appState = StateObject(wrappedValue: appState)
+        _contentViewModel = StateObject(wrappedValue: contentViewModel)
+        self.imageCache = imageCache
     }
 
     var body: some View {
@@ -26,6 +34,8 @@ struct AppRootView: View {
             }
         }
         .environmentObject(appState)
+        .environmentObject(contentViewModel)
+        .environment(\.imageCache, imageCache)
         .task {
             await appState.resolveInitialAuthState()
         }

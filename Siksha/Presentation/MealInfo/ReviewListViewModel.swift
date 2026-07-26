@@ -9,6 +9,7 @@ import Combine
 import Foundation
 import UIKit
 
+@MainActor
 public class ReviewListViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let fetchMealReviewsUseCase: FetchMealReviewsUseCase
@@ -78,16 +79,12 @@ public class ReviewListViewModel: ObservableObject {
             do {
                 let response = try await fetchMealReviewsUseCase.execute(
                     menuId: mealID, page: currentPage, perPage: perPage)
-                await MainActor.run {
-                    self.hasMorePages = (self.currentPage < (response.totalCount + self.perPage - 1) / self.perPage)
-                    self.currentPage += 1
-                    self.getReviewStatus = .succeeded
-                    self.reviews += response.reviews
-                }
+                self.hasMorePages = (self.currentPage < (response.totalCount + self.perPage - 1) / self.perPage)
+                self.currentPage += 1
+                self.getReviewStatus = .succeeded
+                self.reviews += response.reviews
             } catch {
-                await MainActor.run {
-                    self.getReviewStatus = .failed
-                }
+                self.getReviewStatus = .failed
             }
         }
     }
@@ -105,16 +102,12 @@ public class ReviewListViewModel: ObservableObject {
             do {
                 let response = try await fetchMealImageReviewsUseCase.execute(
                     menuId: mealID, page: currentPage, perPage: perPage)
-                await MainActor.run {
-                    self.hasMorePages = response.hasNext
-                    self.currentPage += 1
-                    self.getReviewStatus = .succeeded
-                    self.reviews += response.reviews
-                }
+                self.hasMorePages = response.hasNext
+                self.currentPage += 1
+                self.getReviewStatus = .succeeded
+                self.reviews += response.reviews
             } catch {
-                await MainActor.run {
-                    self.getReviewStatus = .failed
-                }
+                self.getReviewStatus = .failed
             }
         }
     }

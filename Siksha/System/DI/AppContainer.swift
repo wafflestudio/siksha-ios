@@ -5,6 +5,7 @@
 //  Created by 한상현 on 2023/09/11.
 //
 
+@MainActor
 final class AppContainer {
     static let shared = AppContainer()
 
@@ -12,6 +13,10 @@ final class AppContainer {
     let useCases: UseCaseProvider
     let socialLoginService: SocialLoginService
     let menuAlarmNotificationManager: MenuAlarmNotificationManaging
+    let imageCache: ImageCache
+    let orderedImageDataLoader: OrderedImageDataLoading
+    let uploadImagePreparer: UploadImagePreparing
+    let blockManager: BlockManager
 
     init() {
         let networkModule = AlamofireNetworking()
@@ -25,6 +30,10 @@ final class AppContainer {
         self.domain = domain
         self.useCases = useCases
         self.socialLoginService = SocialLoginServiceImpl()
+        self.imageCache = TemporaryImageCache()
+        self.orderedImageDataLoader = URLSessionOrderedImageDataLoader()
+        self.uploadImagePreparer = JPEGUploadImagePreparer()
+        self.blockManager = BlockManager()
         self.menuAlarmNotificationManager = DefaultMenuAlarmNotificationManager(
             messagingTokenService: pushMessagingTokenService,
             registerUserDeviceUseCase: useCases.registerUserDeviceUseCase

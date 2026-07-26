@@ -4,13 +4,13 @@
 //
 //  Created by 박정헌 on 9/18/25.
 //
-struct RestaurantLikedMenuGroup: Hashable, Equatable {
+struct RestaurantLikedMenuGroup: Hashable, Equatable, Sendable {
     var id: Int
     var name: String
     var menus: [MyLikedMenu]
 }
 
-struct MyLikedMenu: Equatable, Hashable {
+struct MyLikedMenu: Equatable, Hashable, Sendable {
     var id: Int = 0
     var code: String = ""
     var nameKr: String = ""

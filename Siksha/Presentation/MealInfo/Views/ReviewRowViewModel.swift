@@ -8,6 +8,7 @@
 import Combine
 import Foundation
 
+@MainActor
 class ReviewRowViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let updateReviewLikeUseCase: UpdateReviewLikeUseCase
@@ -73,16 +74,12 @@ class ReviewRowViewModel: ObservableObject {
 
             do {
                 try await updateReviewLikeUseCase.execute(reviewId: review.id, isLiked: true)
-                await MainActor.run {
-                    self.isLiked = true
-                    self.likeCount += 1
-                    self.getLikeStatus = .succeeded
-                }
+                self.isLiked = true
+                self.likeCount += 1
+                self.getLikeStatus = .succeeded
             } catch {
-                await MainActor.run {
-                    self.getLikeStatus = .failed
-                    self.error = ErrorHelper.categorize(error)
-                }
+                self.getLikeStatus = .failed
+                self.error = ErrorHelper.categorize(error)
             }
         }
     }
@@ -93,16 +90,12 @@ class ReviewRowViewModel: ObservableObject {
 
             do {
                 try await updateReviewLikeUseCase.execute(reviewId: review.id, isLiked: false)
-                await MainActor.run {
-                    self.isLiked = false
-                    self.likeCount = max(0, self.likeCount - 1)
-                    self.getLikeStatus = .succeeded
-                }
+                self.isLiked = false
+                self.likeCount = max(0, self.likeCount - 1)
+                self.getLikeStatus = .succeeded
             } catch {
-                await MainActor.run {
-                    self.getLikeStatus = .failed
-                    self.error = ErrorHelper.categorize(error)
-                }
+                self.getLikeStatus = .failed
+                self.error = ErrorHelper.categorize(error)
             }
         }
     }

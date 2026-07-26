@@ -106,7 +106,8 @@ struct RestaurantsView: View {
                     urlString: urlString,
                     showWebView: $kakaoShareManager.showWebView,
                     restaurant: restaurant.kakaoShareModel,
-                    selectedDate: viewModel?.selectedDate ?? "오늘"
+                    selectedDate: viewModel?.selectedDate ?? "오늘",
+                    kakaoShareManager: kakaoShareManager
                 )
             }
         }

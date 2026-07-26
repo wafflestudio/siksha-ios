@@ -106,7 +106,7 @@ struct ReviewRow: View {
                     }
                 }
                 .padding(.leading, 30)
-                .onChange(of: tappedIndex) { index in
+                .onChange(of: tappedIndex) {
                     guard tappedIndex != nil else { return }
                     isImageExpanded = true
                 }

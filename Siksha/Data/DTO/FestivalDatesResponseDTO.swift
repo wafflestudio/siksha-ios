@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct FestivalDatesResponseDTO: Decodable {
+struct FestivalDatesResponseDTO: Decodable, Sendable {
     let festivalDates: [String]
 }
 

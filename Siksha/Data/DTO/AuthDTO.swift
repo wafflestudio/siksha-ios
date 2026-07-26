@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct AuthTokenResponseDTO: Decodable {
+struct AuthTokenResponseDTO: Decodable, Sendable {
     let accessToken: String
 
     enum CodingKeys: String, CodingKey {

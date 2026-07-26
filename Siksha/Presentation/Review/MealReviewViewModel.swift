@@ -9,11 +9,14 @@ import Combine
 import Foundation
 import SwiftUI
 
+@MainActor
 class MealReviewViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     private let fetchReviewCommentRecommendationUseCase: FetchReviewCommentRecommendationUseCase
     private let submitMealReviewUseCase: SubmitMealReviewUseCase
     private let editMealReviewUseCase: EditMealReviewUseCase
+    private let orderedImageDataLoader: OrderedImageDataLoading
+    private let uploadImagePreparer: UploadImagePreparing
 
     @Published var meal: MenuItemDisplayModel?
     @Published var scoreToSubmit: Int = 0
@@ -28,22 +31,29 @@ class MealReviewViewModel: ObservableObject {
 
     @Published var selectedKeywords: [KeywordRateType: String] = [:]
 
-    @Published var selectedImages: [UIImage] = []
+    @Published private(set) var imageAttachments: [UploadImageAttachment] = []
+    @Published private(set) var existingImageLoadState: ExistingImageLoadState = .ready
 
-    private var imagesData = [Data]()
     private var recommendedComment = ""
-    private var isEditMode = false
+    private var recommendationTask: Task<Void, Never>?
+    private var existingImageLoadTask: Task<Void, Never>?
+    private var imageLoadGeneration = 0
+    private var existingImageURLStrings: [String] = []
 
     init(
         meal: MenuItemDisplayModel? = nil,
         fetchReviewCommentRecommendationUseCase: FetchReviewCommentRecommendationUseCase,
         submitMealReviewUseCase: SubmitMealReviewUseCase,
-        editMealReviewUseCase: EditMealReviewUseCase
+        editMealReviewUseCase: EditMealReviewUseCase,
+        orderedImageDataLoader: OrderedImageDataLoading,
+        uploadImagePreparer: UploadImagePreparing
     ) {
         self.meal = meal
         self.fetchReviewCommentRecommendationUseCase = fetchReviewCommentRecommendationUseCase
         self.submitMealReviewUseCase = submitMealReviewUseCase
         self.editMealReviewUseCase = editMealReviewUseCase
+        self.orderedImageDataLoader = orderedImageDataLoader
+        self.uploadImagePreparer = uploadImagePreparer
 
         $postReviewSucceeded
             .dropFirst()
@@ -66,6 +76,7 @@ class MealReviewViewModel: ObservableObject {
                 guard let self = self else { return }
 
                 if score == 0 {
+                    self.recommendationTask?.cancel()
                     self.commentRecommended = false
                 } else {
                     if commentToSubmit.isEmpty || commentToSubmit == recommendedComment {
@@ -76,28 +87,41 @@ class MealReviewViewModel: ObservableObject {
             .store(in: &cancellables)
 
         $commentToSubmit
-            .combineLatest($scoreToSubmit, $selectedKeywords)
+            .combineLatest($scoreToSubmit, $selectedKeywords, $existingImageLoadState)
             .map {
                 !$0.isEmpty && $1 > 0 && $2[KeywordRateType.taste]?.isEmpty == false
                     && $2[KeywordRateType.composition]?.isEmpty == false && $2[KeywordRateType.price]?.isEmpty == false
+                    && $3 == .ready
             }
             .assign(to: \.canSubmit, on: self)
             .store(in: &cancellables)
     }
 
+    deinit {
+        recommendationTask?.cancel()
+        existingImageLoadTask?.cancel()
+    }
+
+    var remainingImageCount: Int {
+        max(0, 5 - imageAttachments.count)
+    }
+
     private func getRecommendedComment(_ score: Int) {
-        Task { [weak self] in
+        recommendationTask?.cancel()
+        recommendationTask = Task { [weak self] in
             guard let self else { return }
 
             do {
                 let comment = try await fetchReviewCommentRecommendationUseCase.execute(score: score)
-                guard !comment.isEmpty else { return }
+                try Task.checkCancellation()
+                guard !comment.isEmpty,
+                    self.scoreToSubmit == score,
+                    self.commentToSubmit.isEmpty || self.commentToSubmit == self.recommendedComment
+                else { return }
 
-                await MainActor.run {
-                    self.commentRecommended = true
-                    self.recommendedComment = comment
-                    self.commentToSubmit = comment
-                }
+                self.commentRecommended = true
+                self.recommendedComment = comment
+                self.commentToSubmit = comment
             } catch {
                 return
             }
@@ -110,50 +134,22 @@ class MealReviewViewModel: ObservableObject {
             return
         }
 
-        let submission = makeSubmission(menuId: meal.id, images: nil)
-        Task { [weak self] in
-            guard let self else { return }
+        guard existingImageLoadState == .ready else { return }
 
-            do {
-                try await submitMealReviewUseCase.execute(submission)
-                await MainActor.run {
-                    self.errorCode = nil
-                    self.postReviewSucceeded = true
-                    self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
-                }
-            } catch {
-                await MainActor.run {
-                    self.errorCode = self.reviewErrorCode(from: error)
-                    self.postReviewSucceeded = false
-                }
-            }
-        }
-    }
-
-    func submitReviewImages(images: [UIImage]) {
-        guard let meal = meal else {
-            self.postReviewSucceeded = false
-            return
-        }
-
-        let imagesData = images.compactMap { $0.jpegData(compressionQuality: 0.5) }
-        let submission = makeSubmission(menuId: meal.id, images: imagesData)
+        let images = imageAttachments.map(\.uploadData)
+        let submission = makeSubmission(menuId: meal.id, images: images.isEmpty ? nil : images)
 
         Task { [weak self] in
             guard let self else { return }
 
             do {
                 try await submitMealReviewUseCase.execute(submission)
-                await MainActor.run {
-                    self.errorCode = nil
-                    self.postReviewSucceeded = true
-                    self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
-                }
+                self.errorCode = nil
+                self.postReviewSucceeded = true
+                self.meal = meal.updatingAfterReviewSubmission(score: self.scoreToSubmit)
             } catch {
-                await MainActor.run {
-                    self.errorCode = self.reviewErrorCode(from: error)
-                    self.postReviewSucceeded = false
-                }
+                self.errorCode = self.reviewErrorCode(from: error)
+                self.postReviewSucceeded = false
             }
         }
     }
@@ -161,7 +157,6 @@ class MealReviewViewModel: ObservableObject {
     // MARK: - 리뷰 수정 관련 메소드
 
     func loadExistingReview(_ review: RestaurantReview) {
-        self.isEditMode = true
         self.scoreToSubmit = review.rating
         self.commentToSubmit = review.reviewText
 
@@ -176,27 +171,40 @@ class MealReviewViewModel: ObservableObject {
         }
 
         if !review.imageUrls.isEmpty {
-            downloadExistingImages(from: review.imageUrls)
+            loadExistingImages(from: review.imageUrls)
         }
     }
 
-    private func downloadExistingImages(from urls: [String]) {
-        let publishers = urls.compactMap { urlString -> AnyPublisher<UIImage?, Never>? in
-            guard let url = URL(string: urlString) else { return nil }
+    private func loadExistingImages(from urlStrings: [String]) {
+        existingImageURLStrings = urlStrings
+        imageLoadGeneration += 1
+        let generation = imageLoadGeneration
+        existingImageLoadTask?.cancel()
+        existingImageLoadState = .loading
 
-            return URLSession.shared.dataTaskPublisher(for: url)
-                .map { UIImage(data: $0.data) }
-                .replaceError(with: nil)
-                .eraseToAnyPublisher()
+        let urls = urlStrings.compactMap(URL.init(string:))
+        guard urls.count == urlStrings.count else {
+            existingImageLoadState = .failed
+            return
+        }
+        guard !urls.isEmpty else {
+            imageAttachments.removeAll { $0.origin == .downloaded }
+            existingImageLoadState = .ready
+            return
         }
 
-        Publishers.MergeMany(publishers)
-            .collect()
-            .receive(on: RunLoop.main)
-            .sink { [weak self] images in
-                self?.selectedImages = images.compactMap { $0 }
+        let orderedImageDataLoader = orderedImageDataLoader
+        existingImageLoadTask = Task { @concurrent [weak self] in
+            do {
+                let loadedData = try await orderedImageDataLoader.loadImageData(from: urls)
+                try Task.checkCancellation()
+                await self?.applyLoadedImageData(loadedData, generation: generation)
+            } catch is CancellationError {
+                return
+            } catch {
+                await self?.applyImageLoadFailure(generation: generation)
             }
-            .store(in: &cancellables)
+        }
     }
 
     func editReview(reviewId: Int) {
@@ -205,31 +213,43 @@ class MealReviewViewModel: ObservableObject {
             return
         }
 
-        let allImagesData = selectedImages.compactMap { $0.jpegData(compressionQuality: 0.5) }
-        let submission = makeSubmission(menuId: meal.id, images: allImagesData.isEmpty ? nil : allImagesData)
+        guard existingImageLoadState == .ready else { return }
+
+        let images = imageAttachments.map(\.uploadData)
+        let submission = makeSubmission(menuId: meal.id, images: images.isEmpty ? nil : images)
 
         Task { [weak self] in
             guard let self else { return }
 
             do {
                 try await editMealReviewUseCase.execute(reviewId: reviewId, submission: submission)
-                await MainActor.run {
-                    self.errorCode = nil
-                    self.postReviewSucceeded = true
-                }
+                self.errorCode = nil
+                self.postReviewSucceeded = true
             } catch {
-                await MainActor.run {
-                    self.errorCode = self.reviewErrorCode(from: error)
-                    self.postReviewSucceeded = false
-                }
+                self.errorCode = self.reviewErrorCode(from: error)
+                self.postReviewSucceeded = false
             }
         }
     }
 
-    func deleteImage(_ image: UIImage) {
-        selectedImages.removeAll {
-            $0 == image
+    func addSelectedImages(_ images: [UIImage]) {
+        let imagesToAdd = images.prefix(remainingImageCount)
+
+        do {
+            let attachments = try imagesToAdd.map(uploadImagePreparer.prepareSelectedImage)
+            imageAttachments.append(contentsOf: attachments)
+        } catch {
+            errorCode = nil
+            postReviewSucceeded = false
         }
+    }
+
+    func deleteImage(id: UUID) {
+        imageAttachments.removeAll { $0.id == id }
+    }
+
+    func retryExistingImageLoad() {
+        loadExistingImages(from: existingImageURLStrings)
     }
 
     private func makeSubmission(menuId: Int, images: [Data]?) -> MealReviewSubmissionModel {
@@ -249,5 +269,23 @@ class MealReviewViewModel: ObservableObject {
             return ReviewErrorCode(rawValue: statusCode) ?? .noNetwork
         }
         return .noNetwork
+    }
+
+    private func applyLoadedImageData(_ loadedData: [Data], generation: Int) {
+        guard imageLoadGeneration == generation else { return }
+
+        do {
+            let downloadedAttachments = try loadedData.map(uploadImagePreparer.prepareDownloadedImage)
+            let selectedAttachments = imageAttachments.filter { $0.origin == .selected }
+            imageAttachments = downloadedAttachments + selectedAttachments
+            existingImageLoadState = .ready
+        } catch {
+            existingImageLoadState = .failed
+        }
+    }
+
+    private func applyImageLoadFailure(generation: Int) {
+        guard imageLoadGeneration == generation else { return }
+        existingImageLoadState = .failed
     }
 }

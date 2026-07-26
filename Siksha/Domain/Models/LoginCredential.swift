@@ -5,7 +5,7 @@
 //  Created by Codex on 7/5/26.
 //
 
-struct LoginCredential {
+struct LoginCredential: Sendable {
     let provider: LoginProvider
     let token: String
     let appleUserIdentifier: String?

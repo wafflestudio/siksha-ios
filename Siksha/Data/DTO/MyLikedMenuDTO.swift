@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MyLikedMenuResponseDTO: Decodable {
+struct MyLikedMenuResponseDTO: Decodable, Sendable {
     let groups: [RestaurantLikedMenuGroupDTO]
 
     enum CodingKeys: String, CodingKey {
@@ -15,7 +15,7 @@ struct MyLikedMenuResponseDTO: Decodable {
     }
 }
 
-struct RestaurantLikedMenuGroupDTO: Decodable {
+struct RestaurantLikedMenuGroupDTO: Decodable, Sendable {
     let id: Int
     let name: String
     let menus: [MyLikedMenuDTO]
@@ -27,7 +27,7 @@ struct RestaurantLikedMenuGroupDTO: Decodable {
     }
 }
 
-struct MyLikedMenuDTO: Decodable {
+struct MyLikedMenuDTO: Decodable, Sendable {
     let id: Int
     let code: String
     let nameKr: String
@@ -91,7 +91,7 @@ struct AlarmMenuDTO: Decodable {
     }
 }
 
-struct AlarmTimeResponseDTO: Decodable {
+struct AlarmTimeResponseDTO: Decodable, Sendable {
     let alarmType: String
 
     enum CodingKeys: String, CodingKey {

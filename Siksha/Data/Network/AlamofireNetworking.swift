@@ -9,7 +9,7 @@ import Alamofire
 import Combine
 
 final class AlamofireNetworking: NetworkModuleProtocol {
-    func request<T: Decodable>(endpoint: SikshaAPI) -> AnyPublisher<T, AppError> {
+    func request<T: Decodable & Sendable>(endpoint: SikshaAPI) -> AnyPublisher<T, AppError> {
         var request: DataRequest
         if endpoint.multiPartFormDataNeeded {
             request = AF.upload(multipartFormData: endpoint.multipartFormData!, with: endpoint)

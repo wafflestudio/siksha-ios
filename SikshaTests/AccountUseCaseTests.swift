@@ -10,6 +10,7 @@ import XCTest
 
 @testable import Siksha
 
+@MainActor
 final class AccountUseCaseTests: XCTestCase {
     func testAccountCleanupContinuesWhenMessagingTokenDeletionFails() async {
         let messaging = MessagingTokenServiceStub(
@@ -156,10 +157,10 @@ final class AccountUseCaseTests: XCTestCase {
             repository: repository,
             authRepository: authRepository
         )
-        let registrationStarted = expectation(description: "registration started")
+        let registrationStarted = AsyncSignal()
         let registrationSignal = AsyncSignal()
         repository.registerHandler = {
-            registrationStarted.fulfill()
+            await registrationStarted.resume()
             await registrationSignal.wait()
         }
         let registerUseCase = DefaultRegisterUserDeviceUseCase(lifecycle: lifecycle)
@@ -171,7 +172,7 @@ final class AccountUseCaseTests: XCTestCase {
         let registrationTask = Task {
             try await registerUseCase.execute(fcmToken: "token")
         }
-        await fulfillment(of: [registrationStarted], timeout: 1)
+        await registrationStarted.wait()
 
         let logoutTask = Task {
             try await logoutUseCase.execute()
@@ -189,19 +190,19 @@ final class AccountUseCaseTests: XCTestCase {
     func testOperationGateSerializesAsyncOperations() async throws {
         let gate = DeviceTokenOperationGate()
         let signal = AsyncSignal()
-        let firstStarted = expectation(description: "first operation started")
+        let firstStarted = AsyncSignal()
         let log = AccountOperationLog()
 
         let firstTask = Task {
             try await gate.withExclusiveAccess {
                 log.append("first-start")
-                firstStarted.fulfill()
+                await firstStarted.resume()
                 await signal.wait()
                 log.append("first-end")
             }
         }
 
-        await fulfillment(of: [firstStarted], timeout: 1)
+        await firstStarted.wait()
 
         let secondTask = Task {
             try await gate.withExclusiveAccess {
@@ -222,27 +223,27 @@ final class AccountUseCaseTests: XCTestCase {
     func testOperationGateDoesNotRunCancelledWaiter() async throws {
         let gate = DeviceTokenOperationGate()
         let signal = AsyncSignal()
-        let firstStarted = expectation(description: "first operation started")
-        let secondStarted = expectation(description: "second task started")
+        let firstStarted = AsyncSignal()
+        let secondStarted = AsyncSignal()
         let log = AccountOperationLog()
 
         let firstTask = Task {
             try await gate.withExclusiveAccess {
                 log.append("first-start")
-                firstStarted.fulfill()
+                await firstStarted.resume()
                 await signal.wait()
                 log.append("first-end")
             }
         }
-        await fulfillment(of: [firstStarted], timeout: 1)
+        await firstStarted.wait()
 
         let secondTask = Task {
-            secondStarted.fulfill()
+            await secondStarted.resume()
             try await gate.withExclusiveAccess {
                 log.append("second")
             }
         }
-        await fulfillment(of: [secondStarted], timeout: 1)
+        await secondStarted.wait()
         secondTask.cancel()
 
         await signal.resume()
@@ -258,6 +259,53 @@ final class AccountUseCaseTests: XCTestCase {
         }
 
         XCTAssertEqual(log.values, ["first-start", "first-end"])
+    }
+
+    func testOperationGateRejectsCancellationBeforeAcquiring() async throws {
+        let gate = DeviceTokenOperationGate()
+        let signal = AsyncSignal()
+        let firstStarted = AsyncSignal()
+        let log = AccountOperationLog()
+
+        let firstTask = Task {
+            try await gate.withExclusiveAccess {
+                log.append("first-start")
+                await firstStarted.resume()
+                await signal.wait()
+                log.append("first-end")
+            }
+        }
+        await firstStarted.wait()
+
+        let cancelledTasks = (0..<25).map { _ in
+            let task = Task {
+                try await gate.withExclusiveAccess {
+                    log.append("cancelled")
+                }
+            }
+            task.cancel()
+            return task
+        }
+
+        await signal.resume()
+        try await firstTask.value
+
+        for task in cancelledTasks {
+            do {
+                try await task.value
+                XCTFail("Expected cancellation")
+            } catch is CancellationError {
+                // Expected cancellation before acquiring exclusive access.
+            } catch {
+                XCTFail("Unexpected error: \(error)")
+            }
+        }
+
+        try await gate.withExclusiveAccess {
+            log.append("after-cancellation")
+        }
+
+        XCTAssertEqual(log.values, ["first-start", "first-end", "after-cancellation"])
     }
 
     private func makeDeleteDependencies(

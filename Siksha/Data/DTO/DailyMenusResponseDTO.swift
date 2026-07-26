@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct DailyMenusResponseDTO: Decodable {
+struct DailyMenusResponseDTO: Decodable, Sendable {
     let count: Int
     let result: [DailyMenusDTO]
 }

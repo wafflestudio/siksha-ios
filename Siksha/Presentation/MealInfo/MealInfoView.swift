@@ -157,6 +157,7 @@ private extension MealInfoView {
     }
 }
 
+@MainActor
 private struct MealInfoPreview {
     static var previews: some View {
         let meal = MenuItemDisplayModel(

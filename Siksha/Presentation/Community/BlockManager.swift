@@ -5,25 +5,27 @@
 
 import Foundation
 
+@MainActor
 final class BlockManager {
-    static let shared = BlockManager()
-
     private let nicknamesKey = "blockedNicknames"
     private let postIdsKey = "blockedPostIds"
     private let commentIdsKey = "blockedCommentIds"
+    private let userDefaults: UserDefaults
 
-    private init() {}
+    init(userDefaults: UserDefaults = .standard) {
+        self.userDefaults = userDefaults
+    }
 
     // MARK: - Nickname-based blocking (non-anonymous users)
 
     func blockNickname(_ nickname: String) {
-        var current = Set(UserDefaults.standard.stringArray(forKey: nicknamesKey) ?? [])
+        var current = Set(userDefaults.stringArray(forKey: nicknamesKey) ?? [])
         current.insert(nickname)
-        UserDefaults.standard.set(Array(current), forKey: nicknamesKey)
+        userDefaults.set(Array(current), forKey: nicknamesKey)
     }
 
     func blockedNicknames() -> Set<String> {
-        return Set(UserDefaults.standard.stringArray(forKey: nicknamesKey) ?? [])
+        return Set(userDefaults.stringArray(forKey: nicknamesKey) ?? [])
     }
 
     // MARK: - Post ID-based blocking (anonymous posts)
@@ -31,11 +33,11 @@ final class BlockManager {
     func blockPost(id: Int) {
         var current = blockedPostIds()
         current.insert(id)
-        UserDefaults.standard.set(Array(current), forKey: postIdsKey)
+        userDefaults.set(Array(current), forKey: postIdsKey)
     }
 
     func blockedPostIds() -> Set<Int> {
-        return Set((UserDefaults.standard.array(forKey: postIdsKey) as? [Int]) ?? [])
+        return Set((userDefaults.array(forKey: postIdsKey) as? [Int]) ?? [])
     }
 
     // MARK: - Comment ID-based blocking (anonymous comments)
@@ -43,10 +45,10 @@ final class BlockManager {
     func blockComment(id: Int) {
         var current = blockedCommentIds()
         current.insert(id)
-        UserDefaults.standard.set(Array(current), forKey: commentIdsKey)
+        userDefaults.set(Array(current), forKey: commentIdsKey)
     }
 
     func blockedCommentIds() -> Set<Int> {
-        return Set((UserDefaults.standard.array(forKey: commentIdsKey) as? [Int]) ?? [])
+        return Set((userDefaults.array(forKey: commentIdsKey) as? [Int]) ?? [])
     }
 }

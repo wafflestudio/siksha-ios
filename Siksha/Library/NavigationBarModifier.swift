@@ -35,6 +35,10 @@ struct NavigationBarModifier: ViewModifier {
             .toolbarBackground(Color.backgroundGNB, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
             .navigationViewStyle(StackNavigationViewStyle())
+            .background {
+                InteractivePopGestureBridge()
+                    .frame(width: 0, height: 0)
+            }
     }
 }
 

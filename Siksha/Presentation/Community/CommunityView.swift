@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
-    @State private var tag: Int? = nil
     @State private var needRefresh = false
 
     // MARK: - Anonymous policy popup state
@@ -49,28 +48,24 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
             }
             .customNavigationBar(title: "icon")
 
-            Button {
-                tag = 1
+            NavigationLink {
+                CommunityPostPublishView(
+                    needRefresh: $needRefresh,
+                    viewModel: CommunityPostPublishViewModel(
+                        boardId: selectedBoardId ?? 0,
+                        communityRepository: AppContainer.shared.domain.communityRepository,
+                        orderedImageDataLoader: AppContainer.shared.orderedImageDataLoader,
+                        uploadImagePreparer: AppContainer.shared.uploadImagePreparer
+                    )
+                )
             } label: {
-                NavigationLink(
-                    destination: CommunityPostPublishView(
-                        needRefresh: $needRefresh,
-                        viewModel: CommunityPostPublishViewModel(
-                            boardId: selectedBoardId ?? 0,
-                            communityRepository: AppContainer.shared.domain.communityRepository
-                        )
-                    ),
-                    tag: 1,
-                    selection: self.$tag
-                ) {
-                    Image("Pencil")
-                        .resizable()
-                        .frame(width: 28, height: 28)
-                        .foregroundColor(.white)
-                        .frame(width: 50, height: 50)
-                        .background(Color.orange500)
-                        .clipShape(Circle())
-                }
+                Image("Pencil")
+                    .resizable()
+                    .frame(width: 28, height: 28)
+                    .foregroundColor(.white)
+                    .frame(width: 50, height: 50)
+                    .background(Color.orange500)
+                    .clipShape(Circle())
             }
             .disabled(selectedBoardId == nil)
             .padding(.trailing, 29)
@@ -104,15 +99,13 @@ struct CommunityView<ViewModel>: View where ViewModel: CommunityViewModelType {
                 .transition(.opacity)
             }
         }
-        .onChange(
-            of: needRefresh,
-            perform: { refresh in
-                if refresh {
-                    self.viewModel.loadSelectedBoardPosts()
-                    self.viewModel.loadTrendingPosts()
-                    needRefresh = false
-                }
-            })
+        .onChange(of: needRefresh) { _, refresh in
+            if refresh {
+                viewModel.loadSelectedBoardPosts()
+                viewModel.loadTrendingPosts()
+                needRefresh = false
+            }
+        }
     }
 
     var loadingView: some View {
@@ -177,6 +170,7 @@ struct CommunityPostPreView: View {
             CommunityPostView(
                 viewModel: CommunityPostViewModel(
                     communityRepository: AppContainer.shared.domain.communityRepository,
+                    blockManager: AppContainer.shared.blockManager,
                     postId: info.id
                 ),
                 needPostViewRefresh: needRefresh
@@ -296,6 +290,9 @@ class StubCommunityViewModel: CommunityViewModelType {
 
     var loadInitialPostsStatus: InitialPostsStatus = .idle
     var isChangingBoard: Bool = false
+
+    @MainActor
+    init() {}
 
     func loadBasicInfos() {}
     func loadMorePosts() {}

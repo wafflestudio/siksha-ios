@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ReviewKeywordSummary {
+struct ReviewKeywordSummary: Sendable {
     let type: KeywordRateType
     let keyword: String
     let count: Int

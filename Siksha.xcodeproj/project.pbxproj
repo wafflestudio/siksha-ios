@@ -80,17 +80,26 @@
 			membershipExceptions = (
 				AccountManageViewModelTests.swift,
 				AccountUseCaseTests.swift,
+				AdapterConcurrencyTests.swift,
 				AppStateTests.swift,
 				AuthRepositoryImplTests.swift,
 				AuthSessionLocalDataSourceTests.swift,
 				AuthUseCaseTests.swift,
+				CalendarViewTests.swift,
+				CapturedStateRaceTests.swift,
 				DeviceTokenRemoteDataSourceTests.swift,
 				DeviceTokenUseCaseTests.swift,
+				MealAndReviewViewModelTests.swift,
+				MenuRepositoryTests.swift,
+				PresentationStateConcurrencyTests.swift,
 				ProfileEditViewModelTests.swift,
+				RemoteConfigRepositoryImplTests.swift,
 				RemoteImageLoaderTests.swift,
 				RenewalSettingsViewModelTests.swift,
 				ResolveInitialAuthStateUseCaseTests.swift,
 				RestaurantLocalDataSourceTests.swift,
+				SharedStateTests.swift,
+				SikshaAPIRequestTests.swift,
 				SikshaTests.swift,
 			);
 			target = 1E3A56FC25C6FCE900DBB3F4 /* SikshaTests */;
@@ -523,13 +532,16 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_NONISOLATED_NONSENDING_BY_DEFAULT = YES;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -582,13 +594,16 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_UPCOMING_FEATURE_NONISOLATED_NONSENDING_BY_DEFAULT = YES;
+				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -611,7 +626,6 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = K9883YB4VR;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Siksha/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -627,7 +641,6 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match Development com.wafflestudio.siksha.dev";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -650,7 +663,6 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = K9883YB4VR;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Siksha/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -665,7 +677,6 @@
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "match AppStore com.wafflestudio.siksha";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
@@ -676,7 +687,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = SikshaTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -684,7 +694,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wafflestudio.SikshaTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Siksha.app/Siksha";
 			};
@@ -696,7 +705,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = SikshaTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -704,7 +712,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.wafflestudio.SikshaTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Siksha.app/Siksha";
 			};
@@ -715,14 +722,12 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = SikshaUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Siksha;
 			};
@@ -733,14 +738,12 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = SikshaUITests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Siksha;
 			};

@@ -16,6 +16,7 @@ struct TopPostCell: View {
             CommunityPostView(
                 viewModel: CommunityPostViewModel(
                     communityRepository: AppContainer.shared.domain.communityRepository,
+                    blockManager: AppContainer.shared.blockManager,
                     postId: post.id
                 ),
                 needPostViewRefresh: needRefresh

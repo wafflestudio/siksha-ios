@@ -7,12 +7,10 @@
 
 import Foundation
 
+@MainActor
 protocol MenuAlarmNotificationManaging {
     func requestAuthorization() async -> Bool
-    @MainActor
     func registerRemoteNotificationsIfNeeded()
-    @MainActor
     func didRegisterForRemoteNotifications(with deviceToken: Data)
-    @MainActor
     func didFailToRegisterForRemoteNotifications(error: Error)
 }

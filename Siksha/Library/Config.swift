@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class Config {
+final class Config: Sendable {
     static let shared = Config()
 
     let baseURL: String
@@ -16,8 +16,6 @@ final class Config {
     let kakaoAppKey: String
     let kakaoShareTemplateId: Int64
     let mixpanelToken: String
-
-    private let envDict: NSDictionary
 
     private init() {
         #if DEBUG
@@ -32,8 +30,6 @@ final class Config {
         else {
             fatalError("Failed to load config.plist or parse \(configKey) environment.")
         }
-
-        self.envDict = envDict
 
         self.baseURL = Self.getString(from: envDict, key: .serverURL)
         self.googleClientId = Self.getString(from: envDict, key: .googleClientId)

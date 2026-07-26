@@ -7,22 +7,13 @@
 
 import SwiftUI
 
-var SAMPLE_ALARM_MENU = [
-    AlarmMenu(id: 0, restaurant: "학생회관식당", menus: ["콩나물밥 & 부추양념", "돌솥부대찌개"]),
-    AlarmMenu(id: 1, restaurant: "학생회관식당", menus: ["콩나물밥 & 부추양념", "돌솥부대찌개"]),
-
-]
-struct AlarmMenu: Hashable {
-    var id: Int
-    var restaurant: String
-    var menus: [String]
-}
 struct AlarmView: View {
     @ObservedObject var viewModel: MyLikedMenuViewModel
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+    @EnvironmentObject private var contentViewModel: ContentViewModel
     var backButton: some View {
         Button(action: {
-            ContentViewModel.contentViewModel.showPopUp = false
+            contentViewModel.showPopUp = false
             self.presentationMode.wrappedValue.dismiss()
         }) {
             Image("NavigationBack")

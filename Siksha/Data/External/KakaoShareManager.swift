@@ -6,15 +6,27 @@
 //
 
 import KakaoSDKAuth
-import KakaoSDKCommon
 import KakaoSDKShare
-import KakaoSDKTemplate
 import SwiftUI
 import UIKit
 
-class KakaoShareManager: ObservableObject {
+@MainActor
+protocol KakaoShareManaging: AnyObject {
+    var webViewLoadRevision: Int { get }
+
+    func isKakaoTalkLoginURL(_ url: URL) -> Bool
+    func exchangeToken(
+        code: String,
+        completion: @escaping @MainActor @Sendable (Bool) -> Void
+    )
+    func shareKakao(restaurant: KakaoShareRestaurantModel, selectedDateString: String)
+}
+
+@MainActor
+final class KakaoShareManager: ObservableObject, KakaoShareManaging {
     @Published var showWebView = false
     @Published var urlToLoad: String?
+    @Published private(set) var webViewLoadRevision = 0
 
     let templateId = Config.shared.kakaoShareTemplateId
 
@@ -22,6 +34,25 @@ class KakaoShareManager: ObservableObject {
     var maxMenus = 0
 
     let dateFormatter = DateFormatter()
+
+    func isKakaoTalkLoginURL(_ url: URL) -> Bool {
+        AuthApi.isKakaoTalkLoginUrl(url)
+    }
+
+    func exchangeToken(
+        code: String,
+        completion: @escaping @MainActor @Sendable (Bool) -> Void
+    ) {
+        AuthApi.shared.token(code: code) { _, error in
+            let didSucceed = error == nil
+            if let error {
+                print("Token error: \(error)")
+            }
+            Task { @MainActor in
+                completion(didSucceed)
+            }
+        }
+    }
 
     func setTempArgs(restaurant: KakaoShareRestaurantModel, selectedDateString: String) {
         dateFormatter.dateFormat = "yyyy-MM-dd"
@@ -64,8 +95,14 @@ class KakaoShareManager: ObservableObject {
                     print(error)
                 } else {
                     print("shareCustom() success.")
-                    if let sharingResult = sharingResult {
-                        UIApplication.shared.open(sharingResult.url, options: [:], completionHandler: nil)
+                    if let sharingURL = sharingResult?.url {
+                        Task { @MainActor in
+                            UIApplication.shared.open(
+                                sharingURL,
+                                options: [:],
+                                completionHandler: nil
+                            )
+                        }
                     }
                 }
             }
@@ -73,6 +110,7 @@ class KakaoShareManager: ObservableObject {
             if let sharingResult = ShareApi.shared.makeCustomUrl(templateId: templateId, templateArgs: kakaoShareInfo) {
                 print("makeCustomURL success")
                 urlToLoad = sharingResult.absoluteString
+                webViewLoadRevision += 1
                 showWebView = true
             } else {
                 let error = NSError(

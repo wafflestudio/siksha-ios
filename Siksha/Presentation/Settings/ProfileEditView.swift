@@ -39,7 +39,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             .task {
                 await viewModel.loadInfo()
             }
-            .onChange(of: viewModel.shouldDismiss) { shouldDismiss in
+            .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
                 if shouldDismiss {
                     presentationMode.wrappedValue.dismiss()
                 }
@@ -71,7 +71,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             keyboardToolbar
                 .opacity(keyboardResponder.didKeyboardShow ? 1 : 0)
                 .offset(y: keyboardResponder.didKeyboardShow ? -keyboardResponder.currentHeight : 50)
-                .animation(.easeOut(duration: 0.35))
+                .animation(.easeOut(duration: 0.35), value: keyboardResponder.didKeyboardShow)
         }
         .edgesIgnoringSafeArea(.bottom)
     }
@@ -246,7 +246,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
             }
             .frame(width: 185, height: 30)
             .opacity(viewModel.showNicknameExistsToast ? 1 : 0)
-            .animation(.easeIn(duration: 0.2))
+            .animation(.easeIn(duration: 0.2), value: viewModel.showNicknameExistsToast)
         }
     }
 }
