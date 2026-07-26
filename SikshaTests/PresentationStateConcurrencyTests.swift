@@ -63,7 +63,7 @@ final class PresentationStateConcurrencyTests: XCTestCase {
             object: nil,
             userInfo: [UIResponder.keyboardFrameEndUserInfoKey: frame]
         )
-        XCTAssertEqual(responder.currentHeight, 250)
+        await waitUntil { responder.currentHeight == 250 }
 
         NotificationCenter.default.post(name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.post(name: UIResponder.keyboardWillHideNotification, object: nil)

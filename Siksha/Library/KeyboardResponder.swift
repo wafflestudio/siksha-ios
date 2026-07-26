@@ -20,16 +20,19 @@ final class KeyboardResponder: ObservableObject {
         self.showDelayNanoseconds = showDelayNanoseconds
 
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillShowNotification)
+            .receive(on: RunLoop.main)
             .sink { [weak self] notification in
                 self?.keyboardNotification(notification: notification)
             }.store(in: &cancellables)
 
         NotificationCenter.default.publisher(for: UIResponder.keyboardDidShowNotification)
+            .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.scheduleDidShowUpdate()
             }.store(in: &cancellables)
 
         NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)
+            .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.didShowTask?.cancel()
                 self?.didKeyboardShow = false
