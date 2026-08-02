@@ -43,9 +43,15 @@ struct StartupView: View {
         .onChange(of: isUpdateRequired) { _, required in
             isUpdateAlertPresented = required
         }
+        .onChange(of: isUpdateAlertPresented) { _, presented in
+            if !presented, isUpdateRequired {
+                isUpdateAlertPresented = true
+            }
+        }
         .alert("업데이트가 필요합니다.", isPresented: $isUpdateAlertPresented) {
             Button("업데이트") {
-                openURL(URL(string: "https://apps.apple.com/app/id1032700617")!)
+                guard let url = URL(string: "https://apps.apple.com/app/id1032700617") else { return }
+                openURL(url)
             }
         } message: {
             Text("원활한 서비스 이용을 위해 최신 버전으로 업데이트해주세요.")
