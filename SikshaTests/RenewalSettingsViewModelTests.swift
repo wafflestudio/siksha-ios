@@ -9,10 +9,12 @@ import XCTest
 
 @MainActor
 final class RenewalSettingsViewModelTests: XCTestCase {
-    func testLoadIfNeededFetchesUserAndVersionOnlyOnce() async {
+    func testLoadIfNeededFetchesUserAndVersionOnlyOnce() async throws {
         let fetchUser = SettingsFetchCurrentUserUseCaseStub(user: .settingsFixture())
-        let fetchVersion = FetchAppStoreVersionUseCaseStub(version: AppVersion(rawValue: "2.0.0")!)
-        let viewModel = makeViewModel(fetchUser: fetchUser, fetchVersion: fetchVersion)
+        let fetchVersion = FetchAppStoreVersionUseCaseStub(
+            version: try XCTUnwrap(AppVersion(rawValue: "2.0.0"))
+        )
+        let viewModel = try makeViewModel(fetchUser: fetchUser, fetchVersion: fetchVersion)
 
         await viewModel.loadIfNeeded()
         await viewModel.loadIfNeeded()
@@ -24,8 +26,8 @@ final class RenewalSettingsViewModelTests: XCTestCase {
         XCTAssertEqual(fetchVersion.executionCount, 1)
     }
 
-    func testApplyUpdatedUserRefreshesSettingsState() {
-        let viewModel = makeViewModel()
+    func testApplyUpdatedUserRefreshesSettingsState() throws {
+        let viewModel = try makeViewModel()
 
         viewModel.applyUpdatedUser(.settingsFixture(id: 20, nickname: "수정 닉네임"))
 
@@ -33,12 +35,15 @@ final class RenewalSettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.userId, 20)
     }
 
-    func testLoadIfNeededRetriesOnlyFailedRequest() async {
+    func testLoadIfNeededRetriesOnlyFailedRequest() async throws {
         let fetchUser = SettingsFetchCurrentUserUseCaseStub(user: .settingsFixture())
         let fetchVersion = FetchAppStoreVersionUseCaseStub(
-            results: [.failure(TestError.expected), .success(AppVersion(rawValue: "2.0.0")!)]
+            results: [
+                .failure(TestError.expected),
+                .success(try XCTUnwrap(AppVersion(rawValue: "2.0.0"))),
+            ]
         )
-        let viewModel = makeViewModel(fetchUser: fetchUser, fetchVersion: fetchVersion)
+        let viewModel = try makeViewModel(fetchUser: fetchUser, fetchVersion: fetchVersion)
 
         await viewModel.loadIfNeeded()
         await viewModel.loadIfNeeded()
@@ -48,9 +53,9 @@ final class RenewalSettingsViewModelTests: XCTestCase {
         XCTAssertEqual(viewModel.appStoreVersion, "2.0.0")
     }
 
-    func testSendVOCTransitionsToSucceeded() async {
+    func testSendVOCTransitionsToSucceeded() async throws {
         let submitVOC = SubmitVOCUseCaseStub(result: .success(()))
-        let viewModel = makeViewModel(submitVOC: submitVOC)
+        let viewModel = try makeViewModel(submitVOC: submitVOC)
         viewModel.vocComment = "문의 내용"
 
         await viewModel.sendVOC()
@@ -67,10 +72,15 @@ final class RenewalSettingsViewModelTests: XCTestCase {
     private func makeViewModel(
         fetchUser: SettingsFetchCurrentUserUseCaseStub = SettingsFetchCurrentUserUseCaseStub(user: .settingsFixture()),
         submitVOC: SubmitVOCUseCaseStub = SubmitVOCUseCaseStub(result: .success(())),
-        fetchVersion: FetchAppStoreVersionUseCaseStub = FetchAppStoreVersionUseCaseStub(
-            version: AppVersion(rawValue: "1.0.0")!)
-    ) -> RenewalSettingsViewModel {
-        RenewalSettingsViewModel(
+        fetchVersion: FetchAppStoreVersionUseCaseStub? = nil
+    ) throws -> RenewalSettingsViewModel {
+        let fetchVersion =
+            try fetchVersion
+            ?? FetchAppStoreVersionUseCaseStub(
+                version: XCTUnwrap(AppVersion(rawValue: "1.0.0"))
+            )
+
+        return RenewalSettingsViewModel(
             manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCaseStub(),
             fetchCurrentUserUseCase: fetchUser,
             submitVOCUseCase: submitVOC,
