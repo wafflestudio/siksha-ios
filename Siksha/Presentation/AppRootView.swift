@@ -28,7 +28,14 @@ struct AppRootView: View {
             case .resolvingAuth:
                 StartupView()
             case .authenticated:
-                ContentView()
+                switch appState.updateState {
+                case .checking:
+                    StartupView()
+                case .allowed:
+                    ContentView()
+                case .required:
+                    StartupView(isUpdateRequired: true)
+                }
             case .requiresLogin:
                 LoginView()
             }
@@ -37,7 +44,7 @@ struct AppRootView: View {
         .environmentObject(contentViewModel)
         .environment(\.imageCache, imageCache)
         .task {
-            await appState.resolveInitialAuthState()
+            await appState.prepareForLaunch()
         }
     }
 }

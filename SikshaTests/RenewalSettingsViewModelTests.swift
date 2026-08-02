@@ -11,7 +11,7 @@ import XCTest
 final class RenewalSettingsViewModelTests: XCTestCase {
     func testLoadIfNeededFetchesUserAndVersionOnlyOnce() async {
         let fetchUser = SettingsFetchCurrentUserUseCaseStub(user: .settingsFixture())
-        let fetchVersion = FetchAppStoreVersionUseCaseStub(version: AppVersion(rawValue: "2.0.0"))
+        let fetchVersion = FetchAppStoreVersionUseCaseStub(version: AppVersion(rawValue: "2.0.0")!)
         let viewModel = makeViewModel(fetchUser: fetchUser, fetchVersion: fetchVersion)
 
         await viewModel.loadIfNeeded()
@@ -36,7 +36,7 @@ final class RenewalSettingsViewModelTests: XCTestCase {
     func testLoadIfNeededRetriesOnlyFailedRequest() async {
         let fetchUser = SettingsFetchCurrentUserUseCaseStub(user: .settingsFixture())
         let fetchVersion = FetchAppStoreVersionUseCaseStub(
-            results: [.failure(TestError.expected), .success(AppVersion(rawValue: "2.0.0"))]
+            results: [.failure(TestError.expected), .success(AppVersion(rawValue: "2.0.0")!)]
         )
         let viewModel = makeViewModel(fetchUser: fetchUser, fetchVersion: fetchVersion)
 
@@ -68,7 +68,7 @@ final class RenewalSettingsViewModelTests: XCTestCase {
         fetchUser: SettingsFetchCurrentUserUseCaseStub = SettingsFetchCurrentUserUseCaseStub(user: .settingsFixture()),
         submitVOC: SubmitVOCUseCaseStub = SubmitVOCUseCaseStub(result: .success(())),
         fetchVersion: FetchAppStoreVersionUseCaseStub = FetchAppStoreVersionUseCaseStub(
-            version: AppVersion(rawValue: "1.0.0"))
+            version: AppVersion(rawValue: "1.0.0")!)
     ) -> RenewalSettingsViewModel {
         RenewalSettingsViewModel(
             manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCaseStub(),

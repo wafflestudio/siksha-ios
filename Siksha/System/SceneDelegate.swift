@@ -11,6 +11,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    private var appState: AppState?
 
     func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
         if let url = URLContexts.first?.url {
@@ -25,6 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         if let windowScene = scene as? UIWindowScene {
             let appState = AppState()
+            self.appState = appState
             let rootView = AppRootView(
                 appState: appState,
                 imageCache: AppContainer.shared.imageCache
@@ -48,8 +50,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
-        // Called when the scene has moved from an inactive state to an active state.
-        // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        guard let appState else {
+            return
+        }
+
+        Task {
+            await appState.checkAppUpdateRequirement()
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

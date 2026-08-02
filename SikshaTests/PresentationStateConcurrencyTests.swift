@@ -142,12 +142,18 @@ final class PresentationStateConcurrencyTests: XCTestCase {
         let secondState = ContentViewModel(userDefaults: secondDefaults)
 
         _ = AppRootView(
-            appState: AppState(resolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCaseStub()),
+            appState: AppState(
+                resolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCaseStub(),
+                checkAppUpdateRequirementUseCase: CheckAppUpdateRequirementUseCaseStub()
+            ),
             imageCache: TemporaryImageCache(),
             contentViewModel: firstState
         )
         _ = AppRootView(
-            appState: AppState(resolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCaseStub()),
+            appState: AppState(
+                resolveInitialAuthStateUseCase: ResolveInitialAuthStateUseCaseStub(),
+                checkAppUpdateRequirementUseCase: CheckAppUpdateRequirementUseCaseStub()
+            ),
             imageCache: TemporaryImageCache(),
             contentViewModel: secondState
         )
@@ -400,4 +406,8 @@ private final class MenuAlarmNotificationManagerStub: MenuAlarmNotificationManag
 
 private struct ResolveInitialAuthStateUseCaseStub: ResolveInitialAuthStateUseCase {
     func execute() async -> AuthState { .requiresLogin }
+}
+
+private struct CheckAppUpdateRequirementUseCaseStub: CheckAppUpdateRequirementUseCase {
+    func execute(currentVersion: String) async -> AppUpdateRequirementResult { .updateNotRequired }
 }

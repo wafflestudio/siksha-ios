@@ -8,6 +8,15 @@
 import SwiftUI
 
 struct StartupView: View {
+    @Environment(\.openURL) private var openURL
+    @State private var isUpdateAlertPresented = false
+
+    private let isUpdateRequired: Bool
+
+    init(isUpdateRequired: Bool = false) {
+        self.isUpdateRequired = isUpdateRequired
+    }
+
     var body: some View {
         ZStack {
             Color.orange500
@@ -28,6 +37,19 @@ struct StartupView: View {
             }
         }
         .ignoresSafeArea()
+        .onAppear {
+            isUpdateAlertPresented = isUpdateRequired
+        }
+        .onChange(of: isUpdateRequired) { _, required in
+            isUpdateAlertPresented = required
+        }
+        .alert("업데이트가 필요합니다.", isPresented: $isUpdateAlertPresented) {
+            Button("업데이트") {
+                openURL(URL(string: "https://apps.apple.com/app/id1032700617")!)
+            }
+        } message: {
+            Text("원활한 서비스 이용을 위해 최신 버전으로 업데이트해주세요.")
+        }
     }
 }
 

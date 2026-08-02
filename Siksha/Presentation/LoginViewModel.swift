@@ -15,7 +15,7 @@ final class LoginViewModel: ObservableObject {
     @Published var signInFailed: Bool = false
     @Published private(set) var isLoggingIn: Bool = false
 
-    var onSignedIn: () -> Void = {}
+    var onSignedIn: @MainActor () async -> Void = {}
 
     init(
         loginUseCase: LoginUseCase,
@@ -45,7 +45,7 @@ final class LoginViewModel: ObservableObject {
                 presentingViewController: presentingViewController
             )
             _ = try await loginUseCase.login(with: credential)
-            onSignedIn()
+            await onSignedIn()
         } catch {
             signInFailed = true
         }
@@ -64,7 +64,7 @@ final class LoginViewModel: ObservableObject {
 
         do {
             _ = try await loginUseCase.loginForTest()
-            onSignedIn()
+            await onSignedIn()
         } catch {
             signInFailed = true
         }

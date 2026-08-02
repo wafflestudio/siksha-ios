@@ -82,6 +82,7 @@
 				AccountUseCaseTests.swift,
 				AdapterConcurrencyTests.swift,
 				AppStateTests.swift,
+				AppVersionPolicyTests.swift,
 				AuthRepositoryImplTests.swift,
 				AuthSessionLocalDataSourceTests.swift,
 				AuthUseCaseTests.swift,

@@ -16,6 +16,7 @@ final class UseCaseProvider {
     let updateUserProfileUseCase: UpdateUserProfileUseCase
     let submitVOCUseCase: SubmitVOCUseCase
     let fetchAppStoreVersionUseCase: FetchAppStoreVersionUseCase
+    let checkAppUpdateRequirementUseCase: CheckAppUpdateRequirementUseCase
     let manageMenuFiltersUseCase: ManageMenuFiltersUseCase
     let manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase
     let manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase
@@ -60,6 +61,7 @@ final class UseCaseProvider {
         updateUserProfileUseCase: UpdateUserProfileUseCase? = nil,
         submitVOCUseCase: SubmitVOCUseCase? = nil,
         fetchAppStoreVersionUseCase: FetchAppStoreVersionUseCase? = nil,
+        checkAppUpdateRequirementUseCase: CheckAppUpdateRequirementUseCase? = nil,
         manageMenuFiltersUseCase: ManageMenuFiltersUseCase? = nil,
         manageRestaurantsWithoutMenuVisibilityUseCase: ManageRestaurantsWithoutMenuVisibilityUseCase? = nil,
         manageFestivalPreferencesUseCase: ManageFestivalPreferencesUseCase? = nil,
@@ -139,6 +141,9 @@ final class UseCaseProvider {
         let appVersionRepository = AppVersionRepositoryImpl(
             remote: AppVersionRemoteDataSourceImpl()
         )
+        let versionPolicyRepository = VersionPolicyRepositoryImpl(
+            remote: VersionPolicyRemoteDataSourceImpl()
+        )
         let defaultRefreshAccessTokenUseCase =
             refreshAccessTokenUseCase
             ?? DefaultRefreshAccessTokenUseCase(
@@ -214,6 +219,11 @@ final class UseCaseProvider {
             fetchAppStoreVersionUseCase
             ?? DefaultFetchAppStoreVersionUseCase(
                 repository: appVersionRepository
+            )
+        self.checkAppUpdateRequirementUseCase =
+            checkAppUpdateRequirementUseCase
+            ?? DefaultCheckAppUpdateRequirementUseCase(
+                repository: versionPolicyRepository
             )
         self.manageMenuFiltersUseCase =
             manageMenuFiltersUseCase
