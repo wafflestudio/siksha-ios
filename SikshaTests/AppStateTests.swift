@@ -16,7 +16,7 @@ final class AppStateTests: XCTestCase {
         XCTAssertEqual(appState.updateState, .checking)
     }
 
-    func testPrepareForLaunchChecksVersionAfterAuthentication() async {
+    func testPrepareForLaunchChecksVersionWhenAuthenticated() async {
         let updateUseCase = CheckAppUpdateRequirementUseCaseStub(results: [.updateRequired])
         let appState = makeAppState(
             authResult: .authenticated(AuthSession(accessToken: "token", expiresAt: nil)),
