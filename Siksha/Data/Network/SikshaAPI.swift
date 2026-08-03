@@ -146,6 +146,8 @@ enum SikshaAPI: URLRequestConvertible {
             return false
         case .getCommentRecommendation:
             return false
+        case .getMinimumIOSVersion:
+            return false
         default:
             return true
         }

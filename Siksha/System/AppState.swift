@@ -49,13 +49,10 @@ public final class AppState: ObservableObject {
         }
 
         didPrepareForLaunch = true
-        await resolveInitialAuthState()
-
-        guard rootState == .authenticated else {
-            return
-        }
-
-        await checkAppUpdateRequirement()
+        async let resolveAuthState: Void = resolveInitialAuthState()
+        async let checkAppUpdate: Void = checkAppUpdateRequirement()
+        await resolveAuthState
+        await checkAppUpdate
     }
 
     func resolveInitialAuthState() async {
@@ -73,19 +70,16 @@ public final class AppState: ObservableObject {
         }
     }
 
-    func didLogin() async {
-        updateState = .checking
+    func didLogin() {
         rootState = .authenticated
-        await checkAppUpdateRequirement()
     }
 
     func didLogout() {
-        updateState = .checking
         rootState = .requiresLogin
     }
 
     func checkAppUpdateRequirement() async {
-        guard rootState == .authenticated, !isCheckingAppUpdate else {
+        guard !isCheckingAppUpdate else {
             return
         }
 

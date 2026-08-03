@@ -69,7 +69,7 @@ final class SikshaAPIRequestTests: XCTestCase {
         XCTAssertEqual(parameters["menu_id"] as? Int, 2)
     }
 
-    func testMinimumIOSVersionRequestUsesAuthenticatedEndpoint() throws {
+    func testMinimumIOSVersionRequestUsesPublicEndpoint() throws {
         let previousToken = UserDefaults.standard.string(forKey: "accessToken")
         defer {
             if let previousToken {
@@ -84,7 +84,7 @@ final class SikshaAPIRequestTests: XCTestCase {
 
         XCTAssertEqual(request.httpMethod, "GET")
         XCTAssertEqual(request.url?.path, "/versions/ios")
-        XCTAssertEqual(request.value(forHTTPHeaderField: "Authorization"), "Bearer version-token")
+        XCTAssertNil(request.value(forHTTPHeaderField: "Authorization"))
         XCTAssertNil(request.url?.query)
     }
 

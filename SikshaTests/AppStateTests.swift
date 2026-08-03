@@ -30,24 +30,38 @@ final class AppStateTests: XCTestCase {
         XCTAssertEqual(updateUseCase.receivedVersions, ["3.5.0"])
     }
 
-    func testPrepareForLaunchSkipsVersionCheckWhenLoginIsRequired() async {
+    func testPrepareForLaunchChecksVersionWhenLoginIsRequired() async {
         let updateUseCase = CheckAppUpdateRequirementUseCaseStub(results: [.updateRequired])
         let appState = makeAppState(authResult: .requiresLogin, updateUseCase: updateUseCase)
 
         await appState.prepareForLaunch()
 
         XCTAssertEqual(appState.rootState, .requiresLogin)
-        XCTAssertEqual(updateUseCase.receivedVersions, [])
+        XCTAssertEqual(appState.updateState, .required)
+        XCTAssertEqual(updateUseCase.receivedVersions, ["3.5.0"])
     }
 
-    func testLoginChecksVersionBeforeAllowingAuthenticatedContent() async {
+    func testLoginPreservesUpdateDecisionWithoutRechecking() async {
         let updateUseCase = CheckAppUpdateRequirementUseCaseStub(results: [.updateNotRequired])
         let appState = makeAppState(authResult: .requiresLogin, updateUseCase: updateUseCase)
+        await appState.checkAppUpdateRequirement()
 
-        await appState.didLogin()
+        appState.didLogin()
 
         XCTAssertEqual(appState.rootState, .authenticated)
         XCTAssertEqual(appState.updateState, .allowed)
+        XCTAssertEqual(updateUseCase.receivedVersions, ["3.5.0"])
+    }
+
+    func testForegroundCheckRunsWhileLoginIsRequired() async {
+        let updateUseCase = CheckAppUpdateRequirementUseCaseStub(results: [.updateRequired])
+        let appState = makeAppState(authResult: .requiresLogin, updateUseCase: updateUseCase)
+        await appState.resolveInitialAuthState()
+
+        await appState.checkAppUpdateRequirement()
+
+        XCTAssertEqual(appState.rootState, .requiresLogin)
+        XCTAssertEqual(appState.updateState, .required)
         XCTAssertEqual(updateUseCase.receivedVersions, ["3.5.0"])
     }
 
@@ -117,17 +131,18 @@ final class AppStateTests: XCTestCase {
         XCTAssertEqual(authUseCase.executionCount, 1)
     }
 
-    func testLogoutResetsUpdateStateForNextLogin() async {
+    func testLogoutPreservesUpdateDecision() async {
         let appState = makeAppState(
             authResult: .requiresLogin,
             updateUseCase: CheckAppUpdateRequirementUseCaseStub(results: [.updateNotRequired])
         )
-        await appState.didLogin()
+        await appState.checkAppUpdateRequirement()
+        appState.didLogin()
 
         appState.didLogout()
 
         XCTAssertEqual(appState.rootState, .requiresLogin)
-        XCTAssertEqual(appState.updateState, .checking)
+        XCTAssertEqual(appState.updateState, .allowed)
     }
 
     private func makeAppState(

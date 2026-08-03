@@ -24,20 +24,20 @@ struct AppRootView: View {
 
     var body: some View {
         Group {
-            switch appState.rootState {
-            case .resolvingAuth:
+            switch appState.updateState {
+            case .checking:
                 StartupView()
-            case .authenticated:
-                switch appState.updateState {
-                case .checking:
+            case .required:
+                StartupView(isUpdateRequired: true)
+            case .allowed:
+                switch appState.rootState {
+                case .resolvingAuth:
                     StartupView()
-                case .allowed:
+                case .authenticated:
                     ContentView()
-                case .required:
-                    StartupView(isUpdateRequired: true)
+                case .requiresLogin:
+                    LoginView()
                 }
-            case .requiresLogin:
-                LoginView()
             }
         }
         .environmentObject(appState)
