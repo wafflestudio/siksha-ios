@@ -24,20 +24,27 @@ struct AppRootView: View {
 
     var body: some View {
         Group {
-            switch appState.rootState {
-            case .resolvingAuth:
+            switch appState.updateState {
+            case .checking:
                 StartupView()
-            case .authenticated:
-                ContentView()
-            case .requiresLogin:
-                LoginView()
+            case .required:
+                StartupView(isUpdateRequired: true)
+            case .allowed:
+                switch appState.rootState {
+                case .resolvingAuth:
+                    StartupView()
+                case .authenticated:
+                    ContentView()
+                case .requiresLogin:
+                    LoginView()
+                }
             }
         }
         .environmentObject(appState)
         .environmentObject(contentViewModel)
         .environment(\.imageCache, imageCache)
         .task {
-            await appState.resolveInitialAuthState()
+            await appState.prepareForLaunch()
         }
     }
 }

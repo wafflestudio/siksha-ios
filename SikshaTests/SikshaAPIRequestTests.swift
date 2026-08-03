@@ -69,6 +69,25 @@ final class SikshaAPIRequestTests: XCTestCase {
         XCTAssertEqual(parameters["menu_id"] as? Int, 2)
     }
 
+    func testMinimumIOSVersionRequestUsesPublicEndpoint() throws {
+        let previousToken = UserDefaults.standard.string(forKey: "accessToken")
+        defer {
+            if let previousToken {
+                UserDefaults.standard.set(previousToken, forKey: "accessToken")
+            } else {
+                UserDefaults.standard.removeObject(forKey: "accessToken")
+            }
+        }
+        UserDefaults.standard.set("version-token", forKey: "accessToken")
+
+        let request = try SikshaAPI.getMinimumIOSVersion.asURLRequest()
+
+        XCTAssertEqual(request.httpMethod, "GET")
+        XCTAssertEqual(request.url?.path, "/versions/ios")
+        XCTAssertNil(request.value(forHTTPHeaderField: "Authorization"))
+        XCTAssertNil(request.url?.query)
+    }
+
     func testParametersAreSendable() {
         let parameters = SikshaAPI.getReviews(menuId: 1, page: 2, perPage: 3).parameters
 

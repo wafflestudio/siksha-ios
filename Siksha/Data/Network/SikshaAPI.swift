@@ -127,6 +127,9 @@ enum SikshaAPI: URLRequestConvertible {
     // VOC
     case submitVOC(comment: String, platform: String)
 
+    // VERSIONS
+    case getMinimumIOSVersion
+
     static let baseURL = Config.shared.baseURL
 
     var needToken: Bool {
@@ -142,6 +145,8 @@ enum SikshaAPI: URLRequestConvertible {
         case .getScoreDistribution:
             return false
         case .getCommentRecommendation:
+            return false
+        case .getMinimumIOSVersion:
             return false
         default:
             return true
@@ -242,6 +247,9 @@ enum SikshaAPI: URLRequestConvertible {
 
         case .submitVOC:
             return .post
+
+        case .getMinimumIOSVersion:
+            return .get
         }
     }
 
@@ -370,6 +378,10 @@ enum SikshaAPI: URLRequestConvertible {
         // VOC
         case .submitVOC:
             return "/voc"
+
+        // VERSIONS
+        case .getMinimumIOSVersion:
+            return "/versions/ios"
         }
     }
 

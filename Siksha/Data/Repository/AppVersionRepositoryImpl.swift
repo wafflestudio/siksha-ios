@@ -21,6 +21,10 @@ final class AppVersionRepositoryImpl: AppVersionRepositoryProtocol {
             throw NetworkError.decodingError
         }
 
-        return AppVersion(rawValue: version)
+        guard let appVersion = AppVersion(rawValue: version) else {
+            throw NetworkError.decodingError
+        }
+
+        return appVersion
     }
 }
