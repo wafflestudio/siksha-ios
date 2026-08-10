@@ -123,19 +123,19 @@ struct EditCommentView: View {
                 HStack {
                     Button("취소", action: onCancel)
                         .foregroundColor(.white)
-                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .customFont(font: .text15(weight: .Regular))
 
                     Spacer()
 
                     Text("댓글 수정")
                         .foregroundColor(.white)
-                        .font(.custom("NanumSquareOTFEB", size: 20))
+                        .customFont(font: .text20(weight: .Bold))
 
                     Spacer()
 
                     Button("확인", action: { onSave(editedContent) })
                         .foregroundColor(.white)
-                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .customFont(font: .text15(weight: .Regular))
                 }
                 .padding()
                 .background(Color("Color/Foundation/Orange/500").opacity(0))

@@ -46,7 +46,7 @@ struct ToastView: View {
                         .padding(.trailing, 10)
 
                     Text(message)
-                        .font(.custom("NanumSquareOTFB", size: 12))
+                        .customFont(font: .text12(weight: .Bold))
                         .lineLimit(1)
                         .foregroundColor(.white)
                 }

@@ -25,7 +25,7 @@ struct BackButton: View {
                     .padding(.trailing, 5)
 
                 Text("설정")
-                    .font(.custom("NanumSquareOTFB", size: 14))
+                    .customFont(font: .text14(weight: .Bold))
                     .foregroundColor(.init("Color/Foundation/Gray/600"))
             }
         }

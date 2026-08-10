@@ -58,7 +58,7 @@ struct ReviewListView: View {
                 VStack {
                     Spacer()
                     Text("리뷰가 없습니다.")
-                        .font(.custom("NanumSquareOTFB", size: 13))
+                        .customFont(font: .text13(weight: .Bold))
                         .foregroundColor(Color.gray600)
                         .padding(.top, 20)
 

@@ -111,8 +111,8 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
                 VStack(alignment: .center) {
                     Spacer()
                     Text("내가 쓴 글이 없어요")
-                        .font(.custom("NanumSquareOTF", size: 15))
-                        .foregroundColor(Color(white: 166 / 255))
+                        .customFont(font: .text15(weight: .Bold))
+                        .foregroundStyle(Color.gray600)
                     Spacer()
                 }
                 .errorAlert(error: $viewModel.error)

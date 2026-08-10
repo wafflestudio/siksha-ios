@@ -80,24 +80,9 @@ struct RestaurantCell<MenuRow: View>: View {
                         .foregroundColor(orangeColor)
                 }
                 Spacer()
-                /*Spacer()
-
-                Text("Price")
-                    .font(.custom("NanumSquareOTF", size: 12))
-                    .foregroundColor(orangeColor)
-                    .frame(width: 50)
-
-                Text("Rate")
-                    .font(.custom("NanumSquareOTF", size: 12))
-                    .foregroundColor(orangeColor)
-                    .frame(width: 35)
-
-                Text("Like")
-                    .font(.custom("NanumSquareOTF", size: 12))
-                    .foregroundColor(orangeColor)
-                    .frame(width: 35)*/
             }
             .padding(EdgeInsets(top: 17, leading: 13, bottom: 11.5, trailing: 0))
+
             HStack(alignment: .center) {
                 Image(TypeInfo(type: TypeSelection(rawValue: (selectedPage))!).icon)
                     .resizable()
@@ -136,16 +121,12 @@ struct RestaurantCell<MenuRow: View>: View {
             }.padding([.leading, .trailing], 13)
                 .padding([.bottom], 6.5)
 
-            /*HStack {
-                orangeColor
-                    .frame(maxWidth:.infinity)
-                    .overlay(RoundedRectangle(cornerRadius: 1.5).stroke(orangeColor,lineWidth:1.5 ))
-            }*/
             Capsule()
                 .frame(height: 1.5)
                 .foregroundColor(orangeColor)
                 .padding([.trailing], 14.5)
                 .padding([.leading], 11.5)
+
             VStack(spacing: 13) {
                 if item.menus.count > 0 {
                     ForEach(item.menus, id: \.id) { menu in
@@ -155,7 +136,7 @@ struct RestaurantCell<MenuRow: View>: View {
                 } else {
                     HStack(alignment: .center) {
                         Text("해당 시간대의 메뉴가 없습니다.")
-                            .font(.custom("NanumSquareOTFR", size: 14))
+                            .customFont(font: .text14(weight: .Regular))
                             .foregroundColor(lightGrayColor)
                     }
                     .padding([.top, .bottom], 12)

@@ -283,7 +283,7 @@ private extension MenuListView {
                     .frame(width: 20, height: 20)
                     .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
                 Text(type.name)
-                    .font(.custom(viewModel.selectedPage == type.id ? "NanumSquareOTFB" : "NanumSquareOTFR", size: 11))
+                    .customFont(font: .text11(weight: viewModel.selectedPage == type.id ? .Bold : .Regular))
                     .foregroundColor(viewModel.selectedPage == type.id ? orangeColor : lightGrayColor)
             }
         }
