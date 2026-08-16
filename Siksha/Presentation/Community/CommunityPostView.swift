@@ -41,17 +41,10 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @Binding var needPostViewRefresh: Bool
 
     var backButton: some View {
-        Button(action: {
+        BackButton {
             needPostViewRefresh = true
             self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .foregroundColor(Color.iconWhiteIcon)
         }
-        .contentShape(Rectangle())
     }
 
     var imageSection: some View {

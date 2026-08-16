@@ -13,16 +13,9 @@ struct RestaurantOrderView: View {
     @ObservedObject var viewModel: RestaurantOrderViewModel
 
     var backButton: some View {
-        Button(action: {
+        BackButton {
             self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .foregroundColor(Color.iconWhiteIcon)
         }
-        .contentShape(Rectangle())
     }
 
     init(_ viewModel: RestaurantOrderViewModel) {

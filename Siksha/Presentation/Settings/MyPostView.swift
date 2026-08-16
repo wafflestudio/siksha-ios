@@ -87,14 +87,8 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     }
 
     var backButton: some View {
-        Button(action: {
+        BackButton {
             self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .foregroundColor(Color.iconWhiteIcon)
         }
     }
 

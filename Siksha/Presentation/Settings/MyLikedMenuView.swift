@@ -12,14 +12,9 @@ struct MyLikedMenuView: View {
     @EnvironmentObject private var contentViewModel: ContentViewModel
     @ObservedObject var viewModel: MyLikedMenuViewModel
     var backButton: some View {
-        Button(action: {
+        BackButton {
             contentViewModel.showPopUp = false
             self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .frame(width: 24, height: 24)
-                .foregroundColor(.white)
         }
     }
     init(viewModel: MyLikedMenuViewModel) {

@@ -16,16 +16,9 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
     @ObservedObject var settingsViewModel: RenewalSettingsViewModel
     @ObservedObject var communityPostViewModel: CommunityPostViewModel
     var backButton: some View {
-        Button(action: {
+        BackButton {
             self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .foregroundColor(Color.iconWhiteIcon)
         }
-        .contentShape(Rectangle())
     }
 
     init(_ settingsViewModel: RenewalSettingsViewModel, _ communityPostViewModel: CommunityPostViewModel) {

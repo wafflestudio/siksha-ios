@@ -216,14 +216,8 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
     }
 
     private var backButton: some View {
-        Button(action: {
+        BackButton {
             presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .foregroundColor(Color.iconWhiteIcon)
         }
     }
 
