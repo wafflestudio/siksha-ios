@@ -17,7 +17,7 @@ enum TypeSelection: Int {
 struct TypeInfo: Identifiable {
     var id: Int
     var type: TypeSelection
-    var icon: String
+    var icon: ImageResource
     var height: CGFloat
     var width: CGFloat
     var name: String
@@ -28,17 +28,17 @@ struct TypeInfo: Identifiable {
 
         switch type {
         case .breakfast:
-            self.icon = "BreakfastTime"
+            self.icon = .Icons.Meal.breakfastTime
             self.width = 20
             self.height = 20
             self.name = "아침"
         case .lunch:
-            self.icon = "LunchTime"
+            self.icon = .Icons.Meal.lunchTime
             self.width = 20
             self.height = 20
             self.name = "점심"
         case .dinner:
-            self.icon = "DinnerTime"
+            self.icon = .Icons.Meal.dinnerTime
             self.width = 20
             self.height = 20
             self.name = "저녁"
