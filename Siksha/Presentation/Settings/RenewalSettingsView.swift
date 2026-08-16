@@ -93,9 +93,8 @@ struct RenewalSettingsView: View {
     }
 
     var arrow: some View {
-        Image("ArrowSmall")
+        Image(.Icons.Common.Chevron.rightSmall)
             .resizable()
-            .renderingMode(.template)
             .foregroundColor(Color.gray500)
             .frame(width: 16, height: 16)
     }

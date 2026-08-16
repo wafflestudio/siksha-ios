@@ -47,9 +47,8 @@ struct AlarmView: View {
                         .foregroundStyle(Color.blackColor)
                         .customFont(font: .text15(weight: .Regular))
                     Spacer()
-                    Image("ArrowSmall")
+                    Image(.Icons.Common.Chevron.rightSmall)
                         .resizable()
-                        .renderingMode(.template)
                         .foregroundColor(Color.gray500)
                         .frame(width: 16, height: 16)
                 }
