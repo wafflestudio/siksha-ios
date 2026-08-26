@@ -40,11 +40,11 @@ struct LikedMenuRestaurantCell: View {
                         label: {
                             Image(
                                 viewModel.isFavoriteRestaurant(restaurantId: restaurant.id)
-                                    ? "Favorite-selected" : "Favorite-default"
+                                    ? .Icons.Common.Star.filled20 : .Icons.Common.Star.outlined20
                             )
                             .resizable()
-                            .renderingMode(.original)
                             .frame(width: 20, height: 20)
+                            .foregroundStyle(orangeColor)
                         }
                     )
                     .disabled(viewModel.isUpdatingFavoriteRestaurant(restaurantId: restaurant.id))
@@ -87,11 +87,11 @@ struct LikedMenuRestaurantCell: View {
                             label: {
                                 Image(
                                     viewModel.isFavoriteRestaurant(restaurantId: restaurant.id)
-                                        ? "Favorite-selected" : "Favorite-default"
+                                        ? .Icons.Common.Star.filled20 : .Icons.Common.Star.outlined20
                                 )
                                 .resizable()
-                                .renderingMode(.original)
                                 .frame(width: 20, height: 20)
+                                .foregroundStyle(orangeColor)
                             }
                         )
                         .disabled(viewModel.isUpdatingFavoriteRestaurant(restaurantId: restaurant.id))

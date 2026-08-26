@@ -29,10 +29,10 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
         }) {
-            Image("Close")
+            Image(.Icons.Common.xmark)
                 .resizable()
-                .foregroundColor(Color.iconWhiteIcon)
                 .frame(width: 28, height: 28)
+                .foregroundColor(Color.iconWhiteIcon)
                 .padding(.leading, 9)
         }
         .contentShape(Rectangle())
@@ -102,13 +102,13 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
         func makeBody(configuration: Configuration) -> some View {
             HStack(spacing: 5) {
                 if configuration.isOn {
-                    Image("CheckboxTicked")
+                    Image(.Icons.Common.CheckBox.checkedFilled)
                         .resizable()
                         .scaledToFill()
                         .frame(width: 13, height: 13)
                         .foregroundStyle(Color.orange500)
                 } else {
-                    Image("Checkbox")
+                    Image(.Icons.Common.CheckBox.uncheckedOutlined)
                         .resizable()
                         .scaledToFill()
                         .frame(width: 13, height: 13)
@@ -158,12 +158,11 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
                     Text(viewModel.boardsList.first { $0.id == viewModel.boardId }?.name ?? "게시판 선택")
                         .customFont(font: .text13(weight: .Regular))
                         .foregroundColor(.gray800)
-                    Image("DownArrow")
-                        .renderingMode(.template)
+                    Image(.Icons.Common.Chevron.down)
                         .resizable()
                         .scaledToFit()
                         .frame(width: 10, height: 6)
-                        .foregroundColor(.gray600)
+                        .foregroundStyle(Color.gray600)
                     Spacer()
                 }
                 .frame(height: 35)
@@ -194,7 +193,7 @@ struct CommunityPostPublishView<ViewModel>: View where ViewModel: CommunityPostP
                                         Text(board.name)
                                             .foregroundColor(.orange500)
                                             .customFont(font: .text13(weight: .Bold))
-                                        Image("Check")
+                                        Image(.Icons.Common.checkMarkCommunity)
                                             .resizable()
                                             .scaledToFit()
                                             .frame(width: 16, height: 16)

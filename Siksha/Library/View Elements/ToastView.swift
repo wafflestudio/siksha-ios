@@ -15,7 +15,7 @@ struct ToastView: View {
         var image: Image {
             switch self {
             case .error: return Image(.Icons.Common.alertCircle)
-            case .check: return Image("CheckCircleOrange")
+            case .check: return Image(.Icons.Common.CheckCircle.filled)
             }
         }
     }
@@ -42,13 +42,15 @@ struct ToastView: View {
 
                 HStack(spacing: 0) {
                     type.image
+                        .resizable()
                         .frame(width: 14, height: 14)
+                        .foregroundStyle(Color.orange500)
                         .padding(.trailing, 10)
 
                     Text(message)
                         .customFont(font: .text12(weight: .Bold))
                         .lineLimit(1)
-                        .foregroundColor(.white)
+                        .foregroundColor(.textDim)
                 }
                 .padding(.horizontal, 12)
             }

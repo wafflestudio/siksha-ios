@@ -13,7 +13,7 @@ struct MapMarker: View {
     let name: String
     var body: some View {
         ZStack {
-            Image("mapMarker")
+            Image(.Icons.Common.mapMarker)
             Text(name)
                 .customFont(font: .text14(weight: .Bold))
                 .foregroundStyle(Color.gray900)

@@ -48,11 +48,11 @@ private extension MealInfoView {
             Button {
                 viewModel.toggleLike()
             } label: {
-                Image("Heart")
+                Image(.Icons.Common.Heart.filled30)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 30, height: 30)
-                    .foregroundStyle(viewModel.meal.isLiked ? Color.accentLike : Color.gray200)
+                    .foregroundStyle(viewModel.meal.isLiked ? Color.accentLike : Color.iconLike)
                     .padding(.top, 20)
             }
             .disabled(viewModel.isUpdatingLike)

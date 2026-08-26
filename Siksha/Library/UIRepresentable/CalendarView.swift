@@ -185,8 +185,8 @@ final class DateHeader: JTACMonthReusableView {
 
         leftButton.frame = CGRect(x: 0, y: 0, width: 10, height: 16)
         rightButton.frame = CGRect(x: 0, y: 0, width: 10, height: 16)
-        leftButton.setBackgroundImage(UIImage(named: "Prevdate-orange"), for: .normal)
-        rightButton.setBackgroundImage(UIImage(named: "NextDate-orange"), for: .normal)
+        leftButton.setBackgroundImage(UIImage(resource: .Icons.prevdateOrange), for: .normal)
+        rightButton.setBackgroundImage(UIImage(resource: .Icons.nextDateOrange), for: .normal)
 
         super.init(frame: frame)
 

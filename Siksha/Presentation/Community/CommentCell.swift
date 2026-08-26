@@ -61,7 +61,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                         .foregroundStyle(Color.gray900)
                         .padding(.leading, 5)
 
-                    Image("etc")
+                    Image(.Icons.Common.ellipsisHorizontal)
                         .renderingMode(.template)
                         .resizable()
                         .scaledToFit()
@@ -78,10 +78,10 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                     viewModel.toggleCommentLike(id: comment.id)
                 }) {
                     VStack(spacing: 4) {
-                        Image(comment.isLiked ? "PostLike-liked" : "PostLike-default")
-                            .resizable()
-                            .frame(width: 13.5, height: 13)
-                            .scaledToFit()
+                        Image(
+                            comment.isLiked ? .Icons.Common.ThumbUp.filledMedium : .Icons.Common.ThumbUp.outlinedMedium
+                        )
+                        .foregroundStyle(Color.orange500)
                         Text("\(comment.likeCnt)")
                             .customFont(font: .text11(weight: .ExtraBold))
                             .foregroundColor(.orange500)

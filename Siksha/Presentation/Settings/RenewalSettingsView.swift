@@ -208,7 +208,7 @@ struct RenewalSettingsView: View {
 
                     Spacer()
 
-                    Image("CheckCircle")
+                    Image(.Icons.Common.CheckCircle.outlined)
                         .resizable()
                         .renderingMode(.template)
                         .frame(width: 20, height: 20)

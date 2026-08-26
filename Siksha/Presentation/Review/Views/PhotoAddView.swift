@@ -31,11 +31,10 @@ struct PhotoAddView: View {
                                     .frame(width: 80, height: 80)
                                     .foregroundStyle(Color.gray100)
 
-                                Image("Plus")
-                                    .renderingMode(.template)
+                                Image(.Icons.Common.plus)
                                     .resizable()
-                                    .foregroundStyle(Color.gray600)
                                     .frame(width: 21, height: 21)
+                                    .foregroundStyle(Color.gray600)
                             }
                             .padding(.top, 6)
                             .padding(.trailing, 5)
@@ -73,7 +72,7 @@ struct PhotoAddView: View {
                         Button {
                             onRemoveImage(attachment.id)
                         } label: {
-                            Image("Cancel")
+                            Image(.Icons.Common.cancelButton)
                                 .frame(width: 18, height: 18)
                                 .background(Color.white)
                                 .clipShape(Circle())

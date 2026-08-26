@@ -159,7 +159,7 @@ struct ProfileEditView<ViewModel>: View where ViewModel: ProfileEditViewModelTyp
                         .stroke(Color.gray200, lineWidth: 1)
                 )
 
-            Image("Camera")
+            Image(.Icons.Common.camera)
                 .frame(width: 22.5, height: 18)
                 .foregroundColor(.gray600)
         }
@@ -263,7 +263,7 @@ struct ClearableTextField: View {
                 .padding(.leading, 16)
                 .padding(.trailing, 28)
             if text != "" {
-                Image("CloseSmall")
+                Image(.Icons.Common.xcircle)
                     .frame(width: 28, height: 28)
                     .foregroundColor(Color.iconCloseBg)
                     .onTapGesture {

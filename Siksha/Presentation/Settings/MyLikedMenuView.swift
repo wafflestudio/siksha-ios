@@ -32,8 +32,8 @@ struct MyLikedMenuView: View {
         .navigationBarItems(leading: backButton)
         .navigationBarItems(
             trailing: NavigationLink(destination: AlarmView(viewModel: viewModel)) {
-                Image("notification").padding(
-                    EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
+                Image(.Icons.Common.bellPlus)
+                    .padding(.trailing, 4)
             }
         )
         .onAppear {

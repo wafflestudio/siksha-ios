@@ -57,12 +57,10 @@ struct AlertView<CommunityPostViewModel>: View where CommunityPostViewModel: Com
 
                     }.frame(height: 44)
                     HStack(spacing: 10) {
-                        Image("Comment-new")
-                            .renderingMode(.template)
+                        Image(.Icons.Common.textBubble)
                             .resizable()
-                            .scaledToFit()
-                            .foregroundStyle(Color.gray700)
                             .frame(width: 18, height: 18)
+                            .foregroundStyle(Color.gray700)
 
                         Text("어떤 이유로 신고하시나요?")
                             .customFont(font: .text18(weight: .ExtraBold))

@@ -208,7 +208,7 @@ struct ContentView: View {
 
             if contentViewModel.showPopUp {
                 ZStack(alignment: .topTrailing) {
-                    Image("notificationPopup")
+                    Image(.Images.notificationPopup)
                         .offset(y: -(UIScreen.main.bounds.height / 2 - 97))
                         .offset(x: UIScreen.main.bounds.width / 2 - 80)
                         .opacity(contentViewModel.popUpOpacity)

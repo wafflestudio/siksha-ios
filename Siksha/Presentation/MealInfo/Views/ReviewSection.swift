@@ -35,8 +35,7 @@ struct ReviewSection: View {
                                     .foregroundStyle(Color.gray600)
                                     .customFont(font: .text12(weight: .Bold))
 
-                                Image("Arrow")
-                                    .renderingMode(.template)
+                                Image(.Icons.Common.Chevron.right)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: 5, height: 8)

@@ -19,7 +19,7 @@ struct ImageView<ViewModel>: View where ViewModel: CommunityPostViewModelType {
         Button(action: {
             self.presentationMode.wrappedValue.dismiss()
         }) {
-            Image("Close")
+            Image(.Icons.Common.xmark)
                 .resizable()
                 .frame(width: 28, height: 28)
                 .foregroundStyle(Color.iconWhiteIcon)

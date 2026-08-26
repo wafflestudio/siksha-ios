@@ -30,10 +30,7 @@ struct TopPostCell: View {
                 Spacer()
 
                 HStack(spacing: 4) {
-                    Image("like")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 11.5, height: 11)
+                    Image(.Icons.Common.ThumbUp.outlinedSmall)
                         .foregroundStyle(Color.orange500)
 
                     Text("\(post.likeCount)")

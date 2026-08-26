@@ -93,7 +93,7 @@ private extension MenuView {
         Button(action: {
             openInstagram()
         }) {
-            Image("FestivalBanner")
+            Image(.Images.festivalBanner)
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity)

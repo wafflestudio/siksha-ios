@@ -13,7 +13,7 @@ struct FilterItem: View {
     var body: some View {
         HStack(spacing: 2) {
             if isOn && isCheck {
-                Image("FilterCheck")
+                Image(.Icons.Common.checkMarkFilter)
                     .resizable()
                     .frame(width: 16, height: 16)
             }
@@ -27,7 +27,7 @@ struct FilterItem: View {
                     .foregroundStyle(Color.blackColor)
             }
             if !isCheck {
-                Image("select")
+                Image(.Icons.Common.Chevron.downFilter)
                     .resizable()
                     .frame(width: 16, height: 16)
             }

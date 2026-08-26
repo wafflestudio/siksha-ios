@@ -63,10 +63,10 @@ struct RestaurantCell<MenuRow: View>: View {
                         onFavoriteTap(item.restaurantId)
                     },
                     label: {
-                        Image(item.isFavorite ? "Favorite-selected" : "Favorite-default")
+                        Image(item.isFavorite ? .Icons.Common.Star.filled20 : .Icons.Common.Star.outlined20)
                             .resizable()
-                            .renderingMode(.original)
                             .frame(width: 20, height: 20)
+                            .foregroundStyle(orangeColor)
                     })
                 Spacer()
                     .frame(width: 4)

@@ -117,8 +117,7 @@ private extension MealReviewView {
     var commentSection: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
-                Image("TextBubble")
-                    .renderingMode(.template)
+                Image(.Icons.Common.textBubble)
                     .resizable()
                     .frame(width: 21.6, height: 21.6)
                     .foregroundStyle(Color.blackColor)

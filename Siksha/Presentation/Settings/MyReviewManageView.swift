@@ -195,7 +195,7 @@ struct RestaurantSectionView: View {
                         .foregroundColor(Color.blackColor)
                     Spacer()
 
-                    Image("SelectGray")
+                    Image(.Icons.Common.Chevron.upMedium)
                         .rotationEffect(.degrees(isExpanded ? 0 : 180))
                 }
                 .padding(.init(top: 13, leading: 16, bottom: 13, trailing: 16))
@@ -266,7 +266,7 @@ struct ReviewCardView: View {
                                     .lineLimit(1)
                                     .truncationMode(.tail)
 
-                                Image("ArrowGray800")
+                                Image(.Icons.Common.Chevron.rightGray800)
                                     .frame(width: 20, height: 20)
 
                                 Spacer()

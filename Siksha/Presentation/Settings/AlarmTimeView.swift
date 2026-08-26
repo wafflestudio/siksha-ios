@@ -26,7 +26,7 @@ struct AlarmTimeView: View {
                     .customFont(font: .text15(weight: .Regular))
                 Spacer()
                 if viewModel.alarmTime == .DAILY {
-                    Image("alarm-time-check")
+                    Image(.Icons.Common.checkMarkAlarm)
                 }
 
             }
@@ -48,7 +48,7 @@ struct AlarmTimeView: View {
                     .customFont(font: .text15(weight: .Regular))
                 Spacer()
                 if viewModel.alarmTime == .EVERY_MEAL {
-                    Image("alarm-time-check")
+                    Image(.Icons.Common.checkMarkAlarm)
                 }
 
             }
