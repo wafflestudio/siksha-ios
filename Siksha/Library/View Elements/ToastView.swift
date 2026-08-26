@@ -62,3 +62,22 @@ struct ToastView: View {
         }
     }
 }
+#Preview("Error Toast") {
+    ToastView(
+        type: .error,
+        message: "Unable to load menu.",
+        isVisible: true
+    )
+    .frame(width: 393, height: 852)
+    .background(Color.gray100)
+}
+
+#Preview("Check Toast") {
+    ToastView(
+        type: .check,
+        message: "Saved.",
+        isVisible: true
+    )
+    .frame(width: 393, height: 852)
+    .background(Color.gray100)
+}
