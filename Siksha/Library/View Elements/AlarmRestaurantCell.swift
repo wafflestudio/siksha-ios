@@ -36,7 +36,7 @@ struct AlarmRestaurantCell: View {
                         .foregroundStyle(Color.blackColor)
                         .customFont(font: .text15(weight: .Regular))
                     Spacer()
-                    Image(menu.alarm ? "alarm-checked" : "alarm-unchecked")
+                    Image(menu.alarm ? .Icons.Common.CheckBox.checkedFilled : .Icons.Common.CheckBox.uncheckedFilled)
                         .resizable()
                         .frame(width: 20, height: 20)
                         .onTapGesture {

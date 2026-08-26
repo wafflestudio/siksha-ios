@@ -15,7 +15,7 @@ struct ToastView: View {
         var image: Image {
             switch self {
             case .error: return Image(.Icons.Common.alertCircle)
-            case .check: return Image("CheckCircleOrange")
+            case .check: return Image(.Icons.Common.CheckCircle.filled)
             }
         }
     }
@@ -42,13 +42,15 @@ struct ToastView: View {
 
                 HStack(spacing: 0) {
                     type.image
+                        .resizable()
                         .frame(width: 14, height: 14)
+                        .foregroundStyle(Color.orange500)
                         .padding(.trailing, 10)
 
                     Text(message)
-                        .font(.custom("NanumSquareOTFB", size: 12))
+                        .customFont(font: .text12(weight: .Bold))
                         .lineLimit(1)
-                        .foregroundColor(.white)
+                        .foregroundColor(.textDim)
                 }
                 .padding(.horizontal, 12)
             }
@@ -59,4 +61,23 @@ struct ToastView: View {
             .padding(.bottom, bottomMargin)
         }
     }
+}
+#Preview("Error Toast") {
+    ToastView(
+        type: .error,
+        message: "Unable to load menu.",
+        isVisible: true
+    )
+    .frame(width: 393, height: 852)
+    .background(Color.gray100)
+}
+
+#Preview("Check Toast") {
+    ToastView(
+        type: .check,
+        message: "Saved.",
+        isVisible: true
+    )
+    .frame(width: 393, height: 852)
+    .background(Color.gray100)
 }

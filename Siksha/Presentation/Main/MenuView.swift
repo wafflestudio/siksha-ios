@@ -93,7 +93,7 @@ private extension MenuView {
         Button(action: {
             openInstagram()
         }) {
-            Image("FestivalBanner")
+            Image(.Images.festivalBanner)
                 .resizable()
                 .scaledToFit()
                 .frame(maxWidth: .infinity)
@@ -108,13 +108,12 @@ private extension MenuView {
                         viewModel.selectedDate = viewModel.prevDate
                     },
                     label: {
-                        Image("PrevDate")
-                            .resizable()
-                            .frame(width: 10, height: 16)
+                        Image(.Icons.Common.Chevron.leftLarge)
+                            .foregroundStyle(Color.textAccent)
                     }
                 )
                 .disabled(viewModel.showCalendar)
-                .padding(.leading, 16)
+                .padding(.leading, 9)
             }
             Spacer()
 
@@ -138,12 +137,11 @@ private extension MenuView {
                         viewModel.selectedDate = viewModel.nextDate
                     },
                     label: {
-                        Image("NextDate")
-                            .resizable()
-                            .frame(width: 10, height: 16)
+                        Image(.Icons.Common.Chevron.rightLarge)
+                            .foregroundStyle(Color.textAccent)
                     }
                 )
-                .padding(.trailing, 16)
+                .padding(.trailing, 9)
             }
 
         }

@@ -66,13 +66,13 @@ struct CommunityReplyBar: View {
         func makeBody(configuration: Configuration) -> some View {
             HStack(spacing: 5) {
                 if configuration.isOn {
-                    Image("CheckboxTicked")
+                    Image(.Icons.Common.CheckBox.checkedFilled)
                         .resizable()
                         .scaledToFill()
                         .frame(width: 13, height: 13)
                         .foregroundStyle(Color.orange500)
                 } else {
-                    Image("Checkbox")
+                    Image(.Icons.Common.CheckBox.uncheckedOutlined)
                         .resizable()
                         .scaledToFill()
                         .frame(width: 13, height: 13)

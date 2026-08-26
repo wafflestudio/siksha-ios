@@ -116,7 +116,7 @@ struct MenuFilterView: View {
                         Spacer()
 
                         Button(action: { dismiss() }) {
-                            Image("Close")
+                            Image(.Icons.Common.xmark)
                                 .resizable()
                                 .frame(width: 32, height: 32)
                                 .foregroundStyle(Color.gray900)
@@ -502,7 +502,7 @@ fileprivate struct MenuFilterViewCloseButtonModifier: ViewModifier {
 
             if filterType != .all {
                 Button(action: { closeAction() }) {
-                    Image("Close")
+                    Image(.Icons.Common.xmark)
                         .resizable()
                         .frame(width: 32, height: 32)
                         .foregroundStyle(Color.gray900)

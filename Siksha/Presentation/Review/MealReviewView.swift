@@ -117,8 +117,7 @@ private extension MealReviewView {
     var commentSection: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
-                Image("TextBubble")
-                    .renderingMode(.template)
+                Image(.Icons.Common.textBubble)
                     .resizable()
                     .frame(width: 21.6, height: 21.6)
                     .foregroundStyle(Color.blackColor)
@@ -255,15 +254,8 @@ private extension MealReviewView {
     }
 
     var backButton: some View {
-        Button(action: {
+        BackButton {
             dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .foregroundColor(Color.white)
         }
     }
 }

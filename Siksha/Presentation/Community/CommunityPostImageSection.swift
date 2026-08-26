@@ -63,7 +63,7 @@ struct CommunityPostImageSection: View {
             Button {
                 onRemoveImage(attachment.id)
             } label: {
-                Image("Cancel")
+                Image(.Icons.Common.cancelButton)
                     .frame(width: 18, height: 18)
                     .background(Color.white)
                     .clipShape(Circle())
@@ -80,10 +80,10 @@ struct CommunityPostImageSection: View {
                     .foregroundColor(.gray100)
                     .frame(width: 106, height: 106)
 
-                Image(systemName: "plus")
+                Image(.Icons.Common.plus)
                     .resizable()
-                    .foregroundColor(.gray600)
                     .frame(width: 28, height: 28)
+                    .foregroundColor(.gray600)
             }
             .padding(.top, 4)
             .padding(.trailing, 5)

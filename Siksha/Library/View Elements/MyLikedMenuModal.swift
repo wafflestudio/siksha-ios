@@ -20,7 +20,7 @@ struct MyLikedMenuModal: View {
             ZStack(alignment: .bottom) {
                 VStack(alignment: .center, spacing: 0) {
                     Spacer()
-                    Image("alarm-modal")
+                    Image(.Images.alarmModal)
                         .resizable()
                         .frame(width: 253, height: 179)
                         .shadow(color: Color.black.opacity(0.25), radius: 4, x: 0, y: -1)
@@ -57,7 +57,8 @@ struct MyLikedMenuModal: View {
                 Spacer()
                     .frame(height: 30)
                 HStack(alignment: .center, spacing: 10) {
-                    Image(isYesSelected ? "radio-selected" : "radio-unselected")
+                    Image(isYesSelected ? .Icons.Common.CheckCircle.filled : .Icons.Common.CheckCircle.empty)
+                        .renderingMode(.original)
                         .resizable()
                         .frame(width: 20, height: 20)
                         .onTapGesture {
@@ -73,7 +74,8 @@ struct MyLikedMenuModal: View {
                 Spacer()
                     .frame(height: 12)
                 HStack(alignment: .center, spacing: 10) {
-                    Image(isNoSelected ? "radio-selected" : "radio-unselected")
+                    Image(isNoSelected ? .Icons.Common.CheckCircle.filled : .Icons.Common.CheckCircle.empty)
+                        .renderingMode(.original)
                         .resizable()
                         .frame(width: 20, height: 20)
                         .onTapGesture {
@@ -149,4 +151,35 @@ struct MyLikedMenuModal: View {
             })
 
     }
+}
+private struct MyLikedMenuModalPreview: View {
+    @StateObject private var contentViewModel = ContentViewModel()
+    @StateObject private var viewModel = MyLikedMenuViewModel(
+        fetchMyLikedMenusUseCase: AppContainer.shared.useCases.fetchMyLikedMenusUseCase,
+        getMenuAlarmEnabledUseCase: AppContainer.shared.useCases.getMenuAlarmEnabledUseCase,
+        setMenuAlarmEnabledUseCase: AppContainer.shared.useCases.setMenuAlarmEnabledUseCase,
+        updateMenuAlarmUseCase: AppContainer.shared.useCases.updateMenuAlarmUseCase,
+        updateAllMenuAlarmsUseCase: AppContainer.shared.useCases.updateAllMenuAlarmsUseCase,
+        fetchMenuAlarmTimeUseCase: AppContainer.shared.useCases.fetchMenuAlarmTimeUseCase,
+        updateMenuAlarmTimeUseCase: AppContainer.shared.useCases.updateMenuAlarmTimeUseCase,
+        updateMenuLikeUseCase: AppContainer.shared.useCases.updateMenuLikeUseCase,
+        menuAlarmNotificationManager: AppContainer.shared.menuAlarmNotificationManager,
+        fetchPersonalRestaurantsUseCase: AppContainer.shared.useCases.fetchPersonalRestaurantsUseCase,
+        updateRestaurantPreferenceUseCase: AppContainer.shared.useCases.updateRestaurantPreferenceUseCase
+    )
+
+    var body: some View {
+        ZStack {
+            Color.backgroundDim
+                .ignoresSafeArea()
+
+            MyLikedMenuModal(viewModel: viewModel)
+                .padding(EdgeInsets(top: 0, leading: 8, bottom: 0, trailing: 7))
+        }
+        .environmentObject(contentViewModel)
+    }
+}
+
+#Preview {
+    MyLikedMenuModalPreview()
 }

@@ -7,28 +7,21 @@
 import SwiftUI
 
 struct BackButton: View {
-    var presentationMode: Binding<PresentationMode>
-
-    init(_ presentationMode: Binding<PresentationMode>) {
-        self.presentationMode = presentationMode
-    }
+    let action: () -> Void
 
     var body: some View {
-        Button(action: {
-            presentationMode.wrappedValue.dismiss()
-        }) {
-            HStack {
-                Image("Back")
-                    .resizable()
-                    .renderingMode(.original)
-                    .frame(width: 13, height: 21)
-                    .padding(.trailing, 5)
-
-                Text("설정")
-                    .font(.custom("NanumSquareOTFB", size: 14))
-                    .foregroundColor(.init("Color/Foundation/Gray/600"))
-            }
+        Button(action: action) {
+            Image(.Icons.Common.Chevron.leftLarge)
+                .resizable()
+                .scaledToFit()
+                .frame(width: 24, height: 24)
+                .foregroundStyle(Color.iconWhiteIcon)
         }
-        .frame(width: 100, alignment: .leading)
+        .accessibilityLabel("뒤로")
     }
+}
+#Preview {
+    BackButton {}
+        .padding()
+        .background(Color.blackColor)
 }

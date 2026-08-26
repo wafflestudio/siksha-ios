@@ -12,14 +12,9 @@ struct MyLikedMenuView: View {
     @EnvironmentObject private var contentViewModel: ContentViewModel
     @ObservedObject var viewModel: MyLikedMenuViewModel
     var backButton: some View {
-        Button(action: {
+        BackButton {
             contentViewModel.showPopUp = false
             self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .frame(width: 24, height: 24)
-                .foregroundColor(.white)
         }
     }
     init(viewModel: MyLikedMenuViewModel) {
@@ -37,8 +32,8 @@ struct MyLikedMenuView: View {
         .navigationBarItems(leading: backButton)
         .navigationBarItems(
             trailing: NavigationLink(destination: AlarmView(viewModel: viewModel)) {
-                Image("notification").padding(
-                    EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 5))
+                Image(.Icons.Common.bellPlus)
+                    .padding(.trailing, 4)
             }
         )
         .onAppear {

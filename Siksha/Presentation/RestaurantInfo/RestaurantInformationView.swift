@@ -59,7 +59,7 @@ struct RestaurantInformationView: View {
                 HStack {
                     Spacer()
                     Button(action: { dismiss() }) {
-                        Image("Close")
+                        Image(.Icons.Common.xmark)
                             .resizable()
                             .frame(width: 24, height: 24)
                             .foregroundStyle(Color.gray900)
@@ -78,7 +78,7 @@ struct RestaurantInformationView: View {
                 VStack(spacing: 0) {
                     if let position = position {
                         HStack(spacing: 4) {
-                            Image("Location")
+                            Image(.Icons.Common.locationPin)
                                 .resizable()
                                 .frame(width: 24, height: 24)
 
@@ -99,7 +99,7 @@ struct RestaurantInformationView: View {
                     }
 
                     HStack(alignment: .center, spacing: 0) {
-                        Image("Schedule")
+                        Image(.Icons.Common.clockFilled)
                             .resizable()
                             .frame(width: 24, height: 24)
                         Spacer()

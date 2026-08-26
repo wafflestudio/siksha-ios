@@ -30,8 +30,7 @@ struct ReviewRow: View {
 
             HStack(spacing: 9.5) {
                 ZStack(alignment: .topLeading) {
-                    Image("SpeechArrow")
-                        .renderingMode(.template)
+                    Image(.Icons.Common.speechArrow)
                         .resizable()
                         .scaledToFill()
                         .frame(width: 17, height: 17)
@@ -58,11 +57,13 @@ struct ReviewRow: View {
                     viewModel.toggleLike()
                 } label: {
                     VStack(spacing: 3) {
-                        Image(viewModel.isLiked ? "Like-on" : "Like-off")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(width: 14, height: 14)
-                            .foregroundStyle(Color.orange500)
+                        Image(
+                            viewModel.isLiked
+                                ? .Icons.Common.ThumbUp.filledMedium : .Icons.Common.ThumbUp.outlinedMedium
+                        )
+                        .resizable()
+                        .frame(width: 14, height: 14)
+                        .foregroundStyle(Color.orange500)
                         Text("\(viewModel.likeCount)")
                             .customFont(font: .text9(weight: .ExtraBold))
                             .foregroundStyle(Color.orange500)
@@ -172,7 +173,7 @@ struct ReviewProfileInfoView: View {
                     Button(action: {
                         showActionSheet = true
                     }) {
-                        Image("etc")
+                        Image(.Icons.Common.ellipsisHorizontal)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 24, height: 24)

@@ -32,7 +32,7 @@ struct FestivalSwitchStyle: ToggleStyle {
             .overlay(
                 Text("축제")
                     .foregroundColor(Color.white)
-                    .font(.custom("NanumSquareOTFB", size: 10))
+                    .customFont(font: .text10(weight: .Bold))
                     .offset(x: configuration.isOn ? 6 : 26, y: 0), alignment: .leading
             )
             .onTapGesture {

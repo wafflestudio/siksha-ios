@@ -41,17 +41,10 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
     @Binding var needPostViewRefresh: Bool
 
     var backButton: some View {
-        Button(action: {
+        BackButton {
             needPostViewRefresh = true
             self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .foregroundColor(Color.iconWhiteIcon)
         }
-        .contentShape(Rectangle())
     }
 
     var imageSection: some View {
@@ -121,7 +114,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                     .foregroundColor(.gray600)
             }
             Spacer()
-            Image("etc")
+            Image(.Icons.Common.ellipsisHorizontal)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 33, height: 33)
@@ -135,7 +128,7 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
         Button(action: {
             viewModel.togglePostLike()
         }) {
-            Image(viewModel.postInfo.isLiked ? "LikeButton-liked" : "LikeButton-default")
+            Image(viewModel.postInfo.isLiked ? .Icons.Common.LikeButton.filled : .Icons.Common.LikeButton.outlined)
         }
     }
 
@@ -303,19 +296,16 @@ struct CommunityPostView<ViewModel>: View where ViewModel: CommunityPostViewMode
                                 .frame(height: 15)
 
                             HStack(spacing: 4) {
-                                Image("like")
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 11.5, height: 11)
+                                Image(.Icons.Common.ThumbUp.outlinedSmall)
                                     .foregroundStyle(Color.orange500)
 
                                 Text(String(viewModel.postInfo.likeCount))
                                     .customFont(font: .text11(weight: .Bold))
                                     .foregroundColor(.orange500)
-                                Image("Comment")
+                                Image(.Icons.Common.speechBubble)
                                     .resizable()
                                     .frame(width: 12, height: 11)
-                                    .scaledToFit()
+                                    .foregroundStyle(Color.gray700)
                                 Text(String(viewModel.postInfo.commentCount))
                                     .customFont(font: .text11(weight: .Bold))
                                     .foregroundColor(.gray700)

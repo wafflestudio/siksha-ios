@@ -12,14 +12,9 @@ struct AlarmView: View {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
     @EnvironmentObject private var contentViewModel: ContentViewModel
     var backButton: some View {
-        Button(action: {
+        BackButton {
             contentViewModel.showPopUp = false
             self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .frame(width: 24, height: 24)
-                .foregroundColor(.white)
         }
     }
     var alarmSettingsView: some View {
@@ -52,9 +47,8 @@ struct AlarmView: View {
                         .foregroundStyle(Color.blackColor)
                         .customFont(font: .text15(weight: .Regular))
                     Spacer()
-                    Image("ArrowSmall")
+                    Image(.Icons.Common.Chevron.rightSmall)
                         .resizable()
-                        .renderingMode(.template)
                         .foregroundColor(Color.gray500)
                         .frame(width: 16, height: 16)
                 }

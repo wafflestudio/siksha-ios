@@ -7,72 +7,6 @@
 
 import SwiftUI
 
-struct MyPostPreView: View {
-    private let contentColor = Color.gray900
-    private let likeColor = Color.orange500
-    private let replyColor = Color.gray700
-    private let defaultImageColor = Color.gray100
-
-    let info: PostInfo
-    let boardName: String
-    let needRefresh: Binding<Bool>
-
-    var body: some View {
-        NavigationLink(
-            destination: CommunityPostView(
-                viewModel: CommunityPostViewModel(
-                    communityRepository: AppContainer.shared.domain.communityRepository,
-                    blockManager: AppContainer.shared.blockManager,
-                    postId: info.id
-                ),
-                needPostViewRefresh: needRefresh)
-        ) {
-            HStack {
-                VStack(alignment: .leading) {
-                    Text(info.title)
-                        .font(.custom("Inter-Bold", size: 15))
-                    Spacer()
-                        .frame(width: 10)
-                    Text(info.content)
-                        .font(.custom("Inter-ExtraLight", size: 12))
-                        .foregroundColor(contentColor)
-                    Spacer()
-                        .frame(width: 10)
-                    HStack {
-                        HStack(alignment: .center) {
-                            Image(info.isLiked ? "PostLike-liked" : "PostLike-default")
-                                .frame(width: 11.5, height: 10)
-                                .padding(.init(top: 0, leading: 0, bottom: 1.56, trailing: 0))
-                            Spacer()
-                                .frame(width: 4)
-                            Text(String(info.likeCount))
-                                .font(.custom("Inter-Regular", size: 9))
-
-                                .foregroundColor(likeColor)
-                        }
-                        HStack(alignment: .center) {
-                            Image("Comment")
-                                .frame(width: 11.5, height: 11)
-                            Spacer()
-                                .frame(width: 4)
-                            Text(String(info.commentCount))
-                                .font(.custom("Inter-Regular", size: 9))
-                                .foregroundColor(Color.init("Color/Foundation/Gray/700"))
-                                .frame(height: 11, alignment: .center)
-
-                        }
-                    }
-                }
-                Spacer()
-                Rectangle()
-                    .frame(width: 61, height: 61)
-                    .foregroundColor(defaultImageColor)
-            }
-            .padding(EdgeInsets(top: 15, leading: 35, bottom: 15, trailing: 21))
-        }
-    }
-}
-
 struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
 
@@ -87,14 +21,8 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
     }
 
     var backButton: some View {
-        Button(action: {
+        BackButton {
             self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .foregroundColor(Color.iconWhiteIcon)
         }
     }
 
@@ -111,8 +39,8 @@ struct MyPostView<ViewModel>: View where ViewModel: MyPostViewModelType {
                 VStack(alignment: .center) {
                     Spacer()
                     Text("내가 쓴 글이 없어요")
-                        .font(.custom("NanumSquareOTF", size: 15))
-                        .foregroundColor(Color(white: 166 / 255))
+                        .customFont(font: .text15(weight: .Bold))
+                        .foregroundStyle(Color.gray600)
                     Spacer()
                 }
                 .errorAlert(error: $viewModel.error)

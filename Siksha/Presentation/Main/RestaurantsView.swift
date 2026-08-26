@@ -86,7 +86,7 @@ struct RestaurantsView: View {
                 VStack {
                     HStack {
                         Text("식단 정보가 없습니다")
-                            .font(.custom("NanumSquareOTFB", size: 15))
+                            .customFont(font: .text15(weight: .Bold))
                             .foregroundColor(fontColor)
                     }
                     .frame(maxHeight: .infinity)

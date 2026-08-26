@@ -36,7 +36,7 @@ struct MealCell: View {
                 .foregroundColor(.blackColor)
 
             if vegetarian {
-                Image("Vegetarian")
+                Image(.Icons.Common.vegan)
                     .resizable()
                     .renderingMode(.original)
                     .frame(width: 18, height: 18)
@@ -66,8 +66,8 @@ struct MealCell: View {
             Button(action: {
                 viewModel.toggleLike()
             }) {
-                Image(viewModel.meal.isLiked ? "Heart-selected" : "Heart-default")
-                    .frame(width: 24, height: 24)
+                Image(.Icons.Common.Heart.filled24)
+                    .foregroundStyle(viewModel.meal.isLiked ? Color.accentLike : Color.iconLike)
             }
             .disabled(viewModel.isUpdatingLike)
         }

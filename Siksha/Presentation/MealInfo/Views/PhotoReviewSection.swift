@@ -58,14 +58,13 @@ struct PhotoReviewSection: View {
                     .frame(width: 120, height: 120)
 
                 VStack(spacing: 6) {
-                    Image("Plus")
-                        .renderingMode(.template)
+                    Image(.Icons.Common.plus)
                         .resizable()
-                        .foregroundStyle(Color.white)
                         .frame(width: 10, height: 10)
+                        .foregroundStyle(Color.backgroundSecondary)
 
                     Text("\(viewModel.totalImageCount - 5)건 더보기")
-                        .foregroundStyle(Color.white)
+                        .foregroundStyle(Color.backgroundSecondary)
                         .customFont(font: .text12(weight: .Bold))
                 }
             }
@@ -90,11 +89,7 @@ struct PhotoReviewSection: View {
                 .foregroundStyle(Color.blackColor)
             Spacer()
             NavigationLink(destination: ReviewListView(mealID: viewModel.meal.id, imageReviewOnly: true)) {
-                Image("Arrow")
-                    .renderingMode(.template)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 7.5, height: 12)
+                Image(.Icons.Common.Chevron.rightMedium)
                     .foregroundStyle(Color.gray600)
             }
         }

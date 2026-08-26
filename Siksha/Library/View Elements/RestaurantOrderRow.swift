@@ -20,7 +20,7 @@ struct RestaurantOrderRow: View {
 
                 HStack(alignment: .center, spacing: 4) {
                     Button(action: onLikeTap) {
-                        Image(isLiked ? .Icons.Common.Star.filled20 : .Icons.Common.Star.unfilled20)
+                        Image(isLiked ? .Icons.Common.Star.filled20 : .Icons.Common.Star.outlined20)
                             .foregroundStyle(isLiked ? Color.orange500 : Color.iconStar)
                     }
                     .buttonStyle(.plain)
@@ -44,7 +44,7 @@ struct RestaurantOrderRow: View {
             .padding(.horizontal, 8)
             .background(Color.gray50)
 
-            Image("ReorderHandle")
+            Image(.Icons.Common.dragHandle)
                 .renderingMode(.template)
                 .foregroundStyle(Color.iconGrayIcon)
                 .padding(.leading, 14)

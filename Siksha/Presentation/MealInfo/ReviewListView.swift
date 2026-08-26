@@ -58,7 +58,7 @@ struct ReviewListView: View {
                 VStack {
                     Spacer()
                     Text("리뷰가 없습니다.")
-                        .font(.custom("NanumSquareOTFB", size: 13))
+                        .customFont(font: .text13(weight: .Bold))
                         .foregroundColor(Color.gray600)
                         .padding(.top, 20)
 
@@ -78,15 +78,8 @@ struct ReviewListView: View {
     }
 
     private var backButton: some View {
-        Button {
+        BackButton {
             dismiss()
-        } label: {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .foregroundColor(.white)
         }
     }
 }

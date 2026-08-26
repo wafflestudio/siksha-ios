@@ -39,8 +39,7 @@ struct ImageViewer: View {
                         Button {
                             dismiss()
                         } label: {
-                            Image("Close")
-                                .renderingMode(.template)
+                            Image(.Icons.Common.xmark)
                                 .resizable()
                                 .frame(width: 28, height: 28)
                                 .foregroundStyle(Color.iconWhiteIcon)

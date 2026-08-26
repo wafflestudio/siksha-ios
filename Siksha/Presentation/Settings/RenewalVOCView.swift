@@ -20,15 +20,9 @@ struct RenewalVOCView: View {
     }
 
     var backButton: some View {
-        Button(action: {
+        BackButton {
             self.presentationMode.wrappedValue.dismiss()
             viewModel.vocComment = ""
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .foregroundColor(Color.iconWhiteIcon)
         }
     }
 
@@ -36,10 +30,10 @@ struct RenewalVOCView: View {
         GeometryReader { geometry in
             VStack {
                 HStack {
-                    Image("Comment-new")
-                        .renderingMode(.original)
+                    Image(.Icons.Common.textBubble)
                         .resizable()
                         .frame(width: 18, height: 18)
+                        .foregroundStyle(Color.gray700)
 
                     Text("문의할 내용을 남겨주세요.")
                         .customFont(font: .text18(weight: .ExtraBold))

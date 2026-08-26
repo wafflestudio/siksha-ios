@@ -61,7 +61,7 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                         .foregroundStyle(Color.gray900)
                         .padding(.leading, 5)
 
-                    Image("etc")
+                    Image(.Icons.Common.ellipsisHorizontal)
                         .renderingMode(.template)
                         .resizable()
                         .scaledToFit()
@@ -78,10 +78,10 @@ struct CommentCell<ViewModel>: View where ViewModel: CommunityPostViewModelType 
                     viewModel.toggleCommentLike(id: comment.id)
                 }) {
                     VStack(spacing: 4) {
-                        Image(comment.isLiked ? "PostLike-liked" : "PostLike-default")
-                            .resizable()
-                            .frame(width: 13.5, height: 13)
-                            .scaledToFit()
+                        Image(
+                            comment.isLiked ? .Icons.Common.ThumbUp.filledMedium : .Icons.Common.ThumbUp.outlinedMedium
+                        )
+                        .foregroundStyle(Color.orange500)
                         Text("\(comment.likeCnt)")
                             .customFont(font: .text11(weight: .ExtraBold))
                             .foregroundColor(.orange500)
@@ -123,19 +123,19 @@ struct EditCommentView: View {
                 HStack {
                     Button("취소", action: onCancel)
                         .foregroundColor(.white)
-                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .customFont(font: .text15(weight: .Regular))
 
                     Spacer()
 
                     Text("댓글 수정")
                         .foregroundColor(.white)
-                        .font(.custom("NanumSquareOTFEB", size: 20))
+                        .customFont(font: .text20(weight: .Bold))
 
                     Spacer()
 
                     Button("확인", action: { onSave(editedContent) })
                         .foregroundColor(.white)
-                        .font(.custom("NanumSquareOTFR", size: 15))
+                        .customFont(font: .text15(weight: .Regular))
                 }
                 .padding()
                 .background(Color("Color/Foundation/Orange/500").opacity(0))

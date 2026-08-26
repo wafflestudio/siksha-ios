@@ -48,11 +48,11 @@ private extension MealInfoView {
             Button {
                 viewModel.toggleLike()
             } label: {
-                Image("Heart")
+                Image(.Icons.Common.Heart.filled30)
                     .resizable()
                     .scaledToFit()
                     .frame(width: 30, height: 30)
-                    .foregroundStyle(viewModel.meal.isLiked ? Color.accentLike : Color.gray200)
+                    .foregroundStyle(viewModel.meal.isLiked ? Color.accentLike : Color.iconLike)
                     .padding(.top, 20)
             }
             .disabled(viewModel.isUpdatingLike)
@@ -144,15 +144,8 @@ private extension MealInfoView {
     }
 
     var backButton: some View {
-        Button(action: {
+        BackButton {
             self.presentationMode.wrappedValue.dismiss()
-        }) {
-            Image("NavigationBack")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 24, height: 24)
-                .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                .foregroundColor(.white)
         }
     }
 }
