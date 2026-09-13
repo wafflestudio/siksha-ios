@@ -16,18 +16,22 @@ struct RestaurantOrderRow: View {
     var body: some View {
         HStack(alignment: .center, spacing: 0) {
             ZStack(alignment: .leading) {
-                Color.elementTooltip2.cornerRadius(12).shadow(color: .black.opacity(0.16), radius: 1.5, x: 0, y: 0)
+                Color.elementTooltip2
+                    .cornerRadius(12)
+                    .shadow(color: .black.opacity(0.16), radius: 1.5, x: 0, y: 0)
 
                 HStack(alignment: .center, spacing: 4) {
                     Button(action: onLikeTap) {
                         Image(isLiked ? .Icons.Common.Star.filled20 : .Icons.Common.Star.outlined20)
+                            .resizable()
+                            .frame(width: 20, height: 20)
                             .foregroundStyle(isLiked ? Color.orange500 : Color.iconStar)
                     }
                     .buttonStyle(.plain)
                     Text(text)
                         .customFont(font: .text13(weight: .Bold))
                         .foregroundColor(Color.gray800)
-                        .padding(.vertical, 11)
+                        .lineLimit(2)
                     Spacer()
                     Button(action: onVisibilityTap) {
                         Image(isVisible ? .Icons.Common.eyeOpened : .Icons.Common.eyeClosed)
@@ -38,8 +42,8 @@ struct RestaurantOrderRow: View {
                     .buttonStyle(.plain)
                 }
                 .padding(.horizontal, 12)
+                .padding(.vertical, 8)
             }
-            .frame(height: 40)
             .padding(.vertical, 6)
             .padding(.horizontal, 8)
             .background(Color.gray50)
