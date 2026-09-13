@@ -60,10 +60,32 @@ struct RestaurantOrderRow: View {
 
 struct MenuRow_Previews: PreviewProvider {
     static var previews: some View {
-        RestaurantOrderRow(
-            text: "302동 식당",
-            isLiked: false,
-            isVisible: false
-        )
+        List {
+            Section {
+                RestaurantOrderRow(
+                    text: "일반식당이름",
+                    isLiked: false,
+                    isVisible: false
+                )
+                .listRowInsets(EdgeInsets())
+                .alignmentGuide(.listRowSeparatorLeading) { d in
+                    d[.leading]
+                }
+                .listRowSeparatorTint(Color.borderPrimary)
+                RestaurantOrderRow(
+                    text: "매우 긴 식당이름. asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf",
+                    isLiked: false,
+                    isVisible: false
+                )
+                .listRowInsets(EdgeInsets())
+                .alignmentGuide(.listRowSeparatorLeading) { d in
+                    d[.leading]
+                }
+                .listRowSeparatorTint(Color.borderPrimary)
+            } header: {
+                Spacer(minLength: 0).listRowInsets(EdgeInsets())
+            }
+        }
+        .environment(\.defaultMinListHeaderHeight, 20)
     }
 }
